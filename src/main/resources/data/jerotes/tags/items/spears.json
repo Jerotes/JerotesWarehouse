@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:wooden_spear",
+    "jerotes:stone_spear",
+    "jerotes:copper_spear",
+    "jerotes:iron_spear",
+    "jerotes:golden_spear",
+    "jerotes:diamond_spear",
+    "jerotes:netherite_spear",
+    "jerotes:bone_throwing_spear_of_spear"
+  ]
+}

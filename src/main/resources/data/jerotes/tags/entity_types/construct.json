@@ -1,0 +1,13 @@
+{
+  "__comment": "生物类型：构装体",
+  "replace": false,
+  "values": [
+    "minecraft:iron_golem",
+    "minecraft:snow_golem",
+    "minecraft:shulker",
+    {
+      "id": "minecraft:copper_golem",
+      "required": false
+    }
+  ]
+}

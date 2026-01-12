@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.1,
+  "ingredient": [
+    {
+      "item": "jerotes:golden_javelin"
+    },
+    {
+      "item": "jerotes:golden_war_beast_armor"
+    },
+    {
+      "item": "jerotes:golden_giant_beast_armor"
+    },
+    {
+      "item": "jerotes:golden_spear"
+    }
+  ],
+  "result": "minecraft:gold_nugget"
+}

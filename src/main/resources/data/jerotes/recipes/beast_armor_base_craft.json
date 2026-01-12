@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "bbb",
+    "bab",
+    "bbb"
+  ],
+  "key": {
+    "a": [
+      {
+        "item": "jerotes:beast_armor_base"
+      },
+      {
+        "item": "minecraft:leather_horse_armor"
+      }
+    ],
+    "b": {
+      "item": "minecraft:paper"
+    }
+  },
+  "result": {
+    "item": "jerotes:beast_armor_base",
+    "count": 2
+  }
+}

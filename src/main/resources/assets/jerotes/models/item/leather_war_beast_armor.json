@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jerotes:item/leather_war_beast_armor"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#jerotes:can_ride_saddle",
+    "#jerotes:can_ride_no_saddle"
+  ]
+}

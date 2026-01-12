@@ -1,0 +1,13 @@
+{
+  "__comment": "可判断是否魔法的类型",
+  "replace": false,
+  "values": [
+    "minecraft:magic",
+    "minecraft:indirect_magic",
+    "minecraft:thorns",
+    "minecraft:wither",
+    "minecraft:wither_skull",
+    "minecraft:dragon_breath",
+    "jerotes:magic_effect"
+  ]
+}

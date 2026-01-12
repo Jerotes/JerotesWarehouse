@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": [
+    {
+      "item": "jerotes:copper_javelin"
+    },
+    {
+      "item": "jerotes:copper_war_beast_armor"
+    },
+    {
+      "item": "jerotes:copper_giant_beast_armor"
+    },
+    {
+      "item": "jerotes:golden_spear"
+    }
+  ],
+  "result": "minecraft:copper_ingot"
+}

@@ -1,0 +1,10 @@
+{
+  "__comment": "生物类型：植物",
+  "replace": false,
+  "values": [
+    {
+      "id": "minecraft:creaking",
+      "required": false
+    }
+  ]
+}

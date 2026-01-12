@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#jerotes:bows",
+    "#jerotes:crossbows",
+    "#jerotes:shields",
+    "#jerotes:tools",
+    "#jerotes:spears",
+    "#jerotes:durability"
+  ]
+}

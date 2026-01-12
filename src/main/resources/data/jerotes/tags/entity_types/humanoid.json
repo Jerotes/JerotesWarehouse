@@ -1,0 +1,19 @@
+{
+  "__comment": "生物类型：类人生物",
+  "replace": false,
+  "values": [
+    "#jerotes:humanoid",
+
+    "minecraft:giant",
+    {
+      "id": "minecraft:mannequin",
+      "required": false
+    },
+
+    "#jerotes:villager",
+    "#jerotes:illager",
+    "#jerotes:witch",
+    "#jerotes:piglin",
+    "#jerotes:enderman"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "__comment": "无视一些特殊击退的生物",
+  "replace": false,
+  "values": [
+  ]
+}

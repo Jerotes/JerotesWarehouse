@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:syringe",
+    "jerotes:magic_effect",
+    "jerotes:bleeding",
+    "jerotes:corrosive",
+    "jerotes:poison"
+  ]
+}

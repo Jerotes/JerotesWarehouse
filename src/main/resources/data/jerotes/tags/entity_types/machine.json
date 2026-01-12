@@ -1,0 +1,11 @@
+{
+  "__comment": "生物类型：机械",
+  "replace": false,
+  "values": [
+    "minecraft:iron_golem",
+    {
+      "id": "minecraft:copper_golem",
+      "required": false
+    }
+  ]
+}

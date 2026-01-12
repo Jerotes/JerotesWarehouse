@@ -1,0 +1,8 @@
+{
+  "__comment": "不会被震慑影响逃离的类型",
+  "replace": false,
+  "values": [
+    "#jerotes:zsiein",
+    "jerotes:jerotes_player"
+  ]
+}

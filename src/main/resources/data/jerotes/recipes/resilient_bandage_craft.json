@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "a",
+    "b",
+    "a"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:string"
+    },
+    "b": {
+      "item": "jerotes:high_strength_string"
+    }
+  },
+  "result": {
+    "item": "jerotes:resilient_bandage",
+    "count": 1
+  }
+}

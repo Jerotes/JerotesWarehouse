@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:magic_missile",
+    "jerotes:poison_breath",
+    "jerotes:lightning_bolt",
+    "jerotes:ray_of_sickness",
+    "jerotes:ray_of_enfeeblement",
+    "jerotes:vicious_mockery",
+    "jerotes:hold_person",
+    "jerotes:bestow_curse",
+    "jerotes:phantasmal_killer",
+    "jerotes:eyebite"
+  ]
+}

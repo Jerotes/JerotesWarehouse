@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#jerotes:slabs",
+    "#jerotes:stairs",
+    "#jerotes:trapdoors",
+    "#jerotes:walls",
+    "#jerotes:doors",
+    "#jerotes:pressure_plates",
+    "#jerotes:ores",
+    "#jerotes:sandstones_all"
+  ]
+}

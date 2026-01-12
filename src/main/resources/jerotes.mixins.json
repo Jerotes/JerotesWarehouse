@@ -1,0 +1,50 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.jerotes.jerotes.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "jerotes.refmap.json",
+  "mixins": [
+    "AbstractHorseMixin",
+    "AnimalMixin",
+    "AnimalPanicMixin",
+    "BeaconBlockEntityMixin",
+    "CamelMixin",
+    "CreeperMixin",
+    "CrossbowItemMixin",
+    "EnderDragonMixin",
+    "EntityMixin",
+    "EvokerMixin",
+    "HorseMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "MinecraftMixin",
+    "MobMixin",
+    "NearestAttackableTargetGoalMixin",
+    "PlayerMixin",
+    "ServerGamePacketListenerImplMixin",
+    "ServerPlayerMixin",
+    "SnowballMixin",
+    "SpiderMixin",
+    "StrayMixin",
+    "WitherBossMixin"
+  ],
+  "client": [
+    "AbstractZombieModelMixin",
+    "CamelRendererMixin",
+    "CustomHeadLayerMixin",
+    "GuiMixin",
+    "HumanoidArmorLayerMixin",
+    "HumanoidModelMixin",
+    "ItemInHandLayerMixin",
+    "ItemInHandRendererMixin",
+    "LivingEntityRendererMixin",
+    "LocalPlayerMixin",
+    "MultiPlayerGameModeMixin",
+    "RenderLayerMixin",
+    "StrayRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

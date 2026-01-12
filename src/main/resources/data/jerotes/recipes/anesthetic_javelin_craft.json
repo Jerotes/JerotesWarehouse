@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aaa",
+    "aba",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "tag": "jerotes:anesthetic_craft_use"
+    },
+    "b": {
+      "item": "jerotes:simple_javelin"
+    }
+  },
+  "result": {
+    "item": "jerotes:anesthetic_javelin",
+    "count": 1
+  }
+}

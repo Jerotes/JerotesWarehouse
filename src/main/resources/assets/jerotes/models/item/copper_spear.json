@@ -1,0 +1,37 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": {
+    "layer0": "jerotes:item/copper_spear",
+    "particle": "jerotes:item/copper_spear"
+  },
+  "base": {
+    "parent": "jerotes:item/copper_spear_in_hand",
+    "textures": {
+      "layer0": "jerotes:item/copper_spear_in_hand"
+    }
+  },
+  "perspectives": {
+    "ground": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/copper_spear"
+      },
+      "gui_light": "front"
+    },
+    "gui": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/copper_spear"
+      },
+      "gui_light": "front"
+    },
+    "fixed": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/copper_spear"
+      },
+      "gui_light": "front"
+    }
+  }
+}

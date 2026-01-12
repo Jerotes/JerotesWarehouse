@@ -1,0 +1,11 @@
+{
+  "__comment": "生物类型：元素",
+  "replace": false,
+  "values": [
+    "minecraft:blaze",
+    {
+      "id": "minecraft:breeze",
+      "required": false
+    }
+  ]
+}

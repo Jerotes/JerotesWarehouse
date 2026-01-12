@@ -1,0 +1,8 @@
+{
+  "__comment": "生物类型：异怪",
+  "replace": false,
+  "values": [
+    "#jerotes:zsiein",
+    "minecraft:shulker"
+  ]
+}

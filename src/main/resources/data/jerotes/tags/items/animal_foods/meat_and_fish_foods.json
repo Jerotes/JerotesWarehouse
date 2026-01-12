@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#jerotes:animal_foods/meat_foods",
+    "#jerotes:animal_foods/fish_foods"
+  ]
+}

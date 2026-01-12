@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:bypasses_cooldown_shoot",
+    "jerotes:bypasses_cooldown_melee",
+    "jerotes:magic_effect"
+  ]
+}

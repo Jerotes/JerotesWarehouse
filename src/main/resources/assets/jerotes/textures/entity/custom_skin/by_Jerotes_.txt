@@ -1,0 +1,6 @@
+1.配置文件中“HumanCustomName”项加入特殊名称
+2.此文件夹处的纹理将用于同名的特殊名称人类
+3.请小写/[a-z0-9/._-]
+1. Add special names to the 'HumanCustomName' setting in configs
+2. Textures here will be used for Human that have the same custom name
+3. Use lowercase letters/[a-z0-9/._-]

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "jerotes:anesthetic_craft_use"
+    },
+    {
+      "item": "jerotes:bandage"
+    }
+  ],
+  "result": {
+    "item": "jerotes:anesthetic_bandage",
+    "count": 3
+  }
+}

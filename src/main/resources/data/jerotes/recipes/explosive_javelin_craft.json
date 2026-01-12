@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aaa",
+    " b ",
+    " c "
+  ],
+  "key": {
+    "a": {
+      "tag": "jerotes:explosive_craft_use"
+    },
+    "b": {
+      "item": "jerotes:simple_javelin"
+    },
+    "c": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "result": {
+    "item": "jerotes:explosive_javelin",
+    "count": 1
+  }
+}

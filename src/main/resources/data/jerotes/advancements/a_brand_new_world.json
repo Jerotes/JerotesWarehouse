@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:story/root",
+  "display": {
+    "icon": {
+      "item": "jerotes:simple_javelin"
+    },
+    "title": {
+      "translate": "advancements.jerotes.a_brand_new_world.title"
+    },
+    "description": {
+      "translate": "advancements.jerotes.a_brand_new_world.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "a_brand_new_world": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "jerotes:simple_javelin"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 100,
+    "recipes": [
+      "jerotes:high_strength_string_craft",
+      "jerotes:anesthetic_arrow_craft",
+      "jerotes:resilient_bandage_craft",
+      "jerotes:anesthetic_bandage_craft",
+
+      "jerotes:simple_javelin_craft",
+      "jerotes:heal_javelin_craft",
+      "jerotes:transport_javelin_craft",
+      "jerotes:anesthetic_javelin_craft",
+      "jerotes:explosive_javelin_craft",
+
+      "jerotes:wooden_javelin_craft",
+      "jerotes:stone_javelin_craft",
+      "jerotes:iron_javelin_craft",
+      "jerotes:copper_javelin_craft",
+      "jerotes:golden_javelin_craft",
+      "jerotes:diamond_javelin_craft",
+      "jerotes:netherite_javelin_smith",
+
+      "jerotes:bone_throwing_spear_craft",
+
+      "jerotes:beast_armor_base_craft",
+      "jerotes:war_beast_armor_base_craft",
+      "jerotes:giant_beast_armor_base_craft",
+
+      "jerotes:leather_war_beast_armor_craft",
+      "jerotes:iron_war_beast_armor_craft",
+      "jerotes:copper_war_beast_armor_craft",
+      "jerotes:golden_war_beast_armor_craft",
+      "jerotes:diamond_war_beast_armor_craft",
+      "jerotes:netherite_war_beast_armor_smith",
+
+      "jerotes:leather_giant_beast_armor_craft",
+      "jerotes:iron_giant_beast_armor_craft",
+      "jerotes:copper_giant_beast_armor_craft",
+      "jerotes:golden_giant_beast_armor_craft",
+      "jerotes:diamond_giant_beast_armor_craft",
+      "jerotes:netherite_giant_beast_armor_smith"
+    ]
+  }
+}

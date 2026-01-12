@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  a",
+    "aba",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "tag": "forge:ingots/gold"
+    },
+    "b": {
+      "item": "jerotes:war_beast_armor_base"
+    }
+  },
+  "result": {
+    "item": "jerotes:golden_war_beast_armor",
+    "count": 1
+  }
+}

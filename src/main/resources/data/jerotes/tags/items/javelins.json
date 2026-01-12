@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:simple_javelin",
+    "jerotes:heal_javelin",
+    "jerotes:transport_javelin",
+    "jerotes:anesthetic_javelin",
+    "jerotes:explosive_javelin",
+    "jerotes:wooden_javelin",
+    "jerotes:stone_javelin",
+    "jerotes:copper_javelin",
+    "jerotes:iron_javelin",
+    "jerotes:golden_javelin",
+    "jerotes:diamond_javelin",
+    "jerotes:netherite_javelin",
+
+    "jerotes:bone_throwing_spear_of_javelin"
+  ]
+}

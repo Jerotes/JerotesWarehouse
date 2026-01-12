@@ -1,0 +1,7 @@
+{
+  "__comment": "可伤害凋灵的生物",
+  "replace": false,
+  "values": [
+    "jerotes:jerotes_player"
+  ]
+}

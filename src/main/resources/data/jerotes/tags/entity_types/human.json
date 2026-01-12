@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:player",
+
+    "jerotes:human",
+    "jerotes:jerotes_player"
+  ]
+}

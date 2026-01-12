@@ -1,0 +1,46 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": {
+    "layer0": "jerotes:item/explosive_javelin",
+    "particle": "jerotes:item/explosive_javelin"
+  },
+  "base": {
+    "parent": "jerotes:item/javelin_in_hand",
+    "textures": {
+      "0": "jerotes:item/explosive_javelin_model",
+      "particle": "jerotes:item/explosive_javelin"
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "throwing": 1
+      },
+      "model": "jerotes:item/explosive_javelin_throwing"
+    }
+  ],
+  "perspectives": {
+    "ground": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/explosive_javelin"
+      },
+      "gui_light": "front"
+    },
+    "gui": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/explosive_javelin"
+      },
+      "gui_light": "front"
+    },
+    "fixed": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/explosive_javelin"
+      },
+      "gui_light": "front"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "__comment": "生物类型：真龙",
+  "replace": false,
+  "values": [
+    "minecraft:ender_dragon"
+  ]
+}

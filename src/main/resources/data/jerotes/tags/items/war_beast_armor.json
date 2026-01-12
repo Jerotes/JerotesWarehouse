@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:war_beast_armor_base",
+    "jerotes:leather_war_beast_armor",
+    "jerotes:chainmail_war_beast_armor",
+    "jerotes:copper_war_beast_armor",
+    "jerotes:iron_war_beast_armor",
+    "jerotes:golden_war_beast_armor",
+    "jerotes:diamond_war_beast_armor",
+    "jerotes:netherite_war_beast_armor",
+    "jerotes:netherite_old_war_beast_armor"
+  ]
+}

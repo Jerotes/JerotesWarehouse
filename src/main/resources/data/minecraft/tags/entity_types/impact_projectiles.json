@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#jerotes:arrows",
+    "#jerotes:javelins",
+    "#jerotes:other_shoots",
+    "#jerotes:magic_shoots"
+  ]
+}

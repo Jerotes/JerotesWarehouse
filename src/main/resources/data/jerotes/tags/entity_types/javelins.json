@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:projectile_throw_simple_javelin",
+    "jerotes:projectile_throw_heal_javelin",
+    "jerotes:projectile_throw_anesthetic_javelin",
+    "jerotes:projectile_throw_transport_javelin",
+    "jerotes:projectile_throw_explosive_javelin",
+    "jerotes:projectile_throw_wooden_javelin",
+    "jerotes:projectile_throw_stone_javelin",
+    "jerotes:projectile_throw_copper_javelin",
+    "jerotes:projectile_throw_iron_javelin",
+    "jerotes:projectile_throw_golden_javelin",
+    "jerotes:projectile_throw_diamond_javelin",
+    "jerotes:projectile_throw_netherite_javelin",
+    "jerotes:projectile_throw_bone_throwing_spear"
+  ]
+}

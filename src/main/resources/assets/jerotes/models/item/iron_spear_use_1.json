@@ -1,0 +1,59 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": {
+    "layer0": "jerotes:item/iron_spear",
+    "particle": "jerotes:item/iron_spear"
+  },
+  "base": {
+    "parent": "jerotes:item/iron_spear_in_hand",
+    "textures": {
+      "layer0": "jerotes:item/iron_spear_in_hand"
+    },
+    "display": {
+      "firstperson_righthand": {
+        "rotation": [ -60, 180, -55 ],
+        "translation": [ 1.13, 0.0, 1.13],
+        "scale": [ 1.36, 1.36, 0.68 ]
+      },
+      "firstperson_lefthand": {
+        "rotation": [ -60, -180, 55 ],
+        "translation": [ 1.13, 0.0, 1.13],
+        "scale": [ 1.36, 1.36, 0.68 ]
+      },
+      "thirdperson_righthand": {
+        "rotation": [ -70, 0, -55 ],
+        "translation": [ 0, -1, 2 ],
+        "scale": [1.5, 1.5, 0.75 ]
+      },
+      "thirdperson_lefthand": {
+        "rotation": [ -70, 0, 55 ],
+        "translation": [ 0, -1, 2 ],
+        "scale": [1.5, 1.5, 0.75 ]
+      }
+    }
+  },
+  "perspectives": {
+    "ground": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/iron_spear"
+      },
+      "gui_light": "front"
+    },
+    "gui": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/iron_spear"
+      },
+      "gui_light": "front"
+    },
+    "fixed": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/iron_spear"
+      },
+      "gui_light": "front"
+    }
+  }
+}

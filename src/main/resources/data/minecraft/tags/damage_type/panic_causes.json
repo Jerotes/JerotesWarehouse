@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:bypasses_cooldown_melee",
+    "jerotes:syringe",
+    "jerotes:magic_effect",
+    "jerotes:bleeding",
+    "jerotes:corrosive",
+    "jerotes:spear",
+    "jerotes:poison"
+  ]
+}

@@ -1,0 +1,174 @@
+package com.jerotes.jerotes.mixin;
+
+import com.jerotes.jerotes.entity.CamelAbout;
+import com.jerotes.jerotes.entity.JerotesChangeLivingEntity;
+import com.jerotes.jerotes.entity.StrayAbout;
+import com.jerotes.jerotes.init.JerotesMobEffects;
+import com.jerotes.jerotes.item.MeleeItem;
+import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.network.JerotesSpearRushAttackPacket;
+import com.jerotes.jerotes.network.PacketHandler;
+import com.jerotes.jerotes.util.EntityFactionFind;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectUtil;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import javax.annotation.Nullable;
+import java.util.Objects;
+
+@Mixin(LivingEntity.class)
+public abstract class LivingEntityMixin extends Entity implements JerotesChangeLivingEntity {
+    protected LivingEntityMixin(EntityType<? extends Entity> entityType, Level level) {
+        super(entityType, level);
+    }
+
+    @Shadow public abstract boolean hasEffect(MobEffect p_21024_);
+
+    @Shadow @Nullable public abstract MobEffectInstance getEffect(MobEffect p_21125_);
+
+    @Shadow public abstract int getUseItemRemainingTicks();
+
+    @Shadow protected int useItemRemaining;
+
+    @Shadow protected abstract void completeUsingItem();
+
+    @Shadow public abstract InteractionHand getUsedItemHand();
+
+    @Shadow protected ItemStack useItem;
+
+    @Shadow public abstract ItemStack getMainHandItem();
+
+    public boolean canAddPassengerJerotes(Entity entity) {
+        return this.canAddPassenger(entity);
+    }
+
+    @Nullable
+    protected Object2LongMap<Entity> recentKineticEnemiesJerotes;
+    public boolean wasRecentlyStabbedJerotes(Entity entity, int n) {
+        if (this.recentKineticEnemiesJerotes == null) {
+            return false;
+        }
+        if (this.recentKineticEnemiesJerotes.containsKey((Object)entity)) {
+            return this.level().getGameTime() - this.recentKineticEnemiesJerotes.getLong((Object)entity) < n;
+        }
+        return false;
+    }
+    public void rememberStabbedEntityJerotes(Entity entity) {
+        if (this.recentKineticEnemiesJerotes != null) {
+            this.recentKineticEnemiesJerotes.put(entity, this.level().getGameTime());
+        }
+    }
+
+    @Inject(method = "startUsingItem", at = @At("TAIL"))
+    private void startUsingItem(InteractionHand p_21159_, CallbackInfo ci) {
+        if (!this.level().isClientSide()) {
+            if (this.useItem.getItem() instanceof ItemToolBaseSpearBase) {
+                this.recentKineticEnemiesJerotes = new Object2LongOpenHashMap<>();
+            }
+        }
+    }
+
+    private long lastKineticHitFeedbackTimeJerotes = Integer.MIN_VALUE;
+    public float getTicksSinceLastKineticHitFeedbackJerotes(float f) {
+        if (this.lastKineticHitFeedbackTimeJerotes < 0L) {
+            return 0.0f;
+        }
+        return (float)(this.level().getGameTime() - this.lastKineticHitFeedbackTimeJerotes) + f;
+    }
+    private void onKineticHitJerotes() {
+        if (this.level().getGameTime() - this.lastKineticHitFeedbackTimeJerotes <= 10L) {
+            return;
+        }
+        this.lastKineticHitFeedbackTimeJerotes = this.level().getGameTime();
+        if (!(this.useItem.getItem() instanceof ItemToolBaseSpearBase kineticWeapon))
+            return;
+        kineticWeapon.makeLocalHitSound(this);
+    }
+
+    @Inject(method = "handleEntityEvent", at = @At("HEAD"))
+    private void handleEntityEvent(byte by, CallbackInfo ci) {
+        if (by == 2) {
+            this.onKineticHitJerotes();
+        }
+    }
+
+    @Inject(method = "updateUsingItem", at = @At("HEAD"))
+    private void updateUsingItem(ItemStack itemStack, CallbackInfo ci) {
+        if (itemStack.getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
+            if (this.level().isClientSide()) {
+//                itemToolBaseSpearBase.damageEntities(itemStack, this.getUseItemRemainingTicks(),
+//                        ((LivingEntity)(Object)this),
+//                        getUsedItemHand() == InteractionHand.MAIN_HAND ?
+//                                EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+                PacketHandler.sendToServer(new JerotesSpearRushAttackPacket(itemStack, getUseItemRemainingTicks(), ((LivingEntity)(Object)this).getId()));
+            }
+        }
+    }
+
+    @Inject(method = "getVisibilityPercent", at = @At("HEAD"), cancellable = true)
+    private void getVisibilityPercent(Entity entity, CallbackInfoReturnable<Double> cir) {
+        if (entity != null) {
+            if (this.hasEffect(JerotesMobEffects.CLOAKING.get())) {
+                int cloakingLevel = (Objects.requireNonNull(this.getEffect(JerotesMobEffects.CLOAKING.get())).getAmplifier() + 1);
+                if (this.distanceTo(entity) > 48 - cloakingLevel * 8) {
+                    cir.setReturnValue(0d);
+                }
+            }
+        }
+    }
+
+    @Inject(method = "canAttack(Lnet/minecraft/world/entity/LivingEntity;)Z", at = @At("HEAD"), cancellable = true)
+    private void canAttack(LivingEntity livingEntity, CallbackInfoReturnable<Boolean> cir) {
+        LivingEntity self = (LivingEntity)(Object) this;
+        if (((this.getTeam() == null && livingEntity.getTeam() == null) || this.getTeam() == livingEntity.getTeam())
+                && EntityFactionFind.isFaction(self, livingEntity)
+        ) {
+            cir.setReturnValue(false);
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "getCurrentSwingDuration", at = @At("HEAD"), cancellable = true)
+    private void getCurrentSwingDuration(CallbackInfoReturnable<Integer> cir) {
+       if (this.getMainHandItem().getItem() instanceof MeleeItem itemToolBaseSpearBase) {
+           int n = itemToolBaseSpearBase.swingTimes();
+           if (MobEffectUtil.hasDigSpeed((LivingEntity) (Object)this)) {
+               cir.setReturnValue(n - (1 + MobEffectUtil.getDigSpeedAmplification((LivingEntity)(Object)this)));
+           }
+           else {
+               cir.setReturnValue(this.hasEffect(MobEffects.DIG_SLOWDOWN) ? n + (1 + this.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier()) * 2 : n);
+           }
+           cir.cancel();
+       }
+    }
+
+    @Inject(method = "getMobType", at = @At("HEAD"), cancellable = true)
+    protected void getMobType(CallbackInfoReturnable<MobType> cir) {
+        if (this instanceof CamelAbout camelAbout && camelAbout.isJerotesCamelHusk() && camelAbout.isJerotesMobControlled())
+            cir.setReturnValue(MobType.UNDEAD);
+    }
+
+
+    @Inject(method = "canBeAffected", at = @At("HEAD"), cancellable = true)
+    public void canBeAffected(MobEffectInstance mobEffectInstance, CallbackInfoReturnable<Boolean> cir) {
+        if (this instanceof StrayAbout strayAbout && strayAbout.isJerotesParched() && mobEffectInstance.getEffect() == MobEffects.WEAKNESS)
+            cir.setReturnValue(false);
+    }
+}

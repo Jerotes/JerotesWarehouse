@@ -1,0 +1,21 @@
+{
+  "__comment": "可判断是否近战的类型",
+  "replace": false,
+  "values": [
+    "minecraft:mob_attack",
+    "minecraft:mob_attack_no_aggro",
+    "minecraft:player_attack",
+    "minecraft:sting",
+    "jerotes:bypasses_cooldown_melee",
+
+    "jerotes:spear",
+    {
+      "id": "minecraft:spear",
+      "required": false
+    },
+    {
+      "id": "minecraft:mace_smash",
+      "required": false
+    }
+  ]
+}

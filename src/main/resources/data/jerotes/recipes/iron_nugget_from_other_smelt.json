@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": [
+    {
+      "item": "jerotes:iron_javelin"
+    },
+    {
+      "item": "jerotes:iron_war_beast_armor"
+    },
+    {
+      "item": "jerotes:chainmail_giant_beast_armor"
+    },
+    {
+      "item": "jerotes:iron_giant_beast_armor"
+    },
+    {
+      "item": "jerotes:chainmail_giant_beast_armor"
+    },
+    {
+      "item": "jerotes:iron_spear"
+    }
+  ],
+  "result": "minecraft:iron_nugget"
+}

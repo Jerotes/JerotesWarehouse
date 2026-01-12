@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#jerotes:head_armors",
+    "#jerotes:chest_armors",
+    "#jerotes:leg_armors",
+    "#jerotes:foot_armors"
+  ]
+}

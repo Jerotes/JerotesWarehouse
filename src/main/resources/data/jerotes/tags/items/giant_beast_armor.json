@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:giant_beast_armor_base",
+    "jerotes:leather_giant_beast_armor",
+    "jerotes:chainmail_giant_beast_armor",
+    "jerotes:copper_giant_beast_armor",
+    "jerotes:iron_giant_beast_armor",
+    "jerotes:golden_giant_beast_armor",
+    "jerotes:diamond_giant_beast_armor",
+    "jerotes:netherite_giant_beast_armor",
+    "jerotes:netherite_old_giant_beast_armor"
+  ]
+}
