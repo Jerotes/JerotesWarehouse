@@ -66,8 +66,10 @@ public class ControlVehicleMessage {
         if (!(entitys instanceof ControlVehicleEntity controlVehicleEntity))
             return;
         if (type == 0) {
+            if (!controlVehicleEntity.canBeControl(player))
+                controlVehicleEntity.setManuallyControlCombat(false);
             //主
-            if (isAdd == 0) {
+            else if (isAdd == 0) {
                 controlVehicleEntity.pressMain(player);
             }
             //次

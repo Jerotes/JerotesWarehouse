@@ -8,11 +8,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public interface ControlVehicleEntity {
-     boolean changeControlType(Container container);
      boolean isManuallyControlCombat();
      void setManuallyControlCombat(boolean bl);
      float getManuallyControlCombatCameraChange();
-     float canBeControl();
+     boolean canBeControl(Player player);
      float pressMain(Player player);
      boolean canPressMain();
      float pressAdd(Player player);
