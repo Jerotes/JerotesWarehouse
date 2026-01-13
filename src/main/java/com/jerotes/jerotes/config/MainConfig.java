@@ -41,6 +41,7 @@ public final class MainConfig {
     public static boolean MobUseThrowShrinkItem;
     public static boolean MobUseOtherShrinkItem;
     public static boolean InventoryMobAboutItemstackInventoryTick;
+    public static boolean MobManuallyControlCombatCameraChange;
     public static boolean RandomSkinMobHasUnderTexture;
     public static List<String> HumanCustomNameWide;
     public static List<String> HumanCustomNameSlim;
@@ -92,6 +93,7 @@ public final class MainConfig {
         MobUseThrowShrinkItem = COMMON.MobUseThrowShrinkItem.get();
         MobUseOtherShrinkItem = COMMON.MobUseOtherShrinkItem.get();
         InventoryMobAboutItemstackInventoryTick = COMMON.InventoryMobAboutItemstackInventoryTick.get();
+        MobManuallyControlCombatCameraChange = COMMON.MobManuallyControlCombatCameraChange.get();
         RandomSkinMobHasUnderTexture = COMMON.RandomSkinMobHasUnderTexture.get();
         HumanCustomNameWide = COMMON.HumanCustomNameWide.get();
         HumanCustomNameSlim = COMMON.HumanCustomNameSlim.get();
@@ -140,6 +142,7 @@ public final class MainConfig {
         public final ForgeConfigSpec.BooleanValue MobUseThrowShrinkItem;
         public final ForgeConfigSpec.BooleanValue MobUseOtherShrinkItem;
         public final ForgeConfigSpec.BooleanValue InventoryMobAboutItemstackInventoryTick;
+        public final ForgeConfigSpec.BooleanValue MobManuallyControlCombatCameraChange;
         public final ForgeConfigSpec.BooleanValue RandomSkinMobHasUnderTexture;
         public final ForgeConfigSpec.ConfigValue<List<String>> HumanCustomNameWide;
         public final ForgeConfigSpec.ConfigValue<List<String>> HumanCustomNameSlim;
@@ -201,6 +204,8 @@ public final class MainConfig {
                     .define("生物使用其他消耗物品", false);
             InventoryMobAboutItemstackInventoryTick = builder.comment("Inventory Mob About Itemstack Inventory Tick")
                     .define("具有物品栏生物关于背包计时的物品", true);
+            MobManuallyControlCombatCameraChange = builder.comment("Mob Manually Control Combat Camera Change")
+                    .define("生物手动控制状态时摄像机变动 ", true);
             RandomSkinMobHasUnderTexture = builder.comment("Random Skin Mob Has Under Texture")
                     .define("随机纹理生物拥有底层纹理", false);
             HumanCustomNameWide = builder.comment("Human Custom Name Wide")

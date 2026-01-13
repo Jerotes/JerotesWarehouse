@@ -2,6 +2,7 @@
 package com.jerotes.jerotes.network;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.ControlVehicleEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -42,17 +43,21 @@ public class PacketHandler {
 				JerotesPlayerData.PlayerVariablesSyncMessage::consume,
 				Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 		NETWORK_WRAPPER.registerMessage(packetsRegistered++, SpellUseMessage.class,
-										SpellUseMessage::encode,
-										SpellUseMessage::decode,
-										SpellUseMessage::consume);
+				SpellUseMessage::encode,
+				SpellUseMessage::decode,
+				SpellUseMessage::consume);
+		NETWORK_WRAPPER.registerMessage(packetsRegistered++, ControlVehicleMessage.class,
+				ControlVehicleMessage::encode,
+				ControlVehicleMessage::decode,
+				ControlVehicleMessage::consume);
 		NETWORK_WRAPPER.registerMessage(packetsRegistered++, JerotesSpearAttackPacket.class,
-										JerotesSpearAttackPacket::encode,
-										JerotesSpearAttackPacket::decode,
-										JerotesSpearAttackPacket::consume);
+				JerotesSpearAttackPacket::encode,
+				JerotesSpearAttackPacket::decode,
+				JerotesSpearAttackPacket::consume);
 		NETWORK_WRAPPER.registerMessage(packetsRegistered++, JerotesSpearRushAttackPacket.class,
-										JerotesSpearRushAttackPacket::encode,
-										JerotesSpearRushAttackPacket::decode,
-										JerotesSpearRushAttackPacket::consume);
+				JerotesSpearRushAttackPacket::encode,
+				JerotesSpearRushAttackPacket::decode,
+				JerotesSpearRushAttackPacket::consume);
 
 	}
 

@@ -311,6 +311,9 @@
 
   "key.jerotes.main_spell_use": "Main Spell Use",
   "key.jerotes.add_spell_use": "Add Spell Use",
+  "key.jerotes.change_control_combat": "Change Control Combat",
+  "key.jerotes.vehicle_control_mouse_main": "Vehicle Control Mouse Main",
+  "key.jerotes.vehicle_control_mouse_add": "Vehicle Control Mouse Add",
 
   "subtitle.jerotes.spell": "Spell Hit",
   "subtitle.jerotes.breath": "Breath",

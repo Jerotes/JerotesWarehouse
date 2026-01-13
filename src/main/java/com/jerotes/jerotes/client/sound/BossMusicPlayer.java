@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 
 public class BossMusicPlayer {
+	//有参考Mowzie's Mobs
 	public static BossMusicSoundInstance bossMusic;
 
 	public static void playBossMusic(BossEntity boss) {

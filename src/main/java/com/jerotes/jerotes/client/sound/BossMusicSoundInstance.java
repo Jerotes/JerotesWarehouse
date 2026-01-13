@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Mob;
 
 public class BossMusicSoundInstance extends AbstractTickableSoundInstance {
+	//有参考Mowzie's Mobs
 	private BossEntity boss;
 	private final SoundEvent soundEvent;
 
