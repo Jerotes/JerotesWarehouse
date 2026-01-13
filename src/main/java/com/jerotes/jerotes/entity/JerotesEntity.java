@@ -7,6 +7,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
@@ -36,6 +37,19 @@ public interface JerotesEntity {
         return false;
     }
     default AABB getAttackBoundingBox() {
+        if (this instanceof Mob mob) {
+            Entity entity = mob.getVehicle();
+            AABB aabb;
+            if (entity != null) {
+                AABB aabb1 = entity.getBoundingBox();
+                AABB aabb2 = mob.getBoundingBox();
+                aabb = new AABB(Math.min(aabb2.minX, aabb1.minX), aabb2.minY, Math.min(aabb2.minZ, aabb1.minZ), Math.max(aabb2.maxX, aabb1.maxX), aabb2.maxY, Math.max(aabb2.maxZ, aabb1.maxZ));
+            } else {
+                aabb = mob.getBoundingBox();
+            }
+            AABB aabb1 = aabb.inflate(Math.sqrt(2.04F) - (double) 0.6F, 0.0D, Math.sqrt(2.04F) - (double) 0.6F);
+            return aabb1.inflate(0.5d, 0.5d, 0.5d);
+        }
         return null;
     }
 

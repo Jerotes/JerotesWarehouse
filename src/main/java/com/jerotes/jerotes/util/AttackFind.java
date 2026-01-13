@@ -1,25 +1,22 @@
 package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.JerotesChangeLivingEntity;
-import com.jerotes.jerotes.entity.JerotesEntity;
-import com.jerotes.jerotes.entity.JerotesPlayerBaseEntity;
-import com.jerotes.jerotes.entity.UseShieldEntity;
+import com.jerotes.jerotes.entity.*;
 import com.jerotes.jerotes.forge.JerotesAvoidDamageEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
+import com.jerotes.jerotes.init.JerotesGameRules;
 import com.jerotes.jerotes.item.tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -31,9 +28,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class AttackFind {
     //伤害类型
@@ -545,6 +545,34 @@ public class AttackFind {
         if (livingEntity2.getLastHurtMob() == livingEntity)
             return true;
         return false;
+    }
+
+    public static void individualAttack(Mob mob, double angleThreshold, int n) {
+        LivingEntity tureHurt = null;
+        List<LivingEntity> list = mob.level().getEntitiesOfClass(LivingEntity.class, mob instanceof JerotesEntity jerotes && jerotes.getAttackBoundingBox() != null ? jerotes.getAttackBoundingBox().inflate(5) : mob.getBoundingBox().inflate(5));
+        list.removeIf(livingEntity1 -> !mob.isWithinMeleeAttackRange(livingEntity1));
+        if (list.isEmpty())
+            return;
+        for (LivingEntity hurt : list) {
+            if (hurt == null) continue;
+            if (AttackFind.FindCanNotAttack(mob, hurt)) continue;
+            if (!mob.hasLineOfSight(hurt)) continue;
+            if (!Main.canSeeAngle(mob, hurt.getEyePosition(), angleThreshold)) continue;
+            if (tureHurt == null || tureHurt.distanceTo(mob) > hurt.distanceTo(mob)) {
+                tureHurt = hurt;
+            }
+        }
+        if (tureHurt == null)
+            return;
+        if (mob instanceof ControlVehicleEntity controlVehicleEntity) {
+            controlVehicleEntity.individualAttack(tureHurt, n);
+            controlVehicleEntity.individualAttack(tureHurt);
+        } else {
+            mob.doHurtTarget(tureHurt);
+        }
+    }
+    public static void individualAttack(Mob mob, double angleThreshold) {
+        individualAttack(mob, angleThreshold, 0);
     }
 }
 

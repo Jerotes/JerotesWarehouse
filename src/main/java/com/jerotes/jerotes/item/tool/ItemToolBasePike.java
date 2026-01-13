@@ -543,7 +543,6 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
                 mass = 5;
             }
         }
-
         return vec3.scale(mass);
     }
     public static void causeExtraKnockback(LivingEntity self, Entity entity, float f, Vec3 vec3) {
