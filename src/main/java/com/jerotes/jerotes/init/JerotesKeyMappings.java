@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = {Dist.CLIENT})
-public class JerotesModKeyMappings {
+public class JerotesKeyMappings {
 	public static final KeyMapping MAIN_SPELL_USE = new KeyMapping("key.jerotes.main_spell_use", GLFW.GLFW_KEY_Y, "key.categories.gameplay") {
 		private boolean isDownOld = false;
 		@Override
@@ -48,14 +48,14 @@ public class JerotesModKeyMappings {
 			isDownOld = isDown;
 		}
 	};
-	public static final KeyMapping CHANGE_CONTROL_COMBAT = new KeyMapping("key.jerotes.change_control_combat", GLFW.GLFW_KEY_K, "key.categories.gameplay") {
+	public static final KeyMapping CHANGE_CONTROL_COMBAT_TYPE = new KeyMapping("key.jerotes.change_control_combat_type", GLFW.GLFW_KEY_K, "key.categories.gameplay") {
 		private boolean isDownOld = false;
 		@Override
 		public void setDown(boolean isDown) {
 			super.setDown(isDown);
 			Minecraft mc = Minecraft.getInstance();
-			if (isDownOld != isDown && isDown) {
-				PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getVehicle().getId(), 0));
+			if (isDownOld != isDown && isDown && mc.player != null && mc.player.getVehicle() != null) {
+				PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getVehicle().getId(), 2));
 				if (Minecraft.getInstance().player != null) {
 					ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getVehicle().getId(), 2);
 				}
@@ -63,59 +63,43 @@ public class JerotesModKeyMappings {
 			isDownOld = isDown;
 		}
 	};
-	public static final KeyMapping VEHICLE_CONTROL_MOUSE_MAIN = new KeyMapping("key.jerotes.vehicle_control_mouse_main", GLFW.GLFW_MOUSE_BUTTON_LEFT, "key.categories.gameplay") {
+	public static final KeyMapping VEHICLE_CONTROL_MOUSE_MAIN = new KeyMapping("key.jerotes.vehicle_control_mouse_main", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_LEFT, "key.categories.gameplay") {
 		private boolean isDownOld = false;
 
 		@Override
 		public void setDown(boolean isDown) {
+			super.setDown(isDown);
 			Minecraft mc = Minecraft.getInstance();
-			boolean shouldIntercept = false;
-			if (mc.player != null && mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressMain()) {
-				if (controlVehicleEntity.isManuallyControlCombat()) {
-					shouldIntercept = true;
-				}
-			}
-			if (shouldIntercept && mc.player.getVehicle() != null) {
-				if (isDownOld != isDown && isDown) {
-					PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getVehicle().getId(), 0));
-					if (mc.player != null) {
-						ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getVehicle().getId(), 0);
+			if (isDownOld != isDown && isDown) {
+				if (mc.player != null && mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressMain()) {
+					if (controlVehicleEntity.isManuallyControlCombat()) {
+						PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getVehicle().getId(), 0));
+						if (mc.player != null) {
+							ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getVehicle().getId(), 0);
+						}
 					}
 				}
-				isDownOld = isDown;
-
-				super.setDown(false);
-			} else {
-				super.setDown(isDown);
-				isDownOld = isDown;
 			}
+			isDownOld = isDown;
 		}
 	};
 
-	public static final KeyMapping VEHICLE_CONTROL_MOUSE_ADD = new KeyMapping("key.jerotes.vehicle_control_mouse_add", GLFW.GLFW_MOUSE_BUTTON_RIGHT, "key.categories.gameplay") {
+	public static final KeyMapping VEHICLE_CONTROL_MOUSE_ADD = new KeyMapping("key.jerotes.vehicle_control_mouse_add", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_RIGHT, "key.categories.gameplay") {
 		private boolean isDownOld = false;
 		@Override
 		public void setDown(boolean isDown) {
 			Minecraft mc = Minecraft.getInstance();
-			boolean shouldIntercept = false;
-			if (mc.player != null && mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressAdd()) {
-				if (controlVehicleEntity.isManuallyControlCombat()) {
-					shouldIntercept = true;
-				}
-			}
-			if (shouldIntercept && mc.player.getVehicle() != null) {
-				if (isDownOld != isDown && isDown) {
-					PacketHandler.sendToServer(new ControlVehicleMessage(1, 0, mc.player.getVehicle().getId(), 1));
-					if (mc.player != null) {
-						ControlVehicleMessage.pressAction(mc.player, 1, 0, mc.player.getVehicle().getId(), 1);
+			if (isDownOld != isDown && isDown) {
+				if (mc.player != null && mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressMain()) {
+					if (controlVehicleEntity.isManuallyControlCombat()) {
+						PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getVehicle().getId(), 1));
+						if (mc.player != null) {
+							ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getVehicle().getId(), 1);
+						}
 					}
 				}
-				isDownOld = isDown;
-				super.setDown(false);
-			} else {
-				super.setDown(isDown);
-				isDownOld = isDown;
 			}
+			isDownOld = isDown;
 		}
 	};
 
@@ -123,7 +107,7 @@ public class JerotesModKeyMappings {
 	public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
 		event.register(MAIN_SPELL_USE);
 		event.register(ADD_SPELL_USE);
-		event.register(CHANGE_CONTROL_COMBAT);
+		event.register(CHANGE_CONTROL_COMBAT_TYPE);
 		event.register(VEHICLE_CONTROL_MOUSE_MAIN);
 		event.register(VEHICLE_CONTROL_MOUSE_ADD);
 	}
@@ -135,7 +119,7 @@ public class JerotesModKeyMappings {
 			if (Minecraft.getInstance().screen == null) {
 				MAIN_SPELL_USE.consumeClick();
 				ADD_SPELL_USE.consumeClick();
-				CHANGE_CONTROL_COMBAT.consumeClick();
+				CHANGE_CONTROL_COMBAT_TYPE.consumeClick();
 				VEHICLE_CONTROL_MOUSE_MAIN.consumeClick();
 				VEHICLE_CONTROL_MOUSE_ADD.consumeClick();
 			}

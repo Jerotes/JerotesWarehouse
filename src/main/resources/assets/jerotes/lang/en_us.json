@@ -309,9 +309,13 @@
   "message.jerotes.boss": "Boss",
   "message.jerotes.elite": "Elite",
 
+  "message.jerotes.change_control_combat_type": "Press %1$s to switch combat control mode",
+  "message.jerotes.change_control_combat_type_0": "Combat Control Mode: Manual",
+  "message.jerotes.change_control_combat_type_1": "Combat Control Mode: Auto",
+
   "key.jerotes.main_spell_use": "Main Spell Use",
   "key.jerotes.add_spell_use": "Add Spell Use",
-  "key.jerotes.change_control_combat": "Change Control Combat",
+  "key.jerotes.change_control_combat_type": "Change Control Combat Type",
   "key.jerotes.vehicle_control_mouse_main": "Vehicle Control Mouse Main",
   "key.jerotes.vehicle_control_mouse_add": "Vehicle Control Mouse Add",
 

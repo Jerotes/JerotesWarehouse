@@ -77,7 +77,7 @@ public class ControlVehicleMessage {
                 controlVehicleEntity.pressAdd(player);
             }
             //切换
-            else {
+            else if (isAdd == 2) {
                 controlVehicleEntity.setManuallyControlCombat(!controlVehicleEntity.isManuallyControlCombat());
             }
         }

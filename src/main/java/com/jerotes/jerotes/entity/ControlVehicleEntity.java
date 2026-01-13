@@ -12,8 +12,9 @@ public interface ControlVehicleEntity {
      void setManuallyControlCombat(boolean bl);
      float getManuallyControlCombatCameraChange();
      boolean canBeControl(Player player);
-     float pressMain(Player player);
+     void pressMain(Player player);
      boolean canPressMain();
-     float pressAdd(Player player);
+     void pressAdd(Player player);
      boolean canPressAdd();
+     boolean isTrueManuallyControlCombat();
 }

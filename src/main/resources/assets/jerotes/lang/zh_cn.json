@@ -309,8 +309,15 @@
   "message.jerotes.boss": "Boss",
   "message.jerotes.elite": "精英",
 
+  "message.jerotes.change_control_combat_type": "按%1$s键切换战斗控制模式",
+  "message.jerotes.change_control_combat_type_0": "战斗控制模式：手动",
+  "message.jerotes.change_control_combat_type_1": "战斗控制模式：自动",
+
   "key.jerotes.main_spell_use": "主要施法",
   "key.jerotes.add_spell_use": "附加施法",
+  "key.jerotes.change_control_combat_type": "切换控制战斗模式",
+  "key.jerotes.vehicle_control_mouse_main": "坐骑控制主鼠标",
+  "key.jerotes.vehicle_control_mouse_add": "坐骑控制副鼠标",
 
   "subtitle.jerotes.spell": "法术命中",
   "subtitle.jerotes.breath": "吐息",
