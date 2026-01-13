@@ -54,10 +54,10 @@ public class JerotesKeyMappings {
 		public void setDown(boolean isDown) {
 			super.setDown(isDown);
 			Minecraft mc = Minecraft.getInstance();
-			if (isDownOld != isDown && isDown && mc.player != null && mc.player.getVehicle() != null) {
-				PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getVehicle().getId(), 2));
+			if (isDownOld != isDown && isDown && mc.player != null && mc.player.getControlledVehicle() != null) {
+				PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getControlledVehicle().getId(), 2));
 				if (Minecraft.getInstance().player != null) {
-					ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getVehicle().getId(), 2);
+					ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getControlledVehicle().getId(), 2);
 				}
 			}
 			isDownOld = isDown;
@@ -71,11 +71,11 @@ public class JerotesKeyMappings {
 			super.setDown(isDown);
 			Minecraft mc = Minecraft.getInstance();
 			if (isDownOld != isDown && isDown) {
-				if (mc.player != null && mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressMain()) {
+				if (mc.player != null && mc.player.getControlledVehicle() != null && mc.player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressMain()) {
 					if (controlVehicleEntity.isManuallyControlCombat()) {
-						PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getVehicle().getId(), 0));
+						PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getControlledVehicle().getId(), 0));
 						if (mc.player != null) {
-							ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getVehicle().getId(), 0);
+							ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getControlledVehicle().getId(), 0);
 						}
 					}
 				}
@@ -90,11 +90,11 @@ public class JerotesKeyMappings {
 		public void setDown(boolean isDown) {
 			Minecraft mc = Minecraft.getInstance();
 			if (isDownOld != isDown && isDown) {
-				if (mc.player != null && mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressMain()) {
+				if (mc.player != null && mc.player.getControlledVehicle() != null && mc.player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressMain()) {
 					if (controlVehicleEntity.isManuallyControlCombat()) {
-						PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getVehicle().getId(), 1));
+						PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getControlledVehicle().getId(), 1));
 						if (mc.player != null) {
-							ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getVehicle().getId(), 1);
+							ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getControlledVehicle().getId(), 1);
 						}
 					}
 				}

@@ -2,6 +2,7 @@ package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.entity.ControlVehicleEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.AAExplorationEye;
 import com.jerotes.jerotes.item.tool.ItemToolBaseBow;
@@ -32,6 +33,16 @@ import java.util.Objects;
 public class CameraEvent {
 	private static final ResourceLocation NAUSEA_LOCATION = new ResourceLocation("textures/misc/nausea.png");
 	private static final ResourceLocation DARK_LOCATION = new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/dark.png");
+
+	@SubscribeEvent
+	public static void onCameraSetup(ComputeFovModifierEvent event) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player != null && mc.player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity) {
+			if (controlVehicleEntity.isManuallyControlCombat()) {
+				event.setNewFovModifier(event.getFovModifier() * controlVehicleEntity.getManuallyControlCombatCameraChange());
+			}
+		}
+	}
 
 	//屏幕震动
 	@SubscribeEvent

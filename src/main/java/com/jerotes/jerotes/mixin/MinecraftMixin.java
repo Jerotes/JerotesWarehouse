@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
+import com.jerotes.jerotes.entity.ControlVehicleEntity;
 import com.jerotes.jerotes.item.ItemSpecialAttack;
 import com.jerotes.jerotes.item.SpearBaseItem;
 import net.minecraft.client.Minecraft;
@@ -43,6 +44,10 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
     @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
     private void startAttack(CallbackInfoReturnable<Boolean> cir) {
+        if (player != null && player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.isManuallyControlCombat()) {
+            cir.setReturnValue(false);
+            return;
+        }
         if (this.missTime > 0) {
             return;
         }
