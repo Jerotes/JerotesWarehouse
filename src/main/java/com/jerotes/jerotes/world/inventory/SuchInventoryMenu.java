@@ -37,7 +37,8 @@ public class SuchInventoryMenu extends AbstractContainerMenu {
             container.startOpen(inv.player);
             this.addSlot(new Slot(container, 0, 8, 18) {
                 public boolean mayPlace(ItemStack itemStack) {
-                    return itemStack.is(Items.SADDLE) && !this.hasItem() && mob instanceof Saddleable armor && armor.isSaddleable();
+                    boolean trueItem = mob instanceof ArmorEntity armor ? armor.isSaddle(itemStack) : itemStack.is(Items.SADDLE);
+                    return trueItem && !this.hasItem() && mob instanceof Saddleable armor && armor.isSaddleable();
                 }
 
                 public boolean isActive() {

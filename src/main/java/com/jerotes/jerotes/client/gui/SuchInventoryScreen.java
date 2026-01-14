@@ -98,7 +98,7 @@ public class SuchInventoryScreen extends AbstractContainerScreen<SuchInventoryMe
 
         if (mob instanceof Saddleable saddleable && saddleable.isSaddleable()) {
             if (mob instanceof ArmorEntity armor && armor.notBaseSaddle()) {
-                guiGraphics.blit(armor.notBaseSaddleResourceLocation(), n3 + 7, n4 + 35, 0, 0, 18, 18, 18, 18);
+                guiGraphics.blit(armor.notBaseSaddleResourceLocation(), n3 + 7, n4 + 35 - 18, 0, 0, 18, 18, 18, 18);
             } else {
                 guiGraphics.blit(SADDLE_SLOT_SPRITE, n3 + 7, n4 + 35 - 18, 0, 0, 18, 18, 18, 18);
             }

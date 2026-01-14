@@ -22,6 +22,7 @@
     "MobMixin",
     "NearestAttackableTargetGoalMixin",
     "PlayerMixin",
+    "SaddleItemMixin",
     "ServerGamePacketListenerImplMixin",
     "ServerPlayerMixin",
     "SnowballMixin",

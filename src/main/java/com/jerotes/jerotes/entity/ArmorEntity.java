@@ -5,10 +5,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public interface ArmorEntity {
      boolean hasInventoryChanged(Container container);
      boolean isArmor(ItemStack itemStack);
+     default boolean isSaddle(ItemStack itemStack) {
+          return itemStack.is(Items.SADDLE);
+     }
      boolean canWearArmor();
      default int getInventoryColumns() {
           return 5;
