@@ -2,6 +2,7 @@ package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.entity.Other.JerotesEarthrendBlock;
 import com.jerotes.jerotes.entity.Part.BasePartEntity;
 import com.jerotes.jerotes.entity.Other.JerotesFallingBlock;
 import com.jerotes.jerotes.entity.Interface.SpecialItemInHandEntity;
@@ -497,14 +498,12 @@ public class Main {
 		return findSpawnPositionNearFillOnBlock(entity.level(), entity.blockPosition(), n);
 	}
 
-
 	//下落方块生成
 	public static void spawnFallingBlockByPos(ServerLevel level, BlockPos pos, float fallingFactor) {
 		Random random = new Random();
 		BlockPos abovePos = new BlockPos(pos).above();
 		BlockState block = level.getBlockState(pos);
 		BlockState blockAbove = level.getBlockState(abovePos);
-
 		if (random.nextBoolean()) {
 			fallingFactor += (float) (0.4 + random.nextGaussian() * 0.2);
 		} else {
@@ -516,24 +515,11 @@ public class Main {
 			level.addFreshEntity(fallingBlock);
 		}
 	}
-	public static void spawnFallingBlockByPos(ServerLevel level, BlockPos pos) {
-		RandomSource random = RandomSource.create();
-		BlockPos abovePos = new BlockPos(pos).above();
-		BlockState block = level.getBlockState(pos);
-		BlockState blockAbove = level.getBlockState(abovePos);
-
-		if (!block.isAir() && block.isRedstoneConductor(level, pos) && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
-			JerotesFallingBlock fallingBlock = new JerotesFallingBlock(level, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, block, 10);
-			fallingBlock.push(0, 0.2 + random.nextGaussian() * 0.2, 0);
-			level.addFreshEntity(fallingBlock);
-		}
-	}
 	public static void spawnFallingBlockByPosChance(ServerLevel level, BlockPos pos, float chance) {
 		RandomSource random = RandomSource.create();
 		BlockPos abovePos = new BlockPos(pos).above();
 		BlockState block = level.getBlockState(pos);
 		BlockState blockAbove = level.getBlockState(abovePos);
-
 		if (!block.isAir() && block.isRedstoneConductor(level, pos) && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
 			if (level.getRandom().nextFloat() <= chance) {
 				JerotesFallingBlock fallingBlock = new JerotesFallingBlock(level, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, block, 10);
@@ -542,17 +528,41 @@ public class Main {
 			}
 		}
 	}
+	public static void spawnFallingBlockByPos(ServerLevel level, BlockPos pos) {
+		spawnFallingBlockByPos(level, pos, 1);
+	}
+	//原版下落方块
 	public static void spawnMinecraftFallingBlockByPos(ServerLevel level, BlockPos pos) {
 		RandomSource random = RandomSource.create();
 		BlockPos abovePos = new BlockPos(pos).above();
 		BlockState block = level.getBlockState(pos);
 		BlockState blockAbove = level.getBlockState(abovePos);
-
 		if (!block.isAir() && block.isRedstoneConductor(level, pos) && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
 			FallingBlockEntity fallingBlock = FallingBlockEntity.fall(level, new BlockPos(pos.getX(), pos.getY() + 1, pos.getZ()), block);
 			fallingBlock.dropItem = false;
 			fallingBlock.push(0, 0.2 + random.nextGaussian() * 0.2, 0);
 			level.addFreshEntity(fallingBlock);
+		}
+	}
+	//拔地方块
+	public static void spawnFallingBlockBySelf(ServerLevel serverLevel, LivingEntity caster, int maxDistance, float pushDistance, int pushAngle, int pushTick, float attackDamage) {
+		AABB aabb = AABB.ofSize(new Vec3(caster.getX(), caster.getY() - 1, caster.getZ()), maxDistance, maxDistance, maxDistance);
+		for (BlockPos blockPos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
+			BlockPos abovePos = new BlockPos(blockPos).above();
+			BlockState block = serverLevel.getBlockState(blockPos);
+			BlockState blockAbove = serverLevel.getBlockState(abovePos);
+			if (!block.isAir() && block.isRedstoneConductor(serverLevel, blockPos) && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
+				double d = (-Mth.sin(caster.getYRot() * 0.017453292F));
+				double d2 = Mth.cos(caster.getYRot() * 0.017453292F);
+				JerotesEarthrendBlock fallingBlock = new JerotesEarthrendBlock(serverLevel, (int) (blockPos.getX() + 0.5 + d * 3), blockPos.getY() + 1, (int) (blockPos.getZ() + 0.5 + d2 * 5), block, 20);
+				fallingBlock.setOwner(caster);
+				fallingBlock.push(0, 0.3 + Math.max(0, (fallingBlock.distanceTo(caster) / (maxDistance - maxDistance / 6f))) * 1.5f, 0);
+				if (Main.canSeeAngle(caster, fallingBlock.getPosition(0.5f), pushAngle) && fallingBlock.distanceTo(caster) < pushDistance) {
+					fallingBlock.setPushTick(pushTick);
+					fallingBlock.setAttackDamage(attackDamage);
+				}
+				serverLevel.addFreshEntity(fallingBlock);
+			}
 		}
 	}
 

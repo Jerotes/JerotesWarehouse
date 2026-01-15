@@ -15,25 +15,17 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class JerotesFallingBlock extends Entity {
+public class JerotesFallingBlock extends BaseFallingBlock {
+	//参考了Mowzie's Mobs
 	private static final EntityDataAccessor<String> MODE = SynchedEntityData.defineId(JerotesFallingBlock.class, EntityDataSerializers.STRING);
 	private static final EntityDataAccessor<Float> ANIM_V_Y = SynchedEntityData.defineId(JerotesFallingBlock.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(JerotesFallingBlock.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<BlockState> BLOCK_STATE = SynchedEntityData.defineId(JerotesFallingBlock.class, EntityDataSerializers.BLOCK_STATE);
-	public float animY = 0;
-	public float prevAnimY = 0;
-	public static float DROP_FACTORS = 0.1f;
-
-	public enum FallingMoveType {
-		RENDER_MOVE,
-		OVERALL_MOVE
-	}
+	private static final EntityDataAccessor<Float> GRAVITY = SynchedEntityData.defineId(JerotesFallingBlock.class, EntityDataSerializers.FLOAT);
 
 	public JerotesFallingBlock(EntityType<JerotesFallingBlock> entityType, Level level) {
 		super(entityType, level);
 		this.setDuration(20);
 	}
-
 
 	public JerotesFallingBlock(Level worldIn, BlockState blockState, float vy) {
 		super(JerotesEntityType.JEROTES_FALLING_BLOCK.get(), worldIn);
@@ -54,66 +46,16 @@ public class JerotesFallingBlock extends Entity {
 		this.setDeltaMovement(Vec3.ZERO);
 	}
 
-	protected void defineSynchedData() {
-		this.getEntityData().define(BLOCK_STATE, Blocks.DIRT.defaultBlockState());
-		this.getEntityData().define(MODE, FallingMoveType.RENDER_MOVE.toString());
-		this.getEntityData().define(ANIM_V_Y, 1F);
-		this.getEntityData().define(DURATION, 20);
-	}
-
-	public void tick() {
-		if (getMode() == FallingMoveType.RENDER_MOVE) setDeltaMovement(0, 0, 0);
-		super.tick();
-		if (getMode() == FallingMoveType.OVERALL_MOVE) {
-			if (!this.isNoGravity()) {
-				this.setDeltaMovement(this.getDeltaMovement().subtract(0.0D, DROP_FACTORS / 2, 0.0D));
-			}
-			this.move(MoverType.SELF, this.getDeltaMovement());
-			this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
-			if ((this.onGround() && this.tickCount > this.getDuration()) || this.tickCount > 300) {
-				this.discard();
-			}
-		} else {
-			float animVY = getAnimVY();
-			prevAnimY = animY;
-			animY += animVY;
-			setAnimVY(animVY - DROP_FACTORS);
-			if (animY < -0.5) discard();
-		}
-	}
-
-
 	@Override
 	public void setDeltaMovement(double x, double y, double z) {
 		if (getMode() == FallingMoveType.OVERALL_MOVE) {
 			super.setDeltaMovement(x, y, z);
 		}
 	}
-
-	protected void addAdditionalSaveData(CompoundTag compoundTag) {
-		BlockState blockState = this.getBlockState();
-		compoundTag.put("BlockState", NbtUtils.writeBlockState(blockState));
-		compoundTag.putInt("Duration", getDuration());
-		compoundTag.putInt("TickCount", tickCount);
-		compoundTag.putFloat("VY", getEntityData().get(ANIM_V_Y));
-	}
-
-	protected void readAdditionalSaveData(CompoundTag compoundTag) {
-		this.setBlockState(NbtUtils.readBlockState(this.level().holderLookup(Registries.BLOCK), compoundTag.getCompound("BlockState")));
-		setDuration(compoundTag.getInt("Duration"));
-		tickCount = compoundTag.getInt("TickCount");
-		setAnimVY(compoundTag.getFloat("VY"));
-	}
-
 	public boolean displayFireAnimation() {
 		return false;
 	}
-	public BlockState getBlockState() {
-		return this.entityData.get(BLOCK_STATE);
-	}
-	public void setBlockState(BlockState p_270267_) {
-		this.entityData.set(BLOCK_STATE, p_270267_);
-	}
+
 	public FallingMoveType getMode() {
 		String mode = this.entityData.get(MODE);
 		if (mode.isEmpty()) return FallingMoveType.RENDER_MOVE;
@@ -133,5 +75,52 @@ public class JerotesFallingBlock extends Entity {
 	}
 	public void setDuration(int duration) {
 		getEntityData().set(DURATION, duration);
+	}
+	public float getGravity() {
+		return getEntityData().get(GRAVITY);
+	}
+	public void setGravity(float gravity) {
+		getEntityData().set(GRAVITY, gravity);
+	}
+
+	protected void addAdditionalSaveData(CompoundTag compoundTag) {
+		super.addAdditionalSaveData(compoundTag);
+		compoundTag.putFloat("AnimVY", getAnimVY());
+		compoundTag.putInt("Duration", getDuration());
+		compoundTag.putFloat("Gravity", getGravity());
+	}
+	protected void readAdditionalSaveData(CompoundTag compoundTag) {
+		super.readAdditionalSaveData(compoundTag);
+		setAnimVY(compoundTag.getFloat("AnimVY"));
+		setDuration(compoundTag.getInt("Duration"));
+		this.setGravity(compoundTag.getInt("Gravity"));
+	}
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.getEntityData().define(MODE, FallingMoveType.RENDER_MOVE.toString());
+		this.getEntityData().define(ANIM_V_Y, 1f);
+		this.getEntityData().define(DURATION, 20);
+	}
+
+	public void tick() {
+		if (getMode() == FallingMoveType.RENDER_MOVE) setDeltaMovement(0, 0, 0);
+		super.tick();
+		if (getMode() == FallingMoveType.OVERALL_MOVE) {
+			if (!this.isNoGravity()) {
+				this.setDeltaMovement(this.getDeltaMovement().subtract(0.0D, getGravity() / 2, 0.0D));
+			}
+			this.move(MoverType.SELF, this.getDeltaMovement());
+			this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
+			if ((this.onGround() && this.tickCount > this.getDuration()) || this.tickCount > this.getDuration() * 20) {
+				this.discard();
+			}
+		}
+		else {
+			float animVY = getAnimVY();
+			prevAnimY = animY;
+			animY += animVY;
+			setAnimVY(animVY - getGravity());
+			if (animY < -0.5) discard();
+		}
 	}
 }

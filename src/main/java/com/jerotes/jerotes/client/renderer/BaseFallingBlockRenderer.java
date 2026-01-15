@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.client.renderer;
 
-import com.jerotes.jerotes.entity.Other.JerotesFallingBlock;
+import com.jerotes.jerotes.entity.Other.BaseFallingBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -11,17 +11,18 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
-public class JerotesFallingBlockRenderer extends EntityRenderer<JerotesFallingBlock> {
-	public JerotesFallingBlockRenderer(EntityRendererProvider.Context context) {
+public class BaseFallingBlockRenderer extends EntityRenderer<BaseFallingBlock> {
+	public BaseFallingBlockRenderer(EntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	public void render(JerotesFallingBlock entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+	public void render(BaseFallingBlock entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
 		matrixStackIn.pushPose();
-		if (entityIn.getMode() == JerotesFallingBlock.FallingMoveType.OVERALL_MOVE) {
+		if (entityIn.getMode() == BaseFallingBlock.FallingMoveType.OVERALL_MOVE) {
 			matrixStackIn.translate(-0.5f, 0, -0.5f);
 		} else {
 			matrixStackIn.translate(0, 0.5f, 0);
@@ -33,7 +34,7 @@ public class JerotesFallingBlockRenderer extends EntityRenderer<JerotesFallingBl
 		matrixStackIn.popPose();
 	}
 
-	public ResourceLocation getTextureLocation(JerotesFallingBlock p_114632_) {
+	public @NotNull ResourceLocation getTextureLocation(@NotNull BaseFallingBlock baseFallingBlock) {
 		return TextureAtlas.LOCATION_BLOCKS;
 	}
 }

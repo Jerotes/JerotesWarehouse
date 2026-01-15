@@ -13,6 +13,7 @@ import com.jerotes.jerotes.entity.Magic.Ray.LightningBoltEntity;
 import com.jerotes.jerotes.entity.Magic.Ray.RayofEnfeeblementEntity;
 import com.jerotes.jerotes.entity.Magic.Ray.RayofSicknessEntity;
 import com.jerotes.jerotes.entity.Magic.Target.*;
+import com.jerotes.jerotes.entity.Other.JerotesEarthrendBlock;
 import com.jerotes.jerotes.util.SpawnRules;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -43,6 +44,9 @@ public class JerotesEntityType {
 					.sized(0.6f, 1.8f));
 	public static final RegistryObject<EntityType<JerotesFallingBlock>> JEROTES_FALLING_BLOCK = register("jerotes_falling_block",
 			EntityType.Builder.<JerotesFallingBlock>of(JerotesFallingBlock::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
+					.sized(0.99f, 0.99f));
+	public static final RegistryObject<EntityType<JerotesEarthrendBlock>> JEROTES_EARTHREND_BLOCK = register("jerotes_earthrend_block",
+			EntityType.Builder.<JerotesEarthrendBlock>of(JerotesEarthrendBlock::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(0.99f, 0.99f));
 	public static final RegistryObject<EntityType<MirrorImageEntity>> MIRROR_IMAGE = register("mirror_image",
 			EntityType.Builder.<MirrorImageEntity>of(MirrorImageEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
