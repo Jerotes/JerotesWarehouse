@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.client.layer;
 
-import com.jerotes.jerotes.entity.ArmorEntity;
+import com.jerotes.jerotes.entity.Interface.ArmorEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

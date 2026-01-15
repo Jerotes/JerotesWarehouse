@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.EvokerAbout;
+import com.jerotes.jerotes.entity.Interface.EvokerAbout;
 import com.jerotes.jerotes.goal.EvokerWololoColorMobGoal;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;

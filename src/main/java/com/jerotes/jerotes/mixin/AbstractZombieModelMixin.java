@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.item.tool.ItemToolBasePike;
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import net.minecraft.client.model.AbstractZombieModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;

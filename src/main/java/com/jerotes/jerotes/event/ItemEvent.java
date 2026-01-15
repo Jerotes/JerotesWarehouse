@@ -1,14 +1,14 @@
 package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.UseDaggerEntity;
+import com.jerotes.jerotes.entity.Interface.UseDaggerEntity;
 import com.jerotes.jerotes.init.JerotesSounds;
 import com.jerotes.jerotes.item.AACreativeClaw;
 import com.jerotes.jerotes.item.AAExplorationEye;
-import com.jerotes.jerotes.item.ItemSpecialEffect;
-import com.jerotes.jerotes.item.ItemTwoHanded;
-import com.jerotes.jerotes.item.tool.ItemToolBaseBandage;
-import com.jerotes.jerotes.item.tool.ItemToolBaseDagger;
+import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
+import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseBandage;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseDagger;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;

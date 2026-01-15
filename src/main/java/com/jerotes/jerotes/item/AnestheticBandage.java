@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.item;
 
 import com.jerotes.jerotes.init.JerotesMobEffects;
-import com.jerotes.jerotes.item.ItemAnesthetized;
-import com.jerotes.jerotes.item.tool.ItemToolBaseBandage;
+import com.jerotes.jerotes.item.Interface.ItemAnesthetized;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseBandage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;

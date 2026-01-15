@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.JerotesEntity;
-import com.jerotes.jerotes.entity.TameMobEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.TameMobEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;

@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

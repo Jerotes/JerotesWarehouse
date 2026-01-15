@@ -1,7 +1,8 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.WizardEntity;
-import com.jerotes.jerotes.item.MagicItem;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.WizardEntity;
+import com.jerotes.jerotes.item.Interface.MagicItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
@@ -21,6 +22,13 @@ public class JerotesCombatIIMagicAttackGoal<T extends PathfinderMob> extends Jer
     }
 
     public static boolean isHoldingMagic(Mob mob, float f) {
+        float reach = 8;
+        if (mob instanceof InventoryEntity inventoryEntity) {
+            reach = inventoryEntity.meleeOrRangeDistance();
+        }
+        if (InventoryEntity.isMeleeWeapon(mob.getMainHandItem()) && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) <= reach) {
+            return false;
+        }
         boolean noWeapon = !JerotesRangedBowAttackGoal.isHoldingBow(mob)
                 && !JerotesRangedCrossbowAttackGoal.isHoldingCrossbow(mob)
                 && !JerotesRangedThrowAttackGoal.isHoldingThrow(mob)
@@ -45,8 +53,11 @@ public class JerotesCombatIIMagicAttackGoal<T extends PathfinderMob> extends Jer
     @Override
     public void stop() {
         super.stop();
-        this.mob.setTarget(null);
-        this.mob.setAggressive(false);
+        LivingEntity livingEntity = this.mob.getTarget();
+        if (!(livingEntity != null && this.mob instanceof InventoryEntity inventoryEntity && inventoryEntity.isCanChangeMeleeOrRange())) {
+            this.mob.setAggressive(false);
+            this.mob.setTarget(null);
+        }
     }
 
     @Override

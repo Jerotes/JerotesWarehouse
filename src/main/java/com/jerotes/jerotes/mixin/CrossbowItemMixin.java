@@ -1,11 +1,11 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.JerotesEntity;
-import com.jerotes.jerotes.entity.UseCrossbowEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.UseCrossbowEntity;
 import com.jerotes.jerotes.init.JerotesGameRules;
-import com.jerotes.jerotes.item.NotNormalCrossbow;
-import com.jerotes.jerotes.item.tool.ItemToolBaseCrossbow;
+import com.jerotes.jerotes.item.Interface.NotNormalCrossbow;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseCrossbow;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

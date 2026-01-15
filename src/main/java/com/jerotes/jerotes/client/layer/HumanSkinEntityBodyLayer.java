@@ -3,7 +3,7 @@ package com.jerotes.jerotes.client.layer;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Mob.HumanEntity;
-import com.jerotes.jerotes.entity.SkinEntity;
+import com.jerotes.jerotes.entity.Interface.SkinEntity;
 import com.jerotes.jerotes.util.Color;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;

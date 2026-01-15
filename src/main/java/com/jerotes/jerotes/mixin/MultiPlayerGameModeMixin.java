@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.item.ItemSpecialAttack;
-import com.jerotes.jerotes.item.SpearBaseItem;
+import com.jerotes.jerotes.item.Interface.ItemSpecialAttack;
+import com.jerotes.jerotes.item.Interface.SpearBaseItem;
 import com.jerotes.jerotes.network.JerotesSpearAttackPacket;
 import com.jerotes.jerotes.network.PacketHandler;
 import net.minecraft.client.Minecraft;

@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.client;
 
 import com.jerotes.jerotes.init.JerotesItems;
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

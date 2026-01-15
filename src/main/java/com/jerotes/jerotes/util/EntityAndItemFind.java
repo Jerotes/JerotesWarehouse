@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.util;
 
-import com.jerotes.jerotes.entity.magic.MagicAbout;
+import com.jerotes.jerotes.entity.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypeTags;

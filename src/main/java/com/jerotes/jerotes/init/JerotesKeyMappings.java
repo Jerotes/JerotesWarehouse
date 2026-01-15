@@ -4,7 +4,7 @@
  */
 package com.jerotes.jerotes.init;
 
-import com.jerotes.jerotes.entity.ControlVehicleEntity;
+import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import com.jerotes.jerotes.network.ControlVehicleMessage;
 import com.jerotes.jerotes.network.PacketHandler;
 import com.jerotes.jerotes.network.SpellUseMessage;

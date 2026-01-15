@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.InventoryEntity;
-import com.jerotes.jerotes.entity.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;

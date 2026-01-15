@@ -5,7 +5,7 @@ import com.jerotes.jerotes.alchemy.effect.AAANullAlchemyEffect;
 import com.jerotes.jerotes.alchemy.forge.JerotesAlchemyMaterialConflictEvent;
 import com.jerotes.jerotes.alchemy.forge.JerotesAlchemyMaterialEffectEvent;
 import com.jerotes.jerotes.alchemy.forge.JerotesAlchemySpecialEvent;
-import com.jerotes.jerotes.entity.SpellUseEntity;
+import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;

@@ -1,9 +1,9 @@
 package com.jerotes.jerotes.enchantment;
 
 import com.jerotes.jerotes.init.JerotesEnchantments;
-import com.jerotes.jerotes.item.ItemToolBaseThrowingSpear;
-import com.jerotes.jerotes.item.tool.ItemToolBasePike;
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.item.Interface.ItemToolBaseThrowingSpear;
+import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;

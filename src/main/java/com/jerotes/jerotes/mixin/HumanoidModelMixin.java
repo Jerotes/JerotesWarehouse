@@ -2,8 +2,8 @@ package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.client.model.Modelspecial_action;
-import com.jerotes.jerotes.item.tool.ItemToolBasePike;
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;

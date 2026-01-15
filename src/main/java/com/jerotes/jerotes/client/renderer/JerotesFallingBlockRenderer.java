@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.client.renderer;
 
-import com.jerotes.jerotes.entity.JerotesFallingBlock;
+import com.jerotes.jerotes.entity.Other.JerotesFallingBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

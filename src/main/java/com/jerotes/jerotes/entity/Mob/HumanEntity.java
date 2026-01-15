@@ -1,11 +1,11 @@
 package com.jerotes.jerotes.entity.Mob;
 
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.*;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.goal.*;
 import com.jerotes.jerotes.init.JerotesGameRules;
 import com.jerotes.jerotes.init.JerotesSounds;
-import com.jerotes.jerotes.item.tool.ItemToolBaseCrossbow;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseCrossbow;
 import com.jerotes.jerotes.spell.MagicType;
 import com.jerotes.jerotes.spell.SpellTypeInterface;
 import com.jerotes.jerotes.util.EntityFactionFind;

@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.item;
 
+import com.jerotes.jerotes.item.Interface.ItemBaseGiantBeastArmor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeableLeatherItem;
 

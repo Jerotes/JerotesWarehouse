@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.EvokerAbout;
+import com.jerotes.jerotes.entity.Interface.EvokerAbout;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;

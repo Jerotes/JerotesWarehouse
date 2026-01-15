@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.item;
 
+import com.jerotes.jerotes.item.Interface.MagicItem;
 import com.jerotes.jerotes.spell.*;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.ChatFormatting;

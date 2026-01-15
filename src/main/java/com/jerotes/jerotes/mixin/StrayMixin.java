@@ -1,9 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.StrayAbout;
-import com.jerotes.jerotes.item.ItemBeastArmor;
-import net.minecraft.resources.ResourceLocation;
+import com.jerotes.jerotes.entity.Interface.StrayAbout;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;

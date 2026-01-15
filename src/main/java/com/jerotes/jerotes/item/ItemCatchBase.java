@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.CatchEntity;
+import com.jerotes.jerotes.entity.Interface.CatchEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

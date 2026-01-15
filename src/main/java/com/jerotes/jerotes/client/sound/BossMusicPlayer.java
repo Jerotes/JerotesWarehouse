@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.client.sound;
 
-import com.jerotes.jerotes.entity.BossEntity;
+import com.jerotes.jerotes.entity.Interface.BossEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;

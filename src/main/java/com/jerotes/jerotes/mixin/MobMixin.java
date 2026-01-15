@@ -1,13 +1,12 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.BaseEntityAbout;
-import com.jerotes.jerotes.entity.CamelAbout;
-import com.jerotes.jerotes.entity.StrayAbout;
-import com.jerotes.jerotes.entity.UseBowEntity;
+import com.jerotes.jerotes.entity.Interface.BaseEntityAbout;
+import com.jerotes.jerotes.entity.Interface.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.StrayAbout;
+import com.jerotes.jerotes.entity.Interface.UseBowEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
-import com.jerotes.jerotes.item.tool.ItemToolBaseUmbrella;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseUmbrella;
 import com.jerotes.jerotes.util.AttackFind;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

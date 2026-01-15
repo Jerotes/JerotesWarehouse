@@ -6,12 +6,12 @@
  */
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.BaseEntityAbout;
-import com.jerotes.jerotes.entity.InventoryEntity;
-import com.jerotes.jerotes.entity.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.BaseEntityAbout;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.init.JerotesEnchantments;
-import com.jerotes.jerotes.item.tool.ItemToolBasePike;
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -24,7 +24,6 @@ import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;

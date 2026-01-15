@@ -3,9 +3,9 @@
  */
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.InventoryEntity;
-import com.jerotes.jerotes.entity.JerotesEntity;
-import com.jerotes.jerotes.entity.JerotesPlayerBaseEntity;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesPlayerBaseEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;

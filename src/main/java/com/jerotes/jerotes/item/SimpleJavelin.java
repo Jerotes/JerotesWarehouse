@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.arrow.BaseJavelinEntity;
-import com.jerotes.jerotes.entity.arrow.ThrownSimpleJavelinEntity;
-import com.jerotes.jerotes.item.tool.ItemToolBaseJavelin;
+import com.jerotes.jerotes.entity.Arrow.BaseJavelinEntity;
+import com.jerotes.jerotes.entity.Arrow.ThrownSimpleJavelinEntity;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseJavelin;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

@@ -1,14 +1,11 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.arrow.BaseJavelinEntity;
-import com.jerotes.jerotes.entity.arrow.ThrownExplosiveJavelinEntity;
-import com.jerotes.jerotes.entity.arrow.ThrownHealJavelinEntity;
-import com.jerotes.jerotes.item.tool.ItemToolBaseJavelin;
+import com.jerotes.jerotes.entity.Arrow.BaseJavelinEntity;
+import com.jerotes.jerotes.entity.Arrow.ThrownExplosiveJavelinEntity;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseJavelin;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

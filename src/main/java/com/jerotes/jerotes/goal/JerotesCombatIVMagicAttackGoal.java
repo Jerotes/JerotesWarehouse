@@ -1,7 +1,8 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.WizardEntity;
-import com.jerotes.jerotes.item.MagicItem;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.WizardEntity;
+import com.jerotes.jerotes.item.Interface.MagicItem;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -41,6 +42,13 @@ public class JerotesCombatIVMagicAttackGoal<T extends PathfinderMob> extends Goa
     }
 
     public static boolean isHoldingMagic(Mob mob, float f) {
+        float reach = 8;
+        if (mob instanceof InventoryEntity inventoryEntity) {
+            reach = inventoryEntity.meleeOrRangeDistance();
+        }
+        if (InventoryEntity.isMeleeWeapon(mob.getMainHandItem()) && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) <= reach) {
+            return false;
+        }
         boolean main = mob.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelp(mob.getMainHandItem()) && !magicItem.isMelee(mob.getMainHandItem()) && magicItem.getSpellDistance(mob.getMainHandItem()) > f;
         boolean off = mob.getOffhandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelp(mob.getOffhandItem()) && !magicItem.isMelee(mob.getOffhandItem()) && magicItem.getSpellDistance(mob.getMainHandItem()) > f;
         boolean mainSpell = (mob instanceof WizardEntity wizardEntity && !wizardEntity.MainSpellList().isEmpty());
@@ -62,8 +70,11 @@ public class JerotesCombatIVMagicAttackGoal<T extends PathfinderMob> extends Goa
     public void stop() {
         super.stop();
         this.seeTime = 0;
-        this.mob.setTarget(null);
-        this.mob.setAggressive(false);
+        LivingEntity livingEntity = this.mob.getTarget();
+        if (!(livingEntity != null && this.mob instanceof InventoryEntity inventoryEntity && inventoryEntity.isCanChangeMeleeOrRange())) {
+            this.mob.setAggressive(false);
+            this.mob.setTarget(null);
+        }
     }
 
     @Override

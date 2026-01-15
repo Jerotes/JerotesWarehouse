@@ -1,10 +1,10 @@
 package com.jerotes.jerotes.client.gui;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.BossEntity;
-import com.jerotes.jerotes.entity.EliteEntity;
-import com.jerotes.jerotes.entity.InventoryEntity;
-import com.jerotes.jerotes.entity.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.BossEntity;
+import com.jerotes.jerotes.entity.Interface.EliteEntity;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.network.*;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;

@@ -1,10 +1,10 @@
 package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.EliteEntity;
-import com.jerotes.jerotes.entity.FireAbsorptionEntity;
-import com.jerotes.jerotes.entity.FreezeAbsorptionEntity;
-import com.jerotes.jerotes.entity.LightningAbsorptionEntity;
+import com.jerotes.jerotes.entity.Interface.EliteEntity;
+import com.jerotes.jerotes.entity.Interface.FireAbsorptionEntity;
+import com.jerotes.jerotes.entity.Interface.FreezeAbsorptionEntity;
+import com.jerotes.jerotes.entity.Interface.LightningAbsorptionEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesSounds;

@@ -1,11 +1,11 @@
 package com.jerotes.jerotes.entity.Mob;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.jerotes.jerotes.entity.JerotesEntity;
-import com.jerotes.jerotes.entity.UseShieldEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.UseShieldEntity;
 import com.jerotes.jerotes.goal.JerotesMoveToGoal;
-import com.jerotes.jerotes.item.ItemTwoHanded;
-import com.jerotes.jerotes.item.tool.ItemToolBasePike;
+import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
+import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

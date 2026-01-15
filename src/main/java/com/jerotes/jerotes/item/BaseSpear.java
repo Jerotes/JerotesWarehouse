@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpear;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpear;
 import net.minecraft.world.item.Tier;
 
 public class BaseSpear extends ItemToolBaseSpear {

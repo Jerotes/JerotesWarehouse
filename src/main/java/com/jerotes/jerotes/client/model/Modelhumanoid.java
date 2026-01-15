@@ -2,14 +2,12 @@ package com.jerotes.jerotes.client.model;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.client.animation.HumanoidAnimation;
-import com.jerotes.jerotes.entity.*;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.entity.Mob.HumanEntity;
 import com.jerotes.jerotes.entity.Mob.TestEntity;
-import com.jerotes.jerotes.item.ItemTwoHanded;
-import com.jerotes.jerotes.item.JerotesItemThrownJavelinUse;
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
+import com.jerotes.jerotes.item.Interface.JerotesItemThrownJavelinUse;
 import net.minecraft.client.model.AnimationUtils;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

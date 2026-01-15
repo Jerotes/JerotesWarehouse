@@ -1,7 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.ArmorEntity;
-import com.jerotes.jerotes.entity.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.ArmorEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;

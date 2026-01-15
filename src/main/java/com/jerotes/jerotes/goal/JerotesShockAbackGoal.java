@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.goal;
 
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.ShockEntity;
-import com.jerotes.jerotes.entity.TameMobEntity;
+import com.jerotes.jerotes.entity.Interface.ShockEntity;
+import com.jerotes.jerotes.entity.Interface.TameMobEntity;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;

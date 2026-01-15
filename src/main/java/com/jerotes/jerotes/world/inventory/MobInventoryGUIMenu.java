@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.world.inventory;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.InventoryEntity;
-import com.jerotes.jerotes.entity.SpellUseEntity;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
 import com.jerotes.jerotes.init.JerotesMenus;
 import com.jerotes.jerotes.util.Main;
 import com.mojang.datafixers.util.Pair;

@@ -2,11 +2,13 @@ package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.ControlVehicleEntity;
+import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.AAExplorationEye;
-import com.jerotes.jerotes.item.tool.ItemToolBaseBow;
-import com.jerotes.jerotes.item.tool.ItemToolBaseDagger;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseBow;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseDagger;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseFlail;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseWhip;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.spell.*;
 import com.jerotes.jerotes.util.Main;
@@ -71,6 +73,16 @@ public class CameraEvent {
 				float f = player.getTicksUsingItem() / 20.0F;
 				f = f > 1.0F ? 1.0F : f * f;
 				event.setNewFovModifier((float) Mth.lerp(Minecraft.getInstance().options.fovEffectScale().get(), 1.0F, (event.getFovModifier() * (1.0F - f * 0.15F))));
+			}
+			else if (useItem instanceof ItemToolBaseFlail itemToolBaseFlail) {
+				float f = player.getTicksUsingItem() / (float) itemToolBaseFlail.useTick;
+				f = f > 1.0F ? 1.0F : f * f;
+				event.setNewFovModifier((float) Mth.lerp(Minecraft.getInstance().options.fovEffectScale().get(), 1.0F, (event.getFovModifier() * (1.0F - f * 0.05F))));
+			}
+			else if (useItem instanceof ItemToolBaseWhip itemToolBaseWhip) {
+				float f = player.getTicksUsingItem() / (float) itemToolBaseWhip.useTick;
+				f = f > 1.0F ? 1.0F : f * f;
+				event.setNewFovModifier((float) Mth.lerp(Minecraft.getInstance().options.fovEffectScale().get(), 1.0F, (event.getFovModifier() * (1.0F - f * 0.05F))));
 			}
 			else if (useItem instanceof AAExplorationEye) {
 				float f = player.getTicksUsingItem() / 20.0F;

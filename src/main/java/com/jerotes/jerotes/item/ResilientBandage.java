@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.item.tool.*;
+import com.jerotes.jerotes.item.Tool.*;
 import net.minecraft.world.item.Rarity;
 
 public class ResilientBandage extends ItemToolBaseBandage {

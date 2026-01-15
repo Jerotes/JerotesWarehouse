@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityFactionFind;

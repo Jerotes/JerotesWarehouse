@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.CanBeIllagerFactionEntity;
+import com.jerotes.jerotes.entity.Interface.CanBeIllagerFactionEntity;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.world.entity.EntitySelector;

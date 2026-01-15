@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.goal;
 
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
 import com.jerotes.jerotes.util.Main;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
@@ -14,7 +14,6 @@ import com.tacz.guns.resource.pojo.data.gun.GunData;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;

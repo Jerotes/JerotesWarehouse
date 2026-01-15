@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.arrow.BaseJavelinEntity;
-import com.jerotes.jerotes.item.tool.ItemToolBaseJavelin;
-import com.jerotes.jerotes.entity.arrow.*;
+import com.jerotes.jerotes.entity.Arrow.BaseJavelinEntity;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseJavelin;
+import com.jerotes.jerotes.entity.Arrow.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.goal;
 
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.sounds.SoundEvent;

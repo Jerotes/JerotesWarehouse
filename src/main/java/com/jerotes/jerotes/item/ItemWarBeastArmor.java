@@ -1,5 +1,7 @@
 package com.jerotes.jerotes.item;
 
+import com.jerotes.jerotes.item.Interface.ItemBaseWarBeastArmor;
+import com.jerotes.jerotes.item.Interface.ItemBeastArmor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

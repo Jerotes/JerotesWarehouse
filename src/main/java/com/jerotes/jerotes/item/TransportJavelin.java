@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.arrow.BaseJavelinEntity;
-import com.jerotes.jerotes.item.tool.ItemToolBaseJavelin;
+import com.jerotes.jerotes.entity.Arrow.BaseJavelinEntity;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseJavelin;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import com.jerotes.jerotes.entity.arrow.*;
+import com.jerotes.jerotes.entity.Arrow.*;
 
 import javax.annotation.Nullable;
 import java.util.List;

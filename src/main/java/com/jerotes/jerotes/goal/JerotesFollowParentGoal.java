@@ -6,7 +6,7 @@
  */
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.TameMobEntity;
+import com.jerotes.jerotes.entity.Interface.TameMobEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;

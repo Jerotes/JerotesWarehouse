@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.ControlVehicleEntity;
-import com.jerotes.jerotes.item.ItemSpecialAttack;
-import com.jerotes.jerotes.item.SpearBaseItem;
+import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
+import com.jerotes.jerotes.item.Interface.ItemSpecialAttack;
+import com.jerotes.jerotes.item.Interface.SpearBaseItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;

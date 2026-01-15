@@ -1,14 +1,11 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.arrow.BaseJavelinEntity;
-import com.jerotes.jerotes.entity.arrow.ThrownBoneThrowingSpearEntity;
-import com.jerotes.jerotes.entity.arrow.ThrownJavelinStoneEntity;
+import com.jerotes.jerotes.entity.Arrow.BaseJavelinEntity;
+import com.jerotes.jerotes.entity.Arrow.ThrownBoneThrowingSpearEntity;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesSounds;
-import com.jerotes.jerotes.item.tool.ItemToolBaseJavelin;
-import com.jerotes.jerotes.item.tool.ItemToolBaseThrowingSpearOfJavelin;
-import com.jerotes.jerotes.item.tool.ItemToolBaseThrowingSpearOfSpear;
-import net.minecraft.tags.ItemTags;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseThrowingSpearOfJavelin;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseThrowingSpearOfSpear;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;

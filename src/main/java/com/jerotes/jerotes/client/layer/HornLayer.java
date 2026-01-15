@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.client.layer;
 
-import com.jerotes.jerotes.entity.HornableEntity;
+import com.jerotes.jerotes.entity.Interface.HornableEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

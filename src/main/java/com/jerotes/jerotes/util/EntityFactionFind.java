@@ -1,11 +1,10 @@
 package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.CanBeIllagerFactionEntity;
-import com.jerotes.jerotes.entity.CanBeSerponFactionEntity;
-import com.jerotes.jerotes.entity.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.CanBeIllagerFactionEntity;
+import com.jerotes.jerotes.entity.Interface.CanBeSerponFactionEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.forge.JerotesFactionEvent;
-import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
@@ -13,7 +12,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.WaterAnimal;

@@ -1,18 +1,18 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.JerotesFallingBlock;
+import com.jerotes.jerotes.entity.Other.JerotesFallingBlock;
 import com.jerotes.jerotes.entity.Mob.HumanEntity;
 import com.jerotes.jerotes.entity.Mob.JerotesPlayerEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
 import com.jerotes.jerotes.entity.Mob.TestEntity;
-import com.jerotes.jerotes.entity.arrow.*;
-import com.jerotes.jerotes.entity.magic.Breath.PoisonBreathEntity;
-import com.jerotes.jerotes.entity.magic.MagicMissile.MagicMissileEntity;
-import com.jerotes.jerotes.entity.magic.Ray.LightningBoltEntity;
-import com.jerotes.jerotes.entity.magic.Ray.RayofEnfeeblementEntity;
-import com.jerotes.jerotes.entity.magic.Ray.RayofSicknessEntity;
-import com.jerotes.jerotes.entity.magic.Target.*;
+import com.jerotes.jerotes.entity.Arrow.*;
+import com.jerotes.jerotes.entity.Magic.Breath.PoisonBreathEntity;
+import com.jerotes.jerotes.entity.Magic.MagicMissile.MagicMissileEntity;
+import com.jerotes.jerotes.entity.Magic.Ray.LightningBoltEntity;
+import com.jerotes.jerotes.entity.Magic.Ray.RayofEnfeeblementEntity;
+import com.jerotes.jerotes.entity.Magic.Ray.RayofSicknessEntity;
+import com.jerotes.jerotes.entity.Magic.Target.*;
 import com.jerotes.jerotes.util.SpawnRules;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

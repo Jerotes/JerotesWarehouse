@@ -1,15 +1,14 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.CamelAbout;
-import com.jerotes.jerotes.entity.CanNotControlEntity;
-import com.jerotes.jerotes.entity.StrayAbout;
+import com.jerotes.jerotes.entity.Interface.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.CanNotControlEntity;
+import com.jerotes.jerotes.entity.Interface.StrayAbout;
 import com.jerotes.jerotes.init.JerotesItems;
-import com.jerotes.jerotes.item.tool.ItemToolBaseUmbrella;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseUmbrella;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -17,11 +16,9 @@ import net.minecraft.world.entity.monster.Husk;
 import net.minecraft.world.entity.monster.Stray;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
-import org.checkerframework.checker.units.qual.C;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,7 +28,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {

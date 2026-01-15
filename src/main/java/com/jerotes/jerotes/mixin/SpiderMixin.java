@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.CanNotSkeletonSpiderEntity;
+import com.jerotes.jerotes.entity.Interface.CanNotSkeletonSpiderEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;

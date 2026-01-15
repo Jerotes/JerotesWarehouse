@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.client.layer;
 
-import com.jerotes.jerotes.entity.TameMobEntity;
+import com.jerotes.jerotes.entity.Interface.TameMobEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;

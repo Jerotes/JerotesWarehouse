@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.ChangePoseAbout;
-import com.jerotes.jerotes.entity.HasHomePosEntity;
+import com.jerotes.jerotes.entity.Interface.ChangePoseAbout;
+import com.jerotes.jerotes.entity.Interface.HasHomePosEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;

@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.client.animation;
 
-import com.jerotes.jerotes.entity.JerotesChangeLivingEntity;
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.jerotes.jerotes.util.Ease;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;

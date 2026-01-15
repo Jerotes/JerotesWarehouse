@@ -1,10 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.JerotesPlayerBaseEntity;
-import com.jerotes.jerotes.entity.Mob.JerotesPlayerEntity;
-import com.jerotes.jerotes.init.JerotesEntityType;
-import com.jerotes.jerotes.util.AttackFind;
-import com.jerotes.jerotes.util.Main;
+import com.jerotes.jerotes.entity.Interface.JerotesPlayerBaseEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

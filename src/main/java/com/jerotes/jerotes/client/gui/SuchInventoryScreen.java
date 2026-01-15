@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.client.gui;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.ArmorEntity;
+import com.jerotes.jerotes.entity.Interface.ArmorEntity;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.world.inventory.SuchInventoryMenu;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,9 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Saddleable;
-import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class SuchInventoryScreen extends AbstractContainerScreen<SuchInventoryMenu> {

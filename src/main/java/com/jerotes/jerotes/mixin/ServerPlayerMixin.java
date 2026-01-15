@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.ServerPlayerEntity;
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.entity.Interface.ServerPlayerEntity;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

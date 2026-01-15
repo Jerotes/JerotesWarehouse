@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.client.model;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.SkinEntity;
+import com.jerotes.jerotes.entity.Interface.SkinEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

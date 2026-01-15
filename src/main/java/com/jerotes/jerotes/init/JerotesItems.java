@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.ArmorEntity;
-import com.jerotes.jerotes.entity.arrow.AnestheticArrowEntity;
+import com.jerotes.jerotes.entity.Interface.ArmorEntity;
+import com.jerotes.jerotes.entity.Arrow.AnestheticArrowEntity;
 import com.jerotes.jerotes.item.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -15,7 +15,6 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;

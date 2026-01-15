@@ -3,8 +3,8 @@
  */
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.ChangePoseAbout;
-import com.jerotes.jerotes.entity.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.ChangePoseAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;

@@ -2,7 +2,7 @@ package com.jerotes.jerotes.client.renderer;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.client.model.Modeljavelin;
-import com.jerotes.jerotes.entity.arrow.ThrownJavelinIronEntity;
+import com.jerotes.jerotes.entity.Arrow.ThrownJavelinIronEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

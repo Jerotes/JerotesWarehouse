@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.InventoryEntity;
-import com.jerotes.jerotes.entity.UseThrowEntity;
-import com.jerotes.jerotes.entity.UseThrownJavelinEntity;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.UseThrowEntity;
+import com.jerotes.jerotes.entity.Interface.UseThrownJavelinEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;

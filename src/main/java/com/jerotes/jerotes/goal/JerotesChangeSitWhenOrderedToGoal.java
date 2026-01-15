@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.ChangePoseAbout;
-import com.jerotes.jerotes.entity.TameMobEntity;
+import com.jerotes.jerotes.entity.Interface.ChangePoseAbout;
+import com.jerotes.jerotes.entity.Interface.TameMobEntity;
 
 public class JerotesChangeSitWhenOrderedToGoal extends JerotesTameMobSitWhenOrderedToGoal {
     private final ChangePoseAbout tameMob;

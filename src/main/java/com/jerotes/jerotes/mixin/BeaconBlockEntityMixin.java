@@ -1,7 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.JerotesPlayerBaseEntity;
-import com.jerotes.jerotes.entity.Mob.JerotesPlayerEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesPlayerBaseEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;

@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.client.renderer;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.arrow.AnestheticArrowEntity;
+import com.jerotes.jerotes.entity.Arrow.AnestheticArrowEntity;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;

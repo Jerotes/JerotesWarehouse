@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.CarvedEntity;
+import com.jerotes.jerotes.entity.Interface.CarvedEntity;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.world.entity.EntitySelector;

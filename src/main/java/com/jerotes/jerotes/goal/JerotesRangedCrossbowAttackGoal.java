@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.InventoryEntity;
-import com.jerotes.jerotes.entity.JerotesEntity;
-import com.jerotes.jerotes.item.tool.ItemToolBaseCrossbow;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseCrossbow;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;

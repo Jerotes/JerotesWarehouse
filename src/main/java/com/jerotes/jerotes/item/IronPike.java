@@ -1,10 +1,7 @@
 package com.jerotes.jerotes.item;
 
 import com.jerotes.jerotes.init.JerotesSounds;
-import com.jerotes.jerotes.item.tool.ItemToolBasePike;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.Tiers;
 

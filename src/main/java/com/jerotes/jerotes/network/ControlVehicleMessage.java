@@ -1,14 +1,10 @@
 
 package com.jerotes.jerotes.network;
 
-import com.jerotes.jerotes.entity.ControlVehicleEntity;
-import com.jerotes.jerotes.spell.*;
-import com.jerotes.jerotes.util.Main;
+import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.common.Mod;

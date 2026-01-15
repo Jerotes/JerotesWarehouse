@@ -2,8 +2,8 @@ package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.EliteEntity;
-import com.jerotes.jerotes.entity.SpellUseEntity;
+import com.jerotes.jerotes.entity.Interface.EliteEntity;
+import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
 import com.jerotes.jerotes.forge.JerotesUseSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.init.JerotesMobEffects;

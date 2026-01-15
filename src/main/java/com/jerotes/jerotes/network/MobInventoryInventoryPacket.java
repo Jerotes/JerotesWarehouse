@@ -1,7 +1,7 @@
 
 package com.jerotes.jerotes.network;
 
-import com.jerotes.jerotes.entity.InventoryEntity;
+import com.jerotes.jerotes.entity.Interface.InventoryEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;

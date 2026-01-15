@@ -1,13 +1,10 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.CamelAbout;
-import com.jerotes.jerotes.entity.StrayAbout;
-import net.minecraft.ChatFormatting;
+import com.jerotes.jerotes.entity.Interface.CamelAbout;
 import net.minecraft.client.model.CamelModel;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.camel.Camel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

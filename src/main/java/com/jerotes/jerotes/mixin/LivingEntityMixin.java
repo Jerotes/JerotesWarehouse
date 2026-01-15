@@ -1,17 +1,16 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.CamelAbout;
-import com.jerotes.jerotes.entity.JerotesChangeLivingEntity;
-import com.jerotes.jerotes.entity.StrayAbout;
+import com.jerotes.jerotes.entity.Interface.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
+import com.jerotes.jerotes.entity.Interface.StrayAbout;
 import com.jerotes.jerotes.init.JerotesMobEffects;
-import com.jerotes.jerotes.item.MeleeItem;
-import com.jerotes.jerotes.item.tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.item.Interface.MeleeItem;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.jerotes.jerotes.network.JerotesSpearRushAttackPacket;
 import com.jerotes.jerotes.network.PacketHandler;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;

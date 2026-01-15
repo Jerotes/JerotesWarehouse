@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.world.inventory;
 
 
-import com.jerotes.jerotes.entity.ArmorEntity;
+import com.jerotes.jerotes.entity.Interface.ArmorEntity;
 import com.jerotes.jerotes.init.JerotesMenus;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.network.FriendlyByteBuf;

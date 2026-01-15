@@ -1,13 +1,12 @@
 package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.AnesthetizedAttackEntity;
-import com.jerotes.jerotes.entity.BasePartLivingEntity;
-import com.jerotes.jerotes.entity.JerotesPlayerBaseEntity;
-import com.jerotes.jerotes.entity.Mob.JerotesPlayerEntity;
+import com.jerotes.jerotes.entity.Interface.AnesthetizedAttackEntity;
+import com.jerotes.jerotes.entity.Part.BasePartLivingEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesPlayerBaseEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
-import com.jerotes.jerotes.item.ItemAnesthetized;
+import com.jerotes.jerotes.item.Interface.ItemAnesthetized;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.server.level.ServerLevel;
