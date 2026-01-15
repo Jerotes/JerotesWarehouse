@@ -16,6 +16,7 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.TEST.get(), TestRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_FALLING_BLOCK.get(), BaseFallingBlockRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_EARTHREND_BLOCK.get(), BaseFallingBlockRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.JEROTES_UNEVEN_BLOCK.get(), JerotesUnevenBlockRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.MIRROR_IMAGE.get(), MirrorImageRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.THROWN_SIMPLE_JAVELIN.get(), ThrownSimpleJavelinRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.THROWN_HEAL_JAVELIN.get(), ThrownHealJavelinRenderer::new);

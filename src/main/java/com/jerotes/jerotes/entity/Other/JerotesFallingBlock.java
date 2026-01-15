@@ -57,12 +57,12 @@ public class JerotesFallingBlock extends BaseFallingBlock {
 	}
 
 	public FallingMoveType getMode() {
-		String mode = this.entityData.get(MODE);
+		String mode = this.getEntityData().get(MODE);
 		if (mode.isEmpty()) return FallingMoveType.RENDER_MOVE;
 		return FallingMoveType.valueOf(mode);
 	}
 	public void setMode(FallingMoveType type) {
-		this.entityData.set(MODE, type.toString());
+		this.getEntityData().set(MODE, type.toString());
 	}
 	public float getAnimVY() {
 		return getEntityData().get(ANIM_V_Y);
@@ -82,26 +82,30 @@ public class JerotesFallingBlock extends BaseFallingBlock {
 	public void setGravity(float gravity) {
 		getEntityData().set(GRAVITY, gravity);
 	}
-
+	@Override
 	protected void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
 		compoundTag.putFloat("AnimVY", getAnimVY());
 		compoundTag.putInt("Duration", getDuration());
 		compoundTag.putFloat("Gravity", getGravity());
 	}
+	@Override
 	protected void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
-		setAnimVY(compoundTag.getFloat("AnimVY"));
-		setDuration(compoundTag.getInt("Duration"));
+		this.setAnimVY(compoundTag.getFloat("AnimVY"));
+		this.setDuration(compoundTag.getInt("Duration"));
 		this.setGravity(compoundTag.getInt("Gravity"));
 	}
+	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.getEntityData().define(MODE, FallingMoveType.RENDER_MOVE.toString());
 		this.getEntityData().define(ANIM_V_Y, 1f);
 		this.getEntityData().define(DURATION, 20);
+		this.getEntityData().define(GRAVITY, 0.1f);
 	}
 
+	@Override
 	public void tick() {
 		if (getMode() == FallingMoveType.RENDER_MOVE) setDeltaMovement(0, 0, 0);
 		super.tick();

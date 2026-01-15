@@ -3,6 +3,7 @@ package com.jerotes.jerotes.util;
 import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Other.JerotesEarthrendBlock;
+import com.jerotes.jerotes.entity.Other.JerotesUnevenBlock;
 import com.jerotes.jerotes.entity.Part.BasePartEntity;
 import com.jerotes.jerotes.entity.Other.JerotesFallingBlock;
 import com.jerotes.jerotes.entity.Interface.SpecialItemInHandEntity;
@@ -60,6 +61,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -337,7 +339,7 @@ public class Main {
 			return false;
 		}
 		if (self instanceof EnderMan enderMan && livingEntity instanceof Player player) {
-			if (net.minecraftforge.common.ForgeHooks.shouldSuppressEnderManAnger(enderMan, player, itemStack)) {
+			if (ForgeHooks.shouldSuppressEnderManAnger(enderMan, player, itemStack)) {
 				return false;
 			}
 		}
@@ -498,7 +500,7 @@ public class Main {
 		return findSpawnPositionNearFillOnBlock(entity.level(), entity.blockPosition(), n);
 	}
 
-	//下落方块生成
+	//下落方块
 	public static void spawnFallingBlockByPos(ServerLevel level, BlockPos pos, float fallingFactor) {
 		Random random = new Random();
 		BlockPos abovePos = new BlockPos(pos).above();
@@ -562,6 +564,41 @@ public class Main {
 					fallingBlock.setAttackDamage(attackDamage);
 				}
 				serverLevel.addFreshEntity(fallingBlock);
+			}
+		}
+	}
+	//凹凸方块
+	public static void spawnUnevenBlock(ServerLevel level, BlockPos pos) {
+		BlockPos abovePos = new BlockPos(pos).above();
+		BlockState block = level.getBlockState(pos);
+		BlockState blockAbove = level.getBlockState(abovePos);
+		if (!block.isAir() && block.isRedstoneConductor(level, pos) && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
+			JerotesUnevenBlock fallingBlock = new JerotesUnevenBlock(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, block, 30);
+			fallingBlock.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+			level.addFreshEntity(fallingBlock);
+		}
+	}
+	public static void spawnUnevenBlockByPos(ServerLevel level, BlockPos blockPos, int reach) {
+		Vec3 startPos = blockPos.getCenter().add(0,8,0);
+		AABB aabb = AABB.ofSize(blockPos.getCenter(), reach * 2 + 1, reach, reach * 2 + 1).move(0, Math.min(0, -(reach - 2)),0);
+		for (BlockPos pos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
+			double distance = blockPos.getCenter().distanceTo(pos.getCenter());
+			if (distance <= reach) {
+				BlockPos abovePos = new BlockPos(pos).above();
+				BlockState block = level.getBlockState(pos);
+				BlockState blockAbove = level.getBlockState(abovePos);
+				if (!block.isAir() && block.isRedstoneConductor(level, pos) && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
+					JerotesUnevenBlock fallingBlock = new JerotesUnevenBlock(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, block, 30);
+					fallingBlock.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+					fallingBlock.setAddHeight(0.15f + Math.min(0.845f, (float) distance/ (Math.max(1f, reach)) * (Math.max(1f, reach)/6f)));
+					fallingBlock.lookAt(startPos, 360f, 360f);
+
+					int n = RandomSource.create().nextInt(20);
+					fallingBlock.setStartTick(Math.max(0, (int)(distance/5f)));
+					fallingBlock.setStopTick(Math.max(15, (int)(15+distance/5f) + n));
+					fallingBlock.setDuration(Math.max(20, (int)(20+distance/5f) + (int)(n * (1 + RandomSource.create().nextFloat() * 0.5f))));
+					level.addFreshEntity(fallingBlock);
+				}
 			}
 		}
 	}

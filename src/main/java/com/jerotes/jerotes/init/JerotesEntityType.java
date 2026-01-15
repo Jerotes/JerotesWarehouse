@@ -1,11 +1,8 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Other.JerotesFallingBlock;
-import com.jerotes.jerotes.entity.Mob.HumanEntity;
-import com.jerotes.jerotes.entity.Mob.JerotesPlayerEntity;
-import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
-import com.jerotes.jerotes.entity.Mob.TestEntity;
+import com.jerotes.jerotes.entity.Other.*;
+import com.jerotes.jerotes.entity.Mob.*;
 import com.jerotes.jerotes.entity.Arrow.*;
 import com.jerotes.jerotes.entity.Magic.Breath.PoisonBreathEntity;
 import com.jerotes.jerotes.entity.Magic.MagicMissile.MagicMissileEntity;
@@ -13,7 +10,6 @@ import com.jerotes.jerotes.entity.Magic.Ray.LightningBoltEntity;
 import com.jerotes.jerotes.entity.Magic.Ray.RayofEnfeeblementEntity;
 import com.jerotes.jerotes.entity.Magic.Ray.RayofSicknessEntity;
 import com.jerotes.jerotes.entity.Magic.Target.*;
-import com.jerotes.jerotes.entity.Other.JerotesEarthrendBlock;
 import com.jerotes.jerotes.util.SpawnRules;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -42,15 +38,19 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<TestEntity>> TEST = register("test",
 			EntityType.Builder.<TestEntity>of(TestEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
 					.sized(0.6f, 1.8f));
+	public static final RegistryObject<EntityType<MirrorImageEntity>> MIRROR_IMAGE = register("mirror_image",
+			EntityType.Builder.<MirrorImageEntity>of(MirrorImageEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
+					.sized(1.0f, 1.0f));
+
 	public static final RegistryObject<EntityType<JerotesFallingBlock>> JEROTES_FALLING_BLOCK = register("jerotes_falling_block",
 			EntityType.Builder.<JerotesFallingBlock>of(JerotesFallingBlock::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(0.99f, 0.99f));
 	public static final RegistryObject<EntityType<JerotesEarthrendBlock>> JEROTES_EARTHREND_BLOCK = register("jerotes_earthrend_block",
 			EntityType.Builder.<JerotesEarthrendBlock>of(JerotesEarthrendBlock::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(0.99f, 0.99f));
-	public static final RegistryObject<EntityType<MirrorImageEntity>> MIRROR_IMAGE = register("mirror_image",
-			EntityType.Builder.<MirrorImageEntity>of(MirrorImageEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
-					.sized(1.0f, 1.0f));
+	public static final RegistryObject<EntityType<JerotesUnevenBlock>> JEROTES_UNEVEN_BLOCK = register("jerotes_uneven_block",
+			EntityType.Builder.<JerotesUnevenBlock>of(JerotesUnevenBlock::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
+					.sized(0.99f, 0.99f));
 	//发射物
 	public static final RegistryObject<EntityType<ThrownSimpleJavelinEntity>> THROWN_SIMPLE_JAVELIN = register("projectile_throw_simple_javelin",
 			EntityType.Builder.<ThrownSimpleJavelinEntity>of(ThrownSimpleJavelinEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64)

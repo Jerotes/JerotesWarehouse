@@ -90,6 +90,9 @@ public class AACreativeClaw extends Item {
 			//SpellFind.CogonSword(player, livingEntity2, 6, 12, 32);
 		}
 
+		if (level instanceof ServerLevel serverLevel) {
+			Main.spawnUnevenBlockByPos(serverLevel, livingEntity.getOnPos(), 4);
+		}
 		//法术列表
 		//SpellList.MagicMissile(3, livingEntity, null, true).spellUse();
 

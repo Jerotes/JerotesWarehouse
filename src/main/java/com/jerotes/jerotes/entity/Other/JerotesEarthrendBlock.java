@@ -79,12 +79,12 @@ public class JerotesEarthrendBlock extends BaseFallingBlock implements OwnableEn
 	}
 
 	public FallingMoveType getMode() {
-		String mode = this.entityData.get(MODE);
+		String mode = this.getEntityData().get(MODE);
 		if (mode.isEmpty()) return FallingMoveType.RENDER_MOVE;
 		return FallingMoveType.valueOf(mode);
 	}
 	public void setMode(FallingMoveType type) {
-		this.entityData.set(MODE, type.toString());
+		this.getEntityData().set(MODE, type.toString());
 	}
 	public float getAnimVY() {
 		return getEntityData().get(ANIM_V_Y);
@@ -222,6 +222,7 @@ public class JerotesEarthrendBlock extends BaseFallingBlock implements OwnableEn
 		this.setGravity(compoundTag.getInt("Gravity"));
 		this.setCanPush(compoundTag.getBoolean("CanPush"));
 	}
+	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.getEntityData().define(MODE, FallingMoveType.OVERALL_MOVE.toString());
@@ -233,9 +234,11 @@ public class JerotesEarthrendBlock extends BaseFallingBlock implements OwnableEn
 		this.getEntityData().define(BREAK_BLOCK_LEVEL, 5f);
 		this.getEntityData().define(ATTACK_DAMAGE, 10f);
 		this.getEntityData().define(CAN_BREAK_BLOCK, true);
+		this.getEntityData().define(GRAVITY, 0.1f);
 		this.getEntityData().define(CAN_PUSH, true);
 	}
 
+	@Override
 	public void tick() {
 		if (getMode() == FallingMoveType.RENDER_MOVE)
 			setDeltaMovement(0, 0, 0);
