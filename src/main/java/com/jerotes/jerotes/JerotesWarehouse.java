@@ -2,6 +2,7 @@ package com.jerotes.jerotes;
 
 import com.jerotes.jerotes.client.CilentInit;
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.event.RendererEvent;
 import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.network.PacketHandler;
 import com.mojang.logging.LogUtils;
@@ -50,6 +51,9 @@ public class JerotesWarehouse
     }
     private void initClient(final FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
-        event.enqueueWork(CilentInit::clientInit);
+        event.enqueueWork(() -> {
+            CilentInit.clientInit();
+            MinecraftForge.EVENT_BUS.register(new RendererEvent());
+        });
     }
 }

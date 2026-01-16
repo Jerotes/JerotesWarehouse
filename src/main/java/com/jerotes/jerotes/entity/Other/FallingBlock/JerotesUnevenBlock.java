@@ -1,4 +1,4 @@
-package com.jerotes.jerotes.entity.Other;
+package com.jerotes.jerotes.entity.Other.FallingBlock;
 
 import com.jerotes.jerotes.init.JerotesEntityType;
 import net.minecraft.nbt.CompoundTag;
@@ -154,6 +154,7 @@ public class JerotesUnevenBlock extends BaseFallingBlock {
 		this.getEntityData().define(STOP_TICK, 15);
 	}
 
+	@Override
 	public void tick() {
 		if (this.tickCount > this.getDuration()) {
 			this.discard();

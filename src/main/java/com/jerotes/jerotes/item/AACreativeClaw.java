@@ -2,6 +2,9 @@ package com.jerotes.jerotes.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
+import com.jerotes.jerotes.entity.Other.TestBeam;
+import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.BlockPos;
@@ -91,18 +94,13 @@ public class AACreativeClaw extends Item {
 		}
 
 		if (level instanceof ServerLevel serverLevel) {
-			Main.spawnUnevenBlockByPos(serverLevel, livingEntity.getOnPos(), 4);
+//			Main.spawnUnevenBlockByPos(serverLevel, livingEntity.getOnPos(), 4);
 		}
-		//法术列表
-		//SpellList.MagicMissile(3, livingEntity, null, true).spellUse();
+		TestBeam testBeam = new TestBeam(JerotesEntityType.TEST_BEAM.get(), level);
+		testBeam.setPos(player.getX(), player.getY() + 1, player.getZ());
+		testBeam.setOwner(player);
+		level.addFreshEntity(testBeam);
 
-		//SpellEvent.EarthquakeKick(player, 12, 6, 30, 20);
-		//SpellEvent.DisarmDrag(player, player, 0, 1, 0, false);
-		//SpellEvent.UncleanBloodFog(livingEntity, livingEntity, 16, 12, 12, 12, 12, 8);
-		//SpellEvent.UncleanBloodRain(livingEntity, livingEntity, 16, spellLevel, spellLevel, 1, 4);
-		//SpellEvent.RayofEnfeeblement(livingEntity, livingEntity, spellLevel * 6, spellLevel, 0, 1, 5, true);
-		//SpellEvent.ElasticLightBall(livingEntity, livingEntity, 2, 1.2f, 0, 3, 5, true);
-		//SpellEvent.ZsieinSonic(livingEntity, livingEntity, 0, 1, 0, true);
 		player.awardStat(Stats.ITEM_USED.get(this));
 	}
 

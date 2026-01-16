@@ -2,10 +2,10 @@ package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.Other.JerotesEarthrendBlock;
-import com.jerotes.jerotes.entity.Other.JerotesUnevenBlock;
+import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesEarthrendBlock;
+import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesUnevenBlock;
 import com.jerotes.jerotes.entity.Part.BasePartEntity;
-import com.jerotes.jerotes.entity.Other.JerotesFallingBlock;
+import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
 import com.jerotes.jerotes.entity.Interface.SpecialItemInHandEntity;
 import com.jerotes.jerotes.item.AAExplorationEye;
 import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;

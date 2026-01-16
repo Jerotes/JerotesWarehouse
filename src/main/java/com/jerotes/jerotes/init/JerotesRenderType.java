@@ -4,6 +4,7 @@ import com.jerotes.jerotes.JerotesWarehouse;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +17,22 @@ import java.util.function.BiFunction;
 public class JerotesRenderType extends RenderType {
 	public JerotesRenderType(String p_173178_, VertexFormat p_173179_, VertexFormat.Mode p_173180_, int p_173181_, boolean p_173182_, boolean p_173183_, Runnable p_173184_, Runnable p_173185_) {
 		super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
+	}
+
+	public static RenderType beam_light() {
+		return create(
+				"beam_light",
+				DefaultVertexFormat.POSITION_COLOR,
+				VertexFormat.Mode.TRIANGLES,
+				256,
+				false,
+				false,
+				RenderType.CompositeState.builder()
+						.setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorShader))
+						.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+						.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+						.setCullState(RenderStateShard.NO_CULL)
+						.createCompositeState(false));
 	}
 
 	public static RenderType flow(ResourceLocation resourceLocation, float f, float f2) {
@@ -32,6 +49,39 @@ public class JerotesRenderType extends RenderType {
 	});
 	public static RenderType glow(ResourceLocation resourceLocation) {
 		return GLOW.apply(resourceLocation, ADDITIVE_TRANSPARENCY);
+	}
+
+	// 双面发光渲染类型（内外都渲染）
+	private static final BiFunction<ResourceLocation, TransparencyStateShard, RenderType> GLOW_DOUBLE_SIDED =
+			Util.memoize((resourceLocation, transparencyStateShard) -> {
+				TextureStateShard textureStateShard = new TextureStateShard(resourceLocation, false, false);
+				return RenderType.create(
+						"glow_double_sided",
+						DefaultVertexFormat.NEW_ENTITY,
+						VertexFormat.Mode.QUADS,
+						1536,
+						false,
+						true,
+						CompositeState.builder()
+								.setShaderState(RENDERTYPE_EYES_SHADER)  // 使用眼睛着色器（发光效果）
+								.setTextureState(textureStateShard)
+								.setTransparencyState(transparencyStateShard)
+								.setWriteMaskState(COLOR_WRITE)          // 写入颜色和alpha
+								.setCullState(NO_CULL)                    // 关键：禁用剔除，实现双面渲染
+								.setDepthTestState(LEQUAL_DEPTH_TEST)     // 深度测试（小于等于）
+								.setOutputState(TRANSLUCENT_TARGET)       // 输出到半透明目标
+								.createCompositeState(false)
+				);
+			});
+
+	public static RenderType glowDoubleSided(ResourceLocation resourceLocation) {
+		return GLOW_DOUBLE_SIDED.apply(resourceLocation, ADDITIVE_TRANSPARENCY);
+	}
+	public static RenderType glowDoubleSidedTranslucent(ResourceLocation resourceLocation) {
+		return GLOW_DOUBLE_SIDED.apply(resourceLocation, TRANSLUCENT_TRANSPARENCY);
+	}
+	public static RenderType glowDoubleSidedNoTransparency(ResourceLocation resourceLocation) {
+		return GLOW_DOUBLE_SIDED.apply(resourceLocation, NO_TRANSPARENCY);
 	}
 
 	private static final RenderType GLOWING_OUTLINE = create("glowing_outline",

@@ -1,4 +1,4 @@
-package com.jerotes.jerotes.entity.Other;
+package com.jerotes.jerotes.entity.Other.FallingBlock;
 
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.util.AttackFind;

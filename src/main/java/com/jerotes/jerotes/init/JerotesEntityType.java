@@ -1,7 +1,6 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Other.*;
 import com.jerotes.jerotes.entity.Mob.*;
 import com.jerotes.jerotes.entity.Arrow.*;
 import com.jerotes.jerotes.entity.Magic.Breath.PoisonBreathEntity;
@@ -10,6 +9,10 @@ import com.jerotes.jerotes.entity.Magic.Ray.LightningBoltEntity;
 import com.jerotes.jerotes.entity.Magic.Ray.RayofEnfeeblementEntity;
 import com.jerotes.jerotes.entity.Magic.Ray.RayofSicknessEntity;
 import com.jerotes.jerotes.entity.Magic.Target.*;
+import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesEarthrendBlock;
+import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
+import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesUnevenBlock;
+import com.jerotes.jerotes.entity.Other.TestBeam;
 import com.jerotes.jerotes.util.SpawnRules;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -41,6 +44,10 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<MirrorImageEntity>> MIRROR_IMAGE = register("mirror_image",
 			EntityType.Builder.<MirrorImageEntity>of(MirrorImageEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(1.0f, 1.0f));
+
+	public static final RegistryObject<EntityType<TestBeam>> TEST_BEAM = register("test_beam",
+			EntityType.Builder.<TestBeam>of(TestBeam::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(0.6f, 0.6f));
 
 	public static final RegistryObject<EntityType<JerotesFallingBlock>> JEROTES_FALLING_BLOCK = register("jerotes_falling_block",
 			EntityType.Builder.<JerotesFallingBlock>of(JerotesFallingBlock::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
