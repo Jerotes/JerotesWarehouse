@@ -45,7 +45,7 @@ public class PhantasmalKillerEntity extends BaseTargetEntity {
         livingEntity.hurt(damageSource, 0f);
         livingEntity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel), this.getEffectSource());
         livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.PHANTASMAL_KILLER.get(), 20 * spellLevelMainEffectTime - 1, spellLevelDamage - 1), this.getEffectSource());
-        this.playSound(JerotesSounds.SPELL, 3.0f, 1.0f);
+        this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
         this.discard();
     }
 

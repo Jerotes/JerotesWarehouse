@@ -62,7 +62,7 @@ public class PoisonBreathEntity extends BaseBreathEntity {
             }
             if (bl) {
                 livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 20 * spellLevelMainEffectTime * 6, spellLevelMainEffectLevel - 1), this.getEffectSource());
-                this.playSound(JerotesSounds.SPELL, 3.0f, 1.0f);
+                this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
             }
         }
     }

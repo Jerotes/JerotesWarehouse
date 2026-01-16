@@ -7,7 +7,7 @@ import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEnchantments;
 import com.jerotes.jerotes.init.JerotesGameRules;
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.item.Interface.ItemSpecialAttack;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
 import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;
@@ -575,12 +575,12 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
                 float strength = 0.458f * lungeLevel;
                 RushAttack(livingEntity, strength);
                 //声音
-                SoundEvent sound = JerotesSounds.LUNGE_1;
+                SoundEvent sound = JerotesSoundEvents.LUNGE_1;
                 if (lungeLevel > 1) {
-                    sound = JerotesSounds.LUNGE_2;
+                    sound = JerotesSoundEvents.LUNGE_2;
                 }
                 if (lungeLevel > 2) {
-                    sound = JerotesSounds.LUNGE_3;
+                    sound = JerotesSoundEvents.LUNGE_3;
                 }
                 level.playSound(
                         null,

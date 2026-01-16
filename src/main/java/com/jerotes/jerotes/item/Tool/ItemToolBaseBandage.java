@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.item.Tool;
 
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -97,7 +97,7 @@ public class ItemToolBaseBandage extends Item {
         }
         int n2 = this.getUseDuration(itemStack) - count;
         if (n2 == this.getUseTime()) {
-            livingEntity.playSound(JerotesSounds.USE_BANDAGE);
+            livingEntity.playSound(JerotesSoundEvents.USE_BANDAGE);
         }
         super.onUseTick(level, livingEntity, itemStack, count);
     }

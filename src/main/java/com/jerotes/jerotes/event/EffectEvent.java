@@ -7,7 +7,7 @@ import com.jerotes.jerotes.entity.Interface.FreezeAbsorptionEntity;
 import com.jerotes.jerotes.entity.Interface.LightningAbsorptionEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.spell.SpellFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
@@ -62,7 +62,7 @@ public class EffectEvent {
 					boolean bl = SpellFind.FireAbsorption(entity, event.getAmount(), AbsorptionPercentage, 0.25f);
 					if (bl) {
 						if (!entity.isSilent()) {
-							entity.playSound(JerotesSounds.MAGIC_FIRE_ABSORPTION, EntityAndItemFind.isBoss(entity.getType()) ? 5f : (entity instanceof EliteEntity ? 2f : 1f) * 1, 1.0F);
+							entity.playSound(JerotesSoundEvents.MAGIC_FIRE_ABSORPTION, EntityAndItemFind.isBoss(entity.getType()) ? 5f : (entity instanceof EliteEntity ? 2f : 1f) * 1, 1.0F);
 						}
 					}
 				}
@@ -78,7 +78,7 @@ public class EffectEvent {
 					boolean bl = SpellFind.FreezeAbsorption(entity, event.getAmount(), AbsorptionPercentage, 0.25f);
 					if (bl) {
 						if (!entity.isSilent()) {
-							entity.playSound(JerotesSounds.MAGIC_FREEZE_ABSORPTION, EntityAndItemFind.isBoss(entity.getType()) ? 5f : (entity instanceof EliteEntity ? 2f : 1f) * 1, 1.0F);
+							entity.playSound(JerotesSoundEvents.MAGIC_FREEZE_ABSORPTION, EntityAndItemFind.isBoss(entity.getType()) ? 5f : (entity instanceof EliteEntity ? 2f : 1f) * 1, 1.0F);
 						}
 					}
 				}
@@ -94,7 +94,7 @@ public class EffectEvent {
 					boolean bl = SpellFind.LightningAbsorption(entity, event.getAmount(), AbsorptionPercentage, 0.25f);
 					if (bl) {
 						if (!entity.isSilent()) {
-							entity.playSound(JerotesSounds.MAGIC_LIGHTNING_ABSORPTION, EntityAndItemFind.isBoss(entity.getType()) ? 5f : (entity instanceof EliteEntity ? 2f : 1f) * 1, 1.0F);
+							entity.playSound(JerotesSoundEvents.MAGIC_LIGHTNING_ABSORPTION, EntityAndItemFind.isBoss(entity.getType()) ? 5f : (entity instanceof EliteEntity ? 2f : 1f) * 1, 1.0F);
 						}
 					}
 				}

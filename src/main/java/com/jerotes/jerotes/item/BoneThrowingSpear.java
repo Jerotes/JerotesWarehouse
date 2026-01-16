@@ -3,7 +3,7 @@ package com.jerotes.jerotes.item;
 import com.jerotes.jerotes.entity.Arrow.BaseJavelinEntity;
 import com.jerotes.jerotes.entity.Arrow.ThrownBoneThrowingSpearEntity;
 import com.jerotes.jerotes.init.JerotesItems;
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseThrowingSpearOfJavelin;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseThrowingSpearOfSpear;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,10 +44,10 @@ public class BoneThrowingSpear {
 					Condition.ofAttackerSpeed((int) (9.0f * 20.0f), 5.1f),
 					Condition.ofRelativeSpeed((int) (13.75f * 20.0f), 4.6f),
 					0.38f, 0.82f,
-					JerotesSounds.SPEAR_USE,
-					JerotesSounds.SPEAR_HIT,
-					JerotesSounds.SPEAR_ATTACK,
-					JerotesSounds.SPEAR_HIT,
+					JerotesSoundEvents.SPEAR_USE,
+					JerotesSoundEvents.SPEAR_HIT,
+					JerotesSoundEvents.SPEAR_ATTACK,
+					JerotesSoundEvents.SPEAR_HIT,
 					0.5f, 3f, 0.5f, 5f, 0.125f, 0.5f, true, false);
 		}
 

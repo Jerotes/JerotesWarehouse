@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.entity.Arrow;
 
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesItems;
 import net.minecraft.core.particles.ParticleTypes;
@@ -51,7 +51,7 @@ public class ThrownTransportJavelinEntity extends BaseJavelinEntity {
 						entity.teleportTo(this.getX(), this.getY(), this.getZ());
 					}
 					entity.resetFallDistance();
-					this.playSound(JerotesSounds.TELEPORT, 1.0F, 1.0F);
+					this.playSound(JerotesSoundEvents.TELEPORT, 1.0F, 1.0F);
 				}
 			}
 			else if (entity != null) {

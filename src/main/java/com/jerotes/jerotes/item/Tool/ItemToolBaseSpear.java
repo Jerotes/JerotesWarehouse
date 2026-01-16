@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.item.Tool;
 
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import net.minecraft.ChatFormatting;
@@ -37,10 +37,10 @@ public class ItemToolBaseSpear extends ItemToolBaseSpearBase implements ItemSpec
                 Condition.ofAttackerSpeed((int) (f6 * 20.0f), f7),
                 Condition.ofRelativeSpeed((int) (f8 * 20.0f), f9),
                 0.38f, f2,
-                wooden ? JerotesSounds.SPEAR_WOOD_USE : JerotesSounds.SPEAR_USE,
-                wooden ? JerotesSounds.SPEAR_WOOD_HIT : JerotesSounds.SPEAR_HIT,
-                wooden ? JerotesSounds.SPEAR_WOOD_ATTACK : JerotesSounds.SPEAR_ATTACK,
-                wooden ? JerotesSounds.SPEAR_WOOD_HIT : JerotesSounds.SPEAR_HIT,
+                wooden ? JerotesSoundEvents.SPEAR_WOOD_USE : JerotesSoundEvents.SPEAR_USE,
+                wooden ? JerotesSoundEvents.SPEAR_WOOD_HIT : JerotesSoundEvents.SPEAR_HIT,
+                wooden ? JerotesSoundEvents.SPEAR_WOOD_ATTACK : JerotesSoundEvents.SPEAR_ATTACK,
+                wooden ? JerotesSoundEvents.SPEAR_WOOD_HIT : JerotesSoundEvents.SPEAR_HIT,
                 2.0f, 4.5f, 2.0f, 6.5f, 0.125f, 0.5f, true, false
         );
     }

@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 
 @SuppressWarnings("WeakerAccess")
 @Mod.EventBusSubscriber(modid = JerotesWarehouse.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class JerotesSounds {
+public class JerotesSoundEvents {
     public static final SoundEvent SPELL = createSoundEvent("spell");
     public static final SoundEvent BREATH = createSoundEvent("breath");
     public static final SoundEvent USE_SADDLE = createSoundEvent("use_saddle");
@@ -66,7 +66,7 @@ public class JerotesSounds {
     @SubscribeEvent
     public static void registerSoundEvents(final NewRegistryEvent event) {
         try {
-            for (Field f : JerotesSounds.class.getFields()) {
+            for (Field f : JerotesSoundEvents.class.getFields()) {
                 Object obj = f.get(null);
                 if (obj instanceof SoundEvent) {
                     ForgeRegistries.SOUND_EVENTS.register(((SoundEvent) obj).getLocation(), (SoundEvent) obj);

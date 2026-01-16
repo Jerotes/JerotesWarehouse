@@ -50,7 +50,7 @@ public class EyebiteEntity extends BaseTargetEntity {
         } else {
             livingEntity.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel - 1), this.getEffectSource());
         }
-        this.playSound(JerotesSounds.SPELL, 3.0f, 1.0f);
+        this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
         this.discard();
     }
 

@@ -2,7 +2,7 @@ package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.UseDaggerEntity;
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.item.AACreativeClaw;
 import com.jerotes.jerotes.item.AAExplorationEye;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
@@ -228,7 +228,7 @@ public class ItemEvent {
 				}
 				if (damages != 1 && !entity.isInvulnerable() &&  !entity.isInvulnerableTo(damagesource)) {
 					if (!entity.isSilent()) {
-						entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JerotesSounds.TWOHANDED_BLOCK, entity.getSoundSource(), 1.0f, 1.0f);
+						entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JerotesSoundEvents.TWOHANDED_BLOCK, entity.getSoundSource(), 1.0f, 1.0f);
 					}
 				}
 				float newAmount = event.getAmount() * damages;

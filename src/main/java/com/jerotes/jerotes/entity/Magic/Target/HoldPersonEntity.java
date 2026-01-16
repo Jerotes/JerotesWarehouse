@@ -55,7 +55,7 @@ public class HoldPersonEntity extends BaseTargetEntity {
         if (EntityFactionFind.isHumanoid(livingEntity)) {
             livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.HOLD_MOB.get(), 20 * spellLevelMainEffectTime - 1, spellLevelMainEffectLevel - 1), this.getEffectSource());
         }
-        this.playSound(JerotesSounds.SPELL, 3.0f, 1.0f);
+        this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
         this.discard();
     }
 

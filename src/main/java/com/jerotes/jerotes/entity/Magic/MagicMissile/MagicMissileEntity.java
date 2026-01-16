@@ -3,7 +3,7 @@ package com.jerotes.jerotes.entity.Magic.MagicMissile;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.RandomSource;
@@ -48,7 +48,7 @@ public class MagicMissileEntity extends BaseMagicMissileEntity {
         if (entity instanceof LivingEntity livingEntity) {
             Entity entity2 = this.getOwner();
             livingEntity.hurt(this.damageSources().indirectMagic(this, entity2), Main.randomReach(RandomSource.create(), 1, 4) + 1);
-            this.playSound(JerotesSounds.SPELL, 3.0f, 1.0f);
+            this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
             this.discard();
         }
     }

@@ -4,7 +4,7 @@ import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.goal.*;
 import com.jerotes.jerotes.init.JerotesGameRules;
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseCrossbow;
 import com.jerotes.jerotes.spell.MagicType;
 import com.jerotes.jerotes.spell.SpellTypeInterface;
@@ -280,7 +280,7 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 		if (InventoryEntity.isThrow(handItem)) {
 			useThrowShoot(this, livingEntity);
 			if (!this.isSilent()) {
-				this.level().playSound(null, this.getX(), this.getY(), this.getZ(), JerotesSounds.ITEM_THROW, this.getSoundSource(), 0.5f, 0.4f / (this.level().getRandom().nextFloat() * 0.4f + 0.8f));
+				this.level().playSound(null, this.getX(), this.getY(), this.getZ(), JerotesSoundEvents.ITEM_THROW, this.getSoundSource(), 0.5f, 0.4f / (this.level().getRandom().nextFloat() * 0.4f + 0.8f));
 			}
 		}
 		if (InventoryEntity.isCrossbow(handItem)) {

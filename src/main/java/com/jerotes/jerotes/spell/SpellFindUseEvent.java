@@ -3,7 +3,7 @@ package com.jerotes.jerotes.spell;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Magic.MagicMissile.MagicMissileEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.server.level.ServerLevel;
@@ -143,7 +143,7 @@ public class SpellFindUseEvent {
                             serverLevel.addFreshEntity(spell);
                         }
                         if (!caster.isSilent()) {
-                            caster.playSound(JerotesSounds.MAGIC_MAGIC_MISSILE,
+                            caster.playSound(JerotesSoundEvents.MAGIC_MAGIC_MISSILE,
                                     1.0f, 1.0F);
                         }
                     }

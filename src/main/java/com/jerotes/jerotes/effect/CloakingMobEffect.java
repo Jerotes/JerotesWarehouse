@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.effect;
 
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -30,7 +30,7 @@ public class CloakingMobEffect extends BaseMobEffectAllTick {
 				double d3 = livingEntity.getRandom().nextGaussian() * 0.02;
 				livingEntity.level().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, livingEntity.getRandomX(1.0), livingEntity.getRandomY() + 0.5, livingEntity.getRandomZ(1.0), d, d2, d3);
 			}
-			livingEntity.level().playSound(null, livingEntity.getOnPos(), JerotesSounds.CLOAKING, livingEntity.getSoundSource(), 1.0f, 1.0f);
+			livingEntity.level().playSound(null, livingEntity.getOnPos(), JerotesSoundEvents.CLOAKING, livingEntity.getSoundSource(), 1.0f, 1.0f);
 		}
 
 		if (livingEntity.isShiftKeyDown()) {

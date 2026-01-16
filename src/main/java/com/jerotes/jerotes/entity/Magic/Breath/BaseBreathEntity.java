@@ -2,7 +2,7 @@ package com.jerotes.jerotes.entity.Magic.Breath;
 
 import com.jerotes.jerotes.entity.Magic.MagicAboutEntity;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
-import com.jerotes.jerotes.init.JerotesSounds;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -64,7 +64,7 @@ public class BaseBreathEntity extends MagicAboutEntity {
                 break;
             }
         }
-        this.playSound(JerotesSounds.BREATH, 1.0f, 1.0f);
+        this.playSound(JerotesSoundEvents.BREATH, 1.0f, 1.0f);
         this.level().addFreshEntity(areaEffectCloud);
         return true;
     }
