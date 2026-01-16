@@ -51,7 +51,6 @@ public class JerotesRenderType extends RenderType {
 		return GLOW.apply(resourceLocation, ADDITIVE_TRANSPARENCY);
 	}
 
-	// 双面发光渲染类型（内外都渲染）
 	private static final BiFunction<ResourceLocation, TransparencyStateShard, RenderType> GLOW_DOUBLE_SIDED =
 			Util.memoize((resourceLocation, transparencyStateShard) -> {
 				TextureStateShard textureStateShard = new TextureStateShard(resourceLocation, false, false);
@@ -63,13 +62,13 @@ public class JerotesRenderType extends RenderType {
 						false,
 						true,
 						CompositeState.builder()
-								.setShaderState(RENDERTYPE_EYES_SHADER)  // 使用眼睛着色器（发光效果）
+								.setShaderState(RENDERTYPE_EYES_SHADER)
 								.setTextureState(textureStateShard)
 								.setTransparencyState(transparencyStateShard)
-								.setWriteMaskState(COLOR_WRITE)          // 写入颜色和alpha
-								.setCullState(NO_CULL)                    // 关键：禁用剔除，实现双面渲染
-								.setDepthTestState(LEQUAL_DEPTH_TEST)     // 深度测试（小于等于）
-								.setOutputState(TRANSLUCENT_TARGET)       // 输出到半透明目标
+								.setWriteMaskState(COLOR_WRITE)
+								.setCullState(NO_CULL)
+								.setDepthTestState(LEQUAL_DEPTH_TEST)
+								.setOutputState(TRANSLUCENT_TARGET)
 								.createCompositeState(false)
 				);
 			});
