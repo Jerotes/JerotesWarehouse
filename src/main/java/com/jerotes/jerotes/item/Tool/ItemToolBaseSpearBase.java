@@ -173,7 +173,6 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
     public boolean canAttackBlock(BlockState p_43291_, Level p_43292_, BlockPos p_43293_, Player p_43294_) {
         return false;
     }
-    @OnlyIn(Dist.CLIENT)
     public void makeSound(Entity entity) {
         if (entity instanceof Player player) {
             entity.level().playSound(player, entity.getX(), entity.getY(), entity.getZ(),
@@ -184,13 +183,10 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
                     sound, entity.getSoundSource(), 1.0f, 1.0f);
         }
     }
-
-    @OnlyIn(Dist.CLIENT)
     public void makeHitSound(Entity entity) {
         entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
                 hitSound, entity.getSoundSource(), 1.0f, 1.0f);
     }
-    @OnlyIn(Dist.CLIENT)
     public void makeSound2(Entity entity) {
         if (entity instanceof Player player) {
             entity.level().playSound(player, entity.getX(), entity.getY(), entity.getZ(),
@@ -201,14 +197,10 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
                     sound2, entity.getSoundSource(), 1.0f, 1.0f);
         }
     }
-
-    @OnlyIn(Dist.CLIENT)
     public void makeHitSound2(Entity entity) {
         entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
                 hitSound2, entity.getSoundSource(), 1.0f, 1.0f);
     }
-
-    @OnlyIn(Dist.CLIENT)
     public void makeLocalHitSound(Entity entity) {
         Minecraft.getInstance().getSoundManager().play(new EntityBoundSoundInstance(hitSound, entity.getSoundSource(), 1.0f, 1.0f, entity, RandomSource.create().nextLong()));;
     }

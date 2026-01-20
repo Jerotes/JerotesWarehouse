@@ -6,7 +6,7 @@
  */
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.Interface.BaseEntityAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeMob;
 import com.jerotes.jerotes.entity.Interface.InventoryEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.init.JerotesEnchantments;
@@ -112,8 +112,8 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
         //float f = bl ? 1.4f : 1.0f;
         Entity entity = ((Entity)this.mob).getRootVehicle();
         float f = 1.0f;
-        if (entity instanceof BaseEntityAbout baseEntityAbout) {
-            f = baseEntityAbout.chargeSpeedModifierJerotes();
+        if (entity instanceof JerotesChangeMob jerotesChangeMob) {
+            f = jerotesChangeMob.chargeSpeedModifierJerotes();
         }
         int n = ((Entity)this.mob).isPassenger() ? 2 : 0;
         ((Mob)this.mob).lookAt(livingEntity, 30.0f, 30.0f);

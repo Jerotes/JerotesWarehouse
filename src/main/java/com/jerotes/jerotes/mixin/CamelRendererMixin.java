@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Interface.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import net.minecraft.client.model.CamelModel;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +20,7 @@ public abstract class CamelRendererMixin extends MobRenderer<Camel, CamelModel<C
 
     @Inject(method = "getTextureLocation*", at = @At("HEAD"), cancellable = true)
     public void getTextureLocation(Camel camel, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (camel instanceof CamelAbout camelAbout && camelAbout.isJerotesCamelHusk()) {
+        if (camel instanceof JerotesChangeCamel jerotesChangeCamel && jerotesChangeCamel.isJerotesCamelHusk()) {
             cir.setReturnValue(new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/camel/camel_husk.png"));
         }
     }

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:fire_melee",
+    "jerotes:fire_shoot",
+    "jerotes:fire_magic",
+    "jerotes:bypasses_cooldown_fire"
+  ]
+}

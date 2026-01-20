@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "jerotes:bypasses_cooldown_shoot"
+    "jerotes:bypasses_cooldown_shoot",
+    "jerotes:fire_shoot",
+    "jerotes:freeze_shoot",
+    "jerotes:lightning_shoot",
+    "jerotes:drown_shoot"
   ]
 }

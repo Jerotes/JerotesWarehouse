@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Interface.StrayAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -26,7 +26,7 @@ public abstract class RenderLayerMixin<T extends Entity, M extends EntityModel<T
     private static <T extends LivingEntity> void render(EntityModel<T> p_117360_, EntityModel<T> p_117361_, ResourceLocation p_117362_, PoseStack p_117363_, MultiBufferSource p_117364_, int p_117365_, T p_117366_, float p_117367_,
                                                         float p_117368_, float p_117369_, float p_117370_, float p_117371_, float p_117372_, float p_117373_, float p_117374_,
                                                         float p_117375_, CallbackInfo ci) {
-        if (p_117366_ instanceof StrayAbout strayAbout && strayAbout.isJerotesParched()) {
+        if (p_117366_ instanceof JerotesChangeStray jerotesChangeStray && jerotesChangeStray.isJerotesParched()) {
             p_117362_ = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skeleton/parched_overlay.png");
             if (!p_117366_.isInvisible()) {
                 p_117360_.copyPropertiesTo(p_117361_);

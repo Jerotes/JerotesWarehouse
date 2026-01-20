@@ -19,6 +19,30 @@ public class JerotesRenderType extends RenderType {
 		super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
 	}
 
+	public static RenderType dagger_glint() {
+		return create(
+				"dagger_glint",
+				DefaultVertexFormat.POSITION_TEX,
+				VertexFormat.Mode.QUADS,
+				256,
+				false,
+				false,
+				CompositeState.builder()
+						.setShaderState(RenderStateShard.POSITION_TEX_SHADER)
+						.setTextureState(new TextureStateShard(
+								new ResourceLocation(JerotesWarehouse.MODID, "textures/misc/enchanted_glint_dagger.png"),
+								false,
+								false
+						))
+						.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+						.setCullState(RenderStateShard.NO_CULL)
+						.setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
+						.setTransparencyState(RenderStateShard.GLINT_TRANSPARENCY)
+						.setTexturingState(RenderStateShard.GLINT_TEXTURING)
+						.setOutputState(RenderStateShard.ITEM_ENTITY_TARGET)
+						.createCompositeState(false)
+		);
+	}
 	public static RenderType beam_light() {
 		return create(
 				"beam_light",

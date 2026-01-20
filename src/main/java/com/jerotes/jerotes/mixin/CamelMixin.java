@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.BaseEntityAbout;
-import com.jerotes.jerotes.entity.Interface.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeMob;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Camel.class)
-public abstract class CamelMixin extends AbstractHorse implements CamelAbout, BaseEntityAbout {
+public abstract class CamelMixin extends AbstractHorse implements JerotesChangeCamel, JerotesChangeMob {
     private static final EntityDataAccessor<Boolean> IS_JEROTES_CAMEL_HUSK = SynchedEntityData.defineId(CamelMixin.class, EntityDataSerializers.BOOLEAN);
 
     protected CamelMixin(EntityType<? extends AbstractHorse> entityType, Level level) {

@@ -23,7 +23,7 @@ public interface UseCrossbowEntity {
 
         if (livingEntity.isHolding(is -> is.getItem() instanceof ItemToolBaseCrossbow) &&
                 itemstack.getItem() instanceof ItemToolBaseCrossbow crossbowItem && crossbowItem.useCustomShoot() && livingEntity instanceof Mob mob) {
-            crossbowItem.customShoot(livingEntity);
+            crossbowItem.customShoot(livingEntity, itemstack);
         }
         else if (livingEntity.isHolding(is -> is.getItem() instanceof CrossbowItem) &&
                 itemstack.getItem() instanceof CrossbowItem) {

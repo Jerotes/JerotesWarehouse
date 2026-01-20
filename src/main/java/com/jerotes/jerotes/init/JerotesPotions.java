@@ -13,6 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class JerotesPotions {
     public static final DeferredRegister<Potion> REGISTRY = DeferredRegister.create(ForgeRegistries.POTIONS, JerotesWarehouse.MODID);
 
+    public static final RegistryObject<Potion> WASTE = REGISTRY.register("waste", () -> new Potion());
     public static final RegistryObject<Potion> CORROSIVE = REGISTRY.register("corrosive", () -> new Potion(new MobEffectInstance(JerotesMobEffects.CORROSIVE.get(), 240, 0)));
     public static final RegistryObject<Potion> LONG_CORROSIVE = REGISTRY.register("long_corrosive", () -> new Potion(new MobEffectInstance(JerotesMobEffects.CORROSIVE.get(), 600, 0)));
     public static final RegistryObject<Potion> STRONG_CORROSIVE = REGISTRY.register("strong_corrosive", () -> new Potion(new MobEffectInstance(JerotesMobEffects.CORROSIVE.get(), 160, 1)));

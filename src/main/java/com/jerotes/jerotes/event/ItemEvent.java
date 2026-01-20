@@ -124,6 +124,9 @@ public class ItemEvent {
 										newAmount = 0f;
 									}
 									event.setAmount(newAmount);
+									if (otherHandItem.getItem() instanceof ItemToolBaseDagger itemToolBaseDagger) {
+										itemToolBaseDagger.attackEffectUse(living, entity, otherHandItem, newAmount > 0);
+									}
 								}
 							}
 						}
@@ -193,6 +196,9 @@ public class ItemEvent {
 							return;
 						//特殊效果
 						specialEffect.attackUse(living, entity, amount > 0);
+						if (handItem.getItem() instanceof ItemToolBaseDagger itemToolBaseDagger) {
+							itemToolBaseDagger.attackEffectUse(living, entity, handItem, amount > 0);
+						}
 					}
 				}
 			}
@@ -219,14 +225,16 @@ public class ItemEvent {
 		Entity attackBy = event.getSource().getEntity();
 		if (damagesource == null || entity == null || !entity.isAlive())
 			return;
-		if (entity.getOffhandItem().isEmpty() && entity.getMainHandItem().getItem() instanceof ItemTwoHanded itemTwoHanded && itemTwoHanded.canBlock()) {
+		if (entity.getOffhandItem().isEmpty() &&
+				entity.getMainHandItem().getItem() instanceof ItemTwoHanded itemTwoHanded &&
+				itemTwoHanded.canBlock()) {
 			if (entity.getMainHandItem().getItem() instanceof ItemSpecialEffect specialEffect) {
 				float damages = 1;
 				if (isDamageSourceBlocks(damagesource, entity) && entity.isUsingItem()) {
 					damages -= itemTwoHanded.getBlockReduction() / 100f;
 					specialEffect.blockUse(entity, attackBy, damagesource);
 				}
-				if (damages != 1 && !entity.isInvulnerable() &&  !entity.isInvulnerableTo(damagesource)) {
+				if (damages != 1 && !entity.isInvulnerable() && !entity.isInvulnerableTo(damagesource)) {
 					if (!entity.isSilent()) {
 						entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), JerotesSoundEvents.TWOHANDED_BLOCK, entity.getSoundSource(), 1.0f, 1.0f);
 					}

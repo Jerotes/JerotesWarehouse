@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.Interface.EvokerAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeEvoker;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -38,16 +38,16 @@ public abstract class EvokerWololoBaseGoal extends Goal {
     @Override
     public void start() {
         this.attackWarmupDelay = this.adjustedTickDelay(this.getCastWarmupTime());
-        if (livingEntity instanceof EvokerAbout evokerAbout) {
-            evokerAbout.jerotes1_20_4$setEvokerAboutSpellCastingTickCount(this.getCastingTime());
+        if (livingEntity instanceof JerotesChangeEvoker jerotesChangeEvoker) {
+            jerotesChangeEvoker.jerotes1_20_4$setEvokerAboutSpellCastingTickCount(this.getCastingTime());
         }
         this.nextAttackTickCount = this.livingEntity.tickCount + this.getCastingInterval();
         SoundEvent soundEvent = this.getSpellPrepareSound();
         if (soundEvent != null) {
             this.livingEntity.playSound(soundEvent, 1.0f, 1.0f);
         }
-        if (livingEntity instanceof EvokerAbout evokerAbout) {
-            evokerAbout.jerotes1_20_4$spellEvokerAboutSpell();
+        if (livingEntity instanceof JerotesChangeEvoker jerotesChangeEvoker) {
+            jerotesChangeEvoker.jerotes1_20_4$spellEvokerAboutSpell();
         }
     }
 
@@ -56,9 +56,9 @@ public abstract class EvokerWololoBaseGoal extends Goal {
         --this.attackWarmupDelay;
         if (this.attackWarmupDelay == 0) {
             this.performSpellCasting();
-            if (livingEntity instanceof EvokerAbout evokerAbout) {
-                evokerAbout.jerotes1_20_4$setEvokerAboutSpellCastingTickCount(this.getCastingTime());
-                this.livingEntity.playSound(evokerAbout.jerotes1_20_4$getEvokerAboutCastingSoundEvent(), 1.0f, 1.0f);
+            if (livingEntity instanceof JerotesChangeEvoker jerotesChangeEvoker) {
+                jerotesChangeEvoker.jerotes1_20_4$setEvokerAboutSpellCastingTickCount(this.getCastingTime());
+                this.livingEntity.playSound(jerotesChangeEvoker.jerotes1_20_4$getEvokerAboutCastingSoundEvent(), 1.0f, 1.0f);
             }
         }
     }

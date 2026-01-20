@@ -2,7 +2,7 @@ package com.jerotes.jerotes.entity.Interface;
 
 import net.minecraft.sounds.SoundEvent;
 
-public interface EvokerAbout {
+public interface JerotesChangeEvoker {
     default void jerotes1_20_4$setEvokerAboutSpellCastingTickCount(int n) {
 
     }

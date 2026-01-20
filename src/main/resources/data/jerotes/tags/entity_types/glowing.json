@@ -1,0 +1,12 @@
+{
+  "__comment": "判定为发光的生物类型 如 发光鱿鱼 烈焰人 悦灵 岩浆怪 恼鬼 凋灵",
+  "replace": false,
+  "values": [
+    "minecraft:allay",
+    "minecraft:vex",
+    "minecraft:glow_squid",
+    "minecraft:blaze",
+    "minecraft:magma_cube",
+    "minecraft:wither"
+  ]
+}

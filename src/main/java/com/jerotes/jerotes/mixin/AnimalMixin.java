@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
@@ -18,7 +18,7 @@ public abstract class AnimalMixin extends AgeableMob {
 
     @Inject(method = "canFallInLove", at = @At("HEAD"), cancellable = true)
     protected void canFallInLove(CallbackInfoReturnable<Boolean> cir) {
-        if (this instanceof CamelAbout camelAbout && camelAbout.isJerotesCamelHusk())
+        if (this instanceof JerotesChangeCamel jerotesChangeCamel && jerotesChangeCamel.isJerotesCamelHusk())
             cir.setReturnValue(false);
     }
 }

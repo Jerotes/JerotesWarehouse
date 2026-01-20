@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:freeze_melee",
+    "jerotes:freeze_shoot",
+    "jerotes:freeze_magic",
+    "jerotes:bypasses_cooldown_freeze"
+  ]
+}

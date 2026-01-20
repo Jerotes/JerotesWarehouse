@@ -30,9 +30,12 @@ public class ThrownHealJavelinEntity extends BaseJavelinEntity {
 	@Override
 	protected void doPostHurtEffects(LivingEntity livingEntity) {
 		super.doPostHurtEffects(livingEntity);
-		if (!livingEntity.level().isClientSide) {
+		if (!livingEntity.level().isClientSide()) {
 			livingEntity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 240, 2));
-			livingEntity.addEffect(new MobEffectInstance(MobEffects.HEAL, 1, 3));
+			MobEffectInstance mobEffect = new MobEffectInstance(MobEffects.HEAL, 1, 3);
+			if (mobEffect.getEffect().isInstantenous()) {
+				mobEffect.getEffect().applyInstantenousEffect(this, this.getOwner() == null ? this : this.getOwner(), livingEntity, mobEffect.getAmplifier(), 1);
+			}
 		}
 	}
 }

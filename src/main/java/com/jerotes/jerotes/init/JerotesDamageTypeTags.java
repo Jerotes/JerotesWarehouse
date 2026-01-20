@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
 public interface JerotesDamageTypeTags {
-	TagKey<DamageType> MAGIC_RESISTANT = create("jerotes:magic_resistant");
+	TagKey<DamageType> IS_MAGIC = create("jerotes:is_magic");
 	TagKey<DamageType> IS_MELEE = create("jerotes:is_melee");
 
 	private static TagKey<DamageType> create(String string) {

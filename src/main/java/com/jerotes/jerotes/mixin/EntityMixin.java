@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import com.jerotes.jerotes.entity.Interface.CanNotControlEntity;
-import com.jerotes.jerotes.entity.Interface.StrayAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseUmbrella;
 import net.minecraft.core.BlockPos;
@@ -67,16 +67,16 @@ public abstract class EntityMixin {
     }
     @Inject(method = "getTypeName", at = @At("HEAD"), cancellable = true)
     private void getTypeName(CallbackInfoReturnable<Component> cir) {
-        if (this instanceof CamelAbout camelAbout && camelAbout.isJerotesCamelHusk())
+        if (this instanceof JerotesChangeCamel jerotesChangeCamel && jerotesChangeCamel.isJerotesCamelHusk())
             cir.setReturnValue(Component.translatable("entity.jerotes.camel_husk"));
-        if (this instanceof StrayAbout strayAbout && strayAbout.isJerotesParched())
+        if (this instanceof JerotesChangeStray jerotesChangeStray && jerotesChangeStray.isJerotesParched())
             cir.setReturnValue(Component.translatable("entity.jerotes.parched"));
     }
 
     @Inject(method = "load", at = @At("HEAD"))
     private void load(CompoundTag compoundTag, CallbackInfo ci) {
-        if (this instanceof CamelAbout camelAbout)
-            camelAbout.setJerotesCamelHusk(compoundTag.getBoolean("IsJerotesCamelHusk"));
+        if (this instanceof JerotesChangeCamel jerotesChangeCamel)
+            jerotesChangeCamel.setJerotesCamelHusk(compoundTag.getBoolean("IsJerotesCamelHusk"));
     }
 
     @Inject(method = "setCustomName", at = @At("HEAD"))
@@ -88,8 +88,8 @@ public abstract class EntityMixin {
         if (nameString == null) {
             return;
         }
-        if (this instanceof CamelAbout camelAbout) {
-            if (!camelAbout.isJerotesCamelHusk() && "Jerotes_ Camel Husk".equals(nameString) && this.getPassengers().isEmpty()) {
+        if (this instanceof JerotesChangeCamel jerotesChangeCamel) {
+            if (!jerotesChangeCamel.isJerotesCamelHusk() && "Jerotes_ Camel Husk".equals(nameString) && this.getPassengers().isEmpty()) {
                 if (this.level() instanceof ServerLevel serverLevel) {
                     PlayerTeam teams = (PlayerTeam) getTeam();
                     Husk husk = EntityType.HUSK.spawn(serverLevel, BlockPos.containing(getX(), getY(), getZ()), MobSpawnType.MOB_SUMMONED);
@@ -113,10 +113,10 @@ public abstract class EntityMixin {
                     }
                 }
             }
-            camelAbout.setJerotesCamelHusk("Jerotes_ Camel Husk".equals(nameString));
+            jerotesChangeCamel.setJerotesCamelHusk("Jerotes_ Camel Husk".equals(nameString));
         }
-        if (this instanceof StrayAbout strayAbout) {
-            strayAbout.setJerotesParched("Jerotes_ Parched".equals(nameString));
+        if (this instanceof JerotesChangeStray jerotesChangeStray) {
+            jerotesChangeStray.setJerotesParched("Jerotes_ Parched".equals(nameString));
         }
 
     }

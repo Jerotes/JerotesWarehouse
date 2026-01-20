@@ -25,9 +25,9 @@ public abstract class BeaconBlockEntityMixin extends BlockEntity {
         super(p_155228_, p_155229_, p_155230_);
     }
 
-    @Inject(method = "applyEffects", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "applyEffects", at = @At(value = "HEAD"))
     private static void applyEffects(Level p_155098_, BlockPos p_155099_, int p_155100_, MobEffect p_155101_, MobEffect p_155102_, CallbackInfo ci) {
-        if (!p_155098_.isClientSide && p_155101_ != null) {
+        if (!p_155098_.isClientSide() && p_155101_ != null) {
             double d0 = (double)(p_155100_ * 10 + 10);
             int i = 0;
             if (p_155100_ >= 4 && p_155101_ == p_155102_) {

@@ -1,20 +1,30 @@
 package com.jerotes.jerotes.item.Tool;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
+import com.jerotes.jerotes.init.JerotesMobEffects;
+import com.jerotes.jerotes.init.JerotesPotions;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -23,6 +33,8 @@ import net.minecraftforge.common.ToolAction;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,6 +42,7 @@ import java.util.stream.Stream;
 import static net.minecraftforge.common.ToolActions.SWORD_DIG;
 
 public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect, MeleeItem {
+    private static final Map<ItemToolBaseDagger, ItemToolBaseDagger> BY_ID = Maps.newIdentityHashMap();
     private final float attackDamage;
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
     public ItemToolBaseDagger(Tier tier, int damage, float speed, Properties properties) {
@@ -39,6 +52,11 @@ public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect,
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)speed, AttributeModifier.Operation.ADDITION));
         this.defaultModifiers = builder.build();
+        BY_ID.put(this, this);
+    }
+
+    public static Iterable<ItemToolBaseDagger> daggers() {
+        return Iterables.unmodifiableIterable(BY_ID.values());
     }
 
     public float getDamage() {
@@ -98,10 +116,72 @@ public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect,
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
+    public void attackEffectUse(Entity self, Entity attackTo, ItemStack itemStack, boolean dealDamage) {
+        if (attackTo instanceof LivingEntity livingEntity) {
+            if (!self.level().isClientSide()) {
+                List<MobEffectInstance> list = PotionUtils.getMobEffects(itemStack);
+                boolean heal = true;
+                for (MobEffectInstance mobEffectInstance : list) {
+                    if (!mobEffectInstance.getEffect().isBeneficial()) {
+                        heal = false;
+                    }
+                }
+                if (dealDamage || heal) {
+                    for (MobEffectInstance mobEffectInstance : list) {
+                        if (mobEffectInstance.getEffect().isInstantenous()) {
+                            mobEffectInstance.getEffect().applyInstantenousEffect(self, self, livingEntity, mobEffectInstance.getAmplifier(), 0.5);
+                            continue;
+                        }
+                        MobEffect mobEffect = new MobEffectInstance(mobEffectInstance).getEffect();
+                        int amplifier = new MobEffectInstance(mobEffectInstance).getAmplifier();
+                        int duration = new MobEffectInstance(mobEffectInstance).getDuration() / 5;
+                        boolean bl = new MobEffectInstance(mobEffectInstance).isAmbient();
+                        boolean bl2 = new MobEffectInstance(mobEffectInstance).isVisible();
+                        if (self instanceof LivingEntity owner) {
+                            livingEntity.addEffect(new MobEffectInstance(mobEffect, duration, amplifier, bl, bl2), owner);
+                        } else {
+                            livingEntity.addEffect(new MobEffectInstance(mobEffect, duration, amplifier, bl, bl2));
+                        }
+                    }
+                    PotionUtils.setPotion(itemStack, Potions.WATER);
+                }
+            }
+        }
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+        ItemStack itemStack = player.getItemInHand(interactionHand);
+        //药水
+        if (usePotion(level, player, interactionHand)) {
+            return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
+        }
+        return super.use(level, player, interactionHand);
+    }
+    public boolean usePotion(Level level, Player player, InteractionHand interactionHand) {
+        ItemStack itemStack = player.getItemInHand(interactionHand);
+        //药水
+        if (itemStack.getItem() instanceof ItemToolBaseDagger && interactionHand == InteractionHand.MAIN_HAND) {
+            if (player.getOffhandItem().getItem() instanceof PotionItem && !(PotionUtils.getPotion(player.getOffhandItem()) == JerotesPotions.WASTE.get()) && !(PotionUtils.getPotion(player.getOffhandItem()) == PotionUtils.getPotion(itemStack))) {
+                PotionUtils.setPotion(itemStack, PotionUtils.getPotion(player.getOffhandItem()));
+                if (!player.getAbilities().instabuild) {
+                    PotionUtils.setPotion(player.getOffhandItem(), JerotesPotions.WASTE.get());
+                }
+                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BREWING_STAND_BREW, SoundSource.NEUTRAL, 0.5f, 0.4f / (level.getRandom().nextFloat() * 0.4f + 0.8f));
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
         list.add(Component.translatable("item.jerotes.dagger").withStyle(ChatFormatting.YELLOW));
         super.appendHoverText(itemStack, level, list, tooltipFlag);
+        List<MobEffectInstance> lists = PotionUtils.getMobEffects(itemStack);
+        if (lists.isEmpty()) {
+            PotionUtils.addPotionTooltip(itemStack, list, 0.2f);
+        }
     }
 }
 

@@ -1,10 +1,31 @@
 {
   "replace": false,
   "values": [
+    "jerotes:bypasses_cooldown_magic",
     "jerotes:syringe",
     "jerotes:magic_effect",
     "jerotes:bleeding",
     "jerotes:corrosive",
-    "jerotes:poison"
+    "jerotes:poison",
+
+    "jerotes:fire_melee",
+    "jerotes:freeze_melee",
+    "jerotes:lightning_melee",
+    "jerotes:drown_melee",
+
+    "jerotes:fire_shoot",
+    "jerotes:freeze_shoot",
+    "jerotes:lightning_shoot",
+    "jerotes:drown_shoot",
+
+    "jerotes:fire_magic",
+    "jerotes:freeze_magic",
+    "jerotes:lightning_magic",
+    "jerotes:drown_magic",
+
+    "jerotes:bypasses_cooldown_fire",
+    "jerotes:bypasses_cooldown_freeze",
+    "jerotes:bypasses_cooldown_lightning",
+    "jerotes:bypasses_cooldown_drown"
   ]
 }

@@ -7,6 +7,7 @@ import com.jerotes.jerotes.item.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
+import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.world.entity.Mob;
@@ -107,6 +108,10 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> EYEBITE = REGISTRY.register("eyebite", () -> new Shoot());
 
 	public static void setup() {
+
+		CauldronInteraction.WATER.put(JerotesItems.LEATHER_WAR_BEAST_ARMOR.get(), CauldronInteraction.DYED_ITEM);
+		CauldronInteraction.WATER.put(JerotesItems.LEATHER_GIANT_BEAST_ARMOR.get(), CauldronInteraction.DYED_ITEM);
+
 		//麻醉箭
 		DispenserBlock.registerBehavior(JerotesItems.ANESTHETIC_ARROW.get(), new AbstractProjectileDispenseBehavior(){
 			@Override

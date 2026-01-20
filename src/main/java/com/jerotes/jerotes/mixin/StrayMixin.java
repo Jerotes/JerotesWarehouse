@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.StrayAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(Stray.class)
-public abstract class StrayMixin extends AbstractSkeleton implements StrayAbout {
+public abstract class StrayMixin extends AbstractSkeleton implements JerotesChangeStray {
     @Unique
     private static final UUID HEALTH_MODIFIER_UUID = UUID.fromString("19045b3c-b9b3-4cf0-a90e-f4bda61e4a53");
     protected StrayMixin(EntityType<? extends AbstractSkeleton> entityType, Level level) {

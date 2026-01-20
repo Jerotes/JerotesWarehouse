@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
-import com.jerotes.jerotes.entity.Interface.StrayAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
@@ -160,14 +160,14 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
 
     @Inject(method = "getMobType", at = @At("HEAD"), cancellable = true)
     protected void getMobType(CallbackInfoReturnable<MobType> cir) {
-        if (this instanceof CamelAbout camelAbout && camelAbout.isJerotesCamelHusk() && camelAbout.isJerotesMobControlled())
+        if (this instanceof JerotesChangeCamel jerotesChangeCamel && jerotesChangeCamel.isJerotesCamelHusk() && jerotesChangeCamel.isJerotesMobControlled())
             cir.setReturnValue(MobType.UNDEAD);
     }
 
 
     @Inject(method = "canBeAffected", at = @At("HEAD"), cancellable = true)
     public void canBeAffected(MobEffectInstance mobEffectInstance, CallbackInfoReturnable<Boolean> cir) {
-        if (this instanceof StrayAbout strayAbout && strayAbout.isJerotesParched() && mobEffectInstance.getEffect() == MobEffects.WEAKNESS)
+        if (this instanceof JerotesChangeStray jerotesChangeStray && jerotesChangeStray.isJerotesParched() && mobEffectInstance.getEffect() == MobEffects.WEAKNESS)
             cir.setReturnValue(false);
     }
 }

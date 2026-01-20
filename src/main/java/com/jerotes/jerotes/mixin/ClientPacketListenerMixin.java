@@ -8,6 +8,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Saddleable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,7 +29,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleSetEntityPassengersPacket", at = @At("TAIL"))
     protected void handleSetEntityPassengersPacket(ClientboundSetPassengersPacket clientboundSetPassengersPacket, CallbackInfo ci) {
         Entity entity = this.level.getEntity(clientboundSetPassengersPacket.getVehicle());
-        if (entity instanceof ControlVehicleEntity controlVehicleEntity) {
+        if (entity instanceof ControlVehicleEntity controlVehicleEntity && entity instanceof Saddleable saddleable && saddleable.isSaddled()) {
             for (int i : clientboundSetPassengersPacket.getPassengers()) {
                 if (this.level.getEntity(i) == this.minecraft.player) {
                     Component component = Component.translatable("message.jerotes.change_control_combat_type", JerotesKeyMappings.CHANGE_CONTROL_COMBAT_TYPE.getTranslatedKeyMessage());

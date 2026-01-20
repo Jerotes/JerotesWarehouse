@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.EvokerAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeEvoker;
 import com.jerotes.jerotes.goal.EvokerWololoColorMobGoal;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Evoker.class)
-public abstract class EvokerMixin extends SpellcasterIllager implements EvokerAbout {
+public abstract class EvokerMixin extends SpellcasterIllager implements JerotesChangeEvoker {
     @Shadow protected abstract @NotNull SoundEvent getCastingSoundEvent();
 
     protected EvokerMixin(EntityType<? extends SpellcasterIllager> entityType, Level level) {

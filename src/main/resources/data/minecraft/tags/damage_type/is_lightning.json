@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:lightning_melee",
+    "jerotes:lightning_shoot",
+    "jerotes:lightning_magic",
+    "jerotes:bypasses_cooldown_lightning"
+  ]
+}

@@ -8,6 +8,11 @@
     "minecraft:wither",
     "minecraft:wither_skull",
     "minecraft:dragon_breath",
-    "jerotes:magic_effect"
+    "jerotes:magic_effect",
+    "jerotes:bypasses_cooldown_magic",
+    "jerotes:fire_magic",
+    "jerotes:freeze_magic",
+    "jerotes:lightning_magic",
+    "jerotes:drown_magic"
   ]
 }

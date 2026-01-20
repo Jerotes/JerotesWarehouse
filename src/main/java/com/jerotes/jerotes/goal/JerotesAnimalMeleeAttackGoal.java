@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.goal;
 
+import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import com.jerotes.jerotes.entity.Interface.InventoryEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import net.minecraft.world.InteractionHand;
@@ -35,6 +36,9 @@ public class JerotesAnimalMeleeAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        if (this.mob instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.isTrueManuallyControlCombat()) {
+            return false;
+        }
         if (this.mob instanceof JerotesEntity jerotes && !jerotes.OwnerCanOrderAttack()) {
             return false;
         }
@@ -59,6 +63,9 @@ public class JerotesAnimalMeleeAttackGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
+        if (this.mob instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.isTrueManuallyControlCombat()) {
+            return false;
+        }
         if (this.mob instanceof JerotesEntity jerotes && !jerotes.OwnerCanOrderAttack()) {
             return false;
         }

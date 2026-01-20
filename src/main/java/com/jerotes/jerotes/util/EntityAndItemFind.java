@@ -59,7 +59,7 @@ public class EntityAndItemFind {
 	}
 	//是否魔法抵抗
 	public static boolean MagicResistance(DamageSource damagesource) {
-		return  damagesource.is(JerotesDamageTypeTags.MAGIC_RESISTANT)
+		return  damagesource.is(JerotesDamageTypeTags.IS_MAGIC)
 				|| (damagesource.getDirectEntity() != null && damagesource.getDirectEntity().getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:magic_shoots"))))
 				|| (damagesource.getEntity() != null && damagesource.getEntity().getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:magic_shoots"))))
 				|| damagesource.getDirectEntity() instanceof MagicAbout || damagesource.getEntity() instanceof MagicAbout

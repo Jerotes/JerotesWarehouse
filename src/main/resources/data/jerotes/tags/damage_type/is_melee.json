@@ -7,6 +7,10 @@
     "minecraft:player_attack",
     "minecraft:sting",
     "jerotes:bypasses_cooldown_melee",
+    "jerotes:fire_melee",
+    "jerotes:freeze_melee",
+    "jerotes:lightning_melee",
+    "jerotes:drown_melee",
 
     "jerotes:spear",
     {

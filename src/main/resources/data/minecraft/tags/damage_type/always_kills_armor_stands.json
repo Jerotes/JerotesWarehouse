@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "jerotes:bypasses_cooldown_shoot"
+    "jerotes:bypasses_cooldown_shoot",
+    "jerotes:fire_melee",
+    "jerotes:freeze_melee",
+    "jerotes:lightning_melee",
+    "jerotes:drown_melee"
   ]
 }

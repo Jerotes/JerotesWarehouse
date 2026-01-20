@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:drown_melee",
+    "jerotes:drown_shoot",
+    "jerotes:drown_magic",
+    "jerotes:bypasses_cooldown_drown"
+  ]
+}

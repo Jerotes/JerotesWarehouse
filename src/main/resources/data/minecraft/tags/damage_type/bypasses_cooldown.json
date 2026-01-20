@@ -3,6 +3,12 @@
   "values": [
     "jerotes:bypasses_cooldown_shoot",
     "jerotes:bypasses_cooldown_melee",
-    "jerotes:magic_effect"
+    "jerotes:bypasses_cooldown_magic",
+    "jerotes:magic_effect",
+
+    "jerotes:bypasses_cooldown_fire",
+    "jerotes:bypasses_cooldown_freeze",
+    "jerotes:bypasses_cooldown_lightning",
+    "jerotes:bypasses_cooldown_drown"
   ]
 }

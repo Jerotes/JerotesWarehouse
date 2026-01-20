@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.CamelAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.AnimalPanic;
@@ -23,7 +23,7 @@ public abstract class AnimalPanicMixin extends Behavior<PathfinderMob> {
 
     @Inject(method = "checkExtraStartConditions*", at = @At("HEAD"), cancellable = true)
     private void checkExtraStartConditions(ServerLevel serverLevel, PathfinderMob pathfinderMob, CallbackInfoReturnable<Boolean> cir) {
-        if (pathfinderMob instanceof CamelAbout camelAbout && camelAbout.isJerotesCamelHusk()) {
+        if (pathfinderMob instanceof JerotesChangeCamel jerotesChangeCamel && jerotesChangeCamel.isJerotesCamelHusk()) {
             cir.setReturnValue(false);
         }
     }

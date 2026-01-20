@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:magic_effect",
+    "jerotes:bypasses_cooldown_magic",
+    "jerotes:fire_magic",
+    "jerotes:freeze_magic",
+    "jerotes:lightning_magic",
+    "jerotes:drown_magic"
+  ]
+}

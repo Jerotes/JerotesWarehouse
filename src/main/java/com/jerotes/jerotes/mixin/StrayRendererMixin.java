@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Interface.StrayAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
@@ -18,7 +18,7 @@ public abstract class StrayRendererMixin extends SkeletonRenderer {
 
     @Inject(method = "getTextureLocation*", at = @At("HEAD"), cancellable = true)
     public void getTextureLocation(AbstractSkeleton abstractSkeleton, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (abstractSkeleton instanceof StrayAbout strayAbout && strayAbout.isJerotesParched()) {
+        if (abstractSkeleton instanceof JerotesChangeStray jerotesChangeStray && jerotesChangeStray.isJerotesParched()) {
             cir.setReturnValue(new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skeleton/parched.png"));
         }
     }

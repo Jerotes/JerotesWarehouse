@@ -6,6 +6,7 @@ import com.jerotes.jerotes.entity.Arrow.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -33,7 +34,10 @@ public class HealJavelin extends ItemToolBaseJavelin {
 	public void attackUse(Entity self, Entity attackTo) {
 		if (!attackTo.level().isClientSide && attackTo instanceof LivingEntity livingEntity) {
 			livingEntity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 240, 2));
-			livingEntity.addEffect(new MobEffectInstance(MobEffects.HEAL, 1, 3));
+			MobEffectInstance mobEffect = new MobEffectInstance(MobEffects.HEAL, 1, 3);
+			if (mobEffect.getEffect().isInstantenous()) {
+				mobEffect.getEffect().applyInstantenousEffect(self, self, livingEntity, mobEffect.getAmplifier(), 1);
+			}
 		}
 	}
 

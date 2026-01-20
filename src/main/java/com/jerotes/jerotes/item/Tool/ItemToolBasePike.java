@@ -116,8 +116,6 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
     public int getBlockReduction() {
         return 50;
     }
-
-    @OnlyIn(Dist.CLIENT)
     public void makeSound(Entity entity) {
         if (entity instanceof Player player) {
             entity.level().playSound(player, entity.getX(), entity.getY(), entity.getZ(),
@@ -128,7 +126,6 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
                     sound, entity.getSoundSource(), 1.0f, 1.0f);
         }
     }
-    @OnlyIn(Dist.CLIENT)
     public void makeSound2(Entity entity) {
         if (entity instanceof Player player) {
             entity.level().playSound(player, entity.getX(), entity.getY(), entity.getZ(),
@@ -139,7 +136,6 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
                     sound2, entity.getSoundSource(), 1.0f, 1.0f);
         }
     }
-    @OnlyIn(Dist.CLIENT)
     public void makeHitSound(Entity entity) {
         entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
                 hitSound, entity.getSoundSource(), 1.0f, 1.0f);

@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.BaseEntityAbout;
-import com.jerotes.jerotes.entity.Interface.CamelAbout;
-import com.jerotes.jerotes.entity.Interface.StrayAbout;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeMob;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
 import com.jerotes.jerotes.entity.Interface.UseBowEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseUmbrella;
@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Mob.class)
-public abstract class MobMixin extends LivingEntity implements BaseEntityAbout, StrayAbout {
+public abstract class MobMixin extends LivingEntity implements JerotesChangeMob {
     @Shadow public abstract void tick();
 
     @Shadow public abstract void setPersistenceRequired();
@@ -64,12 +64,12 @@ public abstract class MobMixin extends LivingEntity implements BaseEntityAbout, 
 
     @Inject(method = "canBeLeashed", at = @At("HEAD"), cancellable = true)
     protected void canBeLeashed(Player player, CallbackInfoReturnable<Boolean> cir) {
-        if (this instanceof CamelAbout camelAbout && camelAbout.isJerotesCamelHusk() && camelAbout.isJerotesMobControlled())
+        if (this instanceof JerotesChangeCamel jerotesChangeCamel && jerotesChangeCamel.isJerotesCamelHusk() && jerotesChangeCamel.isJerotesMobControlled())
             cir.setReturnValue(false);
     }
     @Inject(method = "interact", at = @At("HEAD"))
     public void interact(Player p_21420_, InteractionHand p_21421_, CallbackInfoReturnable<InteractionResult> cir) {
-        if (this instanceof CamelAbout camelAbout && camelAbout.isJerotesCamelHusk() && camelAbout.isJerotesMobControlled())
+        if (this instanceof JerotesChangeCamel jerotesChangeCamel && jerotesChangeCamel.isJerotesCamelHusk() && jerotesChangeCamel.isJerotesMobControlled())
             this.setPersistenceRequired();
     }
 
@@ -80,7 +80,9 @@ public abstract class MobMixin extends LivingEntity implements BaseEntityAbout, 
     }
     public void setJerotesParched(boolean bl) {
         this.getEntityData().set(IS_JEROTES_PARCHED, bl);
-        this.setJerotesParchedOther(bl);
+        if (this instanceof JerotesChangeStray jerotesChangeStray) {
+            jerotesChangeStray.setJerotesParchedOther(bl);
+        }
     }
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
