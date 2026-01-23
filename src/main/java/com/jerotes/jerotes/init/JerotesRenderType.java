@@ -19,6 +19,26 @@ public class JerotesRenderType extends RenderType {
 		super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
 	}
 
+	private static final RenderType BEAST_TOUGH_GLINT = create("tough_glint",
+			DefaultVertexFormat.POSITION_TEX,
+			VertexFormat.Mode.QUADS,
+			1536,
+			false,
+			false,
+			CompositeState.builder()
+					.setShaderState(RENDERTYPE_GLINT_SHADER)
+					.setTextureState(new TextureStateShard(new ResourceLocation(JerotesWarehouse.MODID, "textures/misc/tough_glint.png"), true, false))
+					.setWriteMaskState(COLOR_WRITE)
+					.setCullState(NO_CULL)
+					.setDepthTestState(EQUAL_DEPTH_TEST)
+					.setTransparencyState(GLINT_TRANSPARENCY)
+					.setTexturingState(GLINT_TEXTURING)
+					.createCompositeState(false));
+
+	public static RenderType tough_glint() {
+		return BEAST_TOUGH_GLINT;
+	}
+
 	public static RenderType dagger_glint() {
 		return create(
 				"dagger_glint",

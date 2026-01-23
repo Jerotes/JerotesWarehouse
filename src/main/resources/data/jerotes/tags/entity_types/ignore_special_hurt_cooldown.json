@@ -1,0 +1,10 @@
+{
+  "__comment": "忽视一些特殊伤害间隔",
+  "replace": false,
+  "values": [
+    "minecraft:player",
+    "jerotes:jerotes_player",
+
+    "#jerotes:legendary"
+  ]
+}

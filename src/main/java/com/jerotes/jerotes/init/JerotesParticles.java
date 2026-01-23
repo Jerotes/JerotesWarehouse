@@ -32,6 +32,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.BESTOW_CURSE.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.PHANTASMAL_KILLER.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.EYEBITE.get(), ShootParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.BEAST_TOUGH_BREAK.get(), BigGlowDisplayParticle.Provider::new);
 
 		event.registerSpriteSet(JerotesParticleTypes.MAGIC_MISSILE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.POISON_BREATH_DISPLAY.get(), DisplayParticle::provider);
@@ -52,5 +53,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.INVISIBLE_PASSAGE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.COUNTERSPELL_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.MAGIC_ABSORPTION_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.BEAST_TOUGH_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.ACTION_SURGE_DISPLAY.get(), DisplayParticle::provider);
 	}
 }

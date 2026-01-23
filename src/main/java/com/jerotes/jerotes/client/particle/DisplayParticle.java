@@ -25,12 +25,16 @@ public class DisplayParticle extends TextureSheetParticle {
 	}
 
 	private final SpriteSet spriteSet;
+	private float initialScale = 0f;
+	private float peakScale = 0.3f;
+	private int fadeInTime = 5;
+	private int fadeOutTime = 5;
 
 	protected DisplayParticle(ClientLevel world, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
 		super(world, x, y, z);
 		this.spriteSet = spriteSet;
 		this.setSize(0f, 0f);
-		this.quadSize *= 2.75f;
+		this.quadSize = initialScale;
 		this.lifetime = 20;
 		this.gravity = 0f;
 		this.hasPhysics = false;
@@ -50,8 +54,28 @@ public class DisplayParticle extends TextureSheetParticle {
 	public void tick() {
 		super.tick();
 		this.setSpriteFromAge(this.spriteSet);
+		if (this.age < fadeInTime) {
+			float fadeInProgress = (float)this.age / (float)fadeInTime;
+			this.quadSize = lerp(initialScale, peakScale, easeOutCubic(fadeInProgress));
+		}
+		else if (this.age > this.lifetime - fadeOutTime) {
+			float fadeOutProgress = (float)(this.age - (this.lifetime - fadeOutTime)) / (float)fadeOutTime;
+			this.quadSize = lerp(peakScale, initialScale, easeInCubic(fadeOutProgress));
+		}
+		else {
+			this.quadSize = peakScale;
+		}
 	}
 
+	private float lerp(float start, float end, float progress) {
+		return start + (end - start) * progress;
+	}
+	private float easeInCubic(float t) {
+		return t * t * t;
+	}
+	private float easeOutCubic(float t) {
+		return 1 - (float)Math.pow(1 - t, 3);
+	}
 	@Override
 	public int getLightColor(float f) {
 		return 240;

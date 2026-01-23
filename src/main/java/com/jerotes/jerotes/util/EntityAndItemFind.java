@@ -1,9 +1,11 @@
 package com.jerotes.jerotes.util;
 
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypeTags;
+import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -12,6 +14,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -23,6 +26,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EntityAndItemFind {
 	//近战攻击
@@ -41,9 +45,19 @@ public class EntityAndItemFind {
 	public static boolean isBoss(EntityType type) {
 		return type.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("forge:bosses")));
 	}
+	//是否传奇
+	public static boolean isLegendary(Entity entity) {
+		if (entity instanceof JerotesEntity jerotes && jerotes.isLegendary())
+			return true;
+		return entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:legendary")));
+	}
 	//是否免疫特殊击退
 	public static boolean isNoSpecialKnockback(EntityType type) {
 		return type.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:no_special_knockback")));
+	}
+	//是否忽略特殊伤害间隔
+	public static boolean isIgnoreSpecialHurtCooldown(EntityType type) {
+		return type.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:ignore_special_hurt_cooldown")));
 	}
 	//选择长矛物品
 	public static boolean targetJavelinWeapon(ItemStack javelin) {
@@ -90,7 +104,26 @@ public class EntityAndItemFind {
 		return livingEntity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:blindness")));
 	}
 	public static boolean targetBlindnessTrue(LivingEntity livingEntity) {
-		return livingEntity.hasEffect(MobEffects.DARKNESS) || livingEntity.hasEffect(MobEffects.BLINDNESS) || EntityAndItemFind.targetBlindness(livingEntity) || targetBlindness(livingEntity);
+		AtomicBoolean can = new AtomicBoolean(false);
+		livingEntity.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTagOrEmpty(JerotesMobEffectTags.BLINDNESS).forEach(effect -> {
+			if (livingEntity.hasEffect(effect.get())) {
+				can.set(true);
+			}
+		});
+		return can.get() || EntityAndItemFind.targetBlindness(livingEntity);
+	}
+	//是否发亮
+	public static boolean targetGlowing(LivingEntity livingEntity) {
+		return livingEntity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:glowing")));
+	}
+	public static boolean targetGlowingTrue(LivingEntity livingEntity) {
+		AtomicBoolean can = new AtomicBoolean(false);
+		livingEntity.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTagOrEmpty(JerotesMobEffectTags.GLOWING).forEach(effect -> {
+			if (livingEntity.hasEffect(effect.get())) {
+				can.set(true);
+			}
+		});
+		return can.get() || targetGlowing(livingEntity);
 	}
 
 

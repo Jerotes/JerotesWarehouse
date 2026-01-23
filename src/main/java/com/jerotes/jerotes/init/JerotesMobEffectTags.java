@@ -10,6 +10,8 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public interface JerotesMobEffectTags {
 	TagKey<MobEffect> ABACK_AWAY_IMMUNE = create("jerotes:aback_away_immune");
+	TagKey<MobEffect> BLINDNESS = create("jerotes:blindness");
+	TagKey<MobEffect> GLOWING = create("jerotes:glowing");
 	TagKey<MobEffect> SERPON_FACTION = create("jerotes:serpon_faction");
 	TagKey<MobEffect> REMOVE_AFTER_SPELL = create("jerotes:remove_after_spell");
 	TagKey<MobEffect> REMOVE_AFTER_ATTACK = create("jerotes:remove_after_attack");

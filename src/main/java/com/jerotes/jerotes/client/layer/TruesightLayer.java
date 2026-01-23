@@ -54,12 +54,12 @@ public class TruesightLayer<T extends Entity, M extends EntityModel<T>> extends 
         poseStack.pushPose();
         poseStack.scale(1.05f, 1.05f, 1.05f);
         RenderType glowType = JerotesRenderType.glowing_outline();
-        if (t instanceof Mob mob) {
-            if (mob instanceof Enemy && !(mob.isAlliedTo(player))) {
-                glowType = JerotesRenderType.glowing_outline_combat();
-            }
-            if (mob.isAggressive() && !(mob.isAlliedTo(player))) {
+        if (t instanceof Mob mob && !(mob.isAlliedTo(player))) {
+            if (mob.isAggressive() || mob.getTarget() != null) {
                 glowType = JerotesRenderType.glowing_outline_combat_angry();
+            }
+            else if (mob instanceof Enemy) {
+                glowType = JerotesRenderType.glowing_outline_combat();
             }
         }
         if (t.isInvisible() || !player.hasLineOfSight(t)) {

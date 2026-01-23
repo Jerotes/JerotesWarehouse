@@ -140,7 +140,6 @@ public interface JerotesEntity {
         return this.hasDamageCap() && this.hasDamageCooldownTick() && this.hasPercentageDamage();
     }
 
-
     default void setSprintingCooldown(int n) {
     }
     default void setCanNotAttackTargetTick(int n) {

@@ -76,7 +76,6 @@ public class EntityAboutEvent {
 			event.setFriend(true);
 			return;
 		}
-
 		boolean enmey = livingEntity instanceof JerotesEntity jerotes && jerotes.isHateFaction(livingEntity2) ||
 				livingEntity2 instanceof JerotesEntity jerotes2 && jerotes2.isHateFaction(livingEntity);
 		if (enmey) {

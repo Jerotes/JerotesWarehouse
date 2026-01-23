@@ -202,7 +202,8 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
                 hitSound2, entity.getSoundSource(), 1.0f, 1.0f);
     }
     public void makeLocalHitSound(Entity entity) {
-        Minecraft.getInstance().getSoundManager().play(new EntityBoundSoundInstance(hitSound, entity.getSoundSource(), 1.0f, 1.0f, entity, RandomSource.create().nextLong()));;
+        entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
+                hitSound, entity.getSoundSource(), 1.0f, 1.0f);
     }
 
     public int computeDamageUseDuration() {
