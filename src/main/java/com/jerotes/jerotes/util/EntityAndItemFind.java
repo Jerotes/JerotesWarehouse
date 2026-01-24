@@ -59,6 +59,13 @@ public class EntityAndItemFind {
 	public static boolean isIgnoreSpecialHurtCooldown(EntityType type) {
 		return type.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:ignore_special_hurt_cooldown")));
 	}
+	//是否无法缴械
+	public static boolean isUnableDisarm(EntityType type) {
+		return type.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:unable_disarm")));
+	}
+	public static boolean isUnableDisarm(Entity entity) {
+		return isUnableDisarm(entity.getType()) || isLegendary(entity);
+	}
 	//选择长矛物品
 	public static boolean targetJavelinWeapon(ItemStack javelin) {
 		return javelin.getItem() instanceof TridentItem || javelin.is(ItemTags.create(new ResourceLocation("forge:tools/tridents")));

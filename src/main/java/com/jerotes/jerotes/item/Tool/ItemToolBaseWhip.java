@@ -68,7 +68,7 @@ public class ItemToolBaseWhip extends ItemToolBaseSword {
             if (!user.isSilent()) {
                 user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, user.getSoundSource(), 10.0f, 1.0f);
             }
-            float reachs = (((user instanceof Player || user instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.otherAttackReachAsPlayer()) ? playerReach : reach) + ((user.getAttribute(ForgeMod.ENTITY_REACH.get()) != null) ? (float) Math.max(0, user.getAttributeValue(ForgeMod.ENTITY_REACH.get()) - 3) : 0));
+            float reachs = AttackFind.reachAttackReach(user, itemStack, playerReach, reach, 3f, 0.5f);
             List<LivingEntity> list = serverLevel.getEntitiesOfClass(LivingEntity.class, user.getBoundingBox().inflate(reachs, reachs, reachs));
             for (LivingEntity hurt : list) {
                 if (hurt == null || hurt.distanceTo(user) > reachs * 4) continue;

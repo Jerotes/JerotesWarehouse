@@ -493,10 +493,10 @@ public class Main {
 		return blockPos2;
 	}
 	//
-	public static BlockPos findSpawnPositionNearFill(LivingEntity entity, int n) {
+	public static BlockPos findSpawnPositionNearFill(Entity entity, int n) {
 		return findSpawnPositionNearFill(entity.level(), entity.blockPosition(), n);
 	}
-	public static BlockPos findSpawnPositionNearFillOnBlock(LivingEntity entity, int n) {
+	public static BlockPos findSpawnPositionNearFillOnBlock(Entity entity, int n) {
 		return findSpawnPositionNearFillOnBlock(entity.level(), entity.blockPosition(), n);
 	}
 

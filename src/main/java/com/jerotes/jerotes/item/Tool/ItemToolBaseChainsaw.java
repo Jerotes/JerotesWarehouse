@@ -82,7 +82,7 @@ public class ItemToolBaseChainsaw extends ItemToolBaseAxe {
                 livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.ITEM_BREAK, livingEntity.getSoundSource(), 10.0f, 1.0f);
             }
             //攻击
-            float reachs = (((livingEntity instanceof Player || livingEntity instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.otherAttackReachAsPlayer()) ? playerReach : reach) + ((livingEntity.getAttribute(ForgeMod.ENTITY_REACH.get()) != null) ? (float) Math.max(0, livingEntity.getAttributeValue(ForgeMod.ENTITY_REACH.get()) - 3) : 0));
+            float reachs = AttackFind.reachAttackReach(livingEntity, itemStack, playerReach, reach, 3f, 0.5f);
             List<LivingEntity> list = serverLevel.getEntitiesOfClass(LivingEntity.class, livingEntity.getBoundingBox().inflate(reachs, reachs, reachs));
             for (LivingEntity hurt : list) {
                 if (hurt == null || hurt.distanceTo(livingEntity) > reachs * 4) continue;

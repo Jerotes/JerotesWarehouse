@@ -45,10 +45,10 @@ public class PacketHandler {
 				SpellUseMessage::encode,
 				SpellUseMessage::decode,
 				SpellUseMessage::consume);
-		NETWORK_WRAPPER.registerMessage(packetsRegistered++, ControlVehicleMessage.class,
-				ControlVehicleMessage::encode,
-				ControlVehicleMessage::decode,
-				ControlVehicleMessage::consume);
+		NETWORK_WRAPPER.registerMessage(packetsRegistered++, ControlVehiclePacket.class,
+				ControlVehiclePacket::encode,
+				ControlVehiclePacket::decode,
+				ControlVehiclePacket::consume);
 		NETWORK_WRAPPER.registerMessage(packetsRegistered++, JerotesSpearAttackPacket.class,
 				JerotesSpearAttackPacket::encode,
 				JerotesSpearAttackPacket::decode,
@@ -57,7 +57,6 @@ public class PacketHandler {
 				JerotesSpearRushAttackPacket::encode,
 				JerotesSpearRushAttackPacket::decode,
 				JerotesSpearRushAttackPacket::consume);
-
 	}
 
 	public static void sendToServer(Object msg) {

@@ -115,8 +115,8 @@ public class SuchInventoryScreen extends AbstractContainerScreen<SuchInventoryMe
                 guiGraphics.blit(ARMOR_SLOT_SPRITE, n3 + 7, n4 + 35, 0, 0, 18, 18, 18, 18);
             }
         }
-       InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, n3 + 51, n4 + 60, 17, (float)(n3 + 51) - this.xMouse, (float)(n4 + 75 - 50) - this.yMouse, this.mob);
-    }
+        MobInventoryGUIScreen.renderEntityInInventoryFollowsMouse(guiGraphics, n3 + 26, n4 + 18, n3 + 78, n4 + 70, 17, 0.25f, this.xMouse, this.yMouse, this.mob);
+   }
 
     @Override
     public void render(GuiGraphics guiGraphics, int n, int n2, float f) {

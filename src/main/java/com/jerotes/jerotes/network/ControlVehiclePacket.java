@@ -13,37 +13,37 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-public class ControlVehicleMessage {
+public class ControlVehiclePacket {
     int type, pressedms;
     int livingEntity;
     int isAdd;
 
-    public ControlVehicleMessage(int type, int pressedms, int livingEntity, int isAdd) {
+    public ControlVehiclePacket(int type, int pressedms, int livingEntity, int isAdd) {
         this.type = type;
         this.pressedms = pressedms;
         this.livingEntity = livingEntity;
         this.isAdd = isAdd;
     }
 
-    public ControlVehicleMessage(FriendlyByteBuf buffer) {
+    public ControlVehiclePacket(FriendlyByteBuf buffer) {
         this.type = buffer.readInt();
         this.pressedms = buffer.readInt();
         this.livingEntity = buffer.readInt();
         this.isAdd = buffer.readInt();
     }
 
-    public static void encode(ControlVehicleMessage message, FriendlyByteBuf buffer) {
+    public static void encode(ControlVehiclePacket message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
         buffer.writeInt(message.pressedms);
         buffer.writeInt(message.livingEntity);
         buffer.writeInt(message.isAdd);
     }
 
-    public static ControlVehicleMessage decode(FriendlyByteBuf buffer) {
-        return new ControlVehicleMessage(buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt());
+    public static ControlVehiclePacket decode(FriendlyByteBuf buffer) {
+        return new ControlVehiclePacket(buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt());
     }
 
-    public static void consume(ControlVehicleMessage message, Supplier<NetworkEvent.Context> context) {
+    public static void consume(ControlVehiclePacket message, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             ServerPlayer playerEntity = context.get().getSender();
             if (playerEntity != null) {

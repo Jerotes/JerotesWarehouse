@@ -5,7 +5,7 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
-import com.jerotes.jerotes.network.ControlVehicleMessage;
+import com.jerotes.jerotes.network.ControlVehiclePacket;
 import com.jerotes.jerotes.network.PacketHandler;
 import com.jerotes.jerotes.network.SpellUseMessage;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -55,9 +55,9 @@ public class JerotesKeyMappings {
 			super.setDown(isDown);
 			Minecraft mc = Minecraft.getInstance();
 			if (isDownOld != isDown && isDown && mc.player != null && mc.player.getControlledVehicle() != null) {
-				PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getControlledVehicle().getId(), 2));
+				PacketHandler.sendToServer(new ControlVehiclePacket(0, 0, mc.player.getControlledVehicle().getId(), 2));
 				if (Minecraft.getInstance().player != null) {
-					ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getControlledVehicle().getId(), 2);
+					ControlVehiclePacket.pressAction(mc.player, 0, 0, mc.player.getControlledVehicle().getId(), 2);
 				}
 			}
 			isDownOld = isDown;
@@ -73,9 +73,9 @@ public class JerotesKeyMappings {
 			if (isDownOld != isDown && isDown) {
 				if (mc.player != null && mc.player.getControlledVehicle() != null && mc.player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressMain()) {
 					if (controlVehicleEntity.isManuallyControlCombat()) {
-						PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getControlledVehicle().getId(), 0));
+						PacketHandler.sendToServer(new ControlVehiclePacket(0, 0, mc.player.getControlledVehicle().getId(), 0));
 						if (mc.player != null) {
-							ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getControlledVehicle().getId(), 0);
+							ControlVehiclePacket.pressAction(mc.player, 0, 0, mc.player.getControlledVehicle().getId(), 0);
 						}
 					}
 				}
@@ -92,9 +92,9 @@ public class JerotesKeyMappings {
 			if (isDownOld != isDown && isDown) {
 				if (mc.player != null && mc.player.getControlledVehicle() != null && mc.player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canPressMain()) {
 					if (controlVehicleEntity.isManuallyControlCombat()) {
-						PacketHandler.sendToServer(new ControlVehicleMessage(0, 0, mc.player.getControlledVehicle().getId(), 1));
+						PacketHandler.sendToServer(new ControlVehiclePacket(0, 0, mc.player.getControlledVehicle().getId(), 1));
 						if (mc.player != null) {
-							ControlVehicleMessage.pressAction(mc.player, 0, 0, mc.player.getControlledVehicle().getId(), 1);
+							ControlVehiclePacket.pressAction(mc.player, 0, 0, mc.player.getControlledVehicle().getId(), 1);
 						}
 					}
 				}

@@ -10,9 +10,11 @@ import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
 import com.jerotes.jerotes.world.inventory.MobInventoryGUIMenu;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
@@ -21,6 +23,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -37,7 +40,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,11 +68,56 @@ public class MobInventoryGUIScreen extends AbstractContainerScreen<MobInventoryG
     private static final ResourceLocation TEXTURE = new ResourceLocation(JerotesWarehouse.MODID,"textures/gui/container/mob_inventory_gui.png");
     private static final ResourceLocation TEXTURE_INVENTORY = new ResourceLocation(JerotesWarehouse.MODID,"textures/gui/container/mob_inventory_gui_inventory.png");
 
-    //1.20.1
-    public static void renderEntityInInventoryFollowsMouse(GuiGraphics p_282802_, int p_275688_, int p_275245_, int p_275535_, float p_275604_, float p_275546_, LivingEntity p_275689_) {
-        float f = (float)Math.atan((double)(p_275604_ / 40.0F));
-        float f1 = (float)Math.atan((double)(p_275546_ / 40.0F));
-        InventoryScreen.renderEntityInInventoryFollowsAngle(p_282802_, p_275688_, p_275245_, p_275535_, f, f1, p_275689_);
+    public static void renderEntityInInventoryFollowsMouse(GuiGraphics p_282802_, int p_275688_, int p_275245_, int p_275535_, int p_301381_, int p_299741_, float p_275604_, float p_275546_, float p_300682_, LivingEntity p_275689_) {
+        float f = (float)(p_275688_ + p_275535_) / 2.0F;
+        float f1 = (float)(p_275245_ + p_301381_) / 2.0F;
+        p_282802_.enableScissor(p_275688_, p_275245_, p_275535_, p_301381_);
+        float f2 = (float)Math.atan((double)((f - p_275546_) / 40.0F));
+        float f3 = (float)Math.atan((double)((f1 - p_300682_) / 40.0F));
+        Quaternionf quaternionf = (new Quaternionf()).rotateZ((float)Math.PI);
+        Quaternionf quaternionf1 = (new Quaternionf()).rotateX(f3 * 20.0F * ((float)Math.PI / 180F));
+        quaternionf.mul(quaternionf1);
+        float f4 = p_275689_.yBodyRot;
+        float f5 = p_275689_.getYRot();
+        float f6 = p_275689_.getXRot();
+        float f7 = p_275689_.yHeadRotO;
+        float f8 = p_275689_.yHeadRot;
+        p_275689_.yBodyRot = 180.0F + f2 * 20.0F;
+        p_275689_.setYRot(180.0F + f2 * 40.0F);
+        p_275689_.setXRot(-f3 * 20.0F);
+        p_275689_.yHeadRot = p_275689_.getYRot();
+        p_275689_.yHeadRotO = p_275689_.getYRot();
+        Vector3f vector3f = new Vector3f(0.0F, p_275689_.getBbHeight() / 2.0F + p_275604_, 0.0F);
+        renderEntityInInventory(p_282802_, f, f1, p_299741_, vector3f, quaternionf, quaternionf1, p_275689_);
+        p_275689_.yBodyRot = f4;
+        p_275689_.setYRot(f5);
+        p_275689_.setXRot(f6);
+        p_275689_.yHeadRotO = f7;
+        p_275689_.yHeadRot = f8;
+        p_282802_.disableScissor();
+    }
+
+    public static void renderEntityInInventory(GuiGraphics p_282665_, float p_300023_, float p_301239_, int p_283622_, Vector3f p_298037_, Quaternionf p_281880_, @Nullable Quaternionf p_282882_, LivingEntity p_282466_) {
+        p_282665_.pose().pushPose();
+        p_282665_.pose().translate((double)p_300023_, (double)p_301239_, 50.0D);
+        p_282665_.pose().mulPoseMatrix((new Matrix4f()).scaling((float)p_283622_, (float)p_283622_, (float)(-p_283622_)));
+        p_282665_.pose().translate(p_298037_.x, p_298037_.y, p_298037_.z);
+        p_282665_.pose().mulPose(p_281880_);
+        Lighting.setupForEntityInInventory();
+        EntityRenderDispatcher entityrenderdispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        if (p_282882_ != null) {
+            p_282882_.conjugate();
+            entityrenderdispatcher.overrideCameraOrientation(p_282882_);
+        }
+
+        entityrenderdispatcher.setRenderShadow(false);
+        RenderSystem.runAsFancy(() -> {
+            entityrenderdispatcher.render(p_282466_, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, p_282665_.pose(), p_282665_.bufferSource(), 15728880);
+        });
+        p_282665_.flush();
+        entityrenderdispatcher.setRenderShadow(true);
+        p_282665_.pose().popPose();
+        Lighting.setupFor3DItems();
     }
 
     @Override
@@ -75,7 +127,7 @@ public class MobInventoryGUIScreen extends AbstractContainerScreen<MobInventoryG
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         if (this.menu.boundEntity instanceof LivingEntity livingEntity) {
             //本身
-            InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, (this.width - this.imageWidth) / 2 + 33, (this.height - this.imageHeight) / 2 + 54, 17, (float)((this.width - this.imageWidth) / 2 + 33) - mouseX, (float)((this.height - this.imageHeight) / 2 + 75 - 50 - 9) - mouseY, livingEntity);
+            renderEntityInInventoryFollowsMouse(guiGraphics, this.leftPos + 8, this.topPos + 8, this.leftPos + 59, this.topPos + 59, 17, this.getMenu().getScale(), mouseX, mouseY, livingEntity);
 
             if (!this.menu.isCanUseMainHand() ||
                     (Main.isCanNotMove(livingEntity.getItemBySlot(EquipmentSlot.MAINHAND)))) {

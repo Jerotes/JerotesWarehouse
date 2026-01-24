@@ -1,9 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.JerotesChangeMob;
-import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
-import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
-import com.jerotes.jerotes.entity.Interface.UseBowEntity;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseUmbrella;
 import com.jerotes.jerotes.util.AttackFind;
@@ -55,7 +52,8 @@ public abstract class MobMixin extends LivingEntity implements JerotesChangeMob 
     @Inject(method = "isLeftHanded", at = @At("HEAD"), cancellable = true)
     private void isLeftHanded(CallbackInfoReturnable<Boolean> cir) {
         if (ModList.get().isLoaded("tacz")) {
-            if (this.getMainHandItem().getItem().getDescriptionId().contains("modern_kinetic_gun") && (this instanceof UseBowEntity useBowEntity && !useBowEntity.justBow() || this.getType() == JerotesEntityType.TEST.get())) {
+            if (this.getMainHandItem().getItem().getDescriptionId().contains("modern_kinetic_gun") &&
+                    (this instanceof UseBowEntity useBowEntity && !useBowEntity.justBow() || this.getType() == JerotesEntityType.TEST.get())) {
                 cir.setReturnValue(false);
             }
         }

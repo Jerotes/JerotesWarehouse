@@ -23,7 +23,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
 
@@ -184,6 +186,12 @@ public class AttackFind {
         return true;
     }
 
+    //范围攻击范围
+    public static float reachAttackReach(LivingEntity user, ItemStack weapon, float playerReach, float reach, float baseReachEliminate, float sweepEnchantmentAdd) {
+        float reachs = (((user instanceof Player || user instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.otherAttackReachAsPlayer()) ? playerReach : reach) + ((user.getAttribute(ForgeMod.ENTITY_REACH.get()) != null) ? (float) Math.max(0, user.getAttributeValue(ForgeMod.ENTITY_REACH.get()) - baseReachEliminate) : 0));
+        reachs += sweepEnchantmentAdd * weapon.getEnchantmentLevel(Enchantments.SWEEPING_EDGE);
+        return reachs;
+    }
 
     //非常规攻击触发效果
     public static void attackBegin(LivingEntity attacker, Entity hurt) {
