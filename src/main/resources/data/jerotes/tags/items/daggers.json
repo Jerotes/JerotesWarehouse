@@ -1,5 +1,12 @@
 {
   "replace": false,
   "values": [
+    "jerotes:wooden_dagger",
+    "jerotes:stone_dagger",
+    "jerotes:copper_dagger",
+    "jerotes:iron_dagger",
+    "jerotes:golden_dagger",
+    "jerotes:diamond_dagger",
+    "jerotes:netherite_dagger"
   ]
 }

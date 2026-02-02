@@ -62,19 +62,30 @@ public class ControlVehiclePacket {
         if (!(entitys instanceof ControlVehicleEntity controlVehicleEntity))
             return;
         if (type == 0) {
-            if (!controlVehicleEntity.canBeControl(player))
-                controlVehicleEntity.setManuallyControlCombat(false);
+            if (!controlVehicleEntity.canBeControlJerotes(player) && !(isAdd == 3 || isAdd == 4))
+                controlVehicleEntity.setManuallyControlCombatJerotes(false);
             //主
             else if (isAdd == 0) {
-                controlVehicleEntity.pressMain(player);
+                controlVehicleEntity.pressMainJerotes(player);
             }
             //次
             else if (isAdd == 1) {
-                controlVehicleEntity.pressAdd(player);
+                controlVehicleEntity.pressAddJerotes(player);
             }
             //切换
             else if (isAdd == 2) {
-                controlVehicleEntity.setManuallyControlCombat(!controlVehicleEntity.isManuallyControlCombat());
+                controlVehicleEntity.setManuallyControlCombatJerotes(!controlVehicleEntity.isManuallyControlCombatJerotes());
+            }
+            //左
+            else if (isAdd == 3) {
+                controlVehicleEntity.pressLeftJerotes(player);
+            }
+            //右
+            else if (isAdd == 4) {
+                controlVehicleEntity.pressRightJerotes(player);
+            }
+            else if (isAdd == 5) {
+                controlVehicleEntity.setNormalSteeringControlJerotes(!controlVehicleEntity.isNormalSteeringControlJerotes());
             }
         }
     }

@@ -30,20 +30,20 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemToolBaseChainsaw extends ItemToolBaseAxe {
-    private final float damageBase;
-    private final float knockbackBase;
+    private final float damageMulti;
+    private final float knockbackMulti;
     private final int cooldownTick;
     private final float reach;
     private final float playerReach;
-    public ItemToolBaseChainsaw(Tier tier, int damage, float speed, Properties properties, float damageBase, float knockbackBase, int cooldownTick, float reach, float playerReach) {
+    public ItemToolBaseChainsaw(Tier tier, float damage, float speed, Properties properties, float damageMulti, float knockbackMulti, int cooldownTick, float reach, float playerReach) {
         super(tier, damage, speed, properties);
-        this.damageBase = damageBase;
-        this.knockbackBase = knockbackBase;
+        this.damageMulti = damageMulti;
+        this.knockbackMulti = knockbackMulti;
         this.cooldownTick = cooldownTick;
         this.reach = reach;
         this.playerReach = playerReach;
     }
-    public ItemToolBaseChainsaw(Tier tier, int damage, float speed, Properties properties) {
+    public ItemToolBaseChainsaw(Tier tier, float damage, float speed, Properties properties) {
         this(tier, damage, speed, properties, 0.2f, 0.1f, 40, 1.5f, 3.0f);
     }
 
@@ -92,7 +92,7 @@ public class ItemToolBaseChainsaw extends ItemToolBaseAxe {
                 if (!hurt.hasLineOfSight(livingEntity)) continue;
                 DamageSource damageSources = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.BYPASSES_COOLDOWN_MELEE), livingEntity);
                 AttackFind.attackBegin(livingEntity, hurt);
-                boolean bl2 = AttackFind.attackAfterCustomDamage(livingEntity, hurt, damageSources, damageBase, knockbackBase, false, 0f);
+                boolean bl2 = AttackFind.attackAfterCustomDamage(livingEntity, hurt, damageSources, damageMulti, knockbackMulti, false, 0f);
                 if (bl2) {
                     afterUseAttack(itemStack, level, livingEntity, hurt, list);
                 }
@@ -130,7 +130,7 @@ public class ItemToolBaseChainsaw extends ItemToolBaseAxe {
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
         super.appendHoverText(itemStack, level, list, tooltipFlag);
-        list.add(Component.translatable("item.jerotes.chainsaw", damageBase).withStyle(ChatFormatting.YELLOW));
+        list.add(Component.translatable("item.jerotes.chainsaw", damageMulti).withStyle(ChatFormatting.YELLOW));
     }
 }
 

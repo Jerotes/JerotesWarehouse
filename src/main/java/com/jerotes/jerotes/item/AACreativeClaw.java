@@ -2,8 +2,7 @@ package com.jerotes.jerotes.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
-import com.jerotes.jerotes.entity.Other.TestBeam;
+import com.jerotes.jerotes.entity.Other.Beam.BaseBeamEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.util.Main;
@@ -96,10 +95,13 @@ public class AACreativeClaw extends Item {
 		if (level instanceof ServerLevel serverLevel) {
 //			Main.spawnUnevenBlockByPos(serverLevel, livingEntity.getOnPos(), 4);
 		}
-		TestBeam testBeam = new TestBeam(JerotesEntityType.TEST_BEAM.get(), level);
-		testBeam.setPos(player.getX(), player.getY() + 1, player.getZ());
-		testBeam.setOwner(player);
-		level.addFreshEntity(testBeam);
+		BaseBeamEntity baseBeamEntity = new BaseBeamEntity(JerotesEntityType.TEST_BEAM.get(), level);
+		baseBeamEntity.setPos(player.getX(), player.getY(0.75), player.getZ());
+		baseBeamEntity.setLightLockX((float) player.getX());
+		baseBeamEntity.setLightLockY((float) (player.getY(0.75)));
+		baseBeamEntity.setLightLockZ((float) player.getZ());
+		baseBeamEntity.setOwner(player);
+		level.addFreshEntity(baseBeamEntity);
 
 		player.awardStat(Stats.ITEM_USED.get(this));
 	}

@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.Arrow.AnestheticArrowEntity;
+import com.jerotes.jerotes.entity.Shoot.Arrow.AnestheticArrowEntity;
 import com.jerotes.jerotes.item.Interface.ItemAnesthetized;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseArrow;
 import net.minecraft.ChatFormatting;

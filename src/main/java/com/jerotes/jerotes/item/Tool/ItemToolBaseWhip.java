@@ -23,15 +23,15 @@ import java.util.List;
 
 public class ItemToolBaseWhip extends ItemToolBaseSword {
     public final int useTick;
-    private final float damageBase;
-    private final float knockbackBase;
+    private final float damageMulti;
+    private final float knockbackMulti;
     private final float reach;
     private final float playerReach;
-    public ItemToolBaseWhip(Tier tier, int damage, float speed, Properties properties, int useTick, float damageBase, float knockbackBase, float reach, float playerReach) {
+    public ItemToolBaseWhip(Tier tier, int damage, float speed, Properties properties, int useTick, float damageMulti, float knockbackMulti, float reach, float playerReach) {
         super(tier, damage, speed, properties);
         this.useTick = useTick;
-        this.damageBase = damageBase;
-        this.knockbackBase = knockbackBase;
+        this.damageMulti = damageMulti;
+        this.knockbackMulti = knockbackMulti;
         this.reach = reach;
         this.playerReach = playerReach;
     }
@@ -76,7 +76,7 @@ public class ItemToolBaseWhip extends ItemToolBaseSword {
                 if (!Main.canSee(hurt, user)) continue;
                 if (!hurt.hasLineOfSight(user)) continue;
                 AttackFind.attackBegin(user, hurt);
-                boolean bl2 = AttackFind.attackAfter(user, hurt, damageBase, knockbackBase, false, 0f);
+                boolean bl2 = AttackFind.attackAfter(user, hurt, damageMulti, knockbackMulti, false, 0f);
                 if (bl2) {
                     afterUseAttack(itemStack, level, user, hurt, list);
                 }

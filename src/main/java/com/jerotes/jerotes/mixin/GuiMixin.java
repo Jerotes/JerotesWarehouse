@@ -18,7 +18,7 @@ public abstract class GuiMixin {
     @Inject(method = "renderSpyglassOverlay", at = @At(value = "HEAD"), cancellable = true)
     private void renderSpyglassOverlay(GuiGraphics guiGraphics, float f, CallbackInfo ci) {
         if (this.minecraft.player != null && this.minecraft.player.isScoping() &&
-        Main.isOtherScoping(this.minecraft.player)) {
+                Main.isOtherScoping(this.minecraft.player)) {
             ci.cancel();
         }
     }

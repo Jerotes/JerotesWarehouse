@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.goal;
 
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
@@ -39,7 +40,7 @@ public class JerotesAnimalPanicGoal extends Goal {
             this.posZ = blockPos.getZ();
             return true;
         }
-        if (!this.mob.isBaby()) {
+        if (this.mob instanceof JerotesEntity jerotes && jerotes.OwnerCanOrderAttack()) {
             return false;
         }
         return this.findRandomPosition();

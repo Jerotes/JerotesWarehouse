@@ -151,11 +151,11 @@ public class JerotesRangedCrossbowAttackGoal<T extends Mob & CrossbowAttackMob> 
             float f4 = -Mth.sin(f2 * 0.017453292f);
             float f5 = Mth.cos(f1 * 0.017453292f) * Mth.cos(f2 * 0.017453292f);
             float f6 = Mth.sqrt(f3 * f3 + f4 * f4 + f5 * f5);
-            float f7 = -0.02f;
+            float f7 = -0.0225f;
             if (this.mob instanceof JerotesEntity jerotes) {
                 jerotes.setSprintingCooldown(10);
             }
-            if (this.mob.getDeltaMovement().x <= 0.10 && this.mob.getDeltaMovement().z <= 0.10)
+            if (this.mob.getDeltaMovement().x <= 0.2 && this.mob.getDeltaMovement().z <= 0.2)
                 this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(f3 *= f7 / f6, 0, f5 *= f7 / f6));
         }
 

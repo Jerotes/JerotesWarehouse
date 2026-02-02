@@ -13,9 +13,10 @@ public class JerotesEntityRenderers {
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(JerotesEntityType.HUMAN.get(), HumanRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_PLAYER.get(), JerotesPlayerRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.JEROTES_HORSE.get(), JerotesHorseRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.TEST.get(), TestRenderer::new);
 
-        event.registerEntityRenderer(JerotesEntityType.TEST_BEAM.get(), TestBeamRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.TEST_BEAM.get(), BaseBeamRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.JEROTES_FALLING_BLOCK.get(), BaseFallingBlockRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_EARTHREND_BLOCK.get(), BaseFallingBlockRenderer::new);

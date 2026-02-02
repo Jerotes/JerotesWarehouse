@@ -19,36 +19,45 @@ public class ItemWarBeastArmor extends HorseArmorItem implements ItemBeastArmor,
 	private final double knockback_resistance;
 	private final int color;
 	private final ResourceLocation texture;
+	private final String modIdString;
+	private final String trxtureString;
 
 	public ItemWarBeastArmor(int n, int color, String string, String string2, Properties properties) {
-		this(n, color, new ResourceLocation(string, "textures/entity/war_beast_armor/" + string2 + ".png"), properties);
+		this(n, color, new ResourceLocation(string, "textures/entity/war_beast_armor/" + string2 + ".png"), string, string2, properties);
 	}
 
 	public ItemWarBeastArmor(int n, double n2, double n3, int color, String string, String string2, Properties properties) {
-		this(n, n2, n3, color, new ResourceLocation(string, "textures/entity/war_beast_armor/" + string2 + ".png"), properties);
+		this(n, n2, n3, color, new ResourceLocation(string, "textures/entity/war_beast_armor/" + string2 + ".png"), string, string2, properties);
 	}
 
-	public ItemWarBeastArmor(int n, int color, ResourceLocation resourceLocation, Properties properties) {
+	public ItemWarBeastArmor(int n, int color, ResourceLocation resourceLocation, String string, String string2, Properties properties) {
 		super(n, resourceLocation, properties);
 		this.protection = n;
 		this.toughness = 0;
 		this.knockback_resistance = 0;
 		this.color = color;
 		this.texture = resourceLocation;
+		this.modIdString = string;
+		this.trxtureString = string2;
 	}
 
-	public ItemWarBeastArmor(int n, double n2, double n3, int color, ResourceLocation resourceLocation, Properties properties) {
+	public ItemWarBeastArmor(int n, double n2, double n3, int color, ResourceLocation resourceLocation, String string, String string2, Properties properties) {
 		super(n, resourceLocation, properties);
 		this.protection = n;
 		this.toughness = n2;
 		this.knockback_resistance = n3;
 		this.color = color;
 		this.texture = resourceLocation;
+		this.modIdString = string;
+		this.trxtureString = string2;
 	}
 
 	@Override
 	public ResourceLocation getTexture() {
 		return texture;
+	}
+	public ResourceLocation getTextureOverlay() {
+		return new ResourceLocation(modIdString, "textures/entity/war_beast_armor/" + trxtureString + "_overlay" + ".png");
 	}
 
 	@Override

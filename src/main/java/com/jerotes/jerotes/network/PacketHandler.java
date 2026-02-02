@@ -49,14 +49,14 @@ public class PacketHandler {
 				ControlVehiclePacket::encode,
 				ControlVehiclePacket::decode,
 				ControlVehiclePacket::consume);
-		NETWORK_WRAPPER.registerMessage(packetsRegistered++, JerotesSpearAttackPacket.class,
-				JerotesSpearAttackPacket::encode,
-				JerotesSpearAttackPacket::decode,
-				JerotesSpearAttackPacket::consume);
 		NETWORK_WRAPPER.registerMessage(packetsRegistered++, JerotesSpearRushAttackPacket.class,
 				JerotesSpearRushAttackPacket::encode,
 				JerotesSpearRushAttackPacket::decode,
 				JerotesSpearRushAttackPacket::consume);
+		NETWORK_WRAPPER.registerMessage(packetsRegistered++, JerotesPlayerOtherItemAboutPacket.class,
+				JerotesPlayerOtherItemAboutPacket::encode,
+				JerotesPlayerOtherItemAboutPacket::decode,
+				JerotesPlayerOtherItemAboutPacket::consume);
 	}
 
 	public static void sendToServer(Object msg) {

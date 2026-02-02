@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.Arrow.BaseJavelinEntity;
-import com.jerotes.jerotes.entity.Arrow.ThrownJavelinNetheriteEntity;
+import com.jerotes.jerotes.entity.Shoot.Arrow.BaseJavelinEntity;
+import com.jerotes.jerotes.entity.Shoot.Arrow.ThrownJavelinNetheriteEntity;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseJavelin;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

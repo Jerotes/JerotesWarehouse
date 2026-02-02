@@ -2,7 +2,7 @@ package com.jerotes.jerotes.client.renderer;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.client.model.Modelbone_throwing_spear;
-import com.jerotes.jerotes.entity.Arrow.ThrownBoneThrowingSpearEntity;
+import com.jerotes.jerotes.entity.Shoot.Arrow.ThrownBoneThrowingSpearEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

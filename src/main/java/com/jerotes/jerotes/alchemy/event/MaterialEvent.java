@@ -213,7 +213,7 @@ public class MaterialEvent {
 			event.setEffect3(new JumpBoostAlchemyEffect(2, 1));
 		}
 		//雪球
-		if (itemStack.is(Items.EGG)) {
+		if (itemStack.is(Items.SNOWBALL)) {
 			event.setEffectCount(3);
 			event.setEffect1(new SlownessAlchemyEffect(2, 1));
 			event.setEffect2(new FreezeAbsorptionAlchemyEffect(1, 1));
@@ -331,6 +331,19 @@ public class MaterialEvent {
 			event.setEffect2(new GlowingAlchemyEffect(1, 2));
 			event.setEffect3(new InvisbilityAlchemyEffect(1, 1));
 		}
+		//下界合金
+		if (itemStack.is(Items.ANCIENT_DEBRIS) || itemStack.is(Items.NETHERITE_SCRAP)) {
+			event.setEffectCount(3);
+			event.setEffect1(new SlownessAlchemyEffect(1, 2));
+			event.setEffect2(new ResistanceAlchemyEffect(1, 2));
+			event.setEffect3(new FireResistanceAlchemyEffect(1, 1));
+		}
+		if (itemStack.is(Items.NETHERITE_INGOT) || itemStack.is(Items.NETHERITE_BLOCK)) {
+			event.setEffectCount(3);
+			event.setEffect1(new SlownessAlchemyEffect(3, 2));
+			event.setEffect2(new ResistanceAlchemyEffect(2, 3));
+			event.setEffect3(new FireResistanceAlchemyEffect(1, 2));
+		}
 		//凋灵玫瑰 凋灵骷髅头颅
 		if (itemStack.is(Items.WITHER_ROSE) || itemStack.is(Items.WITHER_SKELETON_SKULL)) {
 			event.setEffectCount(3);
@@ -393,6 +406,20 @@ public class MaterialEvent {
 			event.setEffect1(new LightningAbsorptionAlchemyEffect(1, 1));
 			event.setEffect2(new SaturationAlchemyEffect(2, 1));
 			event.setEffect3(new SpeedAlchemyEffect(1, 2));
+		}
+		//避雷针
+		if (itemStack.is(Items.LIGHTNING_ROD)) {
+			event.setEffectCount(3);
+			event.setEffect1(new LightningAbsorptionAlchemyEffect(2, 1));
+			event.setEffect2(new DarknessAlchemyEffect(1, 1));
+			event.setEffect3(new SlownessAlchemyEffect(1, 1));
+		}
+		//末影珍珠
+		if (itemStack.is(Items.ENDER_PEARL) || itemStack.is(Items.ENDER_EYE)) {
+			event.setEffectCount(3);
+			event.setEffect1(new BlindnessAlchemyEffect(2, 2));
+			event.setEffect2(new FogAlchemyEffect(1, 2));
+			event.setEffect3(new ExplosionAlchemyEffect(1, 1));
 		}
 		//金类
 		if (itemStack.is(Items.RAW_GOLD) || itemStack.is(Items.GOLD_INGOT)) {
@@ -485,10 +512,11 @@ public class MaterialEvent {
 		}
 		//火把花 瓶子草
 		if (itemStack.is(Items.TORCHFLOWER) || itemStack.is(Items.PITCHER_PLANT)) {
-			event.setEffectCount(3);
+			event.setEffectCount(4);
 			event.setEffect1(new NauseaAlchemyEffect(1, 1));
 			event.setEffect2(new PruritusAlchemyEffect(3, 1));
 			event.setEffect3(new FireResistanceAlchemyEffect(1, 1));
+			event.setEffect3(new NightVisionAlchemyEffect(1, 2));
 		}
 		//向日葵
 		if (itemStack.is(Items.SUNFLOWER)) {

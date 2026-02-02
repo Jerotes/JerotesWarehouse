@@ -2,7 +2,7 @@ package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.item.Interface.ItemSpecialAttack;
 import com.jerotes.jerotes.item.Interface.SpearBaseItem;
-import com.jerotes.jerotes.network.JerotesSpearAttackPacket;
+import com.jerotes.jerotes.network.JerotesPlayerOtherItemAboutPacket;
 import com.jerotes.jerotes.network.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -24,7 +24,7 @@ public abstract class MultiPlayerGameModeMixin implements SpearBaseItem {
         this.ensureHasSentCarriedItem();
         if (this.minecraft.player != null) {
             piercingWeapon.jerotesSpecialAttackClient(this.minecraft.player);
-            PacketHandler.sendToServer(new JerotesSpearAttackPacket(this.minecraft.player.getId()));
+            PacketHandler.sendToServer(new JerotesPlayerOtherItemAboutPacket(this.minecraft.player.getId(), 2));
         }
         // this.connection.send(new ServerboundPlayerActionPacket(ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK, BlockPos.ZERO, Direction.DOWN));
     }

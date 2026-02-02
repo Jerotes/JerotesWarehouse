@@ -5,7 +5,7 @@ import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Mob.TestEntity;
 import com.jerotes.jerotes.entity.Interface.UseBowEntity;
-import com.jerotes.jerotes.entity.Magic.MagicAbout;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesFactionEvent;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
@@ -274,7 +274,6 @@ public class EntityAboutEvent {
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_1_tick", true);
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_2_tick", true);
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_3_tick", true);
-
 		if (entity.getPersistentData().get("jerotes_has_mirror_image_1_tick") == null || entity.getPersistentData().getDouble("jerotes_has_mirror_image_1_tick") <= 0) {
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_x");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_y");
@@ -294,6 +293,9 @@ public class EntityAboutEvent {
 		if (entity.getPersistentData().getFloat("jerotes_boss_hurt_cooldown") > 0) {
 			entity.getPersistentData().putFloat("jerotes_boss_hurt_cooldown", entity.getPersistentData().getFloat("jerotes_boss_hurt_cooldown") - 1);
 		}
+		//弹反
+		Main.persistentDataDoubleReduceToZero(entity, "jerotes_shield_parry_cooldown", true);
+		Main.persistentDataDoubleReduceToZero(entity, "jerotes_shield_parry_tick", true);
 	}
 
 	//战斗

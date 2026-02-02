@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.entity.Interface;
 
+import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseBow;
 import com.jerotes.jerotes.util.Main;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.phys.Vec3;
 
 public interface UseBowEntity {
 
@@ -42,37 +44,41 @@ public interface UseBowEntity {
             return;
         }
         ItemStack itemStackBow = livingEntity.getMainHandItem();
-
         Item off = livingEntity.getOffhandItem().getItem();
         if (off instanceof BowItem && (livingEntity.getMainHandItem().isEmpty() || InventoryEntity.isMeleeWeapon(livingEntity.getMainHandItem()))) {
             itemStackBow = livingEntity.getOffhandItem();
         }
+        //特殊射弹
+        if (itemStackBow.getItem() instanceof ItemToolBaseBow itemToolBaseBow
+                && itemToolBaseBow.specialShootBullet(livingEntity, livingEntityTarget, f, n, n2)) {
+            return;
+        }
+        //消耗弹药
         ItemStack itemStackArrow = livingEntity.getProjectile(livingEntity.getItemInHand(ProjectileUtil.getWeaponHoldingHand(livingEntity, itemStackBow.getItem())));
-         if (itemStackBow.getItem() instanceof ItemToolBaseBow itemToolBaseBow
-                 && itemToolBaseBow.specialShootBullet(livingEntity, livingEntityTarget, f, n, n2)) {
-
+         if (itemStackBow.getItem() instanceof ItemToolBaseBow itemToolBaseBow) {
              if (MainConfig.MobUseBowShrinkArrow) {
                  itemStackArrow.shrink(1);
              }
              return;
          }
-
+         //箭
         AbstractArrow abstractArrow = getCustomArrow(itemStackArrow, f);
         if (abstractArrow.getType() == EntityType.ARROW && abstractArrow instanceof Arrow arrow && PotionUtils.getPotion(itemStackArrow) == Potions.EMPTY
                 && itemStackBow.getItem() instanceof ItemToolBaseBow customBaseShootBow && customBaseShootBow.useBaseShootArrow()
                 && livingEntity.getRandom().nextFloat() <= customBaseShootBow.customBaseShootArrowChance(livingEntity)) {
             abstractArrow = customBaseShootBow.customBaseShootArrow(livingEntity, itemStackArrow);
         }
-
         if (n2 < n) {
             n = n2;
         }
         int i = Main.randomReach(livingEntity.getRandom(), n, n2);
-        float powerTime = 0.5f;
+        float powerTime = getPowerForTime(i);
         if (itemStackBow.getItem() instanceof BowItem) {
-            powerTime = getPowerForTime(i);
+            powerTime = BowItem.getPowerForTime(i);
+            if (itemStackBow.getItem() instanceof ItemToolBaseBow itemToolBaseBow) {
+                powerTime = itemToolBaseBow.getPowerForTimeJerotes(i);
+            }
         }
-
         double d = livingEntityTarget.getX() - livingEntity.getX();
         int speed1 = Math.min(i, 15);
         int speed2 = Math.max(10, speed1);
@@ -80,8 +86,22 @@ public interface UseBowEntity {
         double d2 = livingEntityTarget.getY(0.35) - abstractArrow.getY();
         double d3 = livingEntityTarget.getZ() - livingEntity.getZ();
         double d4 = Math.sqrt(d * d + d3 * d3);
-        abstractArrow.shoot(d, d2 + d4 * (0.2 - speedOfPowerTime * 0.02f), d3, powerTime * 1.1f * 3.0F, Math.max(0, 20 - getBowLevel()) / 5f);
-
+        //力度
+        float power = powerTime * 3.0F;
+        if (itemStackBow.getItem() instanceof ItemToolBaseBow itemToolBaseBow) {
+            power = itemToolBaseBow.getArrowSpeed(powerTime);
+        }
+        //不精准度
+        float inaccuracy = Math.max(0, 20 - getBowLevel()) / 5f + getBowLevel() >= 20 ? 0 : 1;
+        if (itemStackBow.getItem() instanceof ItemToolBaseBow itemToolBaseBow) {
+            inaccuracy = Math.max(0, 20 - getBowLevel()) / 5f + getBowLevel() >= 20 ? 0 : itemToolBaseBow.getArrowInaccuracy();
+        }
+        //abstractArrow.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot(), 0.0F, f * 3.0F, 1.0F);
+        abstractArrow.shoot(d, d2 + d4 * (0.2 - speedOfPowerTime * 0.02f), d3,
+                power, inaccuracy);
+        Vec3 vec3 = livingEntity.getDeltaMovement();
+        abstractArrow.setDeltaMovement(abstractArrow.getDeltaMovement().add(vec3.x, livingEntity.onGround() ? 0.0D : vec3.y, vec3.z));
+        //JerotesWarehouse.LOGGER.info("bow power" + power);
         //暴击
         if (powerTime == 1.0F) {
             abstractArrow.setCritArrow(true);

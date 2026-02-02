@@ -26,19 +26,19 @@ import java.util.List;
 
 public class ItemToolBaseFlail extends ItemToolBaseHammer {
     public final int useTick;
-    private final float damageBase;
-    private final float knockbackBase;
+    private final float damageMulti;
+    private final float knockbackMulti;
     private final float reach;
     private final float playerReach;
-    public ItemToolBaseFlail(Tier tier, int damage, float speed, Properties properties, int useTick, float damageBase, float knockbackBase, float reach, float playerReach) {
+    public ItemToolBaseFlail(Tier tier, float damage, float speed, Properties properties, int useTick, float damageMulti, float knockbackMulti, float reach, float playerReach) {
         super(tier, damage, speed, properties);
         this.useTick = useTick;
-        this.damageBase = damageBase;
-        this.knockbackBase = knockbackBase;
+        this.damageMulti = damageMulti;
+        this.knockbackMulti = knockbackMulti;
         this.reach = reach;
         this.playerReach = playerReach;
     }
-    public ItemToolBaseFlail(Tier tier, int damage, float speed, Properties properties) {
+    public ItemToolBaseFlail(Tier tier, float damage, float speed, Properties properties) {
         this(tier, damage, speed, properties, 20, 1.0f, 1.0f, 1.5f, 3.0f);
     }
 
@@ -79,7 +79,7 @@ public class ItemToolBaseFlail extends ItemToolBaseHammer {
                 if (!Main.canSee(hurt, user)) continue;
                 if (!hurt.hasLineOfSight(user)) continue;
                 AttackFind.attackBegin(user, hurt);
-                boolean bl2 = AttackFind.attackAfter(user, hurt, damageBase, knockbackBase, false, 0f);
+                boolean bl2 = AttackFind.attackAfter(user, hurt, damageMulti, knockbackMulti, false, 0f);
                 if (bl2) {
                     afterUseAttack(itemStack, level, user, hurt, list);
                 }

@@ -15,6 +15,10 @@ public interface ItemBeastArmor {
     default int getColor() {
         return 0xffffff;
     }
+
+    default boolean hasOverlay() {
+        return false;
+    }
 }
 
 

@@ -53,8 +53,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeMod;
 
@@ -511,7 +509,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
         return entity.getDeltaMovement();
     }
     public static Vec3 getMotion(Entity entity) {
-        if (!(entity instanceof Player) && !(entity instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.usePikeAsPlayer()) && !(entity instanceof UseSpearSpecialEntity useSpearSpecialEntity && useSpearSpecialEntity.isGetMotionLikePlayer()) && entity.isPassenger()) {
+        if (!(entity instanceof Player) && !(entity instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.usePikeAsPlayer()) && !(entity instanceof UseSpearSpecialEntity useSpearSpecialEntity && useSpearSpecialEntity.isJerotesSpearGetMotionLikePlayer()) && entity.isPassenger()) {
             entity = entity.getRootVehicle();
         }
 
@@ -540,7 +538,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
         return vec3.scale(mass);
     }
     public static void causeExtraKnockback(LivingEntity self, Entity entity, float f, Vec3 vec3) {
-        if (self instanceof Player || self instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.usePikeAsPlayer() || self instanceof UseSpearSpecialEntity useSpearSpecialEntity && useSpearSpecialEntity.isCauseExtraKnockbackPlayer()) {
+        if (self instanceof Player || self instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.usePikeAsPlayer() || self instanceof UseSpearSpecialEntity useSpearSpecialEntity && useSpearSpecialEntity.isJerotesSpearCauseExtraKnockbackPlayer()) {
             if (f > 0.0f) {
                 if (entity instanceof LivingEntity livingEntity) {
                     livingEntity.knockback(f, Mth.sin(self.getYRot() * ((float)Math.PI / 180)), -Mth.cos(self.getYRot() * ((float)Math.PI / 180)));

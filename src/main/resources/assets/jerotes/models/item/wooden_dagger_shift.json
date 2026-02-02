@@ -1,0 +1,6 @@
+{
+  "parent": "jerotes:item/base_dagger_shift",
+  "textures": {
+    "layer0": "jerotes:item/wooden_dagger"
+  }
+}

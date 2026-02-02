@@ -2,7 +2,7 @@ package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.ArmorEntity;
-import com.jerotes.jerotes.entity.Arrow.AnestheticArrowEntity;
+import com.jerotes.jerotes.entity.Shoot.Arrow.AnestheticArrowEntity;
 import com.jerotes.jerotes.item.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -34,8 +34,20 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> TEST_SPAWN_EGG = REGISTRY.register("test_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.TEST, 0xffffff, 0xffffff, new Item.Properties()));
 	public static final RegistryObject<Item> HUMAN_SPAWN_EGG = REGISTRY.register("human_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.HUMAN, 0xffffff, 0xffffff, new Item.Properties()));
 	public static final RegistryObject<Item> JEROTES_PLAYER_SPAWN_EGG = REGISTRY.register("jerotes_player_spawn_egg", () -> new JerotesPlayerSpawnEgg());
+	public static final RegistryObject<Item> JEROTES_HORSE_SPAWN_EGG = REGISTRY.register("jerotes_horse_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_HORSE, 0xffffff, 0xffffff, new Item.Properties()));
 
-	public static final RegistryObject<Item> HIGH_STRENGTH_STRING = REGISTRY.register("high_strength_string", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON)));
+	public static final RegistryObject<Item> COPPER_NUGGET = REGISTRY.register("copper_nugget", () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_SWORD = REGISTRY.register("copper_sword", () -> new SwordItem(JerotesTiers.COPPER, 3, -2.4F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_SHOVEL = REGISTRY.register("copper_shovel", () -> new ShovelItem(JerotesTiers.COPPER, 1.5F, -3.0F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_PICKAXE = REGISTRY.register("copper_pickaxe", () -> new PickaxeItem(JerotesTiers.COPPER, 1, -2.8F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_AXE = REGISTRY.register("copper_axe", () -> new AxeItem(JerotesTiers.COPPER, 7.0F, -3.2F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_HOE = REGISTRY.register("copper_hoe", () -> new HoeItem(JerotesTiers.COPPER, -1, -2.0F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_HELMET = REGISTRY.register("copper_helmet", () -> new CopperArmor(JerotesArmorMaterials.COPPER, ArmorItem.Type.HELMET, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_CHESTPLATE = REGISTRY.register("copper_chestplate", () -> new CopperArmor(JerotesArmorMaterials.COPPER, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_LEGGINGS = REGISTRY.register("copper_leggings", () -> new CopperArmor(JerotesArmorMaterials.COPPER, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_BOOTS = REGISTRY.register("copper_boots", () -> new CopperArmor(JerotesArmorMaterials.COPPER, ArmorItem.Type.BOOTS, new Item.Properties()));
+
+	public static final RegistryObject<Item> HIGH_STRENGTH_STRING = REGISTRY.register("high_strength_string", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> RESILIENT_BANDAGE = REGISTRY.register("resilient_bandage", () -> new ResilientBandage());
 	public static final RegistryObject<Item> ANESTHETIC_BANDAGE = REGISTRY.register("anesthetic_bandage", () -> new AnestheticBandage());
 	public static final RegistryObject<Item> ANESTHETIC_ARROW = REGISTRY.register("anesthetic_arrow", () -> new AnestheticArrow());
@@ -74,6 +86,7 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> BONE_THROWING_SPEAR_OF_JAVELIN = REGISTRY.register("bone_throwing_spear_of_javelin", () -> new BoneThrowingSpear.BoneThrowingSpearOfJavelin());
 
 	public static final RegistryObject<Item> IRON_PIKE = REGISTRY.register("iron_pike", () -> new IronPike());
+	public static final RegistryObject<Item> IRON_PARRY_SHIELD = REGISTRY.register("iron_parry_shield", () -> new IronParryShield());
 
 	public static final RegistryObject<Item> BEAST_ARMOR = REGISTRY.register("beast_armor_base", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON)));
 	public static final RegistryObject<Item> WAR_BEAST_ARMOR_BASE = REGISTRY.register("war_beast_armor_base", () -> new ItemWarBeastArmor(0, 0xffffff, JerotesWarehouse.MODID, "base", new Item.Properties().stacksTo(1).rarity(Rarity.COMMON)));

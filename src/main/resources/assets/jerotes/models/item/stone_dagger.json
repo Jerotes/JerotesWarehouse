@@ -1,0 +1,14 @@
+{
+  "parent": "jerotes:item/base_dagger",
+  "textures": {
+    "layer0": "jerotes:item/stone_dagger"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "jerotes_shift": 1
+      },
+      "model": "jerotes:item/stone_dagger_shift"
+    }
+  ]
+}

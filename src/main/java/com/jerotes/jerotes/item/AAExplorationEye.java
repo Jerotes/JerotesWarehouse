@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.item;
 
+import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +12,8 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -40,6 +43,15 @@ public class AAExplorationEye extends Item {
 		return false;
 	}
 
+	@Override
+	public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
+		super.inventoryTick(itemstack, world, entity, slot, selected);
+		if (!entity.level().isClientSide) {
+			if (entity instanceof LivingEntity livingEntity) {
+				livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.ANALYTICAL_EYE.get(), 205, 5, false, false));
+			}
+		}
+	}
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
 		ItemStack itemStack = player.getItemInHand(interactionHand);

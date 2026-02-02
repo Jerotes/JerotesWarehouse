@@ -191,6 +191,7 @@ public class JerotesEarthrendBlock extends BaseFallingBlock implements OwnableEn
 	}
 	@Override
 	protected void addAdditionalSaveData(CompoundTag compoundTag) {
+		super.addAdditionalSaveData(compoundTag);
 		if (this.ownerUUID != null) {
 			compoundTag.putUUID("Owner", this.ownerUUID);
 		}

@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.item;
 
+import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.item.Interface.ItemBaseWarBeastArmor;
 import com.jerotes.jerotes.item.Interface.ItemBeastArmor;
 import net.minecraft.ChatFormatting;
@@ -19,36 +20,45 @@ public class ItemWarBeastArmorDyeable extends DyeableHorseArmorItem implements I
 	private final double knockback_resistance;
 	private final int color;
 	private final ResourceLocation texture;
+	private final String modIdString;
+	private final String trxtureString;
 
 	public ItemWarBeastArmorDyeable(int n, int color, String string, String string2, Properties properties) {
-		this(n, color, new ResourceLocation(string, "textures/entity/war_beast_armor/" + string2 + ".png"), properties);
+		this(n, color, new ResourceLocation(string, "textures/entity/war_beast_armor/" + string2 + ".png"), string, string2, properties);
 	}
 
 	public ItemWarBeastArmorDyeable(int n, double n2, double n3, int color, String string, String string2, Properties properties) {
-		this(n, n2, n3, color, new ResourceLocation(string, "textures/entity/war_beast_armor/" + string2 + ".png"), properties);
+		this(n, n2, n3, color, new ResourceLocation(string, "textures/entity/war_beast_armor/" + string2 + ".png"), string, string2, properties);
 	}
 
-	public ItemWarBeastArmorDyeable(int n, int color, ResourceLocation resourceLocation2, Properties properties) {
+	public ItemWarBeastArmorDyeable(int n, int color, ResourceLocation resourceLocation2, String string, String string2, Properties properties) {
 		super(n, resourceLocation2, properties);
 		this.protection = n;
 		this.toughness = 0;
 		this.knockback_resistance = 0;
 		this.color = color;
 		this.texture = resourceLocation2;
+		this.modIdString = string;
+		this.trxtureString = string2;
 	}
 
-	public ItemWarBeastArmorDyeable(int n, double n2, double n3, int color, ResourceLocation resourceLocation2, Properties properties) {
+	public ItemWarBeastArmorDyeable(int n, double n2, double n3, int color, ResourceLocation resourceLocation2, String string, String string2, Properties properties) {
 		super(n, resourceLocation2, properties);
 		this.protection = n;
 		this.toughness = n2;
 		this.knockback_resistance = n3;
 		this.color = color;
 		this.texture = resourceLocation2;
+		this.modIdString = string;
+		this.trxtureString = string2;
 	}
 
 	@Override
 	public ResourceLocation getTexture() {
 		return texture;
+	}
+	public ResourceLocation getTextureOverlay() {
+		return new ResourceLocation(modIdString, "textures/entity/war_beast_armor/" + trxtureString + "_overlay" + ".png");
 	}
 
 	@Override
@@ -64,6 +74,11 @@ public class ItemWarBeastArmorDyeable extends DyeableHorseArmorItem implements I
 	@Override
 	public double getKnockbackResistance() {
 		return this.knockback_resistance;
+	}
+
+	@Override
+	public boolean hasOverlay() {
+		return this == JerotesItems.LEATHER_WAR_BEAST_ARMOR.get();
 	}
 
 	@Override

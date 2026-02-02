@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.item;
 
+import com.jerotes.jerotes.entity.Mob.HumanEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -63,10 +64,11 @@ public class JerotesPlayerSpawnEgg extends ForgeSpawnEggItem {
 			EntityType<?> entitytype = this.getType(itemstack.getTag());
 			Entity mob = entitytype.spawn((ServerLevel)level, null, p_43223_.getPlayer(), blockpos1,
 					MobSpawnType.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
-			if (mob != null) {
+			if (mob instanceof HumanEntity humanEntity) {
 				if (p_43223_.getItemInHand().hasCustomHoverName()) {
 					String string = p_43223_.getItemInHand().getHoverName().getString();
 					if (string.equals("Bandit")) {
+						humanEntity.setFaction("Bandit");
 						mob.getPersistentData().putString("jerotes_mob_faction", "bandit");
 					}
 				}
@@ -102,7 +104,7 @@ public class JerotesPlayerSpawnEgg extends ForgeSpawnEggItem {
 				mob = (Mob)p_43218_.create(p_43219_);
 			}
 
-			if (mob == null) {
+			if (!(mob instanceof HumanEntity humanEntity)) {
 				return Optional.empty();
 			} else {
 				((Mob)mob).setBaby(true);
@@ -114,6 +116,7 @@ public class JerotesPlayerSpawnEgg extends ForgeSpawnEggItem {
 					if (p_43221_.hasCustomHoverName()) {
 						String string = p_43221_.getHoverName().getString();
 						if (string.equals("Bandit")) {
+							humanEntity.setFaction("Bandit");
 							mob.getPersistentData().putString("jerotes_mob_faction", "bandit");
 						}
 						else {

@@ -1178,7 +1178,7 @@ public interface InventoryEntity {
                     for (int n = 0; n < inventoryCount(); ++n) {
                         ItemStack itemStack = inventory.mobInventory().getItem(n);
                         //副手
-                        if (!(inventory.canEatOrDrinkHand() && isFoodOrPotion(inventory, findNestOffHandItem)) && !itemStack.isEmpty() && (canReplaceShield(inventory, itemStack, findNestOffHandItem)
+                        if (!(inventory.canEatOrDrinkHand() && isFoodOrPotion(inventory, findNestOffHandItem)) && (canReplaceShield(inventory, itemStack, findNestOffHandItem)
                                 || findNestOffHandItem.isEmpty()) && isShield(inventory, itemStack) && (!inventory.NonCombatEmptyShield() || mob.isAggressive())) {
                             findNestOffHandItem = itemStack;
                             findNumOffHandItem = n;

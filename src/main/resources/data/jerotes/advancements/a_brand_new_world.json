@@ -32,10 +32,32 @@
   "rewards": {
     "experience": 100,
     "recipes": [
+
+      "jerotes:copper_sword_craft",
+      "jerotes:copper_axe_craft",
+      "jerotes:copper_hoe_craft",
+      "jerotes:copper_pickaxe_craft",
+      "jerotes:copper_shovel_craft",
+      "jerotes:copper_helmet_craft",
+      "jerotes:copper_chestplate_craft",
+      "jerotes:copper_leggings_craft",
+      "jerotes:copper_boots_craft",
+      "jerotes:copper_ingot_craft",
+      "jerotes:copper_nugget_craft",
+
       "jerotes:high_strength_string_craft",
       "jerotes:anesthetic_arrow_craft",
       "jerotes:resilient_bandage_craft",
       "jerotes:anesthetic_bandage_craft",
+
+      "jerotes:simple_dagger_craft",
+      "jerotes:wooden_dagger_craft",
+      "jerotes:stone_dagger_craft",
+      "jerotes:iron_dagger_craft",
+      "jerotes:copper_dagger_craft",
+      "jerotes:golden_dagger_craft",
+      "jerotes:diamond_dagger_craft",
+      "jerotes:netherite_dagger_smith",
 
       "jerotes:simple_javelin_craft",
       "jerotes:heal_javelin_craft",

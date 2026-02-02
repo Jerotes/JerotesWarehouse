@@ -4,6 +4,7 @@ import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface JerotesEntity {
@@ -31,6 +33,8 @@ public interface JerotesEntity {
         return true;
     }
 
+    default void setCustomNameUseNameTag(@Nullable Component component, Entity self, Entity source, InteractionHand interactionHand) {
+    }
 
     //可以跳跃攻击
     default boolean canAttackJump() {
@@ -48,7 +52,7 @@ public interface JerotesEntity {
                 aabb = mob.getBoundingBox();
             }
             AABB aabb1 = aabb.inflate(Math.sqrt(2.04F) - (double) 0.6F, 0.0D, Math.sqrt(2.04F) - (double) 0.6F);
-            return aabb1.inflate(0.5d, 0.5d, 0.5d);
+            return aabb1.inflate(0d, 0d, 0d);
         }
         return null;
     }

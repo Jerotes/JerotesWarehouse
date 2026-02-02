@@ -3,29 +3,35 @@ package com.jerotes.jerotes.entity.Mob;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.goal.*;
+import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesGameRules;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseCrossbow;
 import com.jerotes.jerotes.spell.MagicType;
+import com.jerotes.jerotes.spell.SpellListByString;
+import com.jerotes.jerotes.spell.SpellRegistry;
 import com.jerotes.jerotes.spell.SpellTypeInterface;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
+import com.jerotes.jerotes.util.PlayerName;
+import com.jerotes.jerotes.util.PlayerSkin;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.SkinManager;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.util.TimeUtil;
-import net.minecraft.util.VisibleForDebug;
+import net.minecraft.util.*;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -56,6 +62,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -72,10 +80,11 @@ import org.joml.Vector3f;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDaggerEntity, SkinEntity, ShiftKeyDownEntity, WizardEntity, UseThrowEntity, UseThrownJavelinEntity, InventoryEntity, CrossbowAttackMob, NeutralMob, RangedAttackMob, InventoryCarrier, Npc, UseCrossbowEntity, UseBowEntity, UseShieldEntity, JerotesEntity {
+public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDaggerEntity, PlayerSkinEntity, SkinEntity, ShiftKeyDownEntity, WizardEntity, UseThrowEntity, UseThrownJavelinEntity, InventoryEntity, CrossbowAttackMob, NeutralMob, RangedAttackMob, InventoryCarrier, Npc, UseCrossbowEntity, UseBowEntity, UseShieldEntity, JerotesEntity {
 	private static final EntityDataAccessor<Integer> COMBAT_STYLE = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> USE_SELF_NOT_SPELL_LIST = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.BOOLEAN);
@@ -85,6 +94,8 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 	private static final EntityDataAccessor<Integer> SHIELD_LEVEL = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> NAME_FIRST = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> NAME_SECOND = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Boolean> IS_ARCHMAGE = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<String> FACTION = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
 	//
 	private static final EntityDataAccessor<Boolean> IS_FEMALE = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> SKIN_TYPE = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
@@ -117,6 +128,7 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 	private static final EntityDataAccessor<Boolean> NO_COMBAT_EMPTY_WEAPON = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> NO_COMBAT_EMPTY_SHIELD = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> CHANGE_INVENTORY_COOLDOWN_TICK = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<String> SKIN_NAME = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
 	public final SimpleContainer inventory = new SimpleContainer(inventoryCount());
 	private LazyOptional<?> itemHandler = null;
 	public AnimationState armWideScaleAnimationState = new AnimationState();
@@ -141,6 +153,18 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 				handsHandler,
 				customHandler
 		);
+	}
+	@Override
+	public String getFactionTypeName() {
+		return getFaction();
+	}
+
+	@Override
+	public boolean isFactionWith(Entity entity) {
+		if (getFaction().isEmpty()) {
+			return entity instanceof LivingEntity livingEntity && livingEntity.getType() == JerotesEntityType.HUMAN.get() && this.getType() == JerotesEntityType.HUMAN.get();
+		}
+		return entity instanceof LivingEntity livingEntity && EntityFactionFind.getTrueFaction(livingEntity).equals(getFaction());
 	}
 
 	@VisibleForDebug
@@ -233,36 +257,33 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 
 	@Override
 	protected void registerGoals() {
-		super.registerGoals();
-		if (!(this instanceof JerotesPlayerEntity)) {
-			this.getNavigation().getNodeEvaluator().setCanOpenDoors(true);
-			this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
-			this.goalSelector.addGoal(0, new FloatGoal(this));
-			this.goalSelector.addGoal(1, new JerotesShiftKeyDownGoal(this));
-			this.goalSelector.addGoal(1, new JerotesMainSpellAttackGoal(this, this.getSpellLevel(), 60, 240, 0.5f));
-			this.goalSelector.addGoal(1, new JerotesAddSpellAttackGoal(this, this.getSpellLevel(), 180, 240, 0.5f));
-			this.goalSelector.addGoal(1, new JerotesCombatIMagicAttackGoal<>(this, 0.5, 15.0f, this.meleeOrRangeDistance()));
-			this.goalSelector.addGoal(1, new JerotesCombatIIMagicAttackGoal<>(this, 0.2, true, this.meleeOrRangeDistance()));
-			this.goalSelector.addGoal(1, new JerotesCombatIIIMagicAttackGoal<>(this, 0.5, 15.0f, this.meleeOrRangeDistance()));
-			this.goalSelector.addGoal(1, new JerotesCombatIVMagicAttackGoal<>(this, 0.5, 15.0f, this.meleeOrRangeDistance()));
-			this.goalSelector.addGoal(1, new JerotesRangedBowAttackGoal<HumanEntity>(this, 0.5, 20, 15.0f));
-			this.goalSelector.addGoal(1, new JerotesRangedCrossbowAttackGoal<HumanEntity>(this, 1.0, 15.0f));
-			this.goalSelector.addGoal(1, new JerotesRangedJavelinAttackGoal<>(this, 1.0, 60, 12.0F, this.meleeOrRangeDistance()));
-			this.goalSelector.addGoal(1, new JerotesSpearUseGoal<>(this, 1.0, 1.0, 10.0f, 2.0f));
-			this.goalSelector.addGoal(1, new JerotesPikeUseGoal(this, 1.2, true));
-			this.goalSelector.addGoal(1, new JerotesRangedThrowAttackGoal<>(this, 0.4, 40, 12.0F));
-			this.goalSelector.addGoal(2, new JerotesMeleeAttackGoal(HumanEntity.this, 1.2, true));
-			this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 6.0f));
-			this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, HumanEntity.class, 6.0f));
-			this.goalSelector.addGoal(4, new RandomStrollGoal(this, 1));
-			this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-			this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-			this.targetSelector.addGoal(1, new JerotesHelpSameFactionGoal(this, LivingEntity.class, false, false, livingEntity -> livingEntity instanceof LivingEntity));
-			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<LivingEntity>(this, LivingEntity.class, 5, false, false, livingEntity -> EntityFactionFind.isHateFaction(this, livingEntity)));
-			this.targetSelector.addGoal(1, new JerotesHelpAlliesGoal(this, LivingEntity.class, false, false, livingEntity -> livingEntity instanceof LivingEntity));
-			this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<Player>(this, Player.class, 10, true, false, this::isAngryAt));
-			this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<HumanEntity>(this, true));
-		}
+		this.getNavigation().getNodeEvaluator().setCanOpenDoors(true);
+		this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
+		this.goalSelector.addGoal(0, new FloatGoal(this));
+		this.goalSelector.addGoal(1, new JerotesShiftKeyDownGoal(this));
+		this.goalSelector.addGoal(1, new JerotesMainSpellAttackGoal(this, this.getSpellLevel(), 60, 240, 0.5f));
+		this.goalSelector.addGoal(1, new JerotesAddSpellAttackGoal(this, this.getSpellLevel(), 180, 240, 0.5f));
+		this.goalSelector.addGoal(1, new JerotesCombatIMagicAttackGoal<>(this, 0.5, 15.0f, this.meleeOrRangeDistance()));
+		this.goalSelector.addGoal(1, new JerotesCombatIIMagicAttackGoal<>(this, 0.2, true, this.meleeOrRangeDistance()));
+		this.goalSelector.addGoal(1, new JerotesCombatIIIMagicAttackGoal<>(this, 0.5, 15.0f, this.meleeOrRangeDistance()));
+		this.goalSelector.addGoal(1, new JerotesCombatIVMagicAttackGoal<>(this, 0.5, 15.0f, this.meleeOrRangeDistance()));
+		this.goalSelector.addGoal(1, new JerotesRangedBowAttackGoal<HumanEntity>(this, 0.5, 20, 15.0f));
+		this.goalSelector.addGoal(1, new JerotesRangedCrossbowAttackGoal<HumanEntity>(this, 1.0, 15.0f));
+		this.goalSelector.addGoal(1, new JerotesRangedJavelinAttackGoal<>(this, 1.0, 60, 12.0F, this.meleeOrRangeDistance()));
+		this.goalSelector.addGoal(1, new JerotesSpearUseGoal<>(this, 1.0, 1.0, 10.0f, 2.0f));
+		this.goalSelector.addGoal(1, new JerotesPikeUseGoal(this, 1.2, true));
+		this.goalSelector.addGoal(1, new JerotesRangedThrowAttackGoal<>(this, 0.4, 40, 12.0F));
+		this.goalSelector.addGoal(2, new JerotesMeleeAttackGoal(HumanEntity.this, 1.2, true));
+		this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 6.0f));
+		this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, HumanEntity.class, 6.0f));
+		this.goalSelector.addGoal(4, new RandomStrollGoal(this, 1));
+		this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+		this.targetSelector.addGoal(1, new JerotesHelpSameFactionGoal(this, LivingEntity.class, false, false, livingEntity -> livingEntity instanceof LivingEntity));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<LivingEntity>(this, LivingEntity.class, 5, false, false, livingEntity -> EntityFactionFind.isHateFaction(this, livingEntity)));
+		this.targetSelector.addGoal(1, new JerotesHelpAlliesGoal(this, LivingEntity.class, false, false, livingEntity -> livingEntity instanceof LivingEntity));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<Player>(this, Player.class, 10, true, false, this::isAngryAt));
+		this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<HumanEntity>(this, true));
 	}
 
 	@Override
@@ -495,11 +516,22 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 	public void setUseSelfNotStringSpellList(boolean bl) {
 		this.getEntityData().set(USE_SELF_NOT_SPELL_LIST, bl);
 	}
-
+	public boolean isArchmage() {
+		return this.getEntityData().get(IS_ARCHMAGE);
+	}
+	public void setArchmage(boolean bl) {
+		this.getEntityData().set(IS_ARCHMAGE, bl);
+	}
+	public String getFaction() {
+		return this.getEntityData().get(FACTION);
+	}
+	public void setFaction(String string) {
+		this.getEntityData().set(FACTION, string);
+	}
 	//性别
 	@Override
 	public boolean IsFemale() {
-		return this.getEntityData().get(IS_FEMALE);
+		return this.getEntityData().get(IS_FEMALE) || this.getUsername() != null && !this.getUsername().getSkinName().isEmpty() && PlayerSkin.getPlayerSkinType(this.getProfile()) == PlayerSkin.SkinType.SLIM;
 	}
 	public void setFemale(boolean bl) {
 		this.getEntityData().set(IS_FEMALE, bl);
@@ -797,15 +829,40 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 	}
 	@Override
 	public List<SpellTypeInterface> SelfMainSpellList() {
+
+			if (isArchmage()) {
+				List<SpellTypeInterface> spellList = new ArrayList<>();
+				for (String spellId : SpellRegistry.getRegisteredSpellIds()) {
+					SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(spellId);
+					if (SpellListByString.getSpell(3, this, this, spellTypeInterface).getMagicType2() == MagicType.MAIN) {
+						spellList.add(SpellRegistry.getSpellTypeById(spellId));
+					}
+				}
+				return spellList;
+			}
+
 		return new ArrayList<>();
 	}
 	@Override
 	public List<SpellTypeInterface> SelfAddSpellList() {
+		if (isArchmage()) {
+			List<SpellTypeInterface> spellList = new ArrayList<>();
+			for (String spellId : SpellRegistry.getRegisteredSpellIds()) {
+				SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(spellId);
+				if (SpellListByString.getSpell(3, this, this, spellTypeInterface).getMagicType2() == MagicType.ADD) {
+					spellList.add(SpellRegistry.getSpellTypeById(spellId));
+				}
+			}
+			return spellList;
+		}
 		return new ArrayList<>();
 	}
 	public int spellLevel = 1;
 	@Override
 	public int getSpellLevel() {
+		if (isArchmage()) {
+			return Math.max(10, this.spellLevel);
+		}
 		return this.spellLevel;
 	}
 	public void setSpellTick(int n){
@@ -869,6 +926,8 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 		compoundTag.putInt("ShieldLevel", this.getShieldLevel());
 		compoundTag.putInt("CombatStyle", this.getCombatStyle());
 		compoundTag.putBoolean("UseSelfNotStringSpellList", this.isUseSelfNotStringSpellList());
+		compoundTag.putBoolean("IsArchmage", this.isArchmage());
+		compoundTag.putString("Faction", this.getFaction());
 
 		compoundTag.putBoolean("IsNoCombatEmptyWeapon", this.isNoCombatEmptyWeapon());
 		compoundTag.putBoolean("IsNoCombatEmptyShield", this.isNoCombatEmptyShield());
@@ -901,6 +960,7 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 		compoundTag.putInt("OvercoatType", this.OvercoatType());
 		compoundTag.putInt("OvercoatColor", this.OvercoatColor());
 
+		compoundTag.putString("SkinName", this.getSkinName());
 		this.addPersistentAngerSaveData(compoundTag);
 		this.writeInventoryToTag(compoundTag);
 	}
@@ -920,6 +980,8 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 		this.setShieldLevel(compoundTag.getInt("ShieldLevel"));
 		this.setCombatStyle(compoundTag.getInt("CombatStyle"));
 		this.setUseSelfNotStringSpellList(compoundTag.getBoolean("UseSelfNotStringSpellList"));
+		this.setArchmage(compoundTag.getBoolean("IsArchmage"));
+		this.setFaction(compoundTag.getString("Faction"));
 
 		this.setNoCombatEmptyWeapon(compoundTag.getBoolean("IsNoCombatEmptyWeapon"));
 		this.setNoCombatEmptyShield(compoundTag.getBoolean("IsNoCombatEmptyShield"));
@@ -1002,6 +1064,11 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 			this.setOvercoatColor(compoundTag.getInt("OvercoatColor"));
 		}
 
+		this.setSkinName(compoundTag.getString("SkinName"));
+		String skinName = compoundTag.getString("SkinName");
+		if (!StringUtil.isNullOrEmpty(skinName)) {
+			setUsername(skinName);
+		}
 		this.readPersistentAngerSaveData(this.level(), compoundTag);
 		this.readInventoryFromTag(compoundTag);
 	}
@@ -1020,6 +1087,8 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 		this.getEntityData().define(NO_COMBAT_EMPTY_WEAPON, false);
 		this.getEntityData().define(NO_COMBAT_EMPTY_SHIELD, false);
 		this.getEntityData().define(CHANGE_INVENTORY_COOLDOWN_TICK, 50);
+		this.getEntityData().define(IS_ARCHMAGE, false);
+		this.getEntityData().define(FACTION, "");
 
 		this.getEntityData().define(IS_FEMALE, false);
 		this.getEntityData().define(SKIN_TYPE, 1);
@@ -1049,6 +1118,8 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 
 		this.getEntityData().define(CAN_CHANGE_INVENTORY, true);
 		this.getEntityData().define(CAN_CHANGE_MELEE_OR_RANGE, true);
+
+		this.getEntityData().define(SKIN_NAME, "");
 	}
 	@Override
 	public void onSyncedDataUpdated(EntityDataAccessor<?> entityDataAccessor) {
@@ -1287,7 +1358,6 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 			if (newSpawn == 0) {
 				RandomSource randomSource = serverLevelAccessor.getRandom();
 				this.populateDefaultEquipmentSlots(randomSource, difficultyInstance);
-				this.populateDefaultEquipmentEnchantments(randomSource, difficultyInstance);
 
 				if (serverLevelAccessor.getRandom().nextFloat() < 0.5f) {
 					this.setFemale(true);
@@ -1360,10 +1430,83 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 				float offhandRandom = this.random.nextFloat();
 				this.setItemSlot(EquipmentSlot.MAINHAND, this.createSpawnWeapon(weaponRandom));
 				this.setItemSlot(EquipmentSlot.OFFHAND, this.createSpawnOffhand(offhandRandom, weaponRandom));
+				this.populateDefaultEquipmentEnchantments(randomSource, difficultyInstance);
 				newSpawn = 1;
 			}
 		}
 		return spawnGroupData;
+	}
+	@Override
+	protected void onOffspringSpawnedFromEgg(Player player, Mob child) {
+		super.onOffspringSpawnedFromEgg(player, child);
+		if (child instanceof HumanEntity humanEntity && humanEntity.level() instanceof ServerLevel serverLevelAccessor) {
+			if (serverLevelAccessor.getRandom().nextFloat() < 0.5f) {
+				humanEntity.setFemale(true);
+			}
+			humanEntity.setSkinType(humanEntity.MaxSkinType());
+			humanEntity.setSkinColor(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxSkinColor()));
+			if (serverLevelAccessor.getRandom().nextFloat() < 0.01f) {
+				humanEntity.setEyeType(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxEyeType()));
+			}
+			else {
+				humanEntity.setEyeType(1);
+			}
+			humanEntity.setEyeColor(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxEyeColor()));
+			if (serverLevelAccessor.getRandom().nextFloat() < 0.2f) {
+				humanEntity.setAddType_1(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxAddType()));
+				if (serverLevelAccessor.getRandom().nextFloat() < 0.3f) {
+					humanEntity.setAddType_2(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxAddType()));
+					if (humanEntity.AddType_1() == humanEntity.AddType_2()) {
+						humanEntity.setAddType_2(0);
+					}
+					if (serverLevelAccessor.getRandom().nextFloat() < 0.4f) {
+						humanEntity.setAddType_3(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxAddType()));
+						if (humanEntity.AddType_2() == humanEntity.AddType_3()) {
+							humanEntity.setAddType_3(0);
+						}
+					}
+				}
+			}
+			humanEntity.setHairType(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxHairType()));
+			if (serverLevelAccessor.getRandom().nextFloat() < 0.01f) {
+				humanEntity.setHairType(0);
+			}
+			humanEntity.setHairColor(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxHairColor()));
+			humanEntity.setJacketType(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxJacketType()));
+			humanEntity.setJacketColor(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxJacketColor()));
+			humanEntity.setPantsType(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxPantsType()));
+			humanEntity.setPantsColor(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxPantsColor()));
+			humanEntity.setGlovesType(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxGlovesType()));
+			humanEntity.setGlovesColor(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxGlovesColor()));
+			if (serverLevelAccessor.getRandom().nextFloat() < 0.2f) {
+				humanEntity.setBaubleType_1(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxBaubleType()));
+				if (serverLevelAccessor.getRandom().nextFloat() < 0.3f) {
+					humanEntity.setBaubleType_2(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxBaubleType()));
+					if (humanEntity.BaubleType_1() == humanEntity.BaubleType_2()) {
+						humanEntity.setBaubleType_2(0);
+					}
+					if (serverLevelAccessor.getRandom().nextFloat() < 0.4f) {
+						humanEntity.setBaubleType_3(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxBaubleType()));
+						if (humanEntity.BaubleType_2() == humanEntity.BaubleType_3()) {
+							humanEntity.setBaubleType_3(0);
+						}
+					}
+				}
+			}
+			humanEntity.setShoesType(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxShoesType()));
+			humanEntity.setShoesColor(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxShoesColor()));
+			if (serverLevelAccessor.getRandom().nextFloat() < 0.2f) {
+				humanEntity.setHatType(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxHairType()));
+			}
+			humanEntity.setHatColor(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxHairColor()));
+			if (serverLevelAccessor.getRandom().nextFloat() < 0.6f) {
+				humanEntity.setOvercoatType(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxOvercoatType()));
+			}
+			humanEntity.setOvercoatColor(Main.randomReach(serverLevelAccessor.getRandom(), 1, humanEntity.MaxOvercoatColor()));
+
+			humanEntity.setNameFirst(Main.randomReach(serverLevelAccessor.getRandom(), 1, 30));
+			humanEntity.setNameSecond(Main.randomReach(serverLevelAccessor.getRandom(), 1, 30));
+		}
 	}
 
 	public ItemStack createSpawnWeapon(float weaponRandom) {
@@ -1377,29 +1520,87 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 	private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 	private int remainingPersistentAngerTime;
 	private UUID persistentAngerTarget;
-
 	@Override
 	public void startPersistentAngerTimer() {
 		this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
 	}
-
 	@Override
 	public void setRemainingPersistentAngerTime(int n) {
 		this.remainingPersistentAngerTime = n;
 	}
-
 	@Override
 	public int getRemainingPersistentAngerTime() {
 		return this.remainingPersistentAngerTime;
 	}
-
 	@Override
 	public void setPersistentAngerTarget(UUID uUID) {
 		this.persistentAngerTarget = uUID;
 	}
-
 	@Override
 	public UUID getPersistentAngerTarget() {
 		return this.persistentAngerTarget;
+	}
+
+
+	public void setSkinName(String string) {
+		this.getEntityData().set(SKIN_NAME, string);
+	}
+	public String getSkinName() {
+		return this.getEntityData().get(SKIN_NAME);
+	}
+	@Nullable
+	private GameProfile profile;
+	@Nullable
+	private ResourceLocation skin;
+	private boolean skinAvailable;
+	@OnlyIn(Dist.CLIENT)
+	public SkinManager.SkinTextureCallback getSkinCallback() {
+		return (type, location, profileTexture) -> {
+			switch (type) {
+				case SKIN -> {
+					skin = location;
+					skinAvailable = true;
+				}
+			}
+		};
+	}
+	@Nullable
+	public GameProfile getProfile() {
+		if (profile == null && hasUsername()) {
+			profile = new GameProfile(null, getUsername().getSkinName());
+			PlayerSkin.ProfileUpdater.updateProfile(this);
+		}
+		return profile;
+	}
+	public void setProfile(@Nullable GameProfile profile) {
+		this.profile = profile;
+	}
+	public boolean hasUsername() {
+		return !StringUtil.isNullOrEmpty(getEntityData().get(SKIN_NAME));
+	}
+	public PlayerName getUsername() {
+		return new PlayerName(getEntityData().get(SKIN_NAME));
+	}
+	public void setUsername(String username) {
+		PlayerName playerName = new PlayerName(username);
+		setUsername(playerName);
+	}
+	public void setUsername(PlayerName name) {
+		PlayerName oldName = hasUsername() ? getUsername(): null;
+		getEntityData().set(SKIN_NAME, name.getCombinedNames());
+
+		if (!Objects.equals(oldName, name)) {
+			setProfile(null);
+			getProfile();
+		}
+	}
+	@OnlyIn(Dist.CLIENT)
+	public boolean isTextureAvailable(MinecraftProfileTexture.Type type) {
+		return skinAvailable;
+	}
+	@SuppressWarnings("ConstantConditions")
+	@OnlyIn(Dist.CLIENT)
+	public ResourceLocation getTexture(MinecraftProfileTexture.Type type) {
+		return skin;
 	}
 }

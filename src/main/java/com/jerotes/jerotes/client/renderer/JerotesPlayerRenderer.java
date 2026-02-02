@@ -8,6 +8,7 @@ import com.jerotes.jerotes.client.model.Modelhumanoid_wide_or_slim_for_human;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Mob.HumanEntity;
 import com.jerotes.jerotes.entity.Mob.JerotesPlayerEntity;
+import com.jerotes.jerotes.util.PlayerSkin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
@@ -208,6 +209,9 @@ public class JerotesPlayerRenderer extends MobRenderer<HumanEntity, Modelhumanoi
 
 	@Override
 	public ResourceLocation getTextureLocation(HumanEntity entity) {
+		if (entity.getUsername() != null && !entity.getUsername().getSkinName().isEmpty()) {
+			return PlayerSkin.getPlayerSkin(entity);
+		}
 		String string = ChatFormatting.stripFormatting(entity.getName().getString());
 		String slim = "wide";
 		if (entity.IsFemale()) {

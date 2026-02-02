@@ -17,7 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 
-public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+public class HumanSkinEntityBodyLayer<T extends HumanEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
     private final EntityModel<T> model;
     private final String string;
 
@@ -35,10 +35,10 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
         if (t.isInvisible() && !bl) {
             return;
         }
-        if (!(t instanceof SkinEntity skinEntity)) {
+        if (!t.isTrueUse()) {
             return;
         }
-        if (!skinEntity.isTrueUse()) {
+        if (t.getUsername() != null && !t.getUsername().getSkinName().isEmpty()) {
             return;
         }
 
@@ -84,7 +84,7 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
         this.model.prepareMobModel(t, f, f2, f3);
         this.model.setupAnim(t, f, f2, f4, f5, f6);
         String sexual = "male";
-        if (skinEntity.IsFemale()) {
+        if (t.IsFemale()) {
             sexual = "female";
         }
         String SkinColorHave = "null";
@@ -96,65 +96,65 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
         ResourceLocation leftEyeLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/eye/eye_left.png");
         ResourceLocation rightEyeLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/eye/eye_right.png");
         //头发
-        ResourceLocation hairLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/hair/hair_" + skinEntity.HairType() + ".png");
+        ResourceLocation hairLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/hair/hair_" + t.HairType() + ".png");
         if (t.isBaby()) {
-            hairLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/baby_hair/hair_" + skinEntity.HairType() + ".png");
+            hairLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/baby_hair/hair_" + t.HairType() + ".png");
         }
         //附件
-        ResourceLocation addLocation_1 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_" + skinEntity.AddType_1() + ".png");
-        ResourceLocation addBaseLocation_1 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_base_" + skinEntity.AddType_1() + ".png");
-        ResourceLocation addLocation_2 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_" + skinEntity.AddType_2() + ".png");
-        ResourceLocation addBaseLocation_2 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_base_" + skinEntity.AddType_2() + ".png");
-        ResourceLocation addLocation_3 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_" + skinEntity.AddType_3() + ".png");
-        ResourceLocation addBaseLocation_3 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_base_" + skinEntity.AddType_3() + ".png");
+        ResourceLocation addLocation_1 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_" + t.AddType_1() + ".png");
+        ResourceLocation addBaseLocation_1 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_base_" + t.AddType_1() + ".png");
+        ResourceLocation addLocation_2 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_" + t.AddType_2() + ".png");
+        ResourceLocation addBaseLocation_2 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_base_" + t.AddType_2() + ".png");
+        ResourceLocation addLocation_3 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_" + t.AddType_3() + ".png");
+        ResourceLocation addBaseLocation_3 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/add/add_base_" + t.AddType_3() + ".png");
         //上衣
-        ResourceLocation jacketLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/jacket_" + skinEntity.JacketType() + ".png");
-        ResourceLocation jacketBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/jacket_base_" + skinEntity.JacketType() + ".png");
+        ResourceLocation jacketLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/jacket_" + t.JacketType() + ".png");
+        ResourceLocation jacketBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/jacket_base_" + t.JacketType() + ".png");
         //裤子
-        ResourceLocation pantsLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/pants_" + skinEntity.PantsType() + ".png");
-        ResourceLocation pantsBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/pants_base_" + skinEntity.PantsType() + ".png");
+        ResourceLocation pantsLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/pants_" + t.PantsType() + ".png");
+        ResourceLocation pantsBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/pants_base_" + t.PantsType() + ".png");
         //手套
-        ResourceLocation glovesLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/gloves_" + skinEntity.GlovesType() + ".png");
-        ResourceLocation glovesBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/gloves_base_" + skinEntity.GlovesType() + ".png");
+        ResourceLocation glovesLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/gloves_" + t.GlovesType() + ".png");
+        ResourceLocation glovesBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/gloves_base_" + t.GlovesType() + ".png");
         //饰品
-        ResourceLocation baubleLocation_1 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_" + skinEntity.BaubleType_1() + ".png");
-        ResourceLocation baubleBaseLocation_1 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_base_" + skinEntity.BaubleType_1() + ".png");
-        ResourceLocation baubleLocation_2 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_" + skinEntity.BaubleType_2() + ".png");
-        ResourceLocation baubleBaseLocation_2 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_base_" + skinEntity.BaubleType_2() + ".png");
-        ResourceLocation baubleLocation_3 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_" + skinEntity.BaubleType_3() + ".png");
-        ResourceLocation baubleBaseLocation_3 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_base_" + skinEntity.BaubleType_3() + ".png");
+        ResourceLocation baubleLocation_1 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_" + t.BaubleType_1() + ".png");
+        ResourceLocation baubleBaseLocation_1 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_base_" + t.BaubleType_1() + ".png");
+        ResourceLocation baubleLocation_2 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_" + t.BaubleType_2() + ".png");
+        ResourceLocation baubleBaseLocation_2 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_base_" + t.BaubleType_2() + ".png");
+        ResourceLocation baubleLocation_3 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_" + t.BaubleType_3() + ".png");
+        ResourceLocation baubleBaseLocation_3 = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/bauble/bauble_base_" + t.BaubleType_3() + ".png");
         //鞋子
-        ResourceLocation shoesLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/shoes_" + skinEntity.ShoesType() + ".png");
-        ResourceLocation shoesBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/shoes_base_" + skinEntity.ShoesType() + ".png");
+        ResourceLocation shoesLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/shoes_" + t.ShoesType() + ".png");
+        ResourceLocation shoesBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/shoes_base_" + t.ShoesType() + ".png");
         //帽子
-        ResourceLocation hatLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/hat_" + skinEntity.HatType() + ".png");
-        ResourceLocation hatBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/hat_base_" + skinEntity.HatType() + ".png");
+        ResourceLocation hatLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/hat_" + t.HatType() + ".png");
+        ResourceLocation hatBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/hat_base_" + t.HatType() + ".png");
         //外套
-        ResourceLocation overcoatLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/overcoat_" + skinEntity.OvercoatType() + ".png");
-        ResourceLocation overcoatBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/overcoat_base_" + skinEntity.OvercoatType() + ".png");
+        ResourceLocation overcoatLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/overcoat_" + t.OvercoatType() + ".png");
+        ResourceLocation overcoatBaseLocation = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/skin/" + this.string + "/" + sexual + "/clothes/overcoat_base_" + t.OvercoatType() + ".png");
 
         //皮肤
-        if (skinEntity.SkinType() > 0 && skinEntity.SkinColor() > 0) {
+        if (t.SkinType() > 0 && t.SkinColor() > 0) {
             String SkinColor;
             //肤色
             if (t instanceof HumanEntity) {
-                if (skinEntity.SkinColor() == 1) {
+                if (t.SkinColor() == 1) {
                     SkinColor = "efdabf";
-                } else if (skinEntity.SkinColor() == 2) {
+                } else if (t.SkinColor() == 2) {
                     SkinColor = "f9a786";
-                } else if (skinEntity.SkinColor() == 3) {
+                } else if (t.SkinColor() == 3) {
                     SkinColor = "f29f5f";
-                } else if (skinEntity.SkinColor() == 4) {
+                } else if (t.SkinColor() == 4) {
                     SkinColor = "df9658";
-                } else if (skinEntity.SkinColor() == 5) {
+                } else if (t.SkinColor() == 5) {
                     SkinColor = "b7836b";
-                } else if (skinEntity.SkinColor() == 6) {
+                } else if (t.SkinColor() == 6) {
                     SkinColor = "b9674a";
-                } else if (skinEntity.SkinColor() == 7) {
+                } else if (t.SkinColor() == 7) {
                     SkinColor = "ab724c";
-                } else if (skinEntity.SkinColor() == 8) {
+                } else if (t.SkinColor() == 8) {
                     SkinColor = "7e5337";
-                } else if (skinEntity.SkinColor() == 9) {
+                } else if (t.SkinColor() == 9) {
                     SkinColor = "443528";
                 }
                 else {
@@ -172,7 +172,7 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
             SkinColorHave = SkinColor;
         }
         //眼睛
-        if (skinEntity.EyeType() > 0) {
+        if (t.EyeType() > 0) {
             //眼睛基础
             String EyeBaseColor;
             EyeBaseColor = "ffffff";
@@ -191,35 +191,35 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
             }
             HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, eyeBaseLocation, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r, g, b);
             //眼睛具体
-            if (skinEntity.EyeColor() > 0 && t.hurtTime <= 0) {
+            if (t.EyeColor() > 0 && t.hurtTime <= 0) {
                 String LeftEyeColor = "000000";
                 String RightEyeColor = LeftEyeColor;
                 if (t instanceof HumanEntity) {
-                    if (skinEntity.EyeColor() == 1) {
+                    if (t.EyeColor() == 1) {
                         LeftEyeColor = "236224";
                         RightEyeColor = "236224";
-                    } else if (skinEntity.EyeColor() == 2) {
+                    } else if (t.EyeColor() == 2) {
                         LeftEyeColor = "240303";
                         RightEyeColor = "240303";
-                    } else if (skinEntity.EyeColor() == 3) {
+                    } else if (t.EyeColor() == 3) {
                         LeftEyeColor = "692b34";
                         RightEyeColor = "692b34";
-                    } else if (skinEntity.EyeColor() == 4) {
+                    } else if (t.EyeColor() == 4) {
                         LeftEyeColor = "436753";
                         RightEyeColor = "436753";
-                    } else if (skinEntity.EyeColor() == 5) {
+                    } else if (t.EyeColor() == 5) {
                         LeftEyeColor = "2e1800";
                         RightEyeColor = "2e1800";
-                    } else if (skinEntity.EyeColor() == 6) {
+                    } else if (t.EyeColor() == 6) {
                         LeftEyeColor = "582c1d";
                         RightEyeColor = "582c1d";
-                    } else if (skinEntity.EyeColor() == 7) {
+                    } else if (t.EyeColor() == 7) {
                         LeftEyeColor = "523d89";
                         RightEyeColor = "523d89";
-                    } else if (skinEntity.EyeColor() == 8) {
+                    } else if (t.EyeColor() == 8) {
                         LeftEyeColor = "000000";
                         RightEyeColor = "000000";
-                    } else if (skinEntity.EyeColor() == 9) {
+                    } else if (t.EyeColor() == 9) {
                         LeftEyeColor = "411e02";
                         RightEyeColor = "411e02";
                     } else {
@@ -239,10 +239,10 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
                 float right_r = right_arrf[0] / 255f;
                 float right_g = right_arrf[1] / 255f;
                 float right_b = right_arrf[2] / 255f;
-                if (skinEntity.EyeType() == 1 || skinEntity.EyeType() == 2) {
+                if (t.EyeType() == 1 || t.EyeType() == 2) {
                     HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, leftEyeLocation, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, left_r, left_g, left_b);
                 }
-                if (skinEntity.EyeType() == 1 || skinEntity.EyeType() == 3) {
+                if (t.EyeType() == 1 || t.EyeType() == 3) {
                     HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, rightEyeLocation, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, right_r, right_g, right_b);
                 }
             }
@@ -250,7 +250,7 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
         //附加
         if (!SkinColorHave.equals("null")) {
             //附加_1
-            if (skinEntity.AddType_1() > 0) {
+            if (t.AddType_1() > 0) {
                 //附加基础
                 int[] arrf_base_1 = Color.colorStringToRGBInt("ffffff");
                 float r_base_1 = arrf_base_1[0] / 255f;
@@ -264,7 +264,7 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
                 HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, addLocation_1, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r_1, g_1, b_1);
             }
             //附加_2
-            if (skinEntity.AddType_2() > 0) {
+            if (t.AddType_2() > 0) {
                 //附加基础
                 int[] arrf_base_2 = Color.colorStringToRGBInt("ffffff");
                 float r_base_2 = arrf_base_2[0] / 255f;
@@ -278,7 +278,7 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
                 HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, addLocation_2, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r_2, g_2, b_2);
             }
             //附加_3
-            if (skinEntity.AddType_3() > 0) {
+            if (t.AddType_3() > 0) {
                 //附加基础
                 int[] arrf_base_3 = Color.colorStringToRGBInt("ffffff");
                 float r_base_3 = arrf_base_3[0] / 255f;
@@ -293,9 +293,9 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
             }
         }
         //上衣
-        if (skinEntity.JacketType() > 0 && skinEntity.JacketColor() > 0) {
+        if (t.JacketType() > 0 && t.JacketColor() > 0) {
             String ClothesColor;
-            int colors = skinEntity.JacketColor();
+            int colors = t.JacketColor();
             if (t instanceof HumanEntity) {
                 if (colors == 1) {
                     ClothesColor = "fcb961";
@@ -354,9 +354,9 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
             HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, jacketLocation, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r_1, g_1, b_1);
         }
         //裤子
-        if (skinEntity.PantsType() > 0 && skinEntity.PantsColor() > 0) {
+        if (t.PantsType() > 0 && t.PantsColor() > 0) {
             String ClothesColor;
-            int colors = skinEntity.PantsColor();
+            int colors = t.PantsColor();
             if (t instanceof HumanEntity) {
                 if (colors == 1) {
                     ClothesColor = "fcb961";
@@ -414,9 +414,9 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
             HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, pantsLocation, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r_1, g_1, b_1);
         }
         //手套
-        if (skinEntity.GlovesType() > 0 && skinEntity.GlovesColor() > 0) {
+        if (t.GlovesType() > 0 && t.GlovesColor() > 0) {
             String ClothesColor;
-            int colors = skinEntity.GlovesColor();
+            int colors = t.GlovesColor();
             if (t instanceof HumanEntity) {
                 if (colors == 1) {
                     ClothesColor = "fcb961";
@@ -474,62 +474,62 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
             HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, glovesLocation, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r_1, g_1, b_1);
         }
         //头发
-        if (skinEntity.HairType() > 0 && skinEntity.HairColor() > 0) {
+        if (t.HairType() > 0 && t.HairColor() > 0) {
             String HairColor;
             //发色
             if (t instanceof HumanEntity) {
-                if (skinEntity.HairColor() == 1) {
+                if (t.HairColor() == 1) {
                     HairColor = "f3a858";
                 }
-                else if (skinEntity.HairColor() == 2) {
+                else if (t.HairColor() == 2) {
                     HairColor = "9d4522";
                 }
-                else if (skinEntity.HairColor() == 3) {
+                else if (t.HairColor() == 3) {
                     HairColor = "956b9e";
                 }
-                else if (skinEntity.HairColor() == 4) {
+                else if (t.HairColor() == 4) {
                     HairColor = "fcf4aa";
                 }
-                else if (skinEntity.HairColor() == 5) {
+                else if (t.HairColor() == 5) {
                     HairColor = "32191e";
                 }
-                else if (skinEntity.HairColor() == 6) {
+                else if (t.HairColor() == 6) {
                     HairColor = "593420";
                 }
-                else if (skinEntity.HairColor() == 7) {
+                else if (t.HairColor() == 7) {
                     HairColor = "3f2a15";
                 }
-                else if (skinEntity.HairColor() == 8) {
+                else if (t.HairColor() == 8) {
                     HairColor = "494949";
                 }
-                else if (skinEntity.HairColor() == 9) {
+                else if (t.HairColor() == 9) {
                     HairColor = "2b1d18";
                 }
-                else if (skinEntity.HairColor() == 10) {
+                else if (t.HairColor() == 10) {
                     HairColor = "de812e";
                 }
-                else if (skinEntity.HairColor() == 11) {
+                else if (t.HairColor() == 11) {
                     HairColor = "803012";
                 }
-                else if (skinEntity.HairColor() == 12) {
+                else if (t.HairColor() == 12) {
                     HairColor = "663f69";
                 }
-                else if (skinEntity.HairColor() == 13) {
+                else if (t.HairColor() == 13) {
                     HairColor = "f7d576";
                 }
-                else if (skinEntity.HairColor() == 14) {
+                else if (t.HairColor() == 14) {
                     HairColor = "1e0e11";
                 }
-                else if (skinEntity.HairColor() == 15) {
+                else if (t.HairColor() == 15) {
                     HairColor = "23120a";
                 }
-                else if (skinEntity.HairColor() == 16) {
+                else if (t.HairColor() == 16) {
                     HairColor = "241808";
                 }
-                else if (skinEntity.HairColor() == 17) {
+                else if (t.HairColor() == 17) {
                     HairColor = "222222";
                 }
-                else if (skinEntity.HairColor() == 18) {
+                else if (t.HairColor() == 18) {
                     HairColor = "0e0401";
                 }
                 else {
@@ -548,7 +548,7 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
         //饰品
         if (!SkinColorHave.equals("null")) {
         //饰品_1
-            if (skinEntity.BaubleType_1() > 0) {
+            if (t.BaubleType_1() > 0) {
                 //饰品基础
                 int[] arrf_base_1 = Color.colorStringToRGBInt("ffffff");
                 float r_base_1 = arrf_base_1[0] / 255f;
@@ -562,7 +562,7 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
                 HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, baubleLocation_1, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r_1, g_1, b_1);
             }
             //饰品_2
-            if (skinEntity.BaubleType_2() > 0) {
+            if (t.BaubleType_2() > 0) {
                 //饰品基础
                 int[] arrf_base_2 = Color.colorStringToRGBInt("ffffff");
                 float r_base_2 = arrf_base_2[0] / 255f;
@@ -576,7 +576,7 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
                 HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, baubleLocation_2, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r_2, g_2, b_2);
             }
             //饰品_3
-            if (skinEntity.BaubleType_3() > 0) {
+            if (t.BaubleType_3() > 0) {
                 //饰品基础
                 int[] arrf_base_3 = Color.colorStringToRGBInt("ffffff");
                 float r_base_3 = arrf_base_3[0] / 255f;
@@ -591,9 +591,9 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
             }
         }
         //鞋子
-        if (skinEntity.ShoesType() > 0 && skinEntity.ShoesColor() > 0) {
+        if (t.ShoesType() > 0 && t.ShoesColor() > 0) {
             String ClothesColor;
-            int colors = skinEntity.ShoesColor();
+            int colors = t.ShoesColor();
             if (t instanceof HumanEntity) {
                 if (colors == 1) {
                     ClothesColor = "6f6f6f";
@@ -651,9 +651,9 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
             HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, shoesLocation, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r_1, g_1, b_1);
         }
         //帽子
-        if (skinEntity.HatType() > 0 && skinEntity.HatColor() > 0 && !t.hasItemInSlot(EquipmentSlot.HEAD)) {
+        if (t.HatType() > 0 && t.HatColor() > 0 && !t.hasItemInSlot(EquipmentSlot.HEAD)) {
             String ClothesColor;
-            int colors = skinEntity.HatColor();
+            int colors = t.HatColor();
             if (t instanceof HumanEntity) {
                 if (colors == 1) {
                     ClothesColor = "fcb961";
@@ -711,9 +711,9 @@ public class HumanSkinEntityBodyLayer<T extends LivingEntity, M extends EntityMo
             HumanSkinEntityBodyLayer.coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, hatLocation, poseStack, multiBufferSource, n, t, f, f2, f4, f5, f6, f3, r_1, g_1, b_1);
         }
         //大衣
-        if (skinEntity.OvercoatType() > 0 && skinEntity.OvercoatColor() > 0) {
+        if (t.OvercoatType() > 0 && t.OvercoatColor() > 0) {
             String ClothesColor;
-            int colors = skinEntity.OvercoatColor();
+            int colors = t.OvercoatColor();
             if (t instanceof HumanEntity) {
                 if (colors == 1) {
                     ClothesColor = "fcb961";

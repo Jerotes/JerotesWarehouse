@@ -305,6 +305,42 @@
       }
     ]
   },
+  "armor_equip_copper": {
+    "subtitle": "subtitle.jerotes.armor_equip_copper",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/other/armor_equip_copper_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/other/armor_equip_copper_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/other/armor_equip_copper_3",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/other/armor_equip_copper_4",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/other/armor_equip_copper_5",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/other/armor_equip_copper_6",
+        "volume": 1.0,
+        "weight": 1.0
+      }
+    ]
+  },
 
   "magic_magic_missile": {
     "subtitle": "subtitle.jerotes.magic_magic_missile",

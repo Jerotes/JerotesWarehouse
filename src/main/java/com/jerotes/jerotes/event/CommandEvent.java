@@ -3,8 +3,11 @@ package com.jerotes.jerotes.event;
 import com.jerotes.jerotes.alchemy.Alchemy;
 import com.jerotes.jerotes.argument.SpellArgumentType;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeAbstractHorse;
+import com.jerotes.jerotes.entity.Mob.JerotesHorseEntity;
 import com.jerotes.jerotes.entity.Mob.JerotesPlayerEntity;
+import com.jerotes.jerotes.init.JerotesEnchantments;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.spell.SpellListByString;
 import com.jerotes.jerotes.spell.SpellRegistry;
@@ -24,6 +27,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +35,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -452,7 +457,7 @@ public class CommandEvent {
 				)
 				//角色
 				.then(Commands.literal("character")
-						.then(Commands.literal("Netherite").executes(arguments ->
+						.then(Commands.literal("NetheriteWarrior").executes(arguments ->
 										{
 											JerotesPlayerEntity player = JerotesEntityType.JEROTES_PLAYER.get().spawn(arguments.getSource().getLevel(), BlockPos.containing(arguments.getSource().getPosition().x,arguments.getSource().getPosition().y, arguments.getSource().getPosition().z), MobSpawnType.MOB_SUMMONED);
 											if (player != null) {
@@ -510,8 +515,147 @@ public class CommandEvent {
 												ItemStack arrow = new ItemStack(Items.SPECTRAL_ARROW, 64);
 												player.mobInventory().addItem(arrow);
 												ItemStack shield = new ItemStack(Items.SHIELD);
+												shield.enchant(Enchantments.UNBREAKING, 3);
 												player.mobInventory().addItem(shield);
-												sword.enchant(Enchantments.UNBREAKING, 3);
+												player.mobInventory().addItem(new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, 64));
+											}
+											return 0;
+										}
+								)
+						)
+						.then(Commands.literal("NetheriteKnight").executes(arguments ->
+										{
+											JerotesPlayerEntity player = JerotesEntityType.JEROTES_PLAYER.get().spawn(arguments.getSource().getLevel(), BlockPos.containing(arguments.getSource().getPosition().x,arguments.getSource().getPosition().y, arguments.getSource().getPosition().z), MobSpawnType.MOB_SUMMONED);
+											if (player != null) {
+												player.setLookLevel(10);
+												player.setBowLevel(20);
+												player.setShieldLevel(3);
+												player.setChangeInventoryCooldownTick(5);
+												Objects.requireNonNull(player.getAttribute(Attributes.FOLLOW_RANGE)).setBaseValue(128);
+												player.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.LEGS, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.FEET, new ItemStack(Items.AIR));
+
+												//矛
+												ItemStack spear = new ItemStack(JerotesItems.NETHERITE_SPEAR.get());
+												spear.enchant(Enchantments.SMITE, 5);
+												spear.enchant(Enchantments.KNOCKBACK, 2);
+												spear.enchant(Enchantments.MOB_LOOTING, 3);
+												spear.enchant(JerotesEnchantments.LUNGE.get(), 3);
+												spear.enchant(Enchantments.UNBREAKING, 3);
+												//弓
+												ItemStack bow = new ItemStack(Items.BOW);
+												bow.enchant(Enchantments.POWER_ARROWS, 5);
+												bow.enchant(Enchantments.INFINITY_ARROWS, 1);
+												bow.enchant(Enchantments.PUNCH_ARROWS, 2);
+												bow.enchant(Enchantments.UNBREAKING, 3);
+												//盔甲
+												ItemStack helmet = new ItemStack(Items.NETHERITE_HELMET);
+												ItemStack chestplate = new ItemStack(Items.NETHERITE_CHESTPLATE);
+												ItemStack leggings = new ItemStack(Items.NETHERITE_LEGGINGS);
+												ItemStack boots = new ItemStack(Items.NETHERITE_BOOTS);
+												helmet.enchant(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+												chestplate.enchant(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+												leggings.enchant(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+												boots.enchant(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+												helmet.enchant(Enchantments.UNBREAKING, 3);
+												helmet.enchant(Enchantments.THORNS, 3);
+												chestplate.enchant(Enchantments.UNBREAKING, 3);
+												chestplate.enchant(Enchantments.THORNS, 3);
+												leggings.enchant(Enchantments.UNBREAKING, 3);
+												leggings.enchant(Enchantments.THORNS, 3);
+												boots.enchant(Enchantments.THORNS, 3);
+												boots.enchant(Enchantments.UNBREAKING, 3);
+												boots.enchant(Enchantments.FALL_PROTECTION, 4);
+												boots.enchant(Enchantments.THORNS, 3);
+												//
+												player.mobInventory().addItem(spear);
+												player.mobInventory().addItem(helmet);
+												player.mobInventory().addItem(chestplate);
+												player.mobInventory().addItem(leggings);
+												player.mobInventory().addItem(boots);
+												player.mobInventory().addItem(bow);
+												ItemStack arrow = new ItemStack(Items.SPECTRAL_ARROW, 64);
+												player.mobInventory().addItem(arrow);
+												ItemStack shield = new ItemStack(Items.SHIELD);
+												shield.enchant(Enchantments.UNBREAKING, 3);
+												player.mobInventory().addItem(shield);
+												player.mobInventory().addItem(new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, 64));
+
+												JerotesHorseEntity jerotesHorseEntity = 
+														JerotesEntityType.JEROTES_HORSE.get().
+																spawn(arguments.getSource().getLevel(), BlockPos.containing(player.getX(), player.getY(), player.getZ()), MobSpawnType.MOB_SUMMONED);
+												PlayerTeam teams = (PlayerTeam) player.getTeam();
+												if (jerotesHorseEntity != null) {
+													jerotesHorseEntity.getAttribute(Attributes.MAX_HEALTH).setBaseValue(30);
+													jerotesHorseEntity.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3375);
+													jerotesHorseEntity.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(1.0);
+													jerotesHorseEntity.setBaby(false);
+													jerotesHorseEntity.tameLivingEntity(player);
+													if (teams != null) {
+														arguments.getSource().getLevel().getScoreboard().addPlayerToTeam(jerotesHorseEntity.getStringUUID(), teams);
+													}
+													jerotesHorseEntity.moveTo(player.getX(), player.getY(), player.getZ(), player.getYRot(), 0.0f);
+													//鞍
+													jerotesHorseEntity.equipSaddle(SoundSource.NEUTRAL);
+													//盔甲
+													jerotesHorseEntity.equipArmor(null, new ItemStack(JerotesItems.NETHERITE_WAR_BEAST_ARMOR.get()));
+													if (!player.level().isClientSide()) {
+														jerotesHorseEntity.setBaby(false);
+														player.startRiding(jerotesHorseEntity);
+													}
+												}
+											}
+											return 0;
+										}
+								)
+						)
+						.then(Commands.literal("Archmage").executes(arguments ->
+										{
+											JerotesPlayerEntity player = JerotesEntityType.JEROTES_PLAYER.get().spawn(arguments.getSource().getLevel(), BlockPos.containing(arguments.getSource().getPosition().x,arguments.getSource().getPosition().y, arguments.getSource().getPosition().z), MobSpawnType.MOB_SUMMONED);
+											if (player != null) {
+												player.setLookLevel(10);
+												player.setBowLevel(20);
+												player.setShieldLevel(3);
+												player.setCanPickUpLoot(false);
+												player.setChangeInventoryCooldownTick(5);
+												player.setCombatStyle(4);
+												player.setArchmage(true);
+												Objects.requireNonNull(player.getAttribute(Attributes.FOLLOW_RANGE)).setBaseValue(128);
+												player.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.LEGS, new ItemStack(Items.AIR));
+												player.setItemSlot(EquipmentSlot.FEET, new ItemStack(Items.AIR));
+
+												//盔甲
+												ItemStack helmet = new ItemStack(Items.NETHERITE_HELMET);
+												ItemStack chestplate = new ItemStack(Items.NETHERITE_CHESTPLATE);
+												ItemStack leggings = new ItemStack(Items.NETHERITE_LEGGINGS);
+												ItemStack boots = new ItemStack(Items.NETHERITE_BOOTS);
+												helmet.enchant(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+												chestplate.enchant(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+												leggings.enchant(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+												boots.enchant(Enchantments.ALL_DAMAGE_PROTECTION, 4);
+												helmet.enchant(Enchantments.UNBREAKING, 3);
+												helmet.enchant(Enchantments.THORNS, 3);
+												chestplate.enchant(Enchantments.UNBREAKING, 3);
+												chestplate.enchant(Enchantments.THORNS, 3);
+												leggings.enchant(Enchantments.UNBREAKING, 3);
+												leggings.enchant(Enchantments.THORNS, 3);
+												boots.enchant(Enchantments.THORNS, 3);
+												boots.enchant(Enchantments.UNBREAKING, 3);
+												boots.enchant(Enchantments.FALL_PROTECTION, 4);
+												boots.enchant(Enchantments.THORNS, 3);
+												//
+												player.mobInventory().addItem(helmet);
+												player.mobInventory().addItem(chestplate);
+												player.mobInventory().addItem(leggings);
+												player.mobInventory().addItem(boots);
 												player.mobInventory().addItem(new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, 64));
 											}
 											return 0;

@@ -5,10 +5,7 @@ import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.AAExplorationEye;
-import com.jerotes.jerotes.item.Tool.ItemToolBaseBow;
-import com.jerotes.jerotes.item.Tool.ItemToolBaseDagger;
-import com.jerotes.jerotes.item.Tool.ItemToolBaseFlail;
-import com.jerotes.jerotes.item.Tool.ItemToolBaseWhip;
+import com.jerotes.jerotes.item.Tool.*;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.spell.*;
 import com.jerotes.jerotes.util.Main;
@@ -40,8 +37,8 @@ public class CameraEvent {
 	public static void onCameraSetup(ComputeFovModifierEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null && mc.player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity) {
-			if (controlVehicleEntity.isManuallyControlCombat()) {
-				event.setNewFovModifier(event.getFovModifier() * controlVehicleEntity.getManuallyControlCombatCameraChange());
+			if (controlVehicleEntity.isManuallyControlCombatJerotes()) {
+				event.setNewFovModifier(event.getFovModifier() * controlVehicleEntity.getManuallyControlCombatCameraChangeJerotes());
 			}
 		}
 	}
@@ -111,6 +108,34 @@ public class CameraEvent {
 		Item item = player.getMainHandItem().getItem();
 		if (player.isShiftKeyDown() && item instanceof ItemToolBaseDagger && Main.getTargetedEntity(player, 6, true) != null && Main.getTargetedEntity(player, 6) instanceof LivingEntity livingEntity && !Main.canSee(player, livingEntity)) {
 			event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/dagger.png"), w / 2 - 6, h / 2 - 17, 0, 0, 12, 12, 12, 12);
+		}
+		RenderSystem.depthMask(true);
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.enableDepthTest();
+		RenderSystem.disableBlend();
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+	}
+	//匕首
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void ParryShield(RenderGuiEvent.Pre event) {
+		int w = event.getWindow().getGuiScaledWidth();
+		int h = event.getWindow().getGuiScaledHeight();
+		Player player = Minecraft.getInstance().player;
+		if (player == null) {
+			return;
+		}
+		RenderSystem.disableDepthTest();
+		RenderSystem.depthMask(false);
+		RenderSystem.enableBlend();
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		Item item = player.getUseItem().getItem();
+		if (player.isUsingItem() && item instanceof ItemToolBaseParryShield && (player.getPersistentData().getDouble("jerotes_shield_parry_cooldown") <= 0 || player.getPersistentData().get("jerotes_shield_parry_cooldown") == null)) {
+			event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/parry_shield.png"), w / 2 - 6, h / 2 - 17, 0, 0, 12, 12, 12, 12);
+		}
+		else if (player.isUsingItem() && item instanceof ItemToolBaseParryShield && player.getPersistentData().getDouble("jerotes_shield_parry_tick") > 0) {
+			event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/parry_shield_use.png"), w / 2 - 6, h / 2 - 17, 0, 0, 12, 12, 12, 12);
 		}
 		RenderSystem.depthMask(true);
 		RenderSystem.defaultBlendFunc();

@@ -1,14 +1,17 @@
 package com.jerotes.jerotes.mixin;
 
+import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import com.jerotes.jerotes.item.Interface.ItemSpecialAttack;
 import com.jerotes.jerotes.item.Interface.SpearBaseItem;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseParryShield;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.thread.ReentrantBlockableEventLoop;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.HitResult;
 import org.slf4j.Logger;
@@ -44,10 +47,13 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
     @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
     private void startAttack(CallbackInfoReturnable<Boolean> cir) {
-        if (player != null && player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.isManuallyControlCombat()) {
+        //控制战斗
+        if (player != null && player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
+                controlVehicleEntity.isManuallyControlCombatJerotes()) {
             cir.setReturnValue(false);
             return;
         }
+
         if (this.missTime > 0) {
             return;
         }

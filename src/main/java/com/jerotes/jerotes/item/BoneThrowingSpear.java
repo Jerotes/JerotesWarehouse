@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.Arrow.BaseJavelinEntity;
-import com.jerotes.jerotes.entity.Arrow.ThrownBoneThrowingSpearEntity;
+import com.jerotes.jerotes.entity.Shoot.Arrow.BaseJavelinEntity;
+import com.jerotes.jerotes.entity.Shoot.Arrow.ThrownBoneThrowingSpearEntity;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseThrowingSpearOfJavelin;

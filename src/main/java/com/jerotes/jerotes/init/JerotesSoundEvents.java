@@ -37,6 +37,7 @@ public class JerotesSoundEvents {
     public static final SoundEvent SPEAR_USE = createSoundEvent("spear_use");
     public static final SoundEvent SPEAR_HIT = createSoundEvent("spear_hit");
     public static final SoundEvent SPEAR_ATTACK = createSoundEvent("spear_attack");
+    public static final SoundEvent ARMOR_EQUIP_COPPER = createSoundEvent("armor_equip_copper");
 
     public static final SoundEvent MAGIC_MAGIC_MISSILE = createSoundEvent("magic_magic_missile");
     public static final SoundEvent MAGIC_POISON_BREATH = createSoundEvent("magic_poison_breath");

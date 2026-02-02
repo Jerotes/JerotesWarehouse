@@ -20,6 +20,18 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.TEST_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.HUMAN_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.JEROTES_PLAYER_SPAWN_EGG.get());
+				tabData.accept(JerotesItems.JEROTES_HORSE_SPAWN_EGG.get());
+
+				tabData.accept(JerotesItems.COPPER_NUGGET.get());
+				tabData.accept(JerotesItems.COPPER_SWORD.get());
+				tabData.accept(JerotesItems.COPPER_SHOVEL.get());
+				tabData.accept(JerotesItems.COPPER_PICKAXE.get());
+				tabData.accept(JerotesItems.COPPER_AXE.get());
+				tabData.accept(JerotesItems.COPPER_HOE.get());
+				tabData.accept(JerotesItems.COPPER_HELMET.get());
+				tabData.accept(JerotesItems.COPPER_CHESTPLATE.get());
+				tabData.accept(JerotesItems.COPPER_LEGGINGS.get());
+				tabData.accept(JerotesItems.COPPER_BOOTS.get());
 
 				tabData.accept(JerotesItems.HIGH_STRENGTH_STRING.get());
 				tabData.accept(JerotesItems.RESILIENT_BANDAGE.get());
@@ -47,6 +59,7 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.BONE_THROWING_SPEAR_OF_SPEAR.get());
 				tabData.accept(JerotesItems.BONE_THROWING_SPEAR_OF_JAVELIN.get());
 				tabData.accept(JerotesItems.IRON_PIKE.get());
+				tabData.accept(JerotesItems.IRON_PARRY_SHIELD.get());
 				tabData.accept(JerotesItems.BEAST_ARMOR.get());
 				tabData.accept(JerotesItems.WAR_BEAST_ARMOR_BASE.get());
 				tabData.accept(JerotesItems.LEATHER_WAR_BEAST_ARMOR.get());

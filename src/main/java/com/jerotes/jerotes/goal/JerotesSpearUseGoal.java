@@ -1,9 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  javax.annotation.Nullable
- */
 package com.jerotes.jerotes.goal;
 
 import com.jerotes.jerotes.entity.Interface.JerotesChangeMob;

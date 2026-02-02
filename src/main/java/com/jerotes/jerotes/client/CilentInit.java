@@ -12,6 +12,7 @@ public class CilentInit
         JerotesItems.REGISTRY.getEntries().forEach(item -> {
             ItemProperties.register(item.get(), new ResourceLocation("throwing"), (itemStack, clientLevel, livingEntity, n) -> livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == itemStack ? 1.0f : 0.0f);
             ItemProperties.register(item.get(), new ResourceLocation("jerotes_swing"), (itemStack, clientLevel, livingEntity, n) -> livingEntity != null && livingEntity.getMainHandItem() == itemStack && livingEntity.swinging ? 1.0f : 0.0f);
+            ItemProperties.register(item.get(), new ResourceLocation("jerotes_shift"), (itemStack, clientLevel, livingEntity, n) -> livingEntity != null && livingEntity.isShiftKeyDown() ? 1.0f : 0.0f);
             ItemProperties.register(item.get(), new ResourceLocation("jerotes_charge_stage"), (itemStack, clientLevel, livingEntity, n) -> {
                 if (livingEntity == null || !livingEntity.isUsingItem() || livingEntity.getUseItem() != itemStack) {
                     return 0.0f;

@@ -1,12 +1,12 @@
 package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
-import com.jerotes.jerotes.entity.Magic.Breath.PoisonBreathEntity;
-import com.jerotes.jerotes.entity.Magic.MagicMissile.MagicMissileEntity;
-import com.jerotes.jerotes.entity.Magic.Ray.LightningBoltEntity;
-import com.jerotes.jerotes.entity.Magic.Ray.RayofEnfeeblementEntity;
-import com.jerotes.jerotes.entity.Magic.Ray.RayofSicknessEntity;
-import com.jerotes.jerotes.entity.Magic.Target.*;
+import com.jerotes.jerotes.entity.Shoot.Magic.Breath.PoisonBreathEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.LightningBoltEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.RayofEnfeeblementEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.RayofSicknessEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Target.*;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;

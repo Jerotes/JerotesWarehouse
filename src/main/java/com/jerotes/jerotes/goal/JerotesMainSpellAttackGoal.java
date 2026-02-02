@@ -1,19 +1,21 @@
 package com.jerotes.jerotes.goal;
 
+import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
 import com.jerotes.jerotes.entity.Interface.WizardEntity;
+import com.jerotes.jerotes.entity.Mob.HumanEntity;
 import com.jerotes.jerotes.item.Interface.MagicItem;
-import com.jerotes.jerotes.spell.MagicSpell;
-import com.jerotes.jerotes.spell.MagicType;
-import com.jerotes.jerotes.spell.SpellListByString;
-import com.jerotes.jerotes.spell.SpellTypeInterface;
+import com.jerotes.jerotes.spell.*;
 import com.jerotes.jerotes.util.AttackFind;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import org.checkerframework.checker.units.qual.C;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JerotesMainSpellAttackGoal extends Goal {
@@ -26,6 +28,7 @@ public class JerotesMainSpellAttackGoal extends Goal {
     public int attackCooldown = 1;
     public int spellLevel = 1;
     public float randomSpellChance = 0.5f;
+    public boolean mustThisLevel = false;
     public SpellTypeInterface SpellTypeInterface;
 
     public JerotesMainSpellAttackGoal(Mob mob, int spellLevel, int attackCooldown, int changeSpellCooldown, float randomSpellChance) {
@@ -34,6 +37,10 @@ public class JerotesMainSpellAttackGoal extends Goal {
         this.attackCooldown = attackCooldown;
         this.changeSpellCooldown = changeSpellCooldown;
         this.randomSpellChance = randomSpellChance;
+    }
+    public JerotesMainSpellAttackGoal(Mob mob, int spellLevel, int attackCooldown, int changeSpellCooldown, float randomSpellChance, boolean bl) {
+        this(mob, spellLevel, attackCooldown, changeSpellCooldown, randomSpellChance);
+        this.mustThisLevel = bl;
     }
 
     @Override
@@ -59,6 +66,9 @@ public class JerotesMainSpellAttackGoal extends Goal {
     @Override
     public void start() {
         SpellTypeInterface = selectSpell();
+        if (this.mob instanceof SpellUseEntity spellUse && !this.mustThisLevel) {
+            this.spellLevel = spellUse.getSpellLevel();
+        }
     }
 
     @Override
@@ -228,6 +238,7 @@ public class JerotesMainSpellAttackGoal extends Goal {
     public SpellTypeInterface selectSpell() {
         if (this.mob instanceof WizardEntity wizardEntity) {
             List<SpellTypeInterface> spellList = wizardEntity.MainSpellList();
+
             if (spellList.isEmpty()) {
                 throw new IllegalStateException("法术列表为空");
             }

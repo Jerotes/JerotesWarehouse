@@ -1,0 +1,72 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": {
+    "layer0": "jerotes:item/iron_parry_shield",
+    "particle": "jerotes:item/iron_parry_shield"
+  },
+  "base": {
+    "parent": "jerotes:item/iron_parry_shield_in_hand",
+    "textures": {
+      "0": "jerotes:item/iron_parry_shield_model",
+      "particle": "jerotes:item/iron_parry_shield"
+    },
+    "display": {
+      "thirdperson_righthand": {
+        "rotation": [55, -25, 0],
+        "translation": [-0.49, -4, -2]
+      },
+      "thirdperson_lefthand": {
+        "rotation": [55, -25, 0],
+        "translation": [-0.49, -4, -2]
+      },
+      "firstperson_righthand": {
+        "rotation": [3, 0, 5],
+        "translation": [2, -2.5, 1],
+        "scale": [1.25, 1.25, 1.25]
+      },
+      "firstperson_lefthand": {
+        "rotation": [3, 0, 5],
+        "translation": [2, -2.5, 1],
+        "scale": [1.25, 1.25, 1.25]
+      },
+      "gui": {
+        "rotation": [0, -155, 5],
+        "translation": [-2, -2, 0],
+        "scale": [0.65, 0.65, 0.65]
+      }
+    },
+    "groups": [
+      {
+        "name": "shield",
+        "origin": [8, 11, 9],
+        "color": 0,
+        "nbt": "{}",
+        "children": [0, 1]
+      }
+    ]
+  },
+  "perspectives": {
+    "ground": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/iron_parry_shield"
+      },
+      "gui_light": "front"
+    },
+    "gui": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/iron_parry_shield"
+      },
+      "gui_light": "front"
+    },
+    "fixed": {
+      "parent": "item/generated",
+      "textures": {
+        "layer0": "jerotes:item/iron_parry_shield"
+      },
+      "gui_light": "front"
+    }
+  }
+}

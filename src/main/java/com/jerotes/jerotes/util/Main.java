@@ -548,8 +548,9 @@ public class Main {
 	}
 	//拔地方块
 	public static void spawnFallingBlockBySelf(ServerLevel serverLevel, LivingEntity caster, int maxDistance, float pushDistance, int pushAngle, int pushTick, float attackDamage) {
-		AABB aabb = AABB.ofSize(new Vec3(caster.getX(), caster.getY() - 1, caster.getZ()), maxDistance, maxDistance, maxDistance);
+		AABB aabb = AABB.ofSize(new Vec3(caster.getX(), caster.getY() - 1, caster.getZ()), maxDistance*1.25f, maxDistance*1.25f, maxDistance*1.25f);
 		for (BlockPos blockPos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
+			if (caster.position().distanceTo(blockPos.getCenter()) > maxDistance) continue;
 			BlockPos abovePos = new BlockPos(blockPos).above();
 			BlockState block = serverLevel.getBlockState(blockPos);
 			BlockState blockAbove = serverLevel.getBlockState(abovePos);

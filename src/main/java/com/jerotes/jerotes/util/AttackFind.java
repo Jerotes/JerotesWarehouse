@@ -201,7 +201,7 @@ public class AttackFind {
         }
     }
     //攻击
-    public static boolean attackAfter(LivingEntity attacker, Entity hurt, float damageBase, float knockbackBase, boolean useCustomNumber, float customNumber) {
+    public static boolean attackAfter(LivingEntity attacker, Entity hurt, float damageMulti, float knockbackMulti, boolean useCustomNumber, float customNumber) {
         if (!hurt.isAlive()) {
             return false;
         }
@@ -229,7 +229,7 @@ public class AttackFind {
                 bl = hurt.hurt(attacker.damageSources().playerAttack(player), f);
             }
             else {
-                bl = hurt.hurt(attacker.damageSources().playerAttack(player), f * damageBase);
+                bl = hurt.hurt(attacker.damageSources().playerAttack(player), f * damageMulti);
             }
         }
         else if (attacker instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.attackDamageSourceAsPlayer()) {
@@ -238,7 +238,7 @@ public class AttackFind {
                 bl = hurt.hurt(damageSources, f);
             }
             else {
-                bl = hurt.hurt(damageSources, f * damageBase);
+                bl = hurt.hurt(damageSources, f * damageMulti);
             }
         }
         else {
@@ -246,12 +246,12 @@ public class AttackFind {
                 bl = hurt.hurt(attacker.damageSources().mobAttack(attacker), f);
             }
             else {
-                bl = hurt.hurt(attacker.damageSources().mobAttack(attacker), f * damageBase);
+                bl = hurt.hurt(attacker.damageSources().mobAttack(attacker), f * damageMulti);
             }
         }
         if (bl) {
             if (f1 > 0.0F && hurt instanceof LivingEntity livingEntity) {
-                livingEntity.knockback((f1 * knockbackBase), Mth.sin(attacker.getYRot() * ((float)Math.PI / 180F)), (-Mth.cos(attacker.getYRot() * ((float)Math.PI / 180F))));
+                livingEntity.knockback((f1 * knockbackMulti), Mth.sin(attacker.getYRot() * ((float)Math.PI / 180F)), (-Mth.cos(attacker.getYRot() * ((float)Math.PI / 180F))));
                 attacker.setDeltaMovement(attacker.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
             }
             if (hurt instanceof Player player) {
@@ -263,7 +263,7 @@ public class AttackFind {
         attackOther(attacker, hurt);
         return bl;
     }
-    public static boolean attackAfterCustomDamage(LivingEntity attacker, Entity hurt, DamageSource damageSource, float damageBase, float knockbackBase, boolean useCustomNumber, float customNumber) {
+    public static boolean attackAfterCustomDamage(LivingEntity attacker, Entity hurt, DamageSource damageSource, float damageMulti, float knockbackMulti, boolean useCustomNumber, float customNumber) {
         if (!hurt.isAlive()) {
             return false;
         }
@@ -290,11 +290,11 @@ public class AttackFind {
             bl = hurt.hurt(damageSource, f);
         }
         else {
-            bl = hurt.hurt(damageSource, f * damageBase);
+            bl = hurt.hurt(damageSource, f * damageMulti);
         }
         if (bl) {
             if (f1 > 0.0F && hurt instanceof LivingEntity livingEntity) {
-                livingEntity.knockback((f1 * knockbackBase), Mth.sin(attacker.getYRot() * ((float)Math.PI / 180F)), (-Mth.cos(attacker.getYRot() * ((float)Math.PI / 180F))));
+                livingEntity.knockback((f1 * knockbackMulti), Mth.sin(attacker.getYRot() * ((float)Math.PI / 180F)), (-Mth.cos(attacker.getYRot() * ((float)Math.PI / 180F))));
                 attacker.setDeltaMovement(attacker.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
             }
             if (hurt instanceof Player player) {
@@ -306,7 +306,7 @@ public class AttackFind {
         attackOther(attacker, hurt);
         return bl;
     }
-    public static boolean attackAfterCustomDamageNoEnchantAbout(LivingEntity attacker, Entity hurt, DamageSource damageSource, float damageBase, float knockbackBase, boolean useCustomNumber, float customNumber) {
+    public static boolean attackAfterCustomDamageNoEnchantAbout(LivingEntity attacker, Entity hurt, DamageSource damageSource, float damageMulti, float knockbackMulti, boolean useCustomNumber, float customNumber) {
         if (!hurt.isAlive()) {
             return false;
         }
@@ -329,11 +329,11 @@ public class AttackFind {
             bl = hurt.hurt(damageSource, f);
         }
         else {
-            bl = hurt.hurt(damageSource, f * damageBase);
+            bl = hurt.hurt(damageSource, f * damageMulti);
         }
         if (bl) {
             if (f1 > 0.0F && hurt instanceof LivingEntity livingEntity) {
-                livingEntity.knockback((f1 * knockbackBase), Mth.sin(attacker.getYRot() * ((float)Math.PI / 180F)), (-Mth.cos(attacker.getYRot() * ((float)Math.PI / 180F))));
+                livingEntity.knockback((f1 * knockbackMulti), Mth.sin(attacker.getYRot() * ((float)Math.PI / 180F)), (-Mth.cos(attacker.getYRot() * ((float)Math.PI / 180F))));
                 attacker.setDeltaMovement(attacker.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
             }
             if (hurt instanceof Player player) {
@@ -344,7 +344,7 @@ public class AttackFind {
         attackOther(attacker, hurt);
         return bl;
     }
-    public static boolean attackAfterCustomDamageFalse(LivingEntity attacker, Entity hurt, DamageSource damageSource, float damageBase, float knockbackBase, boolean useCustomNumber, float customNumber) {
+    public static boolean attackAfterCustomDamageFalse(LivingEntity attacker, Entity hurt, DamageSource damageSource, float damageMulti, float knockbackMulti, boolean useCustomNumber, float customNumber) {
         if (!hurt.isAlive()) {
             return false;
         }
@@ -367,11 +367,11 @@ public class AttackFind {
             bl = hurt.hurt(damageSource, f);
         }
         else {
-            bl = hurt.hurt(damageSource, f * damageBase);
+            bl = hurt.hurt(damageSource, f * damageMulti);
         }
         if (bl) {
             if (f1 > 0.0F && hurt instanceof LivingEntity livingEntity) {
-                livingEntity.knockback((f1 * knockbackBase), Mth.sin(attacker.getYRot() * ((float)Math.PI / 180F)), (-Mth.cos(attacker.getYRot() * ((float)Math.PI / 180F))));
+                livingEntity.knockback((f1 * knockbackMulti), Mth.sin(attacker.getYRot() * ((float)Math.PI / 180F)), (-Mth.cos(attacker.getYRot() * ((float)Math.PI / 180F))));
                 attacker.setDeltaMovement(attacker.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
             }
             if (hurt instanceof LivingEntity livingEntityHurt && attacker instanceof Mob mob) {
@@ -549,7 +549,7 @@ public class AttackFind {
         return false;
     }
 
-    public static void individualAttack(Mob mob, double angleThreshold, int n) {
+    public static void individualAttackJerotes(Mob mob, double angleThreshold, int n) {
         LivingEntity tureHurt = null;
         List<LivingEntity> list = mob.level().getEntitiesOfClass(LivingEntity.class, mob instanceof JerotesEntity jerotes && jerotes.getAttackBoundingBox() != null ? jerotes.getAttackBoundingBox().inflate(5) : mob.getBoundingBox().inflate(5));
         list.removeIf(livingEntity1 -> !mob.isWithinMeleeAttackRange(livingEntity1));
@@ -567,14 +567,14 @@ public class AttackFind {
         if (tureHurt == null)
             return;
         if (mob instanceof ControlVehicleEntity controlVehicleEntity) {
-            controlVehicleEntity.individualAttack(tureHurt, n);
-            controlVehicleEntity.individualAttack(tureHurt);
+            controlVehicleEntity.individualAttackJerotes(tureHurt, n);
+            controlVehicleEntity.individualAttackJerotes(tureHurt);
         } else {
             mob.doHurtTarget(tureHurt);
         }
     }
-    public static void individualAttack(Mob mob, double angleThreshold) {
-        individualAttack(mob, angleThreshold, 0);
+    public static void individualAttackJerotes(Mob mob, double angleThreshold) {
+        individualAttackJerotes(mob, angleThreshold, 0);
     }
 }
 

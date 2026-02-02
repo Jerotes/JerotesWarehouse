@@ -1,7 +1,11 @@
 package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import com.jerotes.jerotes.entity.Interface.UseDaggerEntity;
+import com.jerotes.jerotes.entity.Interface.UseShieldEntity;
+import com.jerotes.jerotes.init.JerotesDamageTypes;
+import com.jerotes.jerotes.init.JerotesGameRules;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.item.AACreativeClaw;
 import com.jerotes.jerotes.item.AAExplorationEye;
@@ -9,17 +13,25 @@ import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
 import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseBandage;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseDagger;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseParryShield;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -212,7 +224,15 @@ public class ItemEvent {
 		ItemStack itemStack = event.getItemStack();
 		if (!(entity instanceof LivingEntity livingEntity && player != null))
 			return;
+		if ( player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity &&
+				controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
+				controlVehicleEntity.isManuallyControlCombatJerotes()) {
+			event.setCanceled(true);
+		}
 		if (itemStack.getItem() instanceof AAExplorationEye) {
+			event.setCanceled(true);
+		}
+		if (itemStack.getItem() instanceof ItemToolBaseBandage) {
 			event.setCanceled(true);
 		}
 	}
@@ -268,6 +288,95 @@ public class ItemEvent {
 		//绷带
 		if (entity.getUseItem().getItem() instanceof ItemToolBaseBandage) {
 			entity.stopUsingItem();
+		}
+	}
+
+
+
+	@SubscribeEvent
+	public static void ParryShield(LivingAttackEvent event) {
+		LivingEntity entity = event.getEntity();
+		DamageSource damageSource = event.getSource();
+		Entity attackBy = event.getSource().getEntity();
+		if (damageSource == null || entity == null || !entity.isAlive())
+			return;
+
+		if (entity.isUsingItem() && entity.getUseItem().getItem() instanceof ItemToolBaseParryShield itemToolBaseParryShield &&
+				!(entity instanceof Player player && player.getCooldowns().isOnCooldown(itemToolBaseParryShield)) &&
+				isDamageSourceBlocks(damageSource, entity) && entity.getPersistentData().getDouble("jerotes_shield_parry_tick") > 0) {
+			if (!entity.isSilent()) {
+				itemToolBaseParryShield.makeParryUseSound(entity);
+			}
+			if (EntityAndItemFind.isMeleeDamage(damageSource)){
+				if (entity.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+					float baseDamage = (float) entity.getAttributeValue(Attributes.ATTACK_DAMAGE);
+					if (attackBy != null) {
+						float newAmount = Math.min(event.getAmount() * itemToolBaseParryShield.parryDamageMultiplier, itemToolBaseParryShield.maxParryDamageMultiplier * baseDamage);
+						if (Float.isNaN(newAmount) || Float.isInfinite(newAmount)) {
+							newAmount = 0f;
+						}
+						attackBy.hurt(AttackFind.findDamageType(entity, JerotesDamageTypes.BYPASSES_COOLDOWN_MELEE, entity), newAmount);
+					}
+				}
+				if (attackBy != null) {
+					double d = 0.0;
+					if (attackBy instanceof LivingEntity living && living.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null) {
+						d = Math.max(living.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE), 1.0);
+					}
+					if ((Main.mobSizeSmall(attackBy) || Main.mobSizeMedium(attackBy) || Main.mobSizeLarge(attackBy)) && !EntityAndItemFind.isNoSpecialKnockback(attackBy.getType())) {
+						d += 0.25;
+					}
+					float f1 = entity.getYRot();
+					float f2 = entity.getXRot();
+					float f3 = -Mth.sin(f1 * 0.017453292f) * Mth.cos(f2 * 0.017453292f);
+					float f4 = -Mth.sin(f2 * 0.017453292f);
+					float f5 = Mth.cos(f1 * 0.017453292f) * Mth.cos(f2 * 0.017453292f);
+					float f6 = Mth.sqrt(f3 * f3 + f4 * f4 + f5 * f5);
+					float f7 = (float) (itemToolBaseParryShield.knockbackStength * d);
+					attackBy.setOnGround(false);
+					attackBy.setDeltaMovement(attackBy.getDeltaMovement().add(f3 *= f7 / f6, f4 *= f7 / f6, f5 *= f7 / f6));
+				}
+			}
+
+			Vec3 lookDir = entity.getLookAngle().normalize();
+			Vec3 entityPos = entity.position().add(lookDir.scale(0.35));
+			double radius = 1.325;
+			int particles = 80;
+			double heightOffset = entity.getY(0.8) - entity.getY();
+
+			float yaw = entity.getYRot();
+			float pitch = entity.getXRot();
+			if (entity.level() instanceof ServerLevel serverLevel) {
+				for (int i = 0; i < particles; i++) {
+					double angle = Math.toRadians(-90 + (i * 180.0 / particles));
+					double zOffset = radius * Math.cos(angle);
+					double xOffset = radius * Math.sin(angle);
+					double cosYaw = Math.cos(Math.toRadians(yaw));
+					double sinYaw = Math.sin(Math.toRadians(yaw));
+					double rotatedX = xOffset * cosYaw - zOffset * sinYaw;
+					double rotatedZ = xOffset * sinYaw + zOffset * cosYaw;
+					double finalYOffset = heightOffset + (Math.sin(Math.toRadians(-pitch)) * zOffset);
+					Vec3 particlePos = entityPos.add(rotatedX, finalYOffset, rotatedZ);
+					double speedX = rotatedX * 0.07 + (Math.random() * 0.02 - 0.01);
+					double speedY = lookDir.y * 0.07 + (Math.random() * 0.02 - 0.01);
+					double speedZ = rotatedZ * 0.07 + (Math.random() * 0.02 - 0.01);
+
+					serverLevel.sendParticles(ParticleTypes.CRIT,
+							particlePos.x, particlePos.y, particlePos.z,
+							0, speedX, speedY, speedZ, 1);
+				}
+			}
+
+			if (entity instanceof UseShieldEntity) {
+				if (JerotesGameRules.JEROTES_MELEE_CAN_BREAK != null && entity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_MELEE_CAN_BREAK)) {
+					entity.getUseItem().hurtAndBreak(1, entity,
+							e -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+				}
+			}
+			else {
+				entity.getUseItem().hurtAndBreak(1, entity, e -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+			}
+			event.setCanceled(true);
 		}
 	}
 

@@ -121,7 +121,8 @@ public class Modelhumanoid_wide_or_slim_for_human<T extends HumanEntity> extends
 			modelPart.x += f;
 			modelPart.translateAndRotate(poseStack);
 			modelPart.x -= f;
-		} else {
+		}
+		else {
 			modelPart.translateAndRotate(poseStack);
 		}
 	}

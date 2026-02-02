@@ -182,7 +182,6 @@ public class JerotesRenderType extends RenderType {
 					.setTransparencyState(GLINT_TRANSPARENCY)
 					.setTexturingState(GLINT_TEXTURING)
 					.createCompositeState(false));
-
 	public static RenderType glowing_outline_combat_angry() {
 		return GLOWING_OUTLINE_COMBAT_ANGRY;
 	}
@@ -202,7 +201,6 @@ public class JerotesRenderType extends RenderType {
 					.setTransparencyState(GLINT_TRANSPARENCY)
 					.setTexturingState(GLINT_TEXTURING)
 					.createCompositeState(false));
-
 	public static RenderType glowing_outline_combat_less() {
 		return GLOWING_OUTLINE_COMBAT_LESS;
 	}

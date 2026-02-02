@@ -21,7 +21,6 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -30,7 +29,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
@@ -46,8 +44,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.entity.PartEntity;
@@ -160,7 +156,7 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
         return entity.getDeltaMovement();
     }
     public static Vec3 getMotion(Entity entity) {
-        if (!(entity instanceof Player) && !(entity instanceof UseSpearSpecialEntity useSpearSpecialEntity && useSpearSpecialEntity.isGetMotionLikePlayer()) && entity.isPassenger()) {
+        if (!(entity instanceof Player) && !(entity instanceof UseSpearSpecialEntity useSpearSpecialEntity && useSpearSpecialEntity.isJerotesSpearGetMotionLikePlayer()) && entity.isPassenger()) {
             entity = entity.getRootVehicle();
         }
         Vec3 vec3 = getKnownMovement(entity).scale(20.0);
@@ -222,7 +218,7 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
         f = livingEntity instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.useSpearAsPlayer() ? 0.4f : f;
         //float f2 = livingEntity instanceof Player ? 1.0f : 0.5f;
         if (livingEntity instanceof UseSpearSpecialEntity useSpearSpecialEntity) {
-            f = useSpearSpecialEntity.getNeedSpeed();
+            f = useSpearSpecialEntity.getJerotesSpearNeedSpeed();
            // f2 = useSpearSpecialEntity.getNeedReach();
         }
         boolean bl = false;
@@ -240,7 +236,7 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
             double d2 = vec3.dot(getMotion(entity2));
             double d3 = Math.max(0.0, d - d2);
             if (livingEntity instanceof UseSpearSpecialEntity useSpearSpecialEntity) {
-                d3 *= useSpearSpecialEntity.getDamageMultiple();
+                d3 *= useSpearSpecialEntity.getJerotesSpearDamageMultiple();
             }
             boolean bl2 = this.dismountConditions.isPresent() && this.dismountConditions.get().test(n2, d, d3, f);
             boolean bl3 = this.knockbackConditions.isPresent() && this.knockbackConditions.get().test(n2, d, d3, f);
@@ -305,7 +301,7 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
         return true;
     }
     public static void causeExtraKnockback(LivingEntity self, Entity entity, float f, Vec3 vec3) {
-        if (self instanceof Player || self instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.useSpearAsPlayer() || self instanceof UseSpearSpecialEntity useSpearSpecialEntity && useSpearSpecialEntity.isCauseExtraKnockbackPlayer()) {
+        if (self instanceof Player || self instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.useSpearAsPlayer() || self instanceof UseSpearSpecialEntity useSpearSpecialEntity && useSpearSpecialEntity.isJerotesSpearCauseExtraKnockbackPlayer()) {
             if (f > 0.0f) {
                 if (entity instanceof LivingEntity livingEntity) {
                     livingEntity.knockback(f, Mth.sin(self.getYRot() * ((float)Math.PI / 180)), -Mth.cos(self.getYRot() * ((float)Math.PI / 180)));

@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
-import com.jerotes.jerotes.entity.Magic.MagicAbout;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypeTags;
@@ -12,7 +12,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemToolBaseDrill extends ItemToolBaseAxe {
-    public ItemToolBaseDrill(Tier tier, int damage, float speed, Properties properties) {
+    public ItemToolBaseDrill(Tier tier, float damage, float speed, Properties properties) {
         super(tier, damage, speed, properties);
     }
 

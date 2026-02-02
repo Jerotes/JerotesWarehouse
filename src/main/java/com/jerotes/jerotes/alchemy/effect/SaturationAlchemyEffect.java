@@ -12,7 +12,7 @@ public class SaturationAlchemyEffect extends AAAAlchemyEffect {
         return MobEffects.SATURATION;
     }
     public int getMobEffectTick() {
-        return 5;
+        return 10;
     }
 
     public String getName() {

@@ -32,9 +32,9 @@ public class ItemToolBaseTwoHandedHammer extends TieredItem implements ItemTwoHa
     private final float attackDamage;
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
-    public ItemToolBaseTwoHandedHammer(Tier tier, int damage, float speed, Properties properties) {
+    public ItemToolBaseTwoHandedHammer(Tier tier, float damage, float speed, Properties properties) {
         super(tier, properties);
-        this.attackDamage = (float)damage + tier.getAttackDamageBonus();
+        this.attackDamage = damage + tier.getAttackDamageBonus();
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", speed, AttributeModifier.Operation.ADDITION));

@@ -36,7 +36,7 @@ public class JerotesAnimalMeleeAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (this.mob instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.isTrueManuallyControlCombat()) {
+        if (this.mob instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.isTrueManuallyControlCombatJerotes()) {
             return false;
         }
         if (this.mob instanceof JerotesEntity jerotes && !jerotes.OwnerCanOrderAttack()) {
@@ -63,7 +63,7 @@ public class JerotesAnimalMeleeAttackGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (this.mob instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.isTrueManuallyControlCombat()) {
+        if (this.mob instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.isTrueManuallyControlCombatJerotes()) {
             return false;
         }
         if (this.mob instanceof JerotesEntity jerotes && !jerotes.OwnerCanOrderAttack()) {

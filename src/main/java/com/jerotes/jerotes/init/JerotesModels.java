@@ -16,6 +16,9 @@ public class JerotesModels {
 		event.registerLayerDefinition(Modelhumanoid.LAYER_LOCATION, Modelhumanoid::createBodyLayer);
 		event.registerLayerDefinition(Modelhumanoid_wide_or_slim.LAYER_LOCATION, Modelhumanoid_wide_or_slim::createBodyLayer);
 		event.registerLayerDefinition(Modelhumanoid_wide_or_slim_for_human.LAYER_LOCATION, Modelhumanoid_wide_or_slim_for_human::createBodyLayer);
+		event.registerLayerDefinition(Modeljerotes_horse.LAYER_LOCATION, Modeljerotes_horse::createBodyLayer);
+		event.registerLayerDefinition(Modeljerotes_horse_saddle.LAYER_LOCATION, Modeljerotes_horse_saddle::createBodyLayer);
+		event.registerLayerDefinition(Modeljerotes_horse_armor.LAYER_LOCATION, Modeljerotes_horse_armor::createBodyLayer);
 		event.registerLayerDefinition(Modelspecial_action.LAYER_LOCATION, Modelspecial_action::createBodyLayer);
 	}
 }

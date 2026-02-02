@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Magic.MagicMissile.MagicMissileEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.network.JerotesPlayerData;

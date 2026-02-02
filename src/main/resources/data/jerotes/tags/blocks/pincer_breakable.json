@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:chain",
+    "minecraft:cobweb",
+    "minecraft:iron_bars",
+    "minecraft:ladder",
+    "minecraft:bell",
+    "minecraft:scaffolding",
+    "minecraft:spawner",
+    "#minecraft:trapdoors",
+    "#minecraft:doors",
+    "#minecraft:rails",
+    "#minecraft:fences",
+    "#minecraft:fence_gates"
+  ]
+}

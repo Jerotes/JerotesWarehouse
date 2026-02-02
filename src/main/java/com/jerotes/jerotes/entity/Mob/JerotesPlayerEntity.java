@@ -52,9 +52,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.FireworkRocketEntity;
-import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -113,7 +111,6 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 
 	@Override
 	protected void registerGoals() {
-		super.registerGoals();
 		this.getNavigation().getNodeEvaluator().setCanOpenDoors(true);
 		this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
 		this.goalSelector.addGoal(0, new JerotesPlayerFloatGoal(this));
@@ -269,6 +266,18 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 	@Override
 	protected SoundEvent getSwimHighSpeedSplashSound() {
 		return SoundEvents.PLAYER_SPLASH_HIGH_SPEED;
+	}
+	@Override
+	public AbstractArrow getCustomArrow(ItemStack itemStack, float f) {
+		return getMobArrow(this, itemStack, f);
+	}
+	public static AbstractArrow getMobArrow(LivingEntity p_37301_, ItemStack p_37302_, float p_37303_) {
+		ArrowItem arrowitem = (ArrowItem)(p_37302_.getItem() instanceof ArrowItem ? p_37302_.getItem() : Items.ARROW);
+		AbstractArrow abstractarrow = arrowitem.createArrow(p_37301_.level(), p_37302_, p_37301_);
+		if (p_37302_.is(Items.TIPPED_ARROW) && abstractarrow instanceof Arrow) {
+			((Arrow)abstractarrow).setEffectsFromItem(p_37302_);
+		}
+		return abstractarrow;
 	}
 	@Override
 	public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
@@ -883,6 +892,19 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 					itemStack1.setTag(this.getMainHandItem().getOrCreateTag());
 					itemStack1.setDamageValue(this.getMainHandItem().getDamageValue());
 					this.setItemInHand(InteractionHand.MAIN_HAND, itemStack1);
+				}
+			}
+		}
+		//招架盾
+		if (this.isUsingItem() && this.getUseItem().getItem() instanceof ItemToolBaseParryShield itemToolBaseParryShield &&
+				this.isAggressive() && this.getTarget() != null &&
+				this.getRandom().nextFloat() > 0.2f) {
+			if ((this.getPersistentData().getDouble("jerotes_shield_parry_cooldown") <= 0 ||
+					this.getPersistentData().get("jerotes_shield_parry_cooldown") == null)) {
+				this.getPersistentData().putDouble("jerotes_shield_parry_cooldown", itemToolBaseParryShield.parryCooldownTicks);
+				this.getPersistentData().putDouble("jerotes_shield_parry_tick", itemToolBaseParryShield.parryDurationTicks);
+				if (!this.level().isClientSide()) {
+					itemToolBaseParryShield.makeParrySound(this);
 				}
 			}
 		}

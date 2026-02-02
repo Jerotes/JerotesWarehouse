@@ -2,17 +2,17 @@ package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Mob.*;
-import com.jerotes.jerotes.entity.Arrow.*;
-import com.jerotes.jerotes.entity.Magic.Breath.PoisonBreathEntity;
-import com.jerotes.jerotes.entity.Magic.MagicMissile.MagicMissileEntity;
-import com.jerotes.jerotes.entity.Magic.Ray.LightningBoltEntity;
-import com.jerotes.jerotes.entity.Magic.Ray.RayofEnfeeblementEntity;
-import com.jerotes.jerotes.entity.Magic.Ray.RayofSicknessEntity;
-import com.jerotes.jerotes.entity.Magic.Target.*;
+import com.jerotes.jerotes.entity.Shoot.Arrow.*;
+import com.jerotes.jerotes.entity.Shoot.Magic.Breath.PoisonBreathEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.LightningBoltEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.RayofEnfeeblementEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.RayofSicknessEntity;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesEarthrendBlock;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesUnevenBlock;
-import com.jerotes.jerotes.entity.Other.TestBeam;
+import com.jerotes.jerotes.entity.Other.Beam.BaseBeamEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Target.*;
 import com.jerotes.jerotes.util.SpawnRules;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -38,6 +38,9 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<JerotesPlayerEntity>> JEROTES_PLAYER = register("jerotes_player",
 			EntityType.Builder.<JerotesPlayerEntity>of(JerotesPlayerEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
 					.sized(0.6f, 1.8f));
+	public static final RegistryObject<EntityType<JerotesHorseEntity>> JEROTES_HORSE = register("jerotes_horse",
+			EntityType.Builder.<JerotesHorseEntity>of(JerotesHorseEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
+					.sized(1.4F, 1.6F));
 	public static final RegistryObject<EntityType<TestEntity>> TEST = register("test",
 			EntityType.Builder.<TestEntity>of(TestEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
 					.sized(0.6f, 1.8f));
@@ -45,8 +48,8 @@ public class JerotesEntityType {
 			EntityType.Builder.<MirrorImageEntity>of(MirrorImageEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(1.0f, 1.0f));
 
-	public static final RegistryObject<EntityType<TestBeam>> TEST_BEAM = register("test_beam",
-			EntityType.Builder.<TestBeam>of(TestBeam::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+	public static final RegistryObject<EntityType<BaseBeamEntity>> TEST_BEAM = register("test_beam",
+			EntityType.Builder.<BaseBeamEntity>of(BaseBeamEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(0.6f, 0.6f));
 
 	public static final RegistryObject<EntityType<JerotesFallingBlock>> JEROTES_FALLING_BLOCK = register("jerotes_falling_block",
@@ -147,6 +150,8 @@ public class JerotesEntityType {
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.JEROTES_PLAYER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
+			SpawnPlacements.register(JerotesEntityType.JEROTES_HORSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
+					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.MIRROR_IMAGE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 		});
@@ -157,6 +162,7 @@ public class JerotesEntityType {
 		event.put(TEST.get(), TestEntity.createAttributes().build());
 		event.put(HUMAN.get(), HumanEntity.createAttributes().build());
 		event.put(JEROTES_PLAYER.get(), JerotesPlayerEntity.createAttributes().build());
+		event.put(JEROTES_HORSE.get(), JerotesHorseEntity.createAttributes().build());
 		event.put(MIRROR_IMAGE.get(), MirrorImageEntity.createAttributes().build());
 	}
 }

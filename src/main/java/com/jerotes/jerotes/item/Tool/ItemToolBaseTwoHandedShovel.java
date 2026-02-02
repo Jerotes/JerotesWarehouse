@@ -35,7 +35,7 @@ public class ItemToolBaseTwoHandedShovel extends ShovelItem implements ItemTwoHa
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
     private final float attackDamageBaseline;
 
-    public ItemToolBaseTwoHandedShovel(Tier tier, int damage, float speed, Properties properties) {
+    public ItemToolBaseTwoHandedShovel(Tier tier, float damage, float speed, Properties properties) {
         super(tier, damage, speed, properties);
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         this.attackDamageBaseline = damage + tier.getAttackDamageBonus();

@@ -1,21 +1,21 @@
 package com.jerotes.jerotes.entity.Interface;
 
 public interface UseSpearSpecialEntity {
-    default float getNeedReach() {
+    default float getJerotesSpearNeedReach() {
         return 0.5f;
     }
-    default float getNeedSpeed() {
+    default float getJerotesSpearNeedSpeed() {
         return 0.2f;
     }
-    default float getDamageMultiple() {
+    default float getJerotesSpearDamageMultiple() {
         return 1.0f;
     }
 
-    default boolean isGetMotionLikePlayer() {
+    default boolean isJerotesSpearGetMotionLikePlayer() {
         return false;
     }
 
-    default boolean isCauseExtraKnockbackPlayer() {
+    default boolean isJerotesSpearCauseExtraKnockbackPlayer() {
         return false;
     }
 }

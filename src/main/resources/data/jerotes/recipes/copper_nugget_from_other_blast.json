@@ -14,8 +14,35 @@
       "item": "jerotes:copper_giant_beast_armor"
     },
     {
-      "item": "jerotes:golden_spear"
+      "item": "jerotes:copper_spear"
+    },
+    {
+      "item": "jerotes:copper_pickaxe"
+    },
+    {
+      "item": "jerotes:copper_shovel"
+    },
+    {
+      "item": "jerotes:copper_axe"
+    },
+    {
+      "item": "jerotes:copper_hoe"
+    },
+    {
+      "item": "jerotes:copper_sword"
+    },
+    {
+      "item": "jerotes:copper_helmet"
+    },
+    {
+      "item": "jerotes:copper_chestplate"
+    },
+    {
+      "item": "jerotes:copper_leggings"
+    },
+    {
+      "item": "jerotes:copper_boots"
     }
   ],
-  "result": "minecraft:copper_ingot"
+  "result": "jerotes:copper_nugget"
 }

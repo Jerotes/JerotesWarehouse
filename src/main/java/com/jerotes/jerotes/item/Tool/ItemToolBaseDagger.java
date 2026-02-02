@@ -45,9 +45,9 @@ public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect,
     private static final Map<ItemToolBaseDagger, ItemToolBaseDagger> BY_ID = Maps.newIdentityHashMap();
     private final float attackDamage;
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
-    public ItemToolBaseDagger(Tier tier, int damage, float speed, Properties properties) {
+    public ItemToolBaseDagger(Tier tier, float damage, float speed, Properties properties) {
         super(tier, properties);
-        this.attackDamage = (float)damage + tier.getAttackDamageBonus();
+        this.attackDamage = damage + tier.getAttackDamageBonus();
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)speed, AttributeModifier.Operation.ADDITION));

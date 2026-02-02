@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "jerotes:golden_dagger",
     "jerotes:golden_spear"
   ]
 }

@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.item;
 
-import com.jerotes.jerotes.entity.Arrow.BaseJavelinEntity;
-import com.jerotes.jerotes.entity.Arrow.ThrownExplosiveJavelinEntity;
+import com.jerotes.jerotes.entity.Shoot.Arrow.BaseJavelinEntity;
+import com.jerotes.jerotes.entity.Shoot.Arrow.ThrownExplosiveJavelinEntity;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseJavelin;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

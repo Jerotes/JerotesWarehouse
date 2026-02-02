@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.init.JerotesMobEffects;
+import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.jerotes.jerotes.util.Main;
@@ -41,7 +42,7 @@ public abstract class ItemInHandLayerMixin<T extends LivingEntity, M extends Ent
     }
     @Inject(method = "renderArmWithItem", at = @At("HEAD"), cancellable = true)
     public void renderArmWithItem(LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int n, CallbackInfo ci) {
-        if (itemStack.getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase && !itemToolBaseSpearBase.otherAnimSpear() || itemStack.getItem() instanceof ItemToolBasePike) {
+        if (itemStack.getItem() instanceof ItemSpecialInHand) {
             if (!itemStack.isEmpty()) {
                 poseStack.pushPose();
                 ((ArmedModel) this.getParentModel()).translateToHand(humanoidArm, poseStack);
