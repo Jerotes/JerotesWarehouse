@@ -2,7 +2,7 @@
   "item_group.jerotes.jerotes_stab": "Jerotes Warehouse",
 
   "advancements.jerotes.a_brand_new_world.title": "A Brand New World",
-  "advancements.jerotes.a_brand_new_world.desc": "<Copper Carved Company>The world seems to have changed",
+  "advancements.jerotes.a_brand_new_world.desc": "<Copper Carved Company> The world seems to have changed",
 
   "entity.jerotes.jerotes_falling_block": "Falling Block",
   "entity.jerotes.jerotes_earthrend_block": "Earthrend Block",
@@ -46,6 +46,15 @@
   "item.jerotes.golden_dagger": "Golden Dagger",
   "item.jerotes.diamond_dagger": "Diamond Dagger",
   "item.jerotes.netherite_dagger": "Netherite Dagger",
+
+  "item.jerotes.simple_hammer": "Simple Hammer",
+  "item.jerotes.wooden_hammer": "Wooden Hammer",
+  "item.jerotes.stone_hammer": "Stone Hammer",
+  "item.jerotes.copper_hammer": "Copper Hammer",
+  "item.jerotes.iron_hammer": "Iron Hammer",
+  "item.jerotes.golden_hammer": "Golden Hammer",
+  "item.jerotes.diamond_hammer": "Diamond Hammer",
+  "item.jerotes.netherite_hammer": "Netherite Hammer",
 
   "item.jerotes.simple_javelin": "Simple Javelin",
   "item.jerotes.heal_javelin": "Heal Javelin",

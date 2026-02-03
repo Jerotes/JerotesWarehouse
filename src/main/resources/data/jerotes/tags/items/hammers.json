@@ -1,6 +1,14 @@
 {
   "replace": false,
   "values": [
-    "#jerotes:flails"
+    "#jerotes:flails",
+
+    "jerotes:wooden_hammer",
+    "jerotes:stone_hammer",
+    "jerotes:copper_hammer",
+    "jerotes:iron_hammer",
+    "jerotes:golden_hammer",
+    "jerotes:diamond_hammer",
+    "jerotes:netherite_hammer"
   ]
 }

@@ -97,6 +97,17 @@ public class ItemToolBaseWhip extends ItemToolBaseSword {
             double d1 = Mth.cos(user.getYRot() * ((float)Math.PI / 180F));
             serverLevel.sendParticles(ParticleTypes.SWEEP_ATTACK, user.getX() + d0, user.getY(0.5) , user.getZ() + d1, 0, d0, 0.0D, d1, 0.0D);
         }
+        else {
+            float reachs = AttackFind.reachAttackReach(user, itemStack, playerReach, reach, 3f, 0.5f);
+            List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, user.getBoundingBox().inflate(reachs, reachs, reachs));
+            for (LivingEntity hurt : list) {
+                if (hurt == null || hurt.distanceTo(user) > reachs * 4) continue;
+                if (hurt == user) continue;
+                if (AttackFind.FindCanNotAttack(user, hurt) && !(hurt instanceof ArmorStand armorStand && armorStand.isMarker())) {
+                    hurt.hurtTime = 10;
+                }
+            }
+        }
         itemStack.hurtAndBreak(2,  user, livingEntity -> livingEntity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
     }
     public void afterUseAttack(ItemStack itemStack, Level level, LivingEntity self, LivingEntity hurt, List<LivingEntity> list) {

@@ -62,6 +62,15 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> DIAMOND_DAGGER = REGISTRY.register("diamond_dagger", () -> new ItemToolBaseDagger(Tiers.DIAMOND, 1f, -1.8F, new Item.Properties()));
 	public static final RegistryObject<Item> NETHERITE_DAGGER = REGISTRY.register("netherite_dagger", () -> new ItemToolBaseDagger(Tiers.NETHERITE, 1f, -1.8F, (new Item.Properties()).fireResistant()));
 
+	public static final RegistryObject<Item> SIMPLE_HAMMER = REGISTRY.register("simple_hammer", () -> new SimpleHammer());
+	public static final RegistryObject<Item> WOODEN_HAMMER = REGISTRY.register("wooden_hammer", () -> new ItemToolBaseHammer(Tiers.WOOD, 7.0F, -3.3F, new Item.Properties()));
+	public static final RegistryObject<Item> STONE_HAMMER = REGISTRY.register("stone_hammer", () -> new ItemToolBaseHammer(Tiers.STONE, 8.0F, -3.3F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_HAMMER = REGISTRY.register("copper_hammer", () -> new ItemToolBaseHammer(JerotesTiers.COPPER, 8.0F, -3.3F, new Item.Properties()));
+	public static final RegistryObject<Item> IRON_HAMMER = REGISTRY.register("iron_hammer", () -> new ItemToolBaseHammer(Tiers.IRON, 7.0F, -3.2F, new Item.Properties()));
+	public static final RegistryObject<Item> GOLDEN_HAMMER = REGISTRY.register("golden_hammer", () -> new ItemToolBaseHammer(Tiers.GOLD, 7.0F, -3.1F, new Item.Properties()));
+	public static final RegistryObject<Item> DIAMOND_HAMMER = REGISTRY.register("diamond_hammer", () -> new ItemToolBaseHammer(Tiers.DIAMOND, 6.0F, -3.1F, new Item.Properties()));
+	public static final RegistryObject<Item> NETHERITE_HAMMER = REGISTRY.register("netherite_hammer", () -> new ItemToolBaseHammer(Tiers.NETHERITE, 6.0F, -3.1F, (new Item.Properties()).fireResistant()));
+
 	public static final RegistryObject<Item> SIMPLE_JAVELIN = REGISTRY.register("simple_javelin", () -> new SimpleJavelin());
 	public static final RegistryObject<Item> HEAL_JAVELIN = REGISTRY.register("heal_javelin", () -> new HealJavelin());
 	public static final RegistryObject<Item> ANESTHETIC_JAVELIN = REGISTRY.register("anesthetic_javelin", () -> new AnestheticJavelin());

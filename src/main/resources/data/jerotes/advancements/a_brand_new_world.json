@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:story/root",
+  "background": "jerotes:textures/block/background.png",
   "display": {
     "icon": {
       "item": "jerotes:simple_javelin"
