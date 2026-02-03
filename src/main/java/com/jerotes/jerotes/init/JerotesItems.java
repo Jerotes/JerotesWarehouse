@@ -4,6 +4,7 @@ import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.ArmorEntity;
 import com.jerotes.jerotes.entity.Shoot.Arrow.AnestheticArrowEntity;
 import com.jerotes.jerotes.item.*;
+import com.jerotes.jerotes.item.Tool.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
@@ -37,11 +38,11 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> JEROTES_HORSE_SPAWN_EGG = REGISTRY.register("jerotes_horse_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_HORSE, 0xffffff, 0xffffff, new Item.Properties()));
 
 	public static final RegistryObject<Item> COPPER_NUGGET = REGISTRY.register("copper_nugget", () -> new Item(new Item.Properties()));
-	public static final RegistryObject<Item> COPPER_SWORD = REGISTRY.register("copper_sword", () -> new SwordItem(JerotesTiers.COPPER, 3, -2.4F, new Item.Properties()));
-	public static final RegistryObject<Item> COPPER_SHOVEL = REGISTRY.register("copper_shovel", () -> new ShovelItem(JerotesTiers.COPPER, 1.5F, -3.0F, new Item.Properties()));
-	public static final RegistryObject<Item> COPPER_PICKAXE = REGISTRY.register("copper_pickaxe", () -> new PickaxeItem(JerotesTiers.COPPER, 1, -2.8F, new Item.Properties()));
-	public static final RegistryObject<Item> COPPER_AXE = REGISTRY.register("copper_axe", () -> new AxeItem(JerotesTiers.COPPER, 7.0F, -3.2F, new Item.Properties()));
-	public static final RegistryObject<Item> COPPER_HOE = REGISTRY.register("copper_hoe", () -> new HoeItem(JerotesTiers.COPPER, -1, -2.0F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_SWORD = REGISTRY.register("copper_sword", () -> new ItemToolBaseSword(JerotesTiers.COPPER, 3, -2.4F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_SHOVEL = REGISTRY.register("copper_shovel", () -> new ItemToolBaseShovel(JerotesTiers.COPPER, 1.5F, -3.0F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_PICKAXE = REGISTRY.register("copper_pickaxe", () -> new ItemToolBasePickaxe(JerotesTiers.COPPER, 1, -2.8F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_AXE = REGISTRY.register("copper_axe", () -> new ItemToolBaseAxe(JerotesTiers.COPPER, 7.0F, -3.2F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_HOE = REGISTRY.register("copper_hoe", () -> new ItemToolBaseHoe(JerotesTiers.COPPER, -1, -2.0F, new Item.Properties()));
 	public static final RegistryObject<Item> COPPER_HELMET = REGISTRY.register("copper_helmet", () -> new CopperArmor(JerotesArmorMaterials.COPPER, ArmorItem.Type.HELMET, new Item.Properties()));
 	public static final RegistryObject<Item> COPPER_CHESTPLATE = REGISTRY.register("copper_chestplate", () -> new CopperArmor(JerotesArmorMaterials.COPPER, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
 	public static final RegistryObject<Item> COPPER_LEGGINGS = REGISTRY.register("copper_leggings", () -> new CopperArmor(JerotesArmorMaterials.COPPER, ArmorItem.Type.LEGGINGS, new Item.Properties()));
@@ -51,6 +52,15 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> RESILIENT_BANDAGE = REGISTRY.register("resilient_bandage", () -> new ResilientBandage());
 	public static final RegistryObject<Item> ANESTHETIC_BANDAGE = REGISTRY.register("anesthetic_bandage", () -> new AnestheticBandage());
 	public static final RegistryObject<Item> ANESTHETIC_ARROW = REGISTRY.register("anesthetic_arrow", () -> new AnestheticArrow());
+
+	public static final RegistryObject<Item> SIMPLE_DAGGER = REGISTRY.register("simple_dagger", () -> new SimpleDagger());
+	public static final RegistryObject<Item> WOODEN_DAGGER = REGISTRY.register("wooden_dagger", () -> new ItemToolBaseDagger(Tiers.WOOD, 2.0f, -1.8F, new Item.Properties()));
+	public static final RegistryObject<Item> STONE_DAGGER = REGISTRY.register("stone_dagger", () -> new ItemToolBaseDagger(Tiers.STONE, 1.5f, -1.8F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_DAGGER = REGISTRY.register("copper_dagger", () -> new ItemToolBaseDagger(JerotesTiers.COPPER, 1.5f, -1.8F, new Item.Properties()));
+	public static final RegistryObject<Item> IRON_DAGGER = REGISTRY.register("iron_dagger", () -> new ItemToolBaseDagger(Tiers.IRON, 1.5f, -1.8F, new Item.Properties()));
+	public static final RegistryObject<Item> GOLDEN_DAGGER = REGISTRY.register("golden_dagger", () -> new ItemToolBaseDagger(Tiers.GOLD, 1.5f, -1.8F, new Item.Properties()));
+	public static final RegistryObject<Item> DIAMOND_DAGGER = REGISTRY.register("diamond_dagger", () -> new ItemToolBaseDagger(Tiers.DIAMOND, 1f, -1.8F, new Item.Properties()));
+	public static final RegistryObject<Item> NETHERITE_DAGGER = REGISTRY.register("netherite_dagger", () -> new ItemToolBaseDagger(Tiers.NETHERITE, 1f, -1.8F, (new Item.Properties()).fireResistant()));
 
 	public static final RegistryObject<Item> SIMPLE_JAVELIN = REGISTRY.register("simple_javelin", () -> new SimpleJavelin());
 	public static final RegistryObject<Item> HEAL_JAVELIN = REGISTRY.register("heal_javelin", () -> new HealJavelin());

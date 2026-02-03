@@ -36,7 +36,7 @@ import org.joml.Vector3f;
 import javax.annotation.Nullable;
 
 public class TestEntity extends PathfinderMob implements JerotesEntity, UseShieldEntity {
-	private static final EntityDataAccessor<Boolean> IS_MOVE_TO = SynchedEntityData.defineId(TestEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IS_CAN_MOVE = SynchedEntityData.defineId(TestEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> IS_FEMALE = SynchedEntityData.defineId(TestEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> ID_SIZE = SynchedEntityData.defineId(TestEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> SHIELD_LEVEL = SynchedEntityData.defineId(TestEntity.class, EntityDataSerializers.INT);
@@ -62,7 +62,7 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 		this.goalSelector.addGoal(1, new JerotesMoveToGoal(TestEntity.this, 1.0f, true) {
 			@Override
 			public boolean canUse() {
-				return super.canUse() && TestEntity.this.isMoveTo();
+				return super.canUse() && TestEntity.this.isCanMove();
 			}
 		});
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this, new Class[0]));
@@ -82,11 +82,11 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 		return false;
 	}
 
-	public boolean isMoveTo() {
-		return this.getEntityData().get(IS_MOVE_TO);
+	public boolean isCanMove() {
+		return this.getEntityData().get(IS_CAN_MOVE);
 	}
-	public void setMoveTo(boolean bl) {
-		this.getEntityData().set(IS_MOVE_TO, bl);
+	public void setCanMove(boolean bl) {
+		this.getEntityData().set(IS_CAN_MOVE, bl);
 	}
 	public void setShieldLevel(int n){
 		this.getEntityData().set(SHIELD_LEVEL, n);
@@ -114,7 +114,7 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 	public void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
 		compoundTag.putInt("Size", this.getSize());
-		compoundTag.putBoolean("IsMoveTo", this.isMoveTo());
+		compoundTag.putBoolean("IsCanMove", this.isCanMove());
 		compoundTag.putBoolean("IsFemale", this.IsFemale());
 		compoundTag.putInt("ShieldLevel", this.getShieldLevel());
 	}
@@ -122,7 +122,7 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 	public void readAdditionalSaveData(CompoundTag compoundTag) {
 		this.setSize(compoundTag.getInt("Size"));
 		super.readAdditionalSaveData(compoundTag);
-		this.setMoveTo(compoundTag.getBoolean("IsMoveTo"));
+		this.setCanMove(compoundTag.getBoolean("IsCanMove"));
 		this.setFemale(compoundTag.getBoolean("IsFemale"));
 		this.setShieldLevel(compoundTag.getInt("ShieldLevel"));
 	}
@@ -130,7 +130,7 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.getEntityData().define(IS_FEMALE, false);
-		this.getEntityData().define(IS_MOVE_TO, false);
+		this.getEntityData().define(IS_CAN_MOVE, false);
 		this.getEntityData().define(ID_SIZE, 180);
 		this.getEntityData().define(SHIELD_LEVEL, 1);
 	}
@@ -248,6 +248,7 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 			float healthAfter = this.getHealth();
 			this.setCustomName(Component.literal(String.valueOf(healthBefore - healthAfter)));
 			this.setHealth(this.getMaxHealth());
+			this.deathTime = 0;
 		}
 		return true;
 	}

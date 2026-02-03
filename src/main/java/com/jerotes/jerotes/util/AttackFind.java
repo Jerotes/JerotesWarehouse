@@ -479,7 +479,7 @@ public class AttackFind {
                     return true;
                 }
                 //灾厄村民
-                if (EntityFactionFind.isPiglin(mobHurt) && EntityFactionFind.isPiglin(mobAttacker)) {
+                if (EntityFactionFind.isIllager(mobHurt) && EntityFactionFind.isIllager(mobAttacker)) {
                     return true;
                 }
                 //灾厄村民

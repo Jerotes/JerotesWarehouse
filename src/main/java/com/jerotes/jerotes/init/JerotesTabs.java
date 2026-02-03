@@ -37,6 +37,16 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.RESILIENT_BANDAGE.get());
 				tabData.accept(JerotesItems.ANESTHETIC_BANDAGE.get());
 				tabData.accept(JerotesItems.ANESTHETIC_ARROW.get());
+
+				tabData.accept(JerotesItems.SIMPLE_DAGGER.get());
+				tabData.accept(JerotesItems.WOODEN_DAGGER.get());
+				tabData.accept(JerotesItems.STONE_DAGGER.get());
+				tabData.accept(JerotesItems.COPPER_DAGGER.get());
+				tabData.accept(JerotesItems.IRON_DAGGER.get());
+				tabData.accept(JerotesItems.GOLDEN_DAGGER.get());
+				tabData.accept(JerotesItems.DIAMOND_DAGGER.get());
+				tabData.accept(JerotesItems.NETHERITE_DAGGER.get());
+
 				tabData.accept(JerotesItems.SIMPLE_JAVELIN.get());
 				tabData.accept(JerotesItems.HEAL_JAVELIN.get());
 				tabData.accept(JerotesItems.ANESTHETIC_JAVELIN.get());

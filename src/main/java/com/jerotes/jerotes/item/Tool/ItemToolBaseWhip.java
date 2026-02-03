@@ -11,8 +11,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -72,7 +75,16 @@ public class ItemToolBaseWhip extends ItemToolBaseSword {
             List<LivingEntity> list = serverLevel.getEntitiesOfClass(LivingEntity.class, user.getBoundingBox().inflate(reachs, reachs, reachs));
             for (LivingEntity hurt : list) {
                 if (hurt == null || hurt.distanceTo(user) > reachs * 4) continue;
-                if (AttackFind.FindCanNotAttack(user, hurt)) continue;
+                if (hurt == user) continue;
+                if (AttackFind.FindCanNotAttack(user, hurt) && !(hurt instanceof ArmorStand armorStand && armorStand.isMarker())) {
+                    hurt.hurtTime = 10;
+                    if (!hurt.level().isClientSide()) {
+                        hurt.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, (int) (damageMulti * 120), 0), user);
+                        hurt.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, (int) (damageMulti * 120), 0), user);
+                        hurt.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, (int) (damageMulti * 120), 0), user);
+                    }
+                    continue;
+                }
                 if (!Main.canSee(hurt, user)) continue;
                 if (!hurt.hasLineOfSight(user)) continue;
                 AttackFind.attackBegin(user, hurt);
