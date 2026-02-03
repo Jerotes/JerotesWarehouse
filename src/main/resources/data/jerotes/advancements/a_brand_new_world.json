@@ -1,6 +1,6 @@
 {
-  "background": "jerotes:textures/block/background.png",
   "display": {
+    "background": "jerotes:textures/block/background.png",
     "icon": {
       "item": "jerotes:simple_javelin"
     },
