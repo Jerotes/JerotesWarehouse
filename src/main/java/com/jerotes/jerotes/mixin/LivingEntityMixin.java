@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
+import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
@@ -85,6 +86,9 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     }
 
     private long lastKineticHitFeedbackTimeJerotes = Integer.MIN_VALUE;
+    public long getlastKineticHitFeedbackTimeJerotes() {
+        return lastKineticHitFeedbackTimeJerotes;
+    }
     public float getTicksSinceLastKineticHitFeedbackJerotes(float f) {
         if (this.lastKineticHitFeedbackTimeJerotes < 0L) {
             return 0.0f;

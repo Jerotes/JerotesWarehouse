@@ -254,6 +254,12 @@
   "death.attack.bypasses_cooldown_magic": "%1$s死了",
   "death.attack.bypasses_cooldown_magic.item": "%1$s被%2$s使用%3$s所杀",
   "death.attack.bypasses_cooldown_magic.player": "%1$s妄想逃离%2$s",
+  "death.attack.bypasses_armor_shoot": "%1$s死了",
+  "death.attack.bypasses_armor_shoot.item": "%1$s被%2$s使用%3$s所杀",
+  "death.attack.bypasses_armor_shoot.player": "%1$s妄想逃离%2$s",
+  "death.attack.bypasses_armor_melee": "%1$s死了",
+  "death.attack.bypasses_armor_melee.item": "%1$s被%2$s使用%3$s所杀",
+  "death.attack.bypasses_armor_melee.player": "%1$s妄想逃离%2$s",
   "death.attack.jerotes_fire": "%1$s被烧死了",
   "death.attack.jerotes_fire.item": "%1$s被%2$s用%3$s烧死了",
   "death.attack.jerotes_fire.player": "%1$s被%2$s烧死了",
@@ -291,6 +297,8 @@
   "talk.jerotes.pose_4": "<%1$s> 游荡",
 
   "boss.jerotes.legendary": "传奇存在",
+
+  "boss.jerotes.can_not_spawn": "此位已存在于附近",
 
   "message.jerotes.target_magic": "选择魔法：",
 

@@ -24,6 +24,9 @@ public class JerotesDamageTypes {
 	public static final ResourceKey<DamageType> CORROSIVE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "corrosive"));
 	public static final ResourceKey<DamageType> POISON = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "poison"));
 
+	public static final ResourceKey<DamageType> BYPASSES_ARMOR_SHOOT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_armor_shoot"));
+	public static final ResourceKey<DamageType> BYPASSES_ARMOR_MELEE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_armor_melee"));
+
 	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_FIRE = ResourceKey.create(Registries.DAMAGE_TYPE,
 			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_fire"));
 	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_FREEZE = ResourceKey.create(Registries.DAMAGE_TYPE,

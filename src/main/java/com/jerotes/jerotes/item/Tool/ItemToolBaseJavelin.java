@@ -124,7 +124,7 @@ public class ItemToolBaseJavelin extends TridentItem implements ItemSpecialEffec
 			itemStack.hurtAndBreak(1, player2, player -> player.broadcastBreakEvent(livingEntity.getUsedItemHand()));
 			if (n3 == 0) {
 				Projectile thrownJavelin = this.JerotesThrownJavelin(player2, itemStack);
-				thrownJavelin.shootFromRotation(player2, player2.getXRot(), player2.getYRot(), 0.0f, 2.5f + (float)n3 * 0.5f, 1.0f);
+				thrownJavelin.shootFromRotation(player2, player2.getXRot(), player2.getYRot(), 0.0f, getJavelinSpeed() + (float)n3 * 0.5f, 1.0f);
 				if (thrownJavelin instanceof AbstractArrow baseJavelinEntity && player2.getAbilities().instabuild) {
 					baseJavelinEntity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
 				}
@@ -153,6 +153,10 @@ public class ItemToolBaseJavelin extends TridentItem implements ItemSpecialEffec
 			SoundEvent soundEvent = n3 >= 3 ? SoundEvents.TRIDENT_RIPTIDE_3 : (n3 == 2 ? SoundEvents.TRIDENT_RIPTIDE_2 : SoundEvents.TRIDENT_RIPTIDE_1);
 			level.playSound(null, player2, soundEvent, SoundSource.PLAYERS, 1.0f, 1.0f);
 		}
+	}
+	@Override
+	public float getJavelinSpeed() {
+		return 2.5F;
 	}
 
 	public Projectile JerotesThrownJavelin(LivingEntity livingEntity, ItemStack itemStack) {

@@ -7,5 +7,6 @@ public interface JerotesChangeLivingEntity {
     boolean wasRecentlyStabbedJerotes(Entity entity, int n);
     void rememberStabbedEntityJerotes(Entity entity);
     float getTicksSinceLastKineticHitFeedbackJerotes(float f);
+    long getlastKineticHitFeedbackTimeJerotes();
 }
 

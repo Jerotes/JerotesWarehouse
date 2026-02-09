@@ -38,7 +38,7 @@ public class BoneThrowingSpear {
 					  public Ingredient getRepairIngredient() {
 						  return Ingredient.of(new ItemStack(Items.BONE));
 					  }
-				  }, new Properties().stacksTo(1).rarity(Rarity.COMMON), -1f, (1.0f / 0.9f) - 4f, 0.9f,
+				  }, new Properties().stacksTo(1).rarity(Rarity.COMMON), -1f, 1.1f - 4f, (1.0f / 1.1f),
 					0.25f, 10, (int) (0.7f * 20.0f),
 					Condition.ofAttackerSpeed((int) (4.5f * 20.0f), 10.0f),
 					Condition.ofAttackerSpeed((int) (9.0f * 20.0f), 5.1f),

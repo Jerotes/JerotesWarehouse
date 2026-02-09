@@ -59,7 +59,6 @@ public interface UseBowEntity {
              if (MainConfig.MobUseBowShrinkArrow) {
                  itemStackArrow.shrink(1);
              }
-             return;
          }
          //箭
         AbstractArrow abstractArrow = getCustomArrow(itemStackArrow, f);

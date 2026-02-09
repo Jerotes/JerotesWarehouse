@@ -31,6 +31,9 @@ public interface JerotesItemThrownJavelinUse {
     default boolean JerotesUseSpecialThrownJavelinAnim() {
         return false;
     }
+    default float getJavelinSpeed() {
+        return 2.5f;
+    }
     //特殊远程
     default void JerotesNotNormalThrownJavelinUse() {
     }

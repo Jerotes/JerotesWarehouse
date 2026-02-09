@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,7 +33,8 @@ public abstract class WitherBossMixin extends Monster {
 
     @Inject(method = "hurt", at = @At(value = "HEAD"), cancellable = true)
     public void hurt(DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (damageSource.getEntity() != null && EntityFactionFind.isThisEntity(damageSource.getEntity().getType(), "jerotes:can_hurt_wither")) {
+        if (damageSource.getEntity() != null &&
+                (EntityFactionFind.isThisEntity(damageSource.getEntity().getType(), "jerotes:can_hurt_wither") || EntityAndItemFind.isLegendary(damageSource.getEntity()))) {
             if (this.isInvulnerableTo(damageSource)) {
                 cir.setReturnValue(false);
                 cir.cancel();

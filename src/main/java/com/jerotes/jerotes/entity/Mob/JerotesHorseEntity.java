@@ -514,14 +514,8 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 		else if (Objects.equals(animation, "angry2")){
 			return 2;
 		}
-		else if (Objects.equals(animation, "jump")){
-			return 3;
-		}
-		else if (Objects.equals(animation, "longJump")){
-			return 4;
-		}
 		else if (Objects.equals(animation, "eatGrass")){
-			return 5;
+			return 3;
 		}
 		else {
 			return 0;
@@ -531,8 +525,6 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 		List<AnimationState> list = new ArrayList<>();
 		list.add(this.angry1AnimationState);
 		list.add(this.angry2AnimationState);
-		list.add(this.jumpAnimationState);
-		list.add(this.longJumpAnimationState);
 		list.add(this.eatGrassAnimationState);
 		return list;
 	}
@@ -732,14 +724,6 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 						this.stopMostAnimation(this.angry2AnimationState);
 						break;
 					case 3:
-						this.jumpAnimationState.startIfStopped(this.tickCount);
-						this.stopMostAnimation(this.jumpAnimationState);
-						break;
-					case 4:
-						this.longJumpAnimationState.startIfStopped(this.tickCount);
-						this.stopMostAnimation(this.longJumpAnimationState);
-						break;
-					case 5:
 						this.eatGrassAnimationState.startIfStopped(this.tickCount);
 						this.stopMostAnimation(this.eatGrassAnimationState);
 						break;
@@ -1107,16 +1091,10 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 		this.standIfPossible();
 		this.playJumpSound();
 		if (n < 70) {
-			if (!this.level().isClientSide()) {
-				this.setAnimTick(20);
-				this.setAnimationState("jump");
-			}
+			this.level().broadcastEntityEvent(this, (byte)101);
 		}
 		else {
-			if (!this.level().isClientSide()) {
-				this.setAnimTick(35);
-				this.setAnimationState("longJump");
-			}
+			this.level().broadcastEntityEvent(this, (byte)102);
 		}
 	}
 
@@ -1193,6 +1171,12 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 			this.spawnTamingParticles(true);
 		} else if (by == 6) {
 			this.spawnTamingParticles(false);
+		}
+		else if (by == 101) {
+			this.jumpAnimationState.start(this.tickCount);
+		}
+		else if (by == 102) {
+			this.longJumpAnimationState.start(this.tickCount);
 		} else {
 			super.handleEntityEvent(by);
 		}

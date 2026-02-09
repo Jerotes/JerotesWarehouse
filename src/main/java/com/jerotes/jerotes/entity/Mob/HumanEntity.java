@@ -293,7 +293,7 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 			handItem = this.getOffhandItem();
 		}
 		if (InventoryEntity.isRangeJavelin(handItem)) {
-			useTridentShoot(this, livingEntity, 1.6f);
+			useTridentShoot(this, livingEntity);
 		}
 		if (InventoryEntity.isBow(handItem)) {
 			useBowShoot(this, livingEntity, f, getBowLevel(), 20);

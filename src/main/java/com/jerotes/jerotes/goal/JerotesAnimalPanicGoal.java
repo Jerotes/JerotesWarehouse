@@ -1,9 +1,12 @@
 package com.jerotes.jerotes.goal;
 
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.TameMobEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.animal.Animal;
@@ -43,10 +46,22 @@ public class JerotesAnimalPanicGoal extends Goal {
         if (this.mob instanceof JerotesEntity jerotes && jerotes.OwnerCanOrderAttack()) {
             return false;
         }
+        if (this.mob instanceof TamableAnimal tamableAnimal && tamableAnimal.isInSittingPose()) {
+            return false;
+        }
+        if (this.mob instanceof TameMobEntity tamableAnimal && tamableAnimal.isInSittingPose()) {
+            return false;
+        }
         return this.findRandomPosition();
     }
 
     protected boolean shouldPanic() {
+        if (this.mob instanceof TamableAnimal tamableAnimal && tamableAnimal.isInSittingPose()) {
+            return false;
+        }
+        if (this.mob instanceof TameMobEntity tamableAnimal && tamableAnimal.isInSittingPose()) {
+            return false;
+        }
         return this.mob.getLastHurtByMob() != null || this.mob.isFreezing() || this.mob.isOnFire();
     }
 

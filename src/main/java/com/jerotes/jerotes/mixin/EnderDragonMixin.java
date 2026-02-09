@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -32,7 +33,8 @@ public abstract class EnderDragonMixin extends Mob {
 
     @Inject(method = "hurt(Lnet/minecraft/world/entity/boss/EnderDragonPart;Lnet/minecraft/world/damagesource/DamageSource;F)Z", at = @At(value = "HEAD"), cancellable = true)
     public void hurt(EnderDragonPart enderDragonPart, DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (damageSource.getEntity() != null && EntityFactionFind.isThisEntity(damageSource.getEntity().getType(), "jerotes:can_hurt_ender_dragon")) {
+        if (damageSource.getEntity() != null &&
+                (EntityFactionFind.isThisEntity(damageSource.getEntity().getType(), "jerotes:can_hurt_ender_dragon") || EntityAndItemFind.isLegendary(damageSource.getEntity()))) {
             if (this.phaseManager.getCurrentPhase().getPhase() == EnderDragonPhase.DYING) {
                 cir.setReturnValue(false);
             } else {

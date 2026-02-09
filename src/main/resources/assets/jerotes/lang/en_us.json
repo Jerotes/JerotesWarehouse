@@ -254,6 +254,12 @@
   "death.attack.bypasses_cooldown_magic": "%1$s died",
   "death.attack.bypasses_cooldown_magic.item": "%1$s was killed by %2$s using %3$s",
   "death.attack.bypasses_cooldown_magic.player": "%1$s died whilst trying to escape %2$s",
+  "death.attack.bypasses_armor_shoot": "%1$s died",
+  "death.attack.bypasses_armor_shoot.item": "%1$s was killed by %2$s using %3$s",
+  "death.attack.bypasses_armor_shoot.player": "%1$s died whilst trying to escape %2$s",
+  "death.attack.bypasses_armor_melee": "%1$s died",
+  "death.attack.bypasses_armor_melee.item": "%1$s was killed by %2$s using %3$s",
+  "death.attack.bypasses_armor_melee.player": "%1$s died whilst trying to escape %2$s",
   "death.attack.jerotes_fire": "%1$s burned to death",
   "death.attack.jerotes_fire.item": "%1$s was burned to death by %2$s using %3$s",
   "death.attack.jerotes_fire.player": "%1$s was burned to death by %2$s",
@@ -291,6 +297,8 @@
   "talk.jerotes.pose_4": "<%1$s> Wandering",
 
   "boss.jerotes.legendary": "Legendary Being",
+
+  "boss.jerotes.can_not_spawn": "This already exists nearby",
 
   "message.jerotes.target_magic": "Target Magic: ",
 

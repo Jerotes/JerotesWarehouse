@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "jerotes:bypasses_cooldown_melee",
+    "jerotes:bypasses_armor_melee",
     "jerotes:bypasses_cooldown_magic",
     "jerotes:syringe",
     "jerotes:magic_effect",

@@ -198,8 +198,8 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
                 hitSound2, entity.getSoundSource(), 1.0f, 1.0f);
     }
     public void makeLocalHitSound(Entity entity) {
-        entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
-                hitSound, entity.getSoundSource(), 1.0f, 1.0f);
+        entity.level().playLocalSound(entity.getX(), entity.getY(), entity.getZ(),
+                hitSound, entity.getSoundSource(), 1.0f, 1.0f, false);
     }
 
     public int computeDamageUseDuration() {
@@ -216,15 +216,17 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
         double d = vec3.dot(getMotion(livingEntity));
         float f = livingEntity instanceof Player ? 1.0f : 0.2f;
         f = livingEntity instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.useSpearAsPlayer() ? 0.4f : f;
-        //float f2 = livingEntity instanceof Player ? 1.0f : 0.5f;
         if (livingEntity instanceof UseSpearSpecialEntity useSpearSpecialEntity) {
             f = useSpearSpecialEntity.getJerotesSpearNeedSpeed();
            // f2 = useSpearSpecialEntity.getNeedReach();
         }
+        double d2 = livingEntity.getAttribute(Attributes.ATTACK_DAMAGE) != null ? livingEntity.getAttributeBaseValue(Attributes.ATTACK_DAMAGE) : 0;
         boolean bl = false;
         for (EntityHitResult entityHitResult : getHitEntitiesAlong(livingEntity,
                 this,
                 this.hitboxMargin, entity -> canHitEntity(livingEntity, entity))) {
+            boolean bl2;
+            boolean bl3;
             Entity entity2 = entityHitResult.getEntity();
             if (entity2 instanceof PartEntity<?> partEntity) {
                 entity2 = partEntity.getParent();
@@ -233,23 +235,23 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
                     jerotesChangeLivingEntity.wasRecentlyStabbedJerotes(entity2, this.contactCooldownTicks)) {
                 continue;
             }
-            double d2 = vec3.dot(getMotion(entity2));
-            double d3 = Math.max(0.0, d - d2);
-            if (livingEntity instanceof UseSpearSpecialEntity useSpearSpecialEntity) {
-                d3 *= useSpearSpecialEntity.getJerotesSpearDamageMultiple();
-            }
-            boolean bl2 = this.dismountConditions.isPresent() && this.dismountConditions.get().test(n2, d, d3, f);
-            boolean bl3 = this.knockbackConditions.isPresent() && this.knockbackConditions.get().test(n2, d, d3, f);
-            boolean bl4 = this.damageConditions.isPresent() && this.damageConditions.get().test(n2, d, d3, f);
             if (livingEntity instanceof JerotesChangeLivingEntity jerotesChangeLivingEntity) {
                 jerotesChangeLivingEntity.rememberStabbedEntityJerotes(entity2);
             }
-            float fs = (float)d2 + (float)Mth.floor(d3 * (double)this.damageMultiplier);
-            bl |= stabAttack(equipmentSlot, entity2, fs, bl4, bl3, bl2, livingEntity);
+           double d3 = vec3.dot(getMotion(entity2));
+            double d4 = Math.max(0.0, d - d3);
+            if (livingEntity instanceof UseSpearSpecialEntity useSpearSpecialEntity) {
+                d4 *= useSpearSpecialEntity.getJerotesSpearDamageMultiple();
+            }
+            boolean bl4 = this.dismountConditions.isPresent() && this.dismountConditions.get().test(n2, d, d4, f);
+            boolean bl5 = this.knockbackConditions.isPresent() && this.knockbackConditions.get().test(n2, d, d4, f);
+            boolean bl6 = bl2 = this.damageConditions.isPresent() && this.damageConditions.get().test(n2, d, d4, f);
+            if (!bl4 && !bl5 && !bl2) continue;
+            float f2 = (float)d2 + (float)Mth.floor(d4 * (double)this.damageMultiplier);
+            bl |= stabAttack(equipmentSlot, entity2, f2, bl2, bl5, bl4, livingEntity);
         }
         if (bl) {
-            livingEntity.level().broadcastEntityEvent(livingEntity, (byte)2);
-            //this.makeHitSound(livingEntity);
+            livingEntity.level().broadcastEntityEvent(livingEntity, (byte) 2);
         }
     }
 

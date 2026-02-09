@@ -26,7 +26,7 @@ public interface UseThrownJavelinEntity {
     }
 
     //发射
-    default void useTridentShoot(LivingEntity livingEntity, LivingEntity livingEntityTarget, float f) {
+    default void useTridentShoot(LivingEntity livingEntity, LivingEntity livingEntityTarget, float f, boolean base) {
         if (livingEntityTarget == null) {
             return;
         }
@@ -65,7 +65,7 @@ public interface UseThrownJavelinEntity {
                     double d2 = livingEntityTarget.getY(0.3333333333333333) - Javelin.getY();
                     double d3 = livingEntityTarget.getZ() - livingEntity.getZ();
                     double d4 = Math.sqrt(d * d + d3 * d3);
-                    Javelin.shoot(d, d2 + d4 * 0.20000000298023224, d3, f, 2);
+                    Javelin.shoot(d, d2 + d4 * 0.20000000298023224, d3, base ? jerotesItemThrownJavelinUse.getJavelinSpeed() : f, 2);
                     if (!livingEntity.isSilent()) {
                         livingEntity.playSound(SoundEvents.TRIDENT_THROW, 1.0f, 1.0f / (livingEntity.getRandom().nextFloat() * 0.4f + 0.8f));
                     }
@@ -103,13 +103,20 @@ public interface UseThrownJavelinEntity {
                 double d2 = livingEntityTarget.getY(0.3333333333333333) - Javelin.getY();
                 double d3 = livingEntityTarget.getZ() - livingEntity.getZ();
                 double d4 = Math.sqrt(d * d + d3 * d3);
-                Javelin.shoot(d, d2 + d4 * 0.20000000298023224, d3, f, 2);
+                Javelin.shoot(d, d2 + d4 * 0.20000000298023224, d3, base ? 2.5f : f, 2);
                 if (!livingEntity.isSilent()) {
                     livingEntity.playSound(SoundEvents.TRIDENT_THROW, 1.0f, 1.0f / (livingEntity.getRandom().nextFloat() * 0.4f + 0.8f));
                 }
                 livingEntity.level().addFreshEntity(Javelin);
             }
         }
+    }
+
+    default void useTridentShoot(LivingEntity livingEntity, LivingEntity livingEntityTarget, float f) {
+        useTridentShoot(livingEntity, livingEntityTarget, f, false);
+    }
+    default void useTridentShoot(LivingEntity livingEntity, LivingEntity livingEntityTarget) {
+        useTridentShoot(livingEntity, livingEntityTarget, 2.5f, true);
     }
 }
 
