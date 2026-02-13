@@ -42,7 +42,7 @@ public class BaseArrowEntity extends BaseAbstractArrowEntity {
     @Nullable
     private IntOpenHashSet piercingIgnoreEntityIds;
     @Nullable
-    private List<Entity> piercedAndKilledEntities;
+    public List<Entity> piercedAndKilledEntities;
     private ItemStack arrowItem = new ItemStack(Items.ARROW);
 
     public BaseArrowEntity(EntityType<? extends AbstractArrow> entityType, Level level, ItemStack itemStack, double damages) {

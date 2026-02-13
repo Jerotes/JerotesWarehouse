@@ -190,17 +190,18 @@ public class CommandEvent {
 										)
 								)
 								.then(Commands.literal("add")
-										.then(Commands.argument("player", EntityArgument.player()).executes(arguments -> {
+										.then(Commands.argument("player", EntityArgument.player())
+												.executes(arguments -> {
 															Player playerTo = EntityArgument.getPlayer(arguments, "player");
 
-													playerTo.sendSystemMessage(
-															Component.translatable("message.jerotes.target_magic")
-																	.append(SpellListByString.getSpellEasy(SpellRegistry.getSpellTypeById(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTarget)).getSpellName())
-																	.append(Component.translatable("spell.jerotes.spell_base", playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTargetLevel))
-																	.withStyle(ChatFormatting.DARK_PURPLE));
-													if (!playerTo.level().isClientSide()) {
-														(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables())).syncPlayerVariables(playerTo);
-													}
+															playerTo.sendSystemMessage(
+																	Component.translatable("message.jerotes.target_magic")
+																			.append(SpellListByString.getSpellEasy(SpellRegistry.getSpellTypeById(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTarget)).getSpellName())
+																			.append(Component.translatable("spell.jerotes.spell_base", playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTargetLevel))
+																			.withStyle(ChatFormatting.DARK_PURPLE));
+															if (!playerTo.level().isClientSide()) {
+																(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables())).syncPlayerVariables(playerTo);
+															}
 															return 0;
 														}
 												)
@@ -209,7 +210,45 @@ public class CommandEvent {
 						)
 				)
 				//修改
-				.then(Commands.literal("entity_change").then(Commands.argument("entities", EntityArgument.entities())
+				.then(Commands.literal("player_change")
+						.then(Commands.argument("player", EntityArgument.player())
+								.then(Commands.literal("legend")
+										.then(Commands.literal("true")
+												.executes(arguments -> {
+															Player playerTo = EntityArgument.getPlayer(arguments, "player");
+															playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).ifPresent(capability -> {
+																capability.setLegend(true);
+															});
+															if (!playerTo.level().isClientSide()) {
+																(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables())).syncPlayerVariables(playerTo);
+															}
+															playerTo.sendSystemMessage(
+																	Component.translatable("message.jerotes.legend_true").withStyle(ChatFormatting.GOLD));
+															return 0;
+														}
+												)
+										)
+										.then(Commands.literal("false")
+												.executes(arguments -> {
+															Player playerTo = EntityArgument.getPlayer(arguments, "player");
+															playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).ifPresent(capability -> {
+																capability.setLegend(false);
+															});
+															if (!playerTo.level().isClientSide()) {
+																(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables())).syncPlayerVariables(playerTo);
+															}
+															playerTo.sendSystemMessage(
+																	Component.translatable("message.jerotes.legend_false")
+																			.withStyle(ChatFormatting.GOLD));
+															return 0;
+														}
+												)
+										)
+								)
+						)
+				)
+				.then(Commands.literal("entity_change")
+						.then(Commands.argument("entities", EntityArgument.entities())
 								.then(Commands.literal("anesthetized")
 										.then(Commands.argument("number", DoubleArgumentType.doubleArg(0)).executes(arguments -> {
 															Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
@@ -668,7 +707,6 @@ public class CommandEvent {
 
 	@SubscribeEvent
 	public static void registerCommand0(RegisterCommandsEvent event) {
-		event.getDispatcher().register(Commands.literal("jerotes").requires(s -> s.hasPermission(0))
-		);
+		event.getDispatcher().register(Commands.literal("jerotes").requires(s -> s.hasPermission(0)));
 	}
 }

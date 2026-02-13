@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.effect;
 
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -19,6 +20,8 @@ public class AnesthetizedHoldMobEffect extends BaseMobEffectAllTick {
 
 	@Override
 	public void applyEffectTick(LivingEntity livingEntity, int n) {
+		if (EntityAndItemFind.isLegendary(livingEntity))
+			return;
 		float headXRot;
 		if (livingEntity.getXRot() < 45){
 			headXRot = livingEntity.getXRot() + (n + 1);

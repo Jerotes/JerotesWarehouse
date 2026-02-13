@@ -66,6 +66,8 @@ public class JerotesPlayerData {
 			clone.AddSpellTargetLevel = original.AddSpellTargetLevel;
 			clone.AddSpellUseCoolDownTick = original.AddSpellUseCoolDownTick;
 			clone.AddSpellUseCoolDownTickMax = original.AddSpellUseCoolDownTickMax;
+
+			clone.IsLegend = original.IsLegend;
 			clone.syncPlayerVariables(event.getEntity());
 
 		}
@@ -111,6 +113,8 @@ public class JerotesPlayerData {
 		public int AddSpellUseCoolDownTick = 0;
 		public int AddSpellUseCoolDownTickMax = 0;
 
+		public boolean IsLegend = false;
+
 		public void setMainSpellTarget(String string){
 			this.MainSpellTarget = string;
 		}
@@ -137,6 +141,10 @@ public class JerotesPlayerData {
 			this.AddSpellUseCoolDownTickMax = n;
 		}
 
+		public void setLegend(boolean bl){
+			this.IsLegend = bl;
+		}
+
 		public void syncPlayerVariables(Entity entity) {
 			if (!entity.level().isClientSide() && entity instanceof ServerPlayer serverPlayer) {
 				if (this.writeNBT() != null) {
@@ -159,6 +167,8 @@ public class JerotesPlayerData {
 			nbt.putInt("JerotesAddSpellTargetLevel", AddSpellTargetLevel);
 			nbt.putInt("JerotesAddSpellUseCoolDownTick", AddSpellUseCoolDownTick);
 			nbt.putInt("JerotesAddSpellUseCoolDownTickMax", AddSpellUseCoolDownTickMax);
+
+			nbt.putBoolean("JerotesIsLegend", IsLegend);
 			return nbt;
 		}
 
@@ -172,6 +182,8 @@ public class JerotesPlayerData {
 			AddSpellTargetLevel = nbt.getInt("JerotesAddSpellTargetLevel");
 			AddSpellUseCoolDownTick = nbt.getInt("JerotesAddSpellUseCoolDownTick");
 			AddSpellUseCoolDownTickMax = nbt.getInt("JerotesAddSpellUseCoolDownTickMax");
+
+			IsLegend = nbt.getBoolean("JerotesIsLegend");
 		}
 	}
 

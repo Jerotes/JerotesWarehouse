@@ -34,6 +34,8 @@ public class AnesthetizedEvent {
 			return;
 		if (EntityFactionFind.isConstruct(entity))
 			return;
+		if (EntityAndItemFind.isLegendary(entity))
+			return;
 		//如果麻醉
 		if (entity.hasEffect(JerotesMobEffects.ANESTHETIZED.get())){
 			int anesthetizedTicks = entity.getEffect(JerotesMobEffects.ANESTHETIZED.get()).getDuration();
@@ -86,6 +88,8 @@ public class AnesthetizedEvent {
 			return;
 		if (EntityFactionFind.isConstruct(entity))
 			return;
+		if (EntityAndItemFind.isLegendary(entity))
+			return;
 		if (entity.getPersistentData().getDouble("jerotes_anesthetized") > 0) {
 			//散发粒子
 			if (entity.level() instanceof ServerLevel _level && !entity.isInvisible()) {
@@ -126,6 +130,8 @@ public class AnesthetizedEvent {
 			return;
 		if (EntityFactionFind.isConstruct(entity))
 			return;
+		if (EntityAndItemFind.isLegendary(entity))
+			return;
 		//受击降低麻醉
 		if (entity.getPersistentData().getDouble("jerotes_anesthetized") > 0 && entity.hasEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()) && event.getAmount() > 0) {
 			entity.getPersistentData().putDouble("jerotes_anesthetized", entity.getPersistentData().getDouble("jerotes_anesthetized") - 600 * event.getAmount());
@@ -161,6 +167,8 @@ public class AnesthetizedEvent {
 		if (EntityFactionFind.isMachine(entity))
 			return;
 		if (EntityFactionFind.isConstruct(entity))
+			return;
+		if (EntityAndItemFind.isLegendary(entity))
 			return;
 		if (entity instanceof BasePartLivingEntity basePartLivingEntity && basePartLivingEntity.getParent() != null && basePartLivingEntity.getParent() instanceof LivingEntity livingEntity) {
 			entity = livingEntity;
@@ -210,6 +218,8 @@ public class AnesthetizedEvent {
 		if (EntityFactionFind.isMachine(entity))
 			return;
 		if (EntityFactionFind.isConstruct(entity))
+			return;
+		if (EntityAndItemFind.isLegendary(entity))
 			return;
 		if (entity instanceof BasePartLivingEntity basePartLivingEntity && basePartLivingEntity.getParent() != null && basePartLivingEntity.getParent() instanceof LivingEntity livingEntity) {
 			entity = livingEntity;

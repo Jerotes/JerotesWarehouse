@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.effect;
 
 import com.jerotes.jerotes.init.JerotesMobEffects;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,8 +24,12 @@ public class HoldMobEffect extends BaseMobEffectAllTick {
 	public void applyEffectTick(LivingEntity livingEntity, int n) {
 		super.applyEffectTick(livingEntity, n);
 		int time = livingEntity.getEffect(JerotesMobEffects.HOLD_MOB.get()).getDuration();
-		if ((time % 120 == 0) && time != 0 && time != 6 && (livingEntity.getRandom().nextFloat() > 0.8f - Main.luck(livingEntity) * 0.2f
-		)) {
+		if ((time % 120 == 0) && time != 0 && time != 6 && (livingEntity.getRandom().nextFloat() > 0.8f - Main.luck(livingEntity) * 0.2f)) {
+			if (!livingEntity.level().isClientSide) {
+				livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
+			}
+		}
+		if ((time % 60 == 0) && time != 0 && (livingEntity.getRandom().nextFloat() > 0.6f - Main.luck(livingEntity) * 0.2f) && EntityAndItemFind.isLegendary(livingEntity)) {
 			if (!livingEntity.level().isClientSide) {
 				livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
 			}

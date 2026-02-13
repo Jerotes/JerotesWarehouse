@@ -324,7 +324,7 @@ public class EntityAboutEvent {
 			}
 		}
 		else {
-			if (MainConfig.HasDamageCooldownTick.contains(boss.getEncodeId())) {
+			if (MainConfig.HasDamageCooldownTick.contains(boss.getEncodeId()) || EntityAndItemFind.isLegendary(boss)) {
 				float base = 1;
 				if (event.getSource().is(DamageTypeTags.BYPASSES_COOLDOWN)) {
 					base *= 0.5f;
@@ -363,7 +363,7 @@ public class EntityAboutEvent {
 				}
 			}
 			else {
-				if (MainConfig.HasPercentageDamage.contains(bossAttacker.getEncodeId()) && damage > 0) {
+				if ((MainConfig.HasPercentageDamage.contains(bossAttacker.getEncodeId()) || EntityAndItemFind.isLegendary(bossAttacker)) && damage > 0) {
 					float f = (float) MainConfig.BaseAttackPercentage;
 					if (EntityAndItemFind.MagicResistance(event.getSource())) {
 						f = (float) MainConfig.BaseMagicAttackPercentage;
@@ -390,7 +390,7 @@ public class EntityAboutEvent {
 				}
 			}
 			else {
-				if (MainConfig.HasDamageCap.contains(boss.getEncodeId())) {
+				if (MainConfig.HasDamageCap.contains(boss.getEncodeId()) || EntityAndItemFind.isLegendary(boss)) {
 					if (damage > (float) MainConfig.BaseDamageCap / 100 * boss.getMaxHealth()) {
 						damage = (float) MainConfig.BaseDamageCap / 100 * boss.getMaxHealth();
 					}
@@ -415,12 +415,13 @@ public class EntityAboutEvent {
 				}
 			}
 			else {
-				if (MainConfig.HasDamageCap.contains(boss.getEncodeId())) {
+				if (MainConfig.HasDamageCap.contains(boss.getEncodeId()) || EntityAndItemFind.isLegendary(boss)) {
 					if (damage > (float) MainConfig.BaseDamageCap / 100 * boss.getMaxHealth()) {
 						damage = (float) MainConfig.BaseDamageCap / 100 * boss.getMaxHealth();
 					}
 				}
 			}
 		}
+		event.setAmount(damage);
 	}
 }

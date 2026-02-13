@@ -384,6 +384,9 @@
   "message.jerotes.change_control_steering_type_0": "Steering Control Mode: Biew",
   "message.jerotes.change_control_steering_type_1": "Steering Control Mode: Key",
 
+  "message.jerotes.legend_true": "You Have Ascended to a Legendary Being",
+  "message.jerotes.legend_false": "You Have Lost Your Legendary Form",
+
   "key.jerotes.main_spell_use": "Main Spell Use",
   "key.jerotes.add_spell_use": "Add Spell Use",
   "key.jerotes.change_control_combat_type": "Change Control Combat Type",

@@ -6,6 +6,7 @@ import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypeTags;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
+import com.jerotes.jerotes.network.JerotesPlayerData;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.warden.Warden;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TridentItem;
@@ -48,6 +50,8 @@ public class EntityAndItemFind {
 	public static boolean isLegendary(Entity entity) {
 		if (entity instanceof JerotesEntity jerotes && jerotes.isLegendary())
 			return true;
+		if (entity instanceof Player player && player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).IsLegend)
+			return true;
 		return entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:legendary")));
 	}
 	//是否免疫特殊击退
@@ -69,8 +73,8 @@ public class EntityAndItemFind {
 	public static boolean targetJavelinWeapon(ItemStack javelin) {
 		return javelin.getItem() instanceof TridentItem || javelin.is(ItemTags.create(new ResourceLocation("forge:tools/tridents")));
 	}
-	//选择灵奴火把
-	public static boolean targetSpirveTorch(ItemStack torch) {
+	//选择火把
+	public static boolean targetTorch(ItemStack torch) {
 		return torch.is(ItemTags.create(new ResourceLocation("jerotes:torchs")));
 	}
 	//是否震撼免疫

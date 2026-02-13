@@ -93,7 +93,7 @@ public class JerotesRangedThrowAttackGoal<T extends Mob & UseThrowEntity> extend
         this.seeTime = bl ? ++this.seeTime : 0;
         Vec3 vec = LandRandomPos.getPosAway((PathfinderMob) this.mob, 30, 15, this.target.position());
         if (vec != null && this.mob.distanceTo(this.target) < 4) {
-            mob.getNavigation().moveTo(vec.x, vec.y, vec.z, 1.5d);
+            mob.getNavigation().moveTo(vec.x, vec.y, vec.z, 1.05d);
         }
         this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
         if (--this.attackTime == 0) {

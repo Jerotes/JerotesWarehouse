@@ -50,7 +50,7 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 	@Nullable
 	private IntOpenHashSet piercingIgnoreEntityIds;
 	@Nullable
-	private List<Entity> piercedAndKilledEntities;
+	public List<Entity> piercedAndKilledEntities;
 	public BaseJavelinEntity(EntityType<? extends AbstractArrow> entityType, Level level, ItemStack itemStack, float damages) {
 		super(entityType, level, itemStack);
 		damage = damages;
@@ -190,7 +190,6 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 		}
 		super.tick();
 	}
-
 	protected boolean canHitEntity(Entity p_36743_) {
 		if (this.getOwner() != null && p_36743_ instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity)) {
 			return false;

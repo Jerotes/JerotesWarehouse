@@ -474,6 +474,9 @@ public class MobInventoryGUIScreen extends AbstractContainerScreen<MobInventoryG
                     if (EntityAndItemFind.isBoss(livingEntity.getType()) || livingEntity instanceof BossEntity) {
                         tooltip.add(Component.translatable("message.jerotes.boss").withStyle(ChatFormatting.DARK_PURPLE));
                     }
+                    if (EntityAndItemFind.isLegendary(livingEntity)) {
+                        tooltip.add(Component.translatable("boss.jerotes.legendary").withStyle(ChatFormatting.GOLD));
+                    }
                     List<String> stringList = EntityFactionFind.getAllFindFaction(livingEntity);
                     for (String stringType : stringList) {
                         if (stringType == null) continue;

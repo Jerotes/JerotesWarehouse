@@ -97,7 +97,7 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 	public static AttributeSupplier.Builder createAttributes() {
 		AttributeSupplier.Builder builder = Mob.createMobAttributes();
 		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.25D);
-		builder = builder.add(Attributes.MAX_HEALTH, 15.0F);
+		builder = builder.add(Attributes.MAX_HEALTH, 30.0F);
 		builder = builder.add(Attributes.JUMP_STRENGTH, 0.4F);
 		builder = builder.add(Attributes.ATTACK_DAMAGE, 4);
 		builder = builder.add(Attributes.FOLLOW_RANGE, 20);
