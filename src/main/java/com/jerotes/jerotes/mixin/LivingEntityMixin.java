@@ -9,9 +9,14 @@ import com.jerotes.jerotes.item.Interface.MeleeItem;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.jerotes.jerotes.network.JerotesSpearRushAttackPacket;
 import com.jerotes.jerotes.network.PacketHandler;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -35,8 +40,17 @@ import java.util.Objects;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements JerotesChangeLivingEntity {
+    private static final EntityDataAccessor<Boolean> IS_TRUE_INVISIBLE_JEROTES = SynchedEntityData.defineId(LivingEntityMixin.class, EntityDataSerializers.BOOLEAN);
+
     protected LivingEntityMixin(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public boolean isTrueInvisibleJerotes() {
+        return this.getEntityData().get(IS_TRUE_INVISIBLE_JEROTES);
+    }
+    public void setTrueInvisibleJerotes(boolean bl) {
+        this.getEntityData().set(IS_TRUE_INVISIBLE_JEROTES, bl);
     }
 
     @Shadow public abstract boolean hasEffect(MobEffect p_21024_);
@@ -54,6 +68,31 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     @Shadow protected ItemStack useItem;
 
     @Shadow public abstract ItemStack getMainHandItem();
+
+
+    @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
+    private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
+        compoundTag.putBoolean("IsTrueInvisibleJerotes", this.isTrueInvisibleJerotes());
+    }
+    @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
+    private void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
+        this.setTrueInvisibleJerotes(compoundTag.getBoolean("IsTrueInvisibleJerotes"));
+    }
+    @Inject(method = "defineSynchedData", at = @At("TAIL"))
+    protected void defineSynchedData(CallbackInfo ci) {
+        this.getEntityData().define(IS_TRUE_INVISIBLE_JEROTES, false);
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    protected void tick(CallbackInfo ci) {
+        if (this.isInvisible()) {
+            boolean trueInvisible = EntityAndItemFind.isTrueInvisibleBuff(this);
+            if (entityData.get(IS_TRUE_INVISIBLE_JEROTES) != trueInvisible) {
+                if (!this.level().isClientSide())
+                    this.entityData.set(IS_TRUE_INVISIBLE_JEROTES, trueInvisible);
+            }
+        }
+    }
 
     public boolean canAddPassengerJerotes(Entity entity) {
         return this.canAddPassenger(entity);
@@ -121,18 +160,6 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
 //                        getUsedItemHand() == InteractionHand.MAIN_HAND ?
 //                                EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
                 PacketHandler.sendToServer(new JerotesSpearRushAttackPacket(itemStack, getUseItemRemainingTicks(), ((LivingEntity)(Object)this).getId()));
-            }
-        }
-    }
-
-    @Inject(method = "getVisibilityPercent", at = @At("HEAD"), cancellable = true)
-    private void getVisibilityPercent(Entity entity, CallbackInfoReturnable<Double> cir) {
-        if (entity != null) {
-            if (this.hasEffect(JerotesMobEffects.CLOAKING.get())) {
-                int cloakingLevel = (Objects.requireNonNull(this.getEffect(JerotesMobEffects.CLOAKING.get())).getAmplifier() + 1);
-                if (this.distanceTo(entity) > 48 - cloakingLevel * 8) {
-                    cir.setReturnValue(0d);
-                }
             }
         }
     }

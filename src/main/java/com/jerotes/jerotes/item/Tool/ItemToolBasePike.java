@@ -292,8 +292,10 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
     public void attack(LivingEntity livingEntity, EquipmentSlot equipmentSlot) {
         float f = livingEntity.getAttribute(Attributes.ATTACK_DAMAGE) != null ? (float) livingEntity.getAttributeValue(Attributes.ATTACK_DAMAGE) : 0f;
         boolean bl = false;
+        int order = 0;
         for (EntityHitResult entityHitResult : getHitEntitiesAlong(livingEntity, this, hitboxMargin, entity -> ItemToolBaseSpearBase.canHitEntity(livingEntity, entity))) {
-            bl |= stabAttack(equipmentSlot, entityHitResult.getEntity(), f, true, true, true, livingEntity);
+            bl |= stabAttack(equipmentSlot, entityHitResult.getEntity(), f, true, true, true, livingEntity, order);
+            order ++;
         }
         if (livingEntity instanceof ServerPlayer serverPlayer) {
             serverPlayer.resetAttackStrengthTicker();
@@ -362,7 +364,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
         }
     }
 
-    public boolean stabAttack(EquipmentSlot equipmentSlot, Entity entity, float f, boolean bl, boolean bl2, boolean bl3, LivingEntity self) {
+    public boolean stabAttack(EquipmentSlot equipmentSlot, Entity entity, float f, boolean bl, boolean bl2, boolean bl3, LivingEntity self, int order) {
 
         //相对速度
         Vec3 attackerVelocity = getMotion(self).multiply(selfSpeedDamage, selfSpeedDamage, selfSpeedDamage);
@@ -462,6 +464,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
             if (equipment.isDamageableItem() && equipment.getDamageValue() > equipment.getMaxDamage() * 0.8) {
                 recoil *= 1.5;
             }
+            recoil *= 1 - Math.min(0.9, order * 0.15);
             //反作用力 攻击反方向 轻微的水平减速，保持垂直运动
             recoil = Math.min(recoil, 1.0);
             Vec3 recoilVector = defenseDirection.scale(-recoil * 0.25);

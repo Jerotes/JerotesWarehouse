@@ -1544,6 +1544,11 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 
 	public void setSkinName(String string) {
 		this.getEntityData().set(SKIN_NAME, string);
+		if (!this.level().isClientSide()) {
+			if (!StringUtil.isNullOrEmpty(string)) {
+				setUsername(string);
+			}
+		}
 	}
 	public String getSkinName() {
 		return this.getEntityData().get(SKIN_NAME);

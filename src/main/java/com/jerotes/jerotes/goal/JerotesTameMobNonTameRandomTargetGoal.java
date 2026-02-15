@@ -22,6 +22,10 @@ public class JerotesTameMobNonTameRandomTargetGoal<T extends LivingEntity> exten
         super((Mob) tameMob, class_, 10, bl, false, predicate);
         this.tamableMob = tameMob;
     }
+    public JerotesTameMobNonTameRandomTargetGoal(TameMobEntity tameMob, Class<T> p_26054_, int p_26055_, boolean p_26056_, boolean p_26057_, @Nullable Predicate<LivingEntity> p_26058_) {
+        super((Mob) tameMob, p_26054_, p_26055_, p_26056_, p_26057_, p_26058_);
+        this.tamableMob = tameMob;
+    }
 
     @Override
     public boolean canUse() {

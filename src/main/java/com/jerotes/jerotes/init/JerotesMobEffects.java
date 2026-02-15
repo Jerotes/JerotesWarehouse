@@ -50,6 +50,7 @@ public class JerotesMobEffects {
 	public static final RegistryObject<MobEffect> FREEZE_ABSORPTION = REGISTRY.register("freeze_absorption", () -> new FreezeAbsorptionMobEffect());
 	public static final RegistryObject<MobEffect> LIGHTNING_ABSORPTION = REGISTRY.register("lightning_absorption", () -> new LightningAbsorptionMobEffect());
 	public static final RegistryObject<MobEffect> INVISIBLE_PASSAGE = REGISTRY.register("invisible_passage", () -> new InvisiblePassageMobEffect());
+	public static final RegistryObject<MobEffect> MIRROR_IMAGE = REGISTRY.register("mirror_image", () -> new MirrorImageMobEffect());
 	public static final RegistryObject<MobEffect> COUNTERSPELL = REGISTRY.register("counterspell", () -> new CounterspellMobEffect());
 	public static final RegistryObject<MobEffect> FOG = REGISTRY.register("fog", () -> new FogMobEffect());
 	public static final RegistryObject<MobEffect> ANALYTICAL_EYE = REGISTRY.register("analytical_eye", () -> new AnalyticalEyeMobEffect());

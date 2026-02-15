@@ -200,6 +200,10 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 		return true;
 	}
 	@Override
+	public boolean hurtByEnderPearlAsPlayer() {
+		return true;
+	}
+	@Override
 	//使用盾牌和双手武器
 	public void useBlockingItem(Mob mob) {
 		if (!mob.level().isClientSide()) {
@@ -249,10 +253,10 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 	public float meleeOrRangeDistance() {
 		//无法触及
 		if (canNotAttackTargetTick >= 240) {
-			return 1f;
+			return 2f;
 		}
 		//无法触及
-		double d = Math.max(0.5f, this.getAttributeValue(ForgeMod.ENTITY_REACH.get()) - 2) + 2;
+		double d = Math.max(2f, this.getAttributeValue(ForgeMod.ENTITY_REACH.get()) - 1) + 4;
 		return (float) d;
 	}
 	@Override

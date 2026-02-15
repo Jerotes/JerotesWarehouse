@@ -2,6 +2,7 @@ package com.jerotes.jerotes.client.layer;
 
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesRenderType;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,11 @@ public class TruesightLayer<T extends Entity, M extends EntityModel<T>> extends 
         if (player == null || !player.hasEffect(JerotesMobEffects.TRUESIGHT.get())) {
             return;
         }
+
         int levels = Objects.requireNonNull(player.getEffect(JerotesMobEffects.TRUESIGHT.get())).getAmplifier();
+        if (EntityAndItemFind.getTrueInvisibleLevel(t) > (levels + 1) / 2f) {
+            return;
+        }
         if (levels % 2 == 0) {
             if (!t.isInvisible()) {
                 return;
@@ -42,8 +47,7 @@ public class TruesightLayer<T extends Entity, M extends EntityModel<T>> extends 
             levels -= 1;
         }
 
-
-        if (Objects.requireNonNull(player.getEffect(JerotesMobEffects.TRUESIGHT.get())).getAmplifier() < 1 && !t.isInvisible()) {
+        if (Objects.requireNonNull(player.getEffect(JerotesMobEffects.TRUESIGHT.get())).getAmplifier() < 1 && !t.isInvisible() && player.hasLineOfSight(t)) {
             return;
         }
         if ((levels + 1) * 30 < player.distanceTo(t)) {

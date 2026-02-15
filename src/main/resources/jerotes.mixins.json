@@ -32,6 +32,7 @@
     "SnowballMixin",
     "SpiderMixin",
     "StrayMixin",
+    "ThrownEnderPearlMixin",
     "WitherBossMixin"
   ],
   "client": [

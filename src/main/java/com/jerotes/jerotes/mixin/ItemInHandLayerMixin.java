@@ -4,6 +4,7 @@ import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -36,7 +37,7 @@ public abstract class ItemInHandLayerMixin<T extends LivingEntity, M extends Ent
 
     @Inject(method = "render*", at = @At("HEAD"), cancellable = true)
     public void render(PoseStack var1, MultiBufferSource var2, int var3, T var4, float var5, float var6, float var7, float var8, float var9, float var10, CallbackInfo ci) {
-        if (var4.hasEffect(JerotesMobEffects.CLOAKING.get()) && var4.isShiftKeyDown()) {
+        if (EntityAndItemFind.isTrueInvisible(var4)) {
             ci.cancel();
         }
     }

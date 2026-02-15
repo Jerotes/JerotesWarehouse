@@ -22,6 +22,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Zombie;
@@ -126,6 +128,9 @@ public class EntityAboutEvent {
 		if (lookingEntity == null || self == null)
 			return;
 		{
+			if (EntityAndItemFind.isTrueInvisible(self)) {
+				event.modifyVisibility(event.getVisibilityModifier()/2);
+			}
 			if (self.hasEffect(JerotesMobEffects.CLOAKING.get())) {
 				int cloakingLevel = (Objects.requireNonNull(self.getEffect(JerotesMobEffects.CLOAKING.get())).getAmplifier() + 1);
 				if (self.distanceTo(lookingEntity) > 48 - cloakingLevel * 8) {
@@ -279,15 +284,30 @@ public class EntityAboutEvent {
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_y");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_z");
 		}
+		else {
+			if (!entity.level().isClientSide()) {
+				entity.addEffect(new MobEffectInstance(JerotesMobEffects.MIRROR_IMAGE.get(), 5, 0, false, false));
+			}
+		}
 		if (entity.getPersistentData().get("jerotes_has_mirror_image_2_tick") == null && entity.getPersistentData().getDouble("jerotes_has_mirror_image_2_tick") <= 0) {
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_2_x");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_2_y");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_2_z");
 		}
+		else {
+			if (!entity.level().isClientSide()) {
+				entity.addEffect(new MobEffectInstance(JerotesMobEffects.MIRROR_IMAGE.get(), 5, 0, false, false));
+			}
+		}
 		if (entity.getPersistentData().get("jerotes_has_mirror_image_3_tick") == null && entity.getPersistentData().getDouble("jerotes_has_mirror_image_3_tick") <= 0) {
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_3_x");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_3_y");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_3_z");
+		}
+		else {
+			if (!entity.level().isClientSide()) {
+				entity.addEffect(new MobEffectInstance(JerotesMobEffects.MIRROR_IMAGE.get(), 5, 0, false, false));
+			}
 		}
 		//伤害间隔
 		if (entity.getPersistentData().getFloat("jerotes_boss_hurt_cooldown") > 0) {

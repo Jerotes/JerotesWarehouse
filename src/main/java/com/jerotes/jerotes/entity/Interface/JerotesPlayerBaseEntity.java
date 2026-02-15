@@ -27,6 +27,9 @@ public interface JerotesPlayerBaseEntity {
     default boolean attackDamageSourceAsPlayer() {
         return false;
     }
+    default boolean hurtByEnderPearlAsPlayer() {
+        return false;
+    }
     default Abilities getAbilities() {
         return null;
     }

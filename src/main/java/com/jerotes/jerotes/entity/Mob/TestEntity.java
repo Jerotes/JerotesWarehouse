@@ -45,6 +45,12 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 
 	public TestEntity(EntityType<? extends TestEntity> type, Level world) {
 		super(type, world);
+		this.armorDropChances[EquipmentSlot.HEAD.getIndex()] = 2f;
+		this.armorDropChances[EquipmentSlot.CHEST.getIndex()] = 2f;
+		this.armorDropChances[EquipmentSlot.LEGS.getIndex()] = 2f;
+		this.armorDropChances[EquipmentSlot.FEET.getIndex()] = 2f;
+		this.handDropChances[EquipmentSlot.MAINHAND.getIndex()] = 2f;
+		this.handDropChances[EquipmentSlot.OFFHAND.getIndex()] = 2f;
 		this.fixupDimensions();
 	}
 

@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.init.JerotesMobEffects;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
@@ -25,7 +26,7 @@ public abstract class CustomHeadLayerMixin<T extends LivingEntity, M extends Ent
 
     @Inject(method = "render*", at = @At("HEAD"), cancellable = true)
     public void render(PoseStack var1, MultiBufferSource var2, int var3, T t, float var5, float var6, float var7, float var8, float var9, float var10, CallbackInfo ci) {
-        if (t.hasEffect(JerotesMobEffects.CLOAKING.get()) && t.isShiftKeyDown()) {
+        if (EntityAndItemFind.isTrueInvisible(t)) {
             ci.cancel();
         }
     }

@@ -7,6 +7,7 @@ import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Interface.ItemBaseWarBeastArmor;
 import com.jerotes.jerotes.item.Interface.ItemBeastArmor;
 import com.jerotes.jerotes.item.ItemWarBeastArmor;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -30,7 +31,7 @@ public class JerotesHorseArmorLayer extends RenderLayer<JerotesHorseEntity, Mode
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int n, JerotesHorseEntity horse, float f, float f2, float f3, float f4, float f5, float f6) {
-        if (horse.hasEffect(JerotesMobEffects.CLOAKING.get()) && horse.isShiftKeyDown()) {
+        if (EntityAndItemFind.isTrueInvisible(horse)) {
             return;
         }
         float f7;

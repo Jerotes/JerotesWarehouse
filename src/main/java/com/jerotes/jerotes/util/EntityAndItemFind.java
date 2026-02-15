@@ -1,11 +1,13 @@
 package com.jerotes.jerotes.util;
 
+import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypeTags;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
+import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +29,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EntityAndItemFind {
@@ -135,13 +138,49 @@ public class EntityAndItemFind {
 		});
 		return can.get() || targetGlowing(livingEntity);
 	}
+	//是否真实隐身
+	public static boolean isTrueInvisible(Entity entity) {
+		return entity instanceof JerotesChangeLivingEntity jerotesChangeLivingEntity && jerotesChangeLivingEntity.isTrueInvisibleJerotes();
+	}
+	public static boolean isTrueInvisibleBuff(Entity entity) {
+		if (entity instanceof LivingEntity livingEntity) {
+			if (livingEntity.hasEffect(JerotesMobEffects.CLOAKING.get()) && livingEntity.isCrouching()) {
+				return true;
+			}
+			if (livingEntity.hasEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get())) {
+				return true;
+			}
+			if (livingEntity.hasEffect(JerotesMobEffects.MIRROR_IMAGE.get())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public static int getTrueInvisibleLevel(Entity entity) {
+		int level = 0;
+		if (entity instanceof LivingEntity livingEntity) {
+			if (livingEntity.hasEffect(JerotesMobEffects.CLOAKING.get()) && livingEntity.isCrouching()) {
+				if (level < Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.CLOAKING.get())).getAmplifier() + 1)
+					level = Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.CLOAKING.get())).getAmplifier() + 1;
+			}
+			if (livingEntity.hasEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get())) {
+				if (level < Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get())).getAmplifier() + 1)
+					level = Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get())).getAmplifier() + 1;
+			}
+			if (livingEntity.hasEffect(JerotesMobEffects.MIRROR_IMAGE.get())) {
+				if (level < Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.MIRROR_IMAGE.get())).getAmplifier() + 1)
+					level = Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.MIRROR_IMAGE.get())).getAmplifier() + 1;
+			}
+		}
+		return level;
+	}
 
 
-
-	//是否目盲
+	//是否更好的附魔
 	public static boolean isEnchantLevelBetter(ItemStack self, ItemStack other) {
 		return getTotalEnchantmentLevel(self) > getTotalEnchantmentLevel(other);
 	}
+
 
 	//附魔等级
 	public static float getTotalEnchantmentLevel(ItemStack stack) {

@@ -212,6 +212,8 @@
   "effect.jerotes.lightning_absorption.description": "吸收闪电伤害。",
   "effect.jerotes.invisible_passage": "隐形通道",
   "effect.jerotes.invisible_passage.description": "进入会因攻击或施法而结束的隐身状态。",
+  "effect.jerotes.mirror_image": "镜影术",
+  "effect.jerotes.mirror_image.description": "召唤三个与自己一模一样的幻影。",
   "effect.jerotes.counterspell": "法术反制",
   "effect.jerotes.counterspell.description": "反制法术。",
   "effect.jerotes.fog": "雾气",

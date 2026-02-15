@@ -212,6 +212,8 @@
   "effect.jerotes.lightning_absorption.description": "Absorb Lightning damage.",
   "effect.jerotes.invisible_passage": "Invisible Passage",
   "effect.jerotes.invisible_passage.description": "Enter a stealth state that will end due to attack or casting spells.",
+  "effect.jerotes.mirror_image": "Mirror Image",
+  "effect.jerotes.mirror_image.description": "Summon three phantoms like self.",
   "effect.jerotes.counterspell": "Counterspell",
   "effect.jerotes.counterspell.description": "Counter Spell.",
   "effect.jerotes.fog": "Fog",

@@ -29,6 +29,13 @@
       }
     }
   },
+  "requirements": [
+    [
+      "grannysfarewellgift_self",
+      "grannysfarewellgift_monster",
+      "grannysfarewellgift_item"
+    ]
+  ],
   "rewards": {
     "experience": 100,
     "recipes": [
