@@ -159,9 +159,6 @@ public class ItemToolBaseJavelin extends TridentItem implements ItemSpecialEffec
 		return 2.5F;
 	}
 
-	public Projectile JerotesThrownJavelin(LivingEntity livingEntity, ItemStack itemStack) {
-		return null;
-	}
 
 	public boolean JerotesNormalThrownJavelin() {
 		return true;
@@ -171,9 +168,19 @@ public class ItemToolBaseJavelin extends TridentItem implements ItemSpecialEffec
 		return UseAnim.SPEAR;
 	}
 
+	public float getThrowingTime() {
+		return throwTime;
+	}
+	public Projectile JerotesThrownJavelin(@Nullable LivingEntity livingEntity, ItemStack itemStack) {
+		return null;
+	}
+	public float getThrowingDamage() {
+		return 0f;
+	}
+
 	@Override
 	public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
-		list.add(Component.translatable("item.jerotes.javelin").withStyle(ChatFormatting.YELLOW));
+		list.add(Component.translatable("item.jerotes.javelin", getThrowingTime() / 20f, getThrowingDamage()).withStyle(ChatFormatting.YELLOW));
 		super.appendHoverText(itemStack, level, list, tooltipFlag);
 	}
 }

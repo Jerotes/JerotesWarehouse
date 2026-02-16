@@ -169,7 +169,7 @@ public class CameraEvent {
 				//图标
 				SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).MainSpellTarget);
 				MagicSpell magicSpell = SpellListByString.getSpellEasy(spellTypeInterface);
-				ResourceLocation resourceLocation = new ResourceLocation(magicSpell.getSpellModId(), "textures/particle/" + magicSpell.getSpellId() + "_display.png");
+				ResourceLocation resourceLocation = magicSpell.getDisplayResourceLocation();
 				event.getGuiGraphics().blit(resourceLocation, widthAdd + 2, h - 22 + heightAdd + 2, 0, 0, 18, 18, 18, 18);
 				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/main_spell_overlay.png"), widthAdd, h - 22 + heightAdd, 0, 0, 22, 22, 22, 22);
 				//背景
@@ -194,7 +194,7 @@ public class CameraEvent {
 				//图标
 				SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTarget);
 				MagicSpell magicSpell = SpellListByString.getSpellEasy(spellTypeInterface);
-				ResourceLocation resourceLocation = new ResourceLocation(magicSpell.getSpellModId(), "textures/particle/" + magicSpell.getSpellId() + "_display.png");
+				ResourceLocation resourceLocation = magicSpell.getDisplayResourceLocation();
 				event.getGuiGraphics().blit(resourceLocation, widthAdd + 22 + 7 + 2, h - 22 + heightAdd + 2, 0, 0, 18, 18, 18, 18);
 				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/add_spell_overlay.png"), widthAdd + 22 + 7, h - 22 + heightAdd, 0, 0, 22, 22, 22, 22);
 				//背景

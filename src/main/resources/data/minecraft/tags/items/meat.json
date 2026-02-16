@@ -11,6 +11,10 @@
     "minecraft:mutton",
     "minecraft:porkchop",
     "minecraft:rabbit",
-    "minecraft:rotten_flesh"
+    "minecraft:rotten_flesh",
+
+    "#jerotes:raw_meats",
+    "#jerotes:fat_meats",
+    "#jerotes:cooked_meats"
   ]
 }

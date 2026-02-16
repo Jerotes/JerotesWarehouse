@@ -28,6 +28,9 @@ public class HealJavelin extends ItemToolBaseJavelin {
 	public BaseJavelinEntity JerotesThrownJavelin(LivingEntity livingEntity, ItemStack itemStack) {
 		return new ThrownHealJavelinEntity(livingEntity.level(), livingEntity, itemStack);
 	}
+	public float getThrowingDamage() {
+		return 0.0f;
+	}
 
 	@Override
 	public void attackUse(Entity self, Entity attackTo) {

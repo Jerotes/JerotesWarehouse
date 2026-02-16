@@ -24,6 +24,9 @@ public class TransportJavelin extends ItemToolBaseJavelin {
 	public BaseJavelinEntity JerotesThrownJavelin(LivingEntity livingEntity, ItemStack itemStack) {
 		return new ThrownTransportJavelinEntity(livingEntity.level(), livingEntity, itemStack);
 	}
+	public float getThrowingDamage() {
+		return 3.0f;
+	}
 
 	@Override
 	public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {

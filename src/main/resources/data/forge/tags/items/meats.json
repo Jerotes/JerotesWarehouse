@@ -1,8 +1,6 @@
 {
   "replace": false,
   "values": [
-    "#minecraft:meat",
-
     "#jerotes:raw_meats",
     "#jerotes:fat_meats",
     "#jerotes:cooked_meats"

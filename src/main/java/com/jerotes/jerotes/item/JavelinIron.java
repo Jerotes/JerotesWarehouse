@@ -17,6 +17,9 @@ public class JavelinIron extends ItemToolBaseJavelin {
 	public BaseJavelinEntity JerotesThrownJavelin(LivingEntity livingEntity, ItemStack itemStack) {
 		return new ThrownJavelinIronEntity(livingEntity.level(), livingEntity, itemStack);
 	}
+	public float getThrowingDamage() {
+		return 6.0f;
+	}
 
 	@Override
 	public boolean isValidRepairItem(ItemStack itemStack, ItemStack itemStack2) {

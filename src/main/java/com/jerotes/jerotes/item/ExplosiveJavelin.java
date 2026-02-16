@@ -25,6 +25,9 @@ public class ExplosiveJavelin extends ItemToolBaseJavelin {
 	public BaseJavelinEntity JerotesThrownJavelin(LivingEntity livingEntity, ItemStack itemStack) {
 		return new ThrownExplosiveJavelinEntity(livingEntity.level(), livingEntity, itemStack);
 	}
+	public float getThrowingDamage() {
+		return 3.0f;
+	}
 
 	@Override
 	public void attackUse(Entity self, Entity attackTo) {

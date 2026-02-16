@@ -67,6 +67,15 @@ public class ItemToolBaseCrossbow extends CrossbowItem implements ItemSpecialEff
     public float getShootingPower(ItemStack itemStack) {
         return containsChargedProjectile(itemStack, Items.FIREWORK_ROCKET) ? 1.6F : 3.15F;
     }
+    public float getArrowInaccuracy() {
+        return 1.0F;
+    }
+    @Override
+    public int getUseDuration(ItemStack itemStack) {
+        if (itemStack.getItem() instanceof ItemToolBaseCrossbow firepowerPourerCrossbow)
+            return firepowerPourerCrossbow.getChargeDurations(itemStack) + 3;
+        return ItemToolBaseCrossbow.getChargeDuration(itemStack) + 3;
+    }
     public int getChargeDurations(ItemStack itemStack) {
         int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, itemStack);
         return i == 0 ? 25 : 25 - 5 * i;
@@ -83,7 +92,13 @@ public class ItemToolBaseCrossbow extends CrossbowItem implements ItemSpecialEff
         compoundTag.putInt("JerotesBullet", bl);
     }
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("item.jerotes.crossbow").withStyle(ChatFormatting.YELLOW));
+        list.add(Component.translatable("item.jerotes.crossbow",
+                getShootingPower(Items.ARROW.getDefaultInstance()),
+                getShootingPower(Items.FIREWORK_ROCKET.getDefaultInstance()),
+                getDefaultProjectileRange(),
+                getChargeDurations(itemStack)/20f,
+                getArrowInaccuracy()
+        ).withStyle(ChatFormatting.YELLOW));
         super.appendHoverText(itemStack, level, list, tooltipFlag);
     }
 }

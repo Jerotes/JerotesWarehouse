@@ -13,6 +13,7 @@ import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -233,6 +234,9 @@ public class MagicSpell {
 	}
 	public boolean mobUseInCombat() {
 		return true;
+	}
+	public ResourceLocation getDisplayResourceLocation() {
+		return new ResourceLocation(this.getSpellModId(), "textures/particle/" + this.getSpellId() + "_display.png");
 	}
 
 	public int playerUseCooldownTick(Player player) {

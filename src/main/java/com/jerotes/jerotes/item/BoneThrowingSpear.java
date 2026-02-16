@@ -70,6 +70,9 @@ public class BoneThrowingSpear {
 		public BaseJavelinEntity JerotesThrownJavelin(LivingEntity livingEntity, ItemStack itemStack) {
 			return new ThrownBoneThrowingSpearEntity(livingEntity.level(), livingEntity, itemStack);
 		}
+		public float getThrowingDamage() {
+			return 5.0f;
+		}
 
 		public Item getOtherMode() {
 			return JerotesItems.BONE_THROWING_SPEAR_OF_SPEAR.get();

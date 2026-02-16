@@ -80,8 +80,9 @@ public class ItemToolBaseBow extends BowItem implements ItemSpecialEffect {
 		}
 	}
 
+
 	public float getPowerForTimeJerotes(int n) {
-		float f = (float)n / 20.0f;
+		float f = (float)n / getMaxDrawDuration();
 		f = (f * f + f * 2.0f) / 3.0f;
 		if (f > 1.0f) {
 			f = 1.0f;
@@ -93,6 +94,13 @@ public class ItemToolBaseBow extends BowItem implements ItemSpecialEffect {
 	}
 	public float getArrowInaccuracy() {
 		return 1.0F;
+	}
+
+	public float getMaxDrawDuration() {
+		return 20.0F;
+	}
+	public int getDefaultProjectileRange() {
+		return 15;
 	}
 
 	//发射特殊非箭弹药
@@ -114,7 +122,12 @@ public class ItemToolBaseBow extends BowItem implements ItemSpecialEffect {
 	}
 	@Override
 	public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
-		list.add(Component.translatable("item.jerotes.bow").withStyle(ChatFormatting.YELLOW));
+		list.add(Component.translatable("item.jerotes.bow",
+				getArrowSpeed(1),
+				getDefaultProjectileRange(),
+				getMaxDrawDuration()/20f,
+				getArrowInaccuracy()
+		).withStyle(ChatFormatting.YELLOW));
 		super.appendHoverText(itemStack, level, list, tooltipFlag);
 	}
 }

@@ -162,7 +162,7 @@ public abstract class CrossbowItemMixin extends ProjectileWeaponItem {
         }
         if (itemStack.getItem() instanceof ItemToolBaseCrossbow itemToolBaseCrossbow) {
             if (isCharged(itemStack)) {
-                performShooting(level, player, interactionHand, itemStack, itemToolBaseCrossbow.getShootingPower(itemStack), 1.0f);
+                performShooting(level, player, interactionHand, itemStack, itemToolBaseCrossbow.getShootingPower(itemStack), itemToolBaseCrossbow.getArrowInaccuracy());
                 if (ItemToolBaseCrossbow.getBullet(itemStack) > 1) {
                     ItemToolBaseCrossbow.setBullet(itemStack, ItemToolBaseCrossbow.getBullet(itemStack) - 1);
                     int n = itemToolBaseCrossbow.mobUseCooldownTick(itemStack);
