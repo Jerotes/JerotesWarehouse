@@ -19,11 +19,12 @@ import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Zombie;
@@ -82,8 +83,7 @@ public class EntityAboutEvent {
 				livingEntity2 instanceof JerotesEntity jerotes2 && jerotes2.isHateFaction(livingEntity);
 		if (enmey) {
 			event.setEnemy(true);
-			return;
-		}
+        }
 	}
 
 
@@ -248,23 +248,23 @@ public class EntityAboutEvent {
 	public static void GoalAdd(EntityJoinLevelEvent event) {
 		Entity entity = event.getEntity();
 		if (entity instanceof PathfinderMob pathfinderMob) {
-			pathfinderMob.goalSelector.addGoal(1, new JerotesShockAbackGoal(pathfinderMob, 1.2));
-			if (entity instanceof Zombie || entity.getType() == EntityType.PIGLIN || entity.getType() == EntityType.PIGLIN_BRUTE) {
-				pathfinderMob.goalSelector.addGoal(1, new JerotesSpearUseGoal<>(pathfinderMob, 1.0, 1.0, 10.0f, 2.0f, false));
+			//威慑
+			if (!EntityAndItemFind.isAbackAwayImmune(pathfinderMob.getType()) && MainConfig.MobHasShockAback) {
+				pathfinderMob.goalSelector.addGoal(1, new JerotesShockAbackGoal(pathfinderMob, 1.2));
+			}
+			//矛
+			if (pathfinderMob instanceof Zombie && MainConfig.MobManuallyControlCombatCameraChange || pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_spears")))) {
+				pathfinderMob.goalSelector.addGoal(1, new JerotesSpearUseGoal<>(pathfinderMob, 1.0, 1.0, 10.0f, 2.0f, !pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_spears_and_can_not_normal_attack")))));
+			}
+			//长枪
+			if (pathfinderMob instanceof Zombie && MainConfig.MobManuallyControlCombatCameraChange || pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_pikes")))) {
 				pathfinderMob.goalSelector.addGoal(1, new JerotesPikeUseGoal(pathfinderMob, 1.2, true));
 			}
-		}
-
-		if (entity instanceof PathfinderMob pathfinderMob && entity instanceof UseBowEntity useBowEntity && !useBowEntity.justBow()) {
-			if (ModList.get().isLoaded("tacz")) {
-				pathfinderMob.goalSelector.addGoal(useBowEntity.getBowUsePriority(), new TaczGunAttackGoal<>(pathfinderMob, 1.0D, 32.0f));
-			}
-		}
-		if (entity instanceof TestEntity pathfinderMob) {
-			pathfinderMob.goalSelector.addGoal(1, new JerotesPikeUseGoal(pathfinderMob, 1.2, true));
-			pathfinderMob.goalSelector.addGoal(1, new JerotesSpearUseGoal<>(pathfinderMob, 1.4, 1.4, 10.0f, 2.0f, false));
-			if (ModList.get().isLoaded("tacz")) {
-				pathfinderMob.goalSelector.addGoal(1, new TaczGunAttackGoal<>(pathfinderMob, 1.0D, 32.0f));
+			//tacz
+			if (entity instanceof UseBowEntity useBowEntity && !useBowEntity.justBow()) {
+				if (ModList.get().isLoaded("tacz")) {
+					pathfinderMob.goalSelector.addGoal(useBowEntity.getBowUsePriority(), new TaczGunAttackGoal<>(pathfinderMob, 1.0D, 32.0f));
+				}
 			}
 		}
 	}

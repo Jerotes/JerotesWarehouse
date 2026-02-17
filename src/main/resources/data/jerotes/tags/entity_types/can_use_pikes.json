@@ -1,0 +1,12 @@
+{
+  "__comment": "可使用长枪的非全能生物生物类型（全能生物无需此tag）",
+  "replace": false,
+  "values": [
+    "jerotes:test",
+    "#minecraft:zombies",
+    "minecraft:husk",
+    "minecraft:drowned",
+    "minecraft:piglin",
+    "minecraft:piglin_brute"
+  ]
+}

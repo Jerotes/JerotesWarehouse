@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Interface.UseShieldEntity;
 import com.jerotes.jerotes.goal.JerotesMoveToGoal;
+import com.jerotes.jerotes.goal.TaczGunAttackGoal;
 import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.util.Main;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fml.ModList;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -65,6 +67,9 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 
 	@Override
 	protected void registerGoals() {
+		if (ModList.get().isLoaded("tacz")) {
+			this.goalSelector.addGoal(1, new TaczGunAttackGoal<>(pathfinderMob, 1.0D, 32.0f));
+		}
 		this.goalSelector.addGoal(1, new JerotesMoveToGoal(TestEntity.this, 1.0f, true) {
 			@Override
 			public boolean canUse() {
@@ -72,6 +77,7 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 			}
 		});
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this, new Class[0]));
+
 	}
 
 	protected Vector3f getPassengerAttachmentPoint(Entity entity, EntityDimensions entityDimensions, float f) {
