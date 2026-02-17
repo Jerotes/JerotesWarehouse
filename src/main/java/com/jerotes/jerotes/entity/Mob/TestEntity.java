@@ -68,7 +68,7 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 	@Override
 	protected void registerGoals() {
 		if (ModList.get().isLoaded("tacz")) {
-			this.goalSelector.addGoal(1, new TaczGunAttackGoal<>(pathfinderMob, 1.0D, 32.0f));
+			this.goalSelector.addGoal(1, new TaczGunAttackGoal<>(this, 1.0D, 32.0f));
 		}
 		this.goalSelector.addGoal(1, new JerotesMoveToGoal(TestEntity.this, 1.0f, true) {
 			@Override
