@@ -2,7 +2,10 @@
   "__comment": "可使用矛的非全能生物生物类型（全能生物无需此tag），但此类中的生物并不会逃离时使用普通攻击",
   "replace": false,
   "values": [
-    "#minecraft:zombies",
+    {
+      "id": "#minecraft:zombies",
+      "required": false
+    },
     "minecraft:piglin",
     "minecraft:piglin_brute"
   ]

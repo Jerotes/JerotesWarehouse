@@ -41,10 +41,6 @@ public class ItemToolBaseThrowingSpearOfJavelin extends ItemToolBaseJavelin impl
         return super.use(level, player, interactionHand);
     }
 
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return super.canApplyAtEnchantingTable(stack, enchantment);
-    }
-
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
         list.add(Component.translatable("item.jerotes.throwing_spear").withStyle(ChatFormatting.YELLOW));

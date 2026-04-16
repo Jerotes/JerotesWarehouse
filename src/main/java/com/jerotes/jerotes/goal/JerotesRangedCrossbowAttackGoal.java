@@ -155,7 +155,7 @@ public class JerotesRangedCrossbowAttackGoal<T extends Mob & CrossbowAttackMob> 
             if (this.mob instanceof JerotesEntity jerotes) {
                 jerotes.setSprintingCooldown(10);
             }
-            if (this.mob.getDeltaMovement().x <= 0.2 && this.mob.getDeltaMovement().z <= 0.2)
+            if (this.mob.getDeltaMovement().x <= 0.25 && this.mob.getDeltaMovement().z <= 0.25)
                 this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(f3 *= f7 / f6, 0, f5 *= f7 / f6));
         }
 

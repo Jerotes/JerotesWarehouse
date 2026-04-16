@@ -32,6 +32,7 @@ public final class MainConfig {
     public static boolean RangeCanBreakBaseInGameRule;
     public static boolean MagicCanBreakBaseInGameRule;
     public static boolean SameFactionAvoidDamage;
+    public static boolean VanillaToolShowSpecialTooltip;
     public static boolean MobDestroyBlock;
     public static boolean TamedMobDestroyBlock;
     public static boolean MobSayQuestionMark;
@@ -85,6 +86,7 @@ public final class MainConfig {
         RangeCanBreakBaseInGameRule = COMMON.RangeCanBreakBaseInGameRule.get();
         MagicCanBreakBaseInGameRule = COMMON.MagicCanBreakBaseInGameRule.get();
         SameFactionAvoidDamage = COMMON.SameFactionAvoidDamage.get();
+        VanillaToolShowSpecialTooltip = COMMON.VanillaToolShowSpecialTooltip.get();
         MobSayQuestionMark = COMMON.MobSayQuestionMark.get();
         MobDestroyBlock = COMMON.MobDestroyBlock.get();
         TamedMobDestroyBlock = COMMON.TamedMobDestroyBlock.get();
@@ -94,7 +96,7 @@ public final class MainConfig {
         MobUseThrowShrinkItem = COMMON.MobUseThrowShrinkItem.get();
         MobUseOtherShrinkItem = COMMON.MobUseOtherShrinkItem.get();
         InventoryMobAboutItemstackInventoryTick = COMMON.InventoryMobAboutItemstackInventoryTick.get();
-                MobManuallyControlCombatCameraChange = COMMON.MobManuallyControlCombatCameraChange.get();
+        MobManuallyControlCombatCameraChange = COMMON.MobManuallyControlCombatCameraChange.get();
         ZombieCanUseSpearAndPikeWithoutTag = COMMON.ZombieCanUseSpearAndPikeWithoutTag.get();
         RandomSkinMobHasUnderTexture = COMMON.RandomSkinMobHasUnderTexture.get();
         HumanCustomNameWide = COMMON.HumanCustomNameWide.get();
@@ -135,6 +137,7 @@ public final class MainConfig {
         public final ForgeConfigSpec.BooleanValue RangeCanBreakBaseInGameRule;
         public final ForgeConfigSpec.BooleanValue MagicCanBreakBaseInGameRule;
         public final ForgeConfigSpec.BooleanValue SameFactionAvoidDamage;
+        public final ForgeConfigSpec.BooleanValue VanillaToolShowSpecialTooltip;
         public final ForgeConfigSpec.BooleanValue MobSayQuestionMark;
         public final ForgeConfigSpec.BooleanValue MobDestroyBlock;
         public final ForgeConfigSpec.BooleanValue TamedMobDestroyBlock;
@@ -189,6 +192,8 @@ public final class MainConfig {
                     .define("基础游戏规则魔法武器损坏", true);
             SameFactionAvoidDamage = builder.comment("Same Faction Avoid Damage")
                     .define("同阵营免伤", true);
+            VanillaToolShowSpecialTooltip = builder.comment("Vanilla Tool Show Special Tooltip")
+                    .define("原版工具特殊提示（无用）", true);
             MobSayQuestionMark = builder.comment("Mob Say Question Mark")
                     .define("生物说问号", true);
             MobDestroyBlock = builder.comment("Mob Destroy Block")

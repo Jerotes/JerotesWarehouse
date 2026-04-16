@@ -5,6 +5,7 @@ import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.compat.tacz.TaczAnimate;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -378,5 +379,14 @@ public class Modelspecial_action<T extends LivingEntity> extends PlayerModel<T> 
 			}
 		}
 		return spear;
+	}
+
+
+	@Override
+	public void translateToHand(HumanoidArm humanoidArm, PoseStack poseStack) {
+		this.getArm(humanoidArm).translateAndRotate(poseStack);
+	}
+	public void translateToHandOld(HumanoidArm humanoidArm, PoseStack poseStack) {
+		this.getArm(humanoidArm).translateAndRotate(poseStack);
 	}
 }

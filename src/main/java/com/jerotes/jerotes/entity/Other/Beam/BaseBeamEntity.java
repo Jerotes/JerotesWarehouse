@@ -236,7 +236,7 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 
 	private Vec3 calculateTargetPosition(LivingEntity caster) {
 		Vec3 eyePos = caster.getEyePosition();
-		Vec3 lookAngle = caster.getLookAngle();
+		Vec3 lookAngle = this.calculateViewVector(caster.getXRot(), caster.getYHeadRot());
 		for (int i = 0; i < MAX_DISTANCE; i++) {
 			Vec3 checkPos = eyePos.add(lookAngle.scale(i));
 			ClipContext clipContext = new ClipContext(
@@ -288,11 +288,11 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 		HitResultContext hitContext = new HitResultContext(start, end);
 		List<Entity> allEntities = this.level().getEntities(
 				caster,
-				new AABB(start, end).inflate(2.0),
+				new AABB(start, end).inflate(0.25),
 				entity -> entity != caster && entity instanceof LivingEntity
 		);
 		for (Entity entity : allEntities) {
-			AABB entityBox = entity.getBoundingBox().inflate(0.75f);
+			AABB entityBox = entity.getBoundingBox().inflate(0.15f);
 			Optional<Vec3> hitPoint = entityBox.clip(start, end);
 			if (hitPoint.isPresent()) {
 				result.add(entity);

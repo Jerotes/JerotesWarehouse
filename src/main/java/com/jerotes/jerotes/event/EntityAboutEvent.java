@@ -2,6 +2,7 @@ package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Mob.TestEntity;
 import com.jerotes.jerotes.entity.Interface.UseBowEntity;
@@ -41,6 +42,14 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Objects;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @Mod.EventBusSubscriber(modid = JerotesWarehouse.MODID)
 public class EntityAboutEvent {
@@ -253,11 +262,16 @@ public class EntityAboutEvent {
 				pathfinderMob.goalSelector.addGoal(1, new JerotesShockAbackGoal(pathfinderMob, 1.2));
 			}
 			//矛
-			if (pathfinderMob instanceof Zombie && MainConfig.MobManuallyControlCombatCameraChange || pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_spears")))) {
-				pathfinderMob.goalSelector.addGoal(1, new JerotesSpearUseGoal<>(pathfinderMob, 1.0, 1.0, 10.0f, 2.0f, !pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_spears_and_can_not_normal_attack")))));
+			if (pathfinderMob instanceof Zombie && MainConfig.MobManuallyControlCombatCameraChange ||
+					pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_spears")))) {
+				pathfinderMob.goalSelector.addGoal(1, new JerotesSpearUseGoal<>(pathfinderMob, 1.0, 1.0, 10.0f, 2.0f,
+						!pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_spears_and_can_not_normal_attack"))),
+						!pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_spears_and_can_not_charge_attack")))
+				));
 			}
 			//长枪
-			if (pathfinderMob instanceof Zombie && MainConfig.MobManuallyControlCombatCameraChange || pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_pikes")))) {
+			if (pathfinderMob instanceof Zombie && MainConfig.MobManuallyControlCombatCameraChange ||
+					pathfinderMob.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:can_use_pikes")))) {
 				pathfinderMob.goalSelector.addGoal(1, new JerotesPikeUseGoal(pathfinderMob, 1.2, true));
 			}
 			//tacz
@@ -443,5 +457,47 @@ public class EntityAboutEvent {
 			}
 		}
 		event.setAmount(damage);
+	}
+
+
+	@SubscribeEvent
+	public static void isManuallyControlCombatJerotes(AttackEntityEvent event) {
+		if (event.getEntity() != null && event.getEntity().getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity &&
+                controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
+                controlVehicleEntity.isManuallyControlCombatJerotes()) {
+			event.setCanceled(true);
+        }
+	}
+	@SubscribeEvent
+	public static void isManuallyControlCombatJerotes(PlayerEvent.BreakSpeed event) {
+		if (event.getEntity() != null && event.getEntity().getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity &&
+				controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
+				controlVehicleEntity.isManuallyControlCombatJerotes()) {
+			event.setNewSpeed(0);
+		}
+	}
+	@SubscribeEvent
+	public static void isManuallyControlCombatJerotes(PlayerInteractEvent.RightClickItem event) {
+		if (event.getEntity() != null && event.getEntity().getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity &&
+				controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
+				controlVehicleEntity.isManuallyControlCombatJerotes()) {
+			event.setCanceled(true);
+		}
+	}
+	@SubscribeEvent
+	public static void isManuallyControlCombatJerotes(PlayerInteractEvent.RightClickBlock event) {
+		if (event.getEntity() != null && event.getEntity().getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity &&
+				controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
+				controlVehicleEntity.isManuallyControlCombatJerotes()) {
+			event.setCanceled(true);
+		}
+	}
+	@SubscribeEvent
+	public static void isManuallyControlCombatJerotes(PlayerInteractEvent.EntityInteract event) {
+		if (event.getEntity() != null && event.getEntity().getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity &&
+				controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
+				controlVehicleEntity.isManuallyControlCombatJerotes()) {
+			event.setCanceled(true);
+		}
 	}
 }

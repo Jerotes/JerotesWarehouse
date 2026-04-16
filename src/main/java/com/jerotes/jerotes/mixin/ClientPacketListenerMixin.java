@@ -33,6 +33,10 @@ public abstract class ClientPacketListenerMixin {
             for (int i : clientboundSetPassengersPacket.getPassengers()) {
                 if (this.level.getEntity(i) == this.minecraft.player) {
                     Component component = Component.translatable("message.jerotes.change_control_combat_type", JerotesKeyMappings.CHANGE_CONTROL_COMBAT_TYPE.getTranslatedKeyMessage());
+                    if (controlVehicleEntity.canChangeSteeringControl(this.minecraft.player)) {
+                        Component component2 = Component.translatable("message.jerotes.change_control_steering_type", JerotesKeyMappings.CHANGE_CONTROL_STEERING_TYPE.getTranslatedKeyMessage());
+                        component = Component.literal("").append(component).append(" ").append(component2);
+                    }
                     this.minecraft.gui.setOverlayMessage(component, false);
                     this.minecraft.getNarrator().sayNow(component);
                 }

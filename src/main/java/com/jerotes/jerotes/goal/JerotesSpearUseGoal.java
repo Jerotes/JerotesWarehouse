@@ -4,7 +4,6 @@ import com.jerotes.jerotes.entity.Interface.JerotesChangeMob;
 import com.jerotes.jerotes.entity.Interface.InventoryEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.init.JerotesEnchantments;
-import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -15,6 +14,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.ai.util.RandomPos;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
@@ -36,17 +36,16 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
     private Vec3 awayPos;
     private boolean done = false;
     private boolean canNormalAttack = true;
+    private boolean canChargeAttack = true;
     public int ticksUntilNextAttack;
 
     public JerotesSpearUseGoal(T t, double d, double d2, float f, float f2) {
-        this.mob = t;
-        this.speedModifierWhenCharging = d;
-        this.speedModifierWhenRepositioning = d2;
-        this.attackRadiusSqr = f * f;
-        this.targetInRangeSqr = f2 * f2;
-        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        this(t, d, d2, f, f2, false, true);
     }
     public JerotesSpearUseGoal(T t, double d, double d2, float f, float f2, boolean bl) {
+        this(t, d, d2, f, f2, bl, true);
+    }
+    public JerotesSpearUseGoal(T t, double d, double d2, float f, float f2, boolean bl, boolean bl2) {
         this.mob = t;
         this.speedModifierWhenCharging = d;
         this.speedModifierWhenRepositioning = d2;
@@ -54,6 +53,7 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
         this.targetInRangeSqr = f2 * f2;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         this.canNormalAttack = bl;
+        this.canChargeAttack = bl2;
     }
 
     @Override
@@ -112,6 +112,14 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
         int n = ((Entity)this.mob).isPassenger() ? 2 : 0;
         ((Mob)this.mob).lookAt(livingEntity, 30.0f, 30.0f);
         ((Mob)this.mob).getLookControl().setLookAt(livingEntity, 30.0f, 30.0f);
+
+        if (canNormalAttack && !this.canChargeAttack) {
+            this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
+            if (this.mob.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase) {
+                this.checkAndPerformAttack(livingEntity, this.mob.getMainHandItem());
+            }
+        }
+
         if (this.engageTime < 0) {
             if (d2 > this.attackRadiusSqr) {
                 ((Mob)this.mob).getNavigation().moveTo(livingEntity, (double)f * this.speedModifierWhenRepositioning);
@@ -121,9 +129,11 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
             if (this.mob.getUseItem().getItem() instanceof ShieldItem) {
                 this.mob.stopUsingItem();
             }
-            (this.mob).startUsingItem(InteractionHand.MAIN_HAND);
-            if (this.mob.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
-                itemToolBaseSpearBase.makeSound(this.mob);
+            if (this.canChargeAttack) {
+                (this.mob).startUsingItem(InteractionHand.MAIN_HAND);
+                if (this.mob.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
+                    itemToolBaseSpearBase.makeSound(this.mob);
+                }
             }
         }
         if (this.engageTime > 0) {
@@ -137,9 +147,9 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
         }
         if (this.fleeingTime > 0) {
             ++this.fleeingTime;
-            this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
-            if (canNormalAttack) {
-                if (this.mob.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
+            if (canNormalAttack && this.canChargeAttack) {
+                this.ticksUntilNextAttack = Math.max(this.ticksUntilNextAttack - 1, 0);
+                if (this.mob.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase) {
                     this.checkAndPerformAttack(livingEntity, this.mob.getMainHandItem());
                 }
             }
@@ -165,9 +175,9 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
             }
         }
         Item item = this.mob.getMainHandItem().getItem();
-        if (item instanceof ItemToolBasePike itemToolBasePike && canNormalAttack) {
+        if (item instanceof ItemToolBaseSpearBase itemToolBaseSpearBase && canNormalAttack) {
             //突刺赶路
-            if (itemToolBasePike.getEnchantmentLevel(this.mob.getMainHandItem(), JerotesEnchantments.LUNGE.get()) > 0 && this.mob.distanceTo(livingEntity) > itemToolBasePike.effectiveMaxRange(this.mob) * 1.5 && this.mob.getRandom().nextInt(30) == 1) {
+            if (itemToolBaseSpearBase.getEnchantmentLevel(this.mob.getMainHandItem(), JerotesEnchantments.LUNGE.get()) > 0 && this.mob.distanceTo(livingEntity) > itemToolBaseSpearBase.effectiveMaxRange(this.mob) * 1.5 && this.mob.getRandom().nextInt(30) == 1) {
                 this.checkAndPerformAttackRush(livingEntity, this.mob.getMainHandItem());
             }
         }
@@ -177,6 +187,12 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
     protected void checkAndPerformAttack(LivingEntity livingEntity, ItemStack itemStack) {
         if (this.canPerformAttack(livingEntity, itemStack)) {
             this.resetAttackCooldown();
+
+            if (canNormalAttack && !this.canChargeAttack) {
+                this.mob.lookAt(livingEntity, 120.0f, 120.0f);
+                this.mob.getLookControl().setLookAt(livingEntity, 120.0f, 120.0f);
+            }
+
             this.mob.stopUsingItem();
             if (this.mob.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
                 itemToolBaseSpearBase.attack(this.mob, EquipmentSlot.MAINHAND);
@@ -195,8 +211,8 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
         if (this.canPerformAttackRush(livingEntity, itemStack)) {
             this.resetAttackCooldown();
             this.mob.stopUsingItem();
-            if (this.mob.getMainHandItem().getItem() instanceof ItemToolBasePike itemToolBasePike) {
-                itemToolBasePike.attack(this.mob, EquipmentSlot.MAINHAND);
+            if (this.mob.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
+                itemToolBaseSpearBase.attack(this.mob, EquipmentSlot.MAINHAND);
             }
         }
     }
@@ -204,7 +220,7 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
     protected void resetAttackCooldown() {
         Item item = this.mob.getMainHandItem().getItem();
         if (item instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
-            this.ticksUntilNextAttack = this.adjustedTickDelay((int)(itemToolBaseSpearBase.swingTimes * 20f));
+            this.ticksUntilNextAttack = this.adjustedTickDelay((int)(itemToolBaseSpearBase.swingTimes() * (canChargeAttack ? 2 : 1)));
         } else {
             this.ticksUntilNextAttack = this.adjustedTickDelay(20);
         }
@@ -222,8 +238,9 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
             return false;
         return this.isTimeToAttack() && this.mob.getSensing().hasLineOfSight(livingEntity) && !this.mob.isUsingItem();
     }
+
     protected boolean canPerformAttackRush(LivingEntity livingEntity, ItemStack itemStack) {
-        if (!(itemStack.getItem() instanceof ItemToolBasePike itemToolBasePike)) {
+        if (!(itemStack.getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase)) {
             return false;
         }
         return this.isTimeToAttack() && !this.mob.isUsingItem();

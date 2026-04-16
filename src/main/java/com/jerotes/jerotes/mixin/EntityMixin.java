@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
+import com.jerotes.jerotes.entity.Interface.BossEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import com.jerotes.jerotes.entity.Interface.CanNotControlEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
@@ -12,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Husk;
 import net.minecraft.world.entity.monster.Stray;
 import net.minecraft.world.entity.player.Player;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
+import net.minecraftforge.common.extensions.IForgeEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,10 +30,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin {
+public abstract class EntityMixin implements IForgeEntity {
     @Shadow public abstract Level level();
 
     @Shadow public abstract double getX();
@@ -48,6 +53,7 @@ public abstract class EntityMixin {
     @Shadow public abstract boolean isVehicle();
 
     @Shadow public abstract InteractionResult interact(Player p_19978_, InteractionHand p_19979_);
+
 
     @Inject(method = "isInRain", at = @At("HEAD"), cancellable = true)
     private void isInRain(CallbackInfoReturnable<Boolean> cir) {
@@ -119,5 +125,28 @@ public abstract class EntityMixin {
             jerotesChangeStray.setJerotesParched("Jerotes_ Parched".equals(nameString));
         }
 
+    }
+
+    @Inject(method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"), cancellable = true)
+    private void spawnAtLocation(ItemStack itemStack, float f, CallbackInfoReturnable<ItemEntity> cir) {
+        if (this instanceof BossEntity && this.level() != null) {
+            if (itemStack.isEmpty()) {
+                cir.setReturnValue(null);
+            } else if (this.level().isClientSide()) {
+                cir.setReturnValue(null);
+            } else {
+                ItemEntity itementity = new ItemEntity(this.level(), this.getX(), this.getY() + (double)f, this.getZ(), itemStack);//生命值
+                CompoundTag compoundTag0 = new CompoundTag();
+                itementity.addAdditionalSaveData(compoundTag0);
+                compoundTag0.putShort("Health", (short) 10000);
+                itementity.readAdditionalSaveData(compoundTag0);
+                itementity.setDefaultPickUpDelay();
+                if (captureDrops() != null) Objects.requireNonNull(captureDrops()).add(itementity);
+                else {
+                    this.level().addFreshEntity(itementity);
+                }
+                cir.setReturnValue(itementity);
+            }
+        }
     }
 }

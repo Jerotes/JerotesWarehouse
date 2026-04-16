@@ -3,12 +3,14 @@ package com.jerotes.jerotes.item.Tool;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.jerotes.jerotes.client.animation.SpearAnimations;
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesPlayerBaseEntity;
 import com.jerotes.jerotes.entity.Mob.TestEntity;
-import com.jerotes.jerotes.entity.Interface.ServerPlayerEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeServerPlayer;
 import com.jerotes.jerotes.entity.Interface.UseSpearSpecialEntity;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
+import com.jerotes.jerotes.init.JerotesEnchantments;
 import com.jerotes.jerotes.init.JerotesGameRules;
 import com.jerotes.jerotes.item.Interface.*;
 import com.jerotes.jerotes.util.AttackFind;
@@ -45,10 +47,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.DamageEnchantment;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -76,6 +75,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
     public final SoundEvent sound2;
     public final float minRange;
     public final float maxRange;
+    public final float reach;
     public final float minCreativeRange;
     public final float maxCreativeRange;
     public final float hitboxMargin;
@@ -93,6 +93,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
         this.sound2 = sound2;
         this.minRange = minRange;
         this.maxRange = maxRange - reach;
+        this.reach = reach;
         this.minCreativeRange = minCreativeRange;
         this.maxCreativeRange = maxCreativeRange - reach;
         this.hitboxMargin = hitboxMargin;
@@ -154,8 +155,8 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("item.jerotes.pike", selfSpeedDamage, targetSpeedDamage, specialDamageBase).withStyle(ChatFormatting.YELLOW));
-        list.add(Component.translatable("item.jerotes.two_handed_pike").withStyle(ChatFormatting.YELLOW));
+        list.add(Component.translatable("item.jerotes.pike", maxRange + reach, minRange, selfSpeedDamage, targetSpeedDamage, specialDamageBase).withStyle(ChatFormatting.YELLOW));
+        list.add(Component.translatable("item.jerotes.two_handed_pike", getBlockReduction()).withStyle(ChatFormatting.YELLOW));
         super.appendHoverText(itemStack, level, list, tooltipFlag);
     }
 
@@ -173,7 +174,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
             this.releaseUsing(itemStack, level, livingEntity, count);
         }
         if (livingEntity.getTicksUsingItem() == 10) {
-            specialAttack(livingEntity.level(), livingEntity);
+            specialAttack(livingEntity.level(), livingEntity, itemStack);
             if (livingEntity instanceof JerotesEntity && JerotesGameRules.JEROTES_MELEE_CAN_BREAK != null && livingEntity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_MELEE_CAN_BREAK) || livingEntity instanceof Player) {
                 if (itemStack.isDamageableItem()) {
                     itemStack.hurtAndBreak(1, livingEntity,
@@ -186,7 +187,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
         }
         super.onUseTick(level, livingEntity, itemStack, count);
     }
-    public void specialAttack(Level level, LivingEntity livingEntity) {
+    public void specialAttack(Level level, LivingEntity livingEntity, ItemStack itemStack) {
         makeSound2(livingEntity);
         if (livingEntity.level() instanceof ServerLevel serverLevel) {
             //攻击
@@ -200,7 +201,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
                 if (!hurt.hasLineOfSight(livingEntity)) continue;
                 AttackFind.attackBegin(livingEntity, hurt);
                 causeExtraKnockback(livingEntity, hurt, 1.0f, hurt.getDeltaMovement());
-                AttackFind.attackAfter(livingEntity, hurt, specialDamageBase
+                AttackFind.attackAfter(livingEntity, hurt, specialDamageBase + itemStack.getEnchantmentLevel(JerotesEnchantments.CORROSION_RESISTANCE.get()) * 0.2f
                         , 2f, false, 0f);
                 if (!EntityAndItemFind.isNoSpecialKnockback(hurt.getType())) {
                     if (Main.mobSizeSmall(hurt) || Main.mobSizeMedium(hurt) || Main.mobSizeLarge(hurt)) {
@@ -278,13 +279,16 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
     }
 
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if (stack.getItem() instanceof ItemToolBasePike) {
-            if (enchantment == Enchantments.FIRE_ASPECT ||
-                    enchantment == Enchantments.KNOCKBACK ||
-                    enchantment == Enchantments.MOB_LOOTING ||
-                    enchantment instanceof DamageEnchantment) {
-                return true;
-            }
+        if (enchantment instanceof DamageEnchantment || enchantment instanceof FireAspectEnchantment || enchantment instanceof LootBonusEnchantment lootBonusEnchantment && lootBonusEnchantment.category == EnchantmentCategory.WEAPON || enchantment instanceof KnockbackEnchantment || enchantment instanceof MeleeEnchantment) {
+            return this.isMeleeWeapon();
+        }
+        if (enchantment instanceof SweepingEdgeEnchantment) {
+            return true;
+        }
+        if (enchantment == Enchantments.FIRE_ASPECT ||
+                enchantment == Enchantments.KNOCKBACK ||
+                enchantment == Enchantments.MOB_LOOTING) {
+            return true;
         }
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }
@@ -500,7 +504,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
         return true;
     }
     public static Vec3 getKnownMovement(Entity entity) {
-        if (entity instanceof ServerPlayerEntity serverPlayer) {
+        if (entity instanceof JerotesChangeServerPlayer serverPlayer) {
             return serverPlayer.jerotesGetKnownMovement();
         }
         LivingEntity livingEntity = entity.getControllingPassenger();

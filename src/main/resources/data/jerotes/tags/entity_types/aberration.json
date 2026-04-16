@@ -3,6 +3,7 @@
   "replace": false,
   "values": [
     "#jerotes:zsiein",
-    "minecraft:shulker"
+    "minecraft:shulker",
+    "minecraft:warden"
   ]
 }

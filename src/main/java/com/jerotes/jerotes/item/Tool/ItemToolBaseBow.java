@@ -36,36 +36,53 @@ public class ItemToolBaseBow extends BowItem implements ItemSpecialEffect {
 				}
 				float f = getPowerForTime(i);
 				if (itemStack.getItem() instanceof ItemToolBaseBow itemToolBaseBow) {
-					f = itemToolBaseBow.getPowerForTimeJerotes(i);
+					f = itemToolBaseBow.getPowerForTimeJerotes(i, itemStack);
 				}
 				if (!((double)f < 0.1D)) {
 					boolean flag1 = player.getAbilities().instabuild || (itemStack2.getItem() instanceof ArrowItem && ((ArrowItem)itemStack2.getItem()).isInfinite(itemStack2, itemStack, player));
 					if (!level.isClientSide()) {
-						ArrowItem arrowitem = (ArrowItem)(itemStack2.getItem() instanceof ArrowItem ? itemStack2.getItem() : Items.ARROW);
-						AbstractArrow abstractarrow = arrowitem.createArrow(level, itemStack2, player);
-						abstractarrow = customArrow(abstractarrow);
-						abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, getArrowSpeed(f), getArrowInaccuracy());
-						if (f == 1.0F) {
-							abstractarrow.setCritArrow(true);
+
+						int im = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, itemStack);
+						int jm = im == 0 ? 1 : 3;
+						for(int km = 0; km < jm; ++km) {
+							ArrowItem arrowitem = (ArrowItem)(itemStack2.getItem() instanceof ArrowItem ? itemStack2.getItem() : Items.ARROW);
+							AbstractArrow abstractarrow = arrowitem.createArrow(level, itemStack2, player);
+							abstractarrow = customArrow(abstractarrow);
+							abstractarrow.shootFromRotation(player, (player.getXRot() - ((jm - 1f) * 5f) / 2f + km * 5f), player.getYRot(), 0.0F, getArrowSpeed(f), getArrowInaccuracy());
+							if (f == 1.0F) {
+								abstractarrow.setCritArrow(true);
+							}
+
+							//常规附魔
+							int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, itemStack);
+							if (j > 0) {
+								abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
+							}
+							int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, itemStack);
+							if (k > 0) {
+								abstractarrow.setKnockback(k);
+							}
+							if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, itemStack) > 0) {
+								abstractarrow.setSecondsOnFire(100);
+							}
+
+							//其他情况的附魔
+							int np = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PIERCING, itemStack);
+							if (np > 0) {
+								abstractarrow.setPierceLevel((byte) np);
+							}
+
+							itemStack.hurtAndBreak(1, player, (player2) -> {
+								player2.broadcastBreakEvent(player.getUsedItemHand());
+							});
+							if (flag1 || km != 0 || player.getAbilities().instabuild && (itemStack2.getItem() instanceof ArrowItem)) {
+								abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+							}
+							level.addFreshEntity(abstractarrow);
 						}
-						int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, itemStack);
-						if (j > 0) {
-							abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
-						}
-						int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, itemStack);
-						if (k > 0) {
-							abstractarrow.setKnockback(k);
-						}
-						if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, itemStack) > 0) {
-							abstractarrow.setSecondsOnFire(100);
-						}
-						itemStack.hurtAndBreak(1, player, (player2) -> {
-							player2.broadcastBreakEvent(player.getUsedItemHand());
-						});
-						if (flag1 || player.getAbilities().instabuild && (itemStack2.getItem() instanceof ArrowItem)) {
-							abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-						}
-						level.addFreshEntity(abstractarrow);
+
+
+
 					}
 					level.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 					if (!flag1 && !player.getAbilities().instabuild) {
@@ -81,8 +98,8 @@ public class ItemToolBaseBow extends BowItem implements ItemSpecialEffect {
 	}
 
 
-	public float getPowerForTimeJerotes(int n) {
-		float f = (float)n / getMaxDrawDuration();
+	public float getPowerForTimeJerotes(int n, ItemStack itemStack) {
+		float f = (float)n / getMaxDrawDurationUse(itemStack);
 		f = (f * f + f * 2.0f) / 3.0f;
 		if (f > 1.0f) {
 			f = 1.0f;
@@ -98,6 +115,13 @@ public class ItemToolBaseBow extends BowItem implements ItemSpecialEffect {
 
 	public float getMaxDrawDuration() {
 		return 20.0F;
+	}
+	public float getMaxDrawDurationQuickChange() {
+		return 3;
+	}
+	public float getMaxDrawDurationUse(ItemStack itemStack) {
+		int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, itemStack);
+		return getMaxDrawDuration() - getMaxDrawDurationQuickChange() * i;
 	}
 	public int getDefaultProjectileRange() {
 		return 15;

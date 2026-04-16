@@ -25,9 +25,11 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -55,6 +57,7 @@ public class MobInventoryGUIScreen extends AbstractContainerScreen<MobInventoryG
     public static final ResourceLocation SLOT = new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/sprites/container/mob_inventory/slot.png");
     public static final ResourceLocation NO = new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/sprites/container/mob_inventory/no.png");
     public static final ResourceLocation EFFECT = new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/sprites/container/mob_inventory/effect.png");
+    public static final ResourceLocation BED = new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/sprites/container/mob_inventory/bed.png");
     public static final ResourceLocation SHARE = new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/sprites/container/mob_inventory/share.png");
     public static final ResourceLocation LOCK = new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/sprites/container/mob_inventory/lock.png");
 
@@ -438,6 +441,14 @@ public class MobInventoryGUIScreen extends AbstractContainerScreen<MobInventoryG
                             tooltip.add(Component.translatable("message.jerotes.trust", livingEntity.getName(), player.getName()).withStyle(ChatFormatting.GREEN));
                         }
                     }
+                    if (livingEntity instanceof Player player) {
+                        //经验等级
+                        tooltip.add(Component.translatable("message.jerotes.xp_level", player.experienceLevel).withStyle(ChatFormatting.AQUA));
+                    }
+                    if (livingEntity instanceof Mob mob) {
+                        //经验等级
+                        tooltip.add(Component.translatable("message.jerotes.drop_xp", mob.getExperienceReward()).withStyle(ChatFormatting.YELLOW));
+                    }
                     //主人
                     if (livingEntity instanceof OwnableEntity ownable) {
                         LivingEntity livingOwner = null;
@@ -477,6 +488,9 @@ public class MobInventoryGUIScreen extends AbstractContainerScreen<MobInventoryG
                     if (EntityAndItemFind.isLegendary(livingEntity)) {
                         tooltip.add(Component.translatable("boss.jerotes.legendary").withStyle(ChatFormatting.GOLD));
                     }
+                    if (EntityAndItemFind.isExalted(livingEntity)) {
+                        tooltip.add(Component.translatable("boss.jerotes.exalted").withStyle(ChatFormatting.GOLD));
+                    }
                     List<String> stringList = EntityFactionFind.getAllFindFaction(livingEntity);
                     for (String stringType : stringList) {
                         if (stringType == null) continue;
@@ -506,15 +520,32 @@ public class MobInventoryGUIScreen extends AbstractContainerScreen<MobInventoryG
                     guiGraphics.renderTooltip(this.font, tooltip, Optional.empty(), mouseX, mouseY);
                 }
                 guiGraphics.blit(EFFECT, this.leftPos + 8, this.topPos + 8, 0, 0, 8, 8, 8, 8);
-                //1.20.4
+                this.addRenderableWidget(new ImageButton(this.leftPos + 8, this.topPos + 8, 8, 8, 0, 0, 7, new ResourceLocation(JerotesWarehouse.MODID, "container/null"), (button) -> {
+                    button.setPosition(this.leftPos + 8, this.topPos + 8);
+                    if (livingEntity.level().isClientSide) {
+                        PacketHandler.sendToServer(new MobSendEffectsPacket(livingEntity.getId()));
+                    }
+                }));
+            }
 
-                //1.20.1
-                    this.addRenderableWidget(new ImageButton(this.leftPos + 8, this.topPos + 8, 8, 8, 0, 0, 7, new ResourceLocation(JerotesWarehouse.MODID, "container/null"), (button) -> {
-                        button.setPosition(this.leftPos + 8, this.topPos + 8);
-                        if (livingEntity.level().isClientSide) {
-                            PacketHandler.sendToServer(new MobSendEffectsPacket(livingEntity.getId()));
-                        }
-                    }));
+            //玩家
+            if (livingEntity instanceof Player) {
+                int textX = this.leftPos + 52;
+                int textY = this.topPos + 52;
+                int textWidth = 8;
+                int textHeight = 8;
+                if (mouseX >= textX && mouseX <= textX + textWidth && mouseY >= textY && mouseY <= textY + textHeight) {
+                    List<Component> tooltip = new ArrayList<>();
+                    tooltip.add(Component.translatable("message.jerotes.bed_click").withStyle(ChatFormatting.BLUE));
+                    guiGraphics.renderTooltip(this.font, tooltip, Optional.empty(), mouseX, mouseY);
+                }
+                guiGraphics.blit(BED, this.leftPos + 52, this.topPos + 52, 0, 0, 8, 8, 8, 8);
+                this.addRenderableWidget(new ImageButton(this.leftPos + 52, this.topPos + 52, 8, 8, 0, 0, 7, new ResourceLocation(JerotesWarehouse.MODID, "container/null"), (button) -> {
+                    button.setPosition(this.leftPos + 52, this.topPos + 52);
+                    if (livingEntity.level().isClientSide) {
+                        PacketHandler.sendToServer(new MobSendEffectsPacket(livingEntity.getId(), 2));
+                    }
+                }));
             }
 
             //分享

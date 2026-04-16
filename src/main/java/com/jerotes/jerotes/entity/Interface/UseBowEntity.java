@@ -75,7 +75,7 @@ public interface UseBowEntity {
         if (itemStackBow.getItem() instanceof BowItem) {
             powerTime = BowItem.getPowerForTime(i);
             if (itemStackBow.getItem() instanceof ItemToolBaseBow itemToolBaseBow) {
-                powerTime = itemToolBaseBow.getPowerForTimeJerotes(i);
+                powerTime = itemToolBaseBow.getPowerForTimeJerotes(i, itemStackBow);
             }
         }
         double d = livingEntityTarget.getX() - livingEntity.getX();
@@ -95,12 +95,16 @@ public interface UseBowEntity {
         if (itemStackBow.getItem() instanceof ItemToolBaseBow itemToolBaseBow) {
             inaccuracy = Math.max(0, 20 - getBowLevel()) / 5f + getBowLevel() >= 20 ? 0 : itemToolBaseBow.getArrowInaccuracy();
         }
-        //abstractArrow.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot(), 0.0F, f * 3.0F, 1.0F);
-        abstractArrow.shoot(d, d2 + d4 * (0.2 - speedOfPowerTime * 0.02f), d3,
-                power, inaccuracy);
-        Vec3 vec3 = livingEntity.getDeltaMovement();
-        abstractArrow.setDeltaMovement(abstractArrow.getDeltaMovement().add(vec3.x, livingEntity.onGround() ? 0.0D : vec3.y, vec3.z));
-        //JerotesWarehouse.LOGGER.info("bow power" + power);
+
+        int im = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, itemStackBow);
+        int jm = im == 0 ? 1 : 3;
+        for(int km = 0; km < jm; ++km) {
+            abstractArrow.shoot(d, (d2 - ((jm - 1f) * 5f) / 2f + km * 5f) + d4 * (0.2 - speedOfPowerTime * 0.02f), d3,
+                    power, inaccuracy);
+            Vec3 vec3 = livingEntity.getDeltaMovement();
+            abstractArrow.setDeltaMovement(abstractArrow.getDeltaMovement().add(vec3.x, livingEntity.onGround() ? 0.0D : vec3.y, vec3.z));
+        }
+
         //暴击
         if (powerTime == 1.0F) {
             abstractArrow.setCritArrow(true);
@@ -117,6 +121,13 @@ public interface UseBowEntity {
         if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, itemStackBow) > 0) {
             abstractArrow.setSecondsOnFire(100);
         }
+
+        //其他情况的附魔
+        int np = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.PIERCING, itemStackBow);
+        if (np > 0) {
+            abstractArrow.setPierceLevel((byte) np);
+        }
+
         if (MainConfig.MobUseBowShrinkArrow) {
             itemStackArrow.shrink(1);
        }

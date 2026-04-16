@@ -237,7 +237,7 @@ public class JerotesMeleeAttackGoal extends Goal {
                 if (this.mob instanceof JerotesEntity jerotes) {
                     jerotes.setSprintingCooldown(10);
                 }
-                if (this.mob.getDeltaMovement().x <= 0.15 && this.mob.getDeltaMovement().z <= 0.15)
+                if (this.mob.getDeltaMovement().x <= 0.25 && this.mob.getDeltaMovement().z <= 0.25)
                     this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(f3 *= f7 / f6, 0, f5 *= f7 / f6));
             }
         }

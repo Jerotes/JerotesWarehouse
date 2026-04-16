@@ -2,9 +2,13 @@ package com.jerotes.jerotes.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.jerotes.jerotes.entity.Mob.AddHandEntity;
 import com.jerotes.jerotes.entity.Other.Beam.BaseBeamEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesMobEffects;
+import com.jerotes.jerotes.item.Interface.MeleeItem;
+import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -95,13 +99,21 @@ public class AACreativeClaw extends Item {
 		if (level instanceof ServerLevel serverLevel) {
 //			Main.spawnUnevenBlockByPos(serverLevel, livingEntity.getOnPos(), 4);
 		}
-		BaseBeamEntity baseBeamEntity = new BaseBeamEntity(JerotesEntityType.TEST_BEAM.get(), level);
-		baseBeamEntity.setPos(player.getX(), player.getY(0.75), player.getZ());
-		baseBeamEntity.setLightLockX((float) player.getX());
-		baseBeamEntity.setLightLockY((float) (player.getY(0.75)));
-		baseBeamEntity.setLightLockZ((float) player.getZ());
-		baseBeamEntity.setOwner(player);
-		level.addFreshEntity(baseBeamEntity);
+//		BaseBeamEntity baseBeamEntity = new BaseBeamEntity(JerotesEntityType.TEST_BEAM.get(), level);
+//		baseBeamEntity.setPos(player.getX(), player.getY(0.75), player.getZ());
+//		baseBeamEntity.setLightLockX((float) player.getX());
+//		baseBeamEntity.setLightLockY((float) (player.getY(0.75)));
+//		baseBeamEntity.setLightLockZ((float) player.getZ());
+//		baseBeamEntity.setOwner(player);
+//		level.addFreshEntity(baseBeamEntity);
+
+		AddHandEntity addHandEntity = Main.spawnAddHand(livingEntity, ((MeleeItem)JerotesItems.IRON_SPEAR.get()).swingTimes(), 100);
+		if (addHandEntity != null) {
+			addHandEntity.setItemInHand(InteractionHand.MAIN_HAND, JerotesItems.IRON_SPEAR.get().getDefaultInstance());
+			if (addHandEntity.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
+				itemToolBaseSpearBase.attack(addHandEntity, EquipmentSlot.MAINHAND);
+			}
+		}
 
 		player.awardStat(Stats.ITEM_USED.get(this));
 	}

@@ -44,6 +44,9 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<TestEntity>> TEST = register("test",
 			EntityType.Builder.<TestEntity>of(TestEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
 					.sized(0.6f, 1.8f));
+	public static final RegistryObject<EntityType<AddHandEntity>> ADD_HAND = register("add_hand",
+			EntityType.Builder.<AddHandEntity>of(AddHandEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
+					.sized(0.6f, 1.8f));
 	public static final RegistryObject<EntityType<MirrorImageEntity>> MIRROR_IMAGE = register("mirror_image",
 			EntityType.Builder.<MirrorImageEntity>of(MirrorImageEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(1.0f, 1.0f));
@@ -146,6 +149,8 @@ public class JerotesEntityType {
 		event.enqueueWork(() -> {
 			SpawnPlacements.register(JerotesEntityType.TEST.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
+			SpawnPlacements.register(JerotesEntityType.ADD_HAND.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
+					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.HUMAN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.JEROTES_PLAYER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
@@ -160,6 +165,7 @@ public class JerotesEntityType {
 	@SubscribeEvent
 	public static void registerAttributes(EntityAttributeCreationEvent event) {
 		event.put(TEST.get(), TestEntity.createAttributes().build());
+		event.put(ADD_HAND.get(), AddHandEntity.createAttributes().build());
 		event.put(HUMAN.get(), HumanEntity.createAttributes().build());
 		event.put(JEROTES_PLAYER.get(), JerotesPlayerEntity.createAttributes().build());
 		event.put(JEROTES_HORSE.get(), JerotesHorseEntity.createAttributes().build());

@@ -39,7 +39,7 @@ public class HumanRenderer extends HumanoidMobRenderer<HumanEntity, Modelhumanoi
 	public HumanRenderer(EntityRendererProvider.Context context) {
 		super(context, new Modelhumanoid_wide_or_slim<>(context.bakeLayer(Modelhumanoid_wide_or_slim.LAYER_LOCATION)), 0.5f);
 		this.addLayer(new HumanoidArmorLayer(this, new HumanoidArmorModel(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidArmorModel(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getModelManager()));
-		this.addLayer(new HumanSkinEntityBodyLayer<>(this, new Modelhumanoid_wide_or_slim(context.bakeLayer(Modelhumanoid_wide_or_slim_for_human.LAYER_LOCATION)), "human"));
+		this.addLayer(new HumanSkinEntityBodyLayer<>(this, new Modelhumanoid_wide_or_slim(context.bakeLayer(Modelhumanoid_wide_or_slim.LAYER_LOCATION)), "human"));
 		this.addLayer(new TruesightLayer<>(this));
 	}
 

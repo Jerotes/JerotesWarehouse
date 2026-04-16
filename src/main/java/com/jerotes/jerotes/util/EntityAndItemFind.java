@@ -51,11 +51,23 @@ public class EntityAndItemFind {
 	}
 	//是否传奇
 	public static boolean isLegendary(Entity entity) {
+		if (isExalted(entity))
+			return true;
 		if (entity instanceof JerotesEntity jerotes && jerotes.isLegendary())
 			return true;
+		if (entity instanceof JerotesEntity jerotes && !jerotes.isLegendary())
+			return false;
 		if (entity instanceof Player player && player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).IsLegend)
 			return true;
 		return entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:legendary")));
+	}
+	//是否至高
+	public static boolean isExalted(Entity entity) {
+		if (entity instanceof JerotesEntity jerotes && jerotes.isExalted())
+			return true;
+		if (entity instanceof JerotesEntity jerotes && !jerotes.isExalted())
+			return false;
+		return entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:exalted")));
 	}
 	//是否免疫特殊击退
 	public static boolean isNoSpecialKnockback(EntityType type) {

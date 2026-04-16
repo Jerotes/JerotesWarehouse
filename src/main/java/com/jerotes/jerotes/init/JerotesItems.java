@@ -67,7 +67,7 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> STONE_HAMMER = REGISTRY.register("stone_hammer", () -> new ItemToolBaseHammer(Tiers.STONE, 8.0F, -3.3F, new Item.Properties()));
 	public static final RegistryObject<Item> COPPER_HAMMER = REGISTRY.register("copper_hammer", () -> new ItemToolBaseHammer(JerotesTiers.COPPER, 8.0F, -3.3F, new Item.Properties()));
 	public static final RegistryObject<Item> IRON_HAMMER = REGISTRY.register("iron_hammer", () -> new ItemToolBaseHammer(Tiers.IRON, 7.0F, -3.2F, new Item.Properties()));
-	public static final RegistryObject<Item> GOLDEN_HAMMER = REGISTRY.register("golden_hammer", () -> new ItemToolBaseHammer(Tiers.GOLD, 7.0F, -3.1F, new Item.Properties()));
+	public static final RegistryObject<Item> GOLDEN_HAMMER = REGISTRY.register("golden_hammer", () -> new ItemToolBaseHammer(Tiers.GOLD, 10.0F, -3.35F, new Item.Properties()));
 	public static final RegistryObject<Item> DIAMOND_HAMMER = REGISTRY.register("diamond_hammer", () -> new ItemToolBaseHammer(Tiers.DIAMOND, 6.0F, -3.1F, new Item.Properties()));
 	public static final RegistryObject<Item> NETHERITE_HAMMER = REGISTRY.register("netherite_hammer", () -> new ItemToolBaseHammer(Tiers.NETHERITE, 6.0F, -3.1F, (new Item.Properties()).fireResistant()));
 

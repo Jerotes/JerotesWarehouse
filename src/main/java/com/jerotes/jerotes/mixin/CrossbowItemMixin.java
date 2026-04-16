@@ -47,11 +47,16 @@ public abstract class CrossbowItemMixin extends ProjectileWeaponItem {
     }
 
     @Shadow
+    public static boolean isCharged(ItemStack p_40933_) {
+        return false;
+    }
+
+    @Shadow
     public static void performShooting(Level p_40888_, LivingEntity p_40889_, InteractionHand p_40890_, ItemStack p_40891_, float p_40892_, float p_40893_) {
     }
 
     @Shadow
-    public static boolean isCharged(ItemStack p_40933_) {
+    protected static boolean loadProjectile(LivingEntity p_40863_, ItemStack p_40864_, ItemStack p_40865_, boolean p_40866_, boolean p_40867_) {
         return false;
     }
 
@@ -70,6 +75,18 @@ public abstract class CrossbowItemMixin extends ProjectileWeaponItem {
             abstractarrow.setPierceLevel((byte) i);
         }
 
+        int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, itemStack);
+        if (j > 0) {
+            abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + (double)j * 0.5D + 0.5D);
+        }
+        int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, itemStack);
+        if (k > 0) {
+            abstractarrow.setKnockback(k);
+        }
+        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, itemStack) > 0) {
+            abstractarrow.setSecondsOnFire(100);
+        }
+
         return abstractarrow;
     }
 
@@ -77,9 +94,39 @@ public abstract class CrossbowItemMixin extends ProjectileWeaponItem {
         super(properties);
     }
 
+    @Inject(method = "tryLoadProjectiles", at = @At(value = "HEAD"), cancellable = true)
+    private static void tryLoadProjectiles(LivingEntity p_40860_, ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
+        if (itemStack.getItem() instanceof ItemToolBaseCrossbow) {
+            int i = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, itemStack);
+            int j = i == 0 ? 1 : 3;
+            boolean flag = p_40860_ instanceof Player && ((Player) p_40860_).getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, itemStack) > 0;
+            ItemStack itemstack = p_40860_.getProjectile(itemStack);
+            ItemStack itemstack1 = itemstack.copy();
+
+            for (int k = 0; k < j; ++k) {
+                if (k > 0) {
+                    itemstack = itemstack1.copy();
+                }
+
+                if (itemstack.isEmpty() && flag) {
+                    itemstack = new ItemStack(Items.ARROW);
+                    itemstack1 = itemstack.copy();
+                }
+
+                if (!loadProjectile(p_40860_, itemStack, itemstack, k > 0, flag)) {
+                    cir.setReturnValue(false);
+                }
+            }
+
+            cir.setReturnValue(true);
+        }
+    }
 
     @Inject(method = "shootProjectile", at = @At(value = "HEAD"), cancellable = true)
-    private static void shootProjectile(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack itemStack, ItemStack itemStack2, float f, boolean bl, float f2, float f3, float f4, CallbackInfo ci) {
+    private static void shootProjectileJerotes(Level level, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack itemStack, ItemStack itemStack2, float f, boolean bl, float f2, float f3, float f4, CallbackInfo ci) {
+        if (!bl && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, itemStack) > 0) {
+            bl = true;
+        }
         if (itemStack.getItem() instanceof ItemToolBaseCrossbow shrapnelLauncher) {
             shrapnelLauncher.customShootProjectile(level, livingEntity, interactionHand, itemStack, itemStack2, f, bl, f2, f3, f4);
         }
@@ -129,7 +176,7 @@ public abstract class CrossbowItemMixin extends ProjectileWeaponItem {
     }
 
     @Inject(method = "loadProjectile", at = @At(value = "HEAD"), cancellable = true)
-    private static void loadProjectile(LivingEntity p_40863_, ItemStack p_40864_, ItemStack itemStack1, boolean p_40866_, boolean p_40867_, CallbackInfoReturnable<Boolean> cir) {
+    private static void loadProjectileJerotes(LivingEntity p_40863_, ItemStack p_40864_, ItemStack itemStack1, boolean p_40866_, boolean p_40867_, CallbackInfoReturnable<Boolean> cir) {
         if (p_40863_ instanceof UseCrossbowEntity && !MainConfig.MobUseCrossbowShrinkArrow) {
             if (itemStack1.isEmpty()) {
                 cir.setReturnValue(false);

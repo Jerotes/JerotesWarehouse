@@ -1,5 +1,7 @@
 {
+  "__comment": "传奇存在 未必需要此tag",
   "replace": false,
   "values": [
+    "#jerotes:exalted"
   ]
 }

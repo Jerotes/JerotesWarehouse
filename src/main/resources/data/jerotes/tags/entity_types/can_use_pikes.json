@@ -3,10 +3,13 @@
   "replace": false,
   "values": [
     "jerotes:test",
-    "#minecraft:zombies",
     "minecraft:husk",
     "minecraft:drowned",
     "minecraft:piglin",
-    "minecraft:piglin_brute"
+    "minecraft:piglin_brute",
+    {
+      "id": "#minecraft:zombies",
+      "required": false
+    }
   ]
 }

@@ -3,6 +3,7 @@ package com.jerotes.jerotes.item.Tool;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
 import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
@@ -16,6 +17,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.SweepingEdgeEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.ToolAction;
@@ -87,6 +91,16 @@ public class ItemToolBaseTwoHandedHoe extends HoeItem implements ItemTwoHanded, 
     @Override
     public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
         return TWO_HANDED_HOE_ACTIONS.contains(toolAction);
+    }
+
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (enchantment instanceof DamageEnchantment || enchantment instanceof FireAspectEnchantment || enchantment instanceof LootBonusEnchantment lootBonusEnchantment && lootBonusEnchantment.category == EnchantmentCategory.WEAPON || enchantment instanceof KnockbackEnchantment || enchantment instanceof MeleeEnchantment) {
+            return this.isMeleeWeapon();
+        }
+        if (enchantment instanceof SweepingEdgeEnchantment) {
+            return true;
+        }
+        return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.jerotes.jerotes.item.Tool;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.item.Interface.ItemAnesthetized;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
 import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
@@ -18,6 +19,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.SweepingEdgeEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeMod;
@@ -69,6 +74,21 @@ public class ItemToolBaseTwoHandedHammer extends TieredItem implements ItemTwoHa
             });
         }
         return true;
+    }
+
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (enchantment instanceof DamageEnchantment || enchantment instanceof FireAspectEnchantment || enchantment instanceof LootBonusEnchantment lootBonusEnchantment && lootBonusEnchantment.category == EnchantmentCategory.WEAPON || enchantment instanceof KnockbackEnchantment || enchantment instanceof MeleeEnchantment) {
+            return this.isMeleeWeapon();
+        }
+        if (enchantment instanceof SweepingEdgeEnchantment) {
+            return true;
+        }
+        if (enchantment == Enchantments.FIRE_ASPECT ||
+                enchantment == Enchantments.KNOCKBACK ||
+                enchantment == Enchantments.MOB_LOOTING) {
+            return true;
+        }
+        return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
     @Override

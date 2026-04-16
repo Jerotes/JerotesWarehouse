@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.ServerPlayerEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeServerPlayer;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerMixin extends Player implements ServerPlayerEntity {
+public abstract class ServerPlayerMixin extends Player implements JerotesChangeServerPlayer {
     public ServerPlayerMixin(Level p_250508_, BlockPos p_250289_, float p_251702_, GameProfile p_252153_) {
         super(p_250508_, p_250289_, p_251702_, p_252153_);
     }

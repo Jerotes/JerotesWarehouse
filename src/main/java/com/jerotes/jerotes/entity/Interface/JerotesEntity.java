@@ -143,6 +143,9 @@ public interface JerotesEntity {
     default boolean isLegendary() {
         return this.hasDamageCap() && this.hasDamageCooldownTick() && this.hasPercentageDamage();
     }
+    default boolean isExalted() {
+        return false;
+    }
 
     default void setSprintingCooldown(int n) {
     }

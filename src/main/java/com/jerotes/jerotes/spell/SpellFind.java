@@ -333,7 +333,7 @@ public class SpellFind {
 				Vec3 endPos = startPos.add(viewVector.scale(maxDistance));
 				BlockHitResult hitResult = serverLevel.clip(new ClipContext(
 						startPos, endPos,
-						ClipContext.Block.COLLIDER,
+						ClipContext.Block.OUTLINE,
 						ClipContext.Fluid.ANY,
 						caster
 				));

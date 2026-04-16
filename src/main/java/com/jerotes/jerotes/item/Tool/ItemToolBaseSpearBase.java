@@ -144,7 +144,7 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
     }
 
     public static Vec3 getKnownMovement(Entity entity) {
-        if (entity instanceof ServerPlayerEntity serverPlayer) {
+        if (entity instanceof JerotesChangeServerPlayer serverPlayer) {
             return serverPlayer.jerotesGetKnownMovement();
         }
         LivingEntity livingEntity = entity.getControllingPassenger();
@@ -592,14 +592,12 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
         livingEntity.push(vec3.x * strength, 0.0, vec3.z * strength);
         return true;
     }
+
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if (stack.getItem() instanceof ItemToolBaseSpearBase) {
-            if (enchantment == Enchantments.FIRE_ASPECT ||
-                    enchantment == Enchantments.KNOCKBACK ||
-                    enchantment == Enchantments.MOB_LOOTING ||
-                    enchantment instanceof DamageEnchantment) {
-                return true;
-            }
+        if (enchantment == Enchantments.FIRE_ASPECT ||
+                enchantment == Enchantments.KNOCKBACK ||
+                enchantment == Enchantments.MOB_LOOTING) {
+            return true;
         }
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }

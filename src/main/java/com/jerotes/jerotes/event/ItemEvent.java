@@ -237,7 +237,20 @@ public class ItemEvent {
 		}
 	}
 
-	//双手武器格挡
+	//格挡
+	@SubscribeEvent
+	public static void ShieldUse(LivingAttackEvent event) {
+		LivingEntity entity = event.getEntity();
+		DamageSource damagesource = event.getSource();
+		Entity attackBy = event.getSource().getEntity();
+		if (damagesource == null || entity == null || !entity.isAlive())
+			return;
+		if (entity.getUseItem().getItem() instanceof ItemSpecialEffect specialEffect) {
+			if (isDamageSourceBlocks(damagesource, entity) && entity.isUsingItem() && entity.isBlocking()) {
+				specialEffect.blockUse(entity, attackBy, damagesource);
+			}
+		}
+	}
 	@SubscribeEvent
 	public static void TwoHandedUse(LivingHurtEvent event) {
 		LivingEntity entity = event.getEntity();

@@ -2,7 +2,9 @@ package com.jerotes.jerotes.item.Tool;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
+import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.item.Interface.JerotesItemThrownJavelinUse;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import net.minecraft.ChatFormatting;
@@ -28,7 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -55,6 +57,23 @@ public class ItemToolBaseJavelin extends TridentItem implements ItemSpecialEffec
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", f2 - 4f, AttributeModifier.Operation.ADDITION));
 		this.defaultModifiers = builder.build();
 		this.throwTime = 10f;
+	}
+
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		if (enchantment instanceof DamageEnchantment ||
+				enchantment instanceof FireAspectEnchantment ||
+				enchantment instanceof LootBonusEnchantment lootBonusEnchantment && lootBonusEnchantment.category == EnchantmentCategory.WEAPON ||
+				enchantment instanceof KnockbackEnchantment ||
+				enchantment instanceof MeleeEnchantment) {
+			return this.isMeleeWeapon();
+		}
+		if (enchantment instanceof SweepingEdgeEnchantment) {
+			return this instanceof ItemTwoHanded;
+		}
+		if (enchantment instanceof ArrowPiercingEnchantment) {
+			return true;
+		}
+		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
 	@Override
@@ -120,13 +139,20 @@ public class ItemToolBaseJavelin extends TridentItem implements ItemSpecialEffec
 		if (n3 > 0 && !player2.isInWaterOrRain()) {
 			return;
 		}
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			itemStack.hurtAndBreak(1, player2, player -> player.broadcastBreakEvent(livingEntity.getUsedItemHand()));
 			if (n3 == 0) {
 				Projectile thrownJavelin = this.JerotesThrownJavelin(player2, itemStack);
 				thrownJavelin.shootFromRotation(player2, player2.getXRot(), player2.getYRot(), 0.0f, getJavelinSpeed() + (float)n3 * 0.5f, 1.0f);
 				if (thrownJavelin instanceof AbstractArrow baseJavelinEntity && player2.getAbilities().instabuild) {
 					baseJavelinEntity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+				}
+				//穿透
+				if (thrownJavelin instanceof AbstractArrow baseJavelinEntity) {
+					int np = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, itemStack);
+					if (np > 0) {
+						baseJavelinEntity.setPierceLevel((byte) np);
+					}
 				}
 				level.addFreshEntity(thrownJavelin);
 				level.playSound(null, thrownJavelin, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0f, 1.0f);

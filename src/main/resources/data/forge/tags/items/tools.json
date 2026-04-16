@@ -1,0 +1,30 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:tools/axes",
+    "#forge:tools/bows",
+    "#forge:tools/chainsaws",
+    "#forge:tools/crossbows",
+    "#forge:tools/daggers",
+    "#forge:tools/drills",
+    "#forge:tools/fishing_rods",
+    "#forge:tools/flails",
+    "#forge:tools/hammers",
+    "#forge:tools/hoes",
+    "#forge:tools/javelins",
+    "#forge:tools/knives",
+    "#forge:tools/parry_shields",
+    "#forge:tools/pickaxes",
+    "#forge:tools/pikes",
+    "#forge:tools/pincers",
+    "#forge:tools/scythes",
+    "#forge:tools/shears",
+    "#forge:tools/shields",
+    "#forge:tools/shovels",
+    "#forge:tools/spears",
+    "#forge:tools/swords",
+    "#forge:tools/tridents",
+    "#forge:tools/whips",
+    "#forge:tools/wrench"
+  ]
+}

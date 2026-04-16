@@ -158,7 +158,7 @@ public class JerotesPikeUseGoal extends Goal {
                 if (this.mob instanceof JerotesEntity jerotes) {
                     jerotes.setSprintingCooldown(10);
                 }
-                if (this.mob.getDeltaMovement().x <= 0.25 && this.mob.getDeltaMovement().z <= 0.25)
+                if (this.mob.getDeltaMovement().x <= 0.35 && this.mob.getDeltaMovement().z <= 0.35)
                   this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(f3 *= f7 / f6 * 2, 0, f5 *= f7 / f6 * 2));
             }
             //敌人过多、被靠近、间隔中 且可以攻击到

@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.ServerPlayerEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeServerPlayer;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,7 +41,7 @@ public abstract class ServerGamePacketListenerImplMixin {
         if (vec3.lengthSqr() > (double)1.0E-5f) {
             this.player.resetLastActionTime();
         }
-        if (this.player instanceof ServerPlayerEntity serverPlayer) {
+        if (this.player instanceof JerotesChangeServerPlayer serverPlayer) {
             serverPlayer.jerotesSetKnownMovement(vec3);
 //            player.sendSystemMessage(Component.literal(
 //                    String.valueOf(serverPlayer.jerotesGetKnownMovement().x()) + "," +

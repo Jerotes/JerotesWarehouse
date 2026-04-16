@@ -1,9 +1,11 @@
 package com.jerotes.jerotes.item.Tool;
 
 import com.google.common.collect.*;
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesPotions;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
+import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
@@ -25,8 +27,10 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.SweepingEdgeEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolAction;
@@ -108,10 +112,16 @@ public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect,
     }
 
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if (stack.getItem() instanceof ItemToolBaseDagger) {
-            if (enchantment == Enchantments.SWEEPING_EDGE) {
-                return false;
-            }
+        if (enchantment instanceof DamageEnchantment || enchantment instanceof FireAspectEnchantment || enchantment instanceof LootBonusEnchantment lootBonusEnchantment && lootBonusEnchantment.category == EnchantmentCategory.WEAPON || enchantment instanceof KnockbackEnchantment || enchantment instanceof MeleeEnchantment) {
+            return this.isMeleeWeapon();
+        }
+        if (enchantment instanceof SweepingEdgeEnchantment) {
+            return this instanceof ItemTwoHanded;
+        }
+        if (enchantment == Enchantments.FIRE_ASPECT ||
+                enchantment == Enchantments.KNOCKBACK ||
+                enchantment == Enchantments.MOB_LOOTING) {
+            return true;
         }
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }

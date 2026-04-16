@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.client.layer;
 
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
@@ -24,6 +25,9 @@ public class ClothesLayer<T extends Entity, M extends EntityModel<T>> extends Re
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int n, T t, float f, float f2, float f3, float f4, float f5, float f6) {
+        if (EntityAndItemFind.isTrueInvisible(t)) {
+            return;
+        }
         this.getParentModel().copyPropertiesTo(this.model);
         this.model.prepareMobModel(t, f, f2, f3);
         this.model.setupAnim(t, f, f2, f4, f5, f6);

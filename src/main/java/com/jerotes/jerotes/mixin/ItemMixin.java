@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
 public abstract class ItemMixin {
-    @Inject(method = "canAttackBlock", at = @At(value = "HEAD"), cancellable = true)
-    public void canAttackBlock(BlockState p_41441_, Level p_41442_, BlockPos p_41443_, Player player, CallbackInfoReturnable<Boolean> cir) {
-        if (player != null && player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity &&
-                controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
-                controlVehicleEntity.isManuallyControlCombatJerotes()) {
-            cir.setReturnValue(false);
-        }
-    }
+//    @Inject(method = "canAttackBlock", at = @At(value = "HEAD"), cancellable = true)
+//    public void canAttackBlock(BlockState p_41441_, Level p_41442_, BlockPos p_41443_, Player player, CallbackInfoReturnable<Boolean> cir) {
+//        if (player != null && player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity &&
+//                controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
+//                controlVehicleEntity.isManuallyControlCombatJerotes()) {
+//            cir.setReturnValue(false);
+//        }
+//    }
 }

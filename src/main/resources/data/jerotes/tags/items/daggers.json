@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "jerotes:simple_dagger",
     "jerotes:wooden_dagger",
     "jerotes:stone_dagger",
     "jerotes:copper_dagger",

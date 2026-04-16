@@ -1,6 +1,8 @@
 package com.jerotes.jerotes.item.Tool;
 
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.entity.Interface.JerotesPlayerBaseEntity;
+import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.ChatFormatting;
@@ -18,6 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.SweepingEdgeEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 
@@ -40,6 +45,16 @@ public class ItemToolBaseFlail extends ItemToolBaseHammer {
     }
     public ItemToolBaseFlail(Tier tier, float damage, float speed, Properties properties) {
         this(tier, damage, speed, properties, 20, 1.0f, 1.0f, 1.5f, 3.0f);
+    }
+
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (enchantment instanceof DamageEnchantment || enchantment instanceof FireAspectEnchantment || enchantment instanceof LootBonusEnchantment lootBonusEnchantment && lootBonusEnchantment.category == EnchantmentCategory.WEAPON || enchantment instanceof KnockbackEnchantment || enchantment instanceof MeleeEnchantment) {
+            return this.isMeleeWeapon();
+        }
+        if (enchantment instanceof SweepingEdgeEnchantment) {
+            return true;
+        }
+        return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
     @Override

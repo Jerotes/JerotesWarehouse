@@ -1,16 +1,17 @@
 package com.jerotes.jerotes.enchantment;
 
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.item.Interface.ItemToolBaseThrowingSpear;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.DamageEnchantment;
+import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 
-public class BaneOfHumanoidsEnchantment extends Enchantment {
+public class BaneOfHumanoidsEnchantment extends Enchantment implements MeleeEnchantment {
 	public BaneOfHumanoidsEnchantment(EquipmentSlot... slots) {
 		super(Rarity.COMMON, EnchantmentCategory.WEAPON, slots);
 	}

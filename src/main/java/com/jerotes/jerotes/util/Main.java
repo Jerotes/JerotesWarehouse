@@ -2,11 +2,15 @@ package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.entity.Mob.AddHandEntity;
+import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesEarthrendBlock;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesUnevenBlock;
 import com.jerotes.jerotes.entity.Part.BasePartEntity;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
 import com.jerotes.jerotes.entity.Interface.SpecialItemInHandEntity;
+import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.AAExplorationEye;
 import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
@@ -47,6 +51,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -57,18 +62,25 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotResult;
 
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class Main {
 	//幸运值
@@ -82,8 +94,7 @@ public class Main {
 	}
 
 	//打开gui
-	public static void openMobInventoryGui(ServerPlayer serverPlayer, LivingEntity livingEntity, boolean bl, boolean bl2,
-										   boolean canUseMainHand, boolean canUseOffHand, boolean canUseHelmet, boolean canUseChestplate, boolean canUseLeggings, boolean canUseBoots) {
+	public static void openMobInventoryGui(ServerPlayer serverPlayer, LivingEntity livingEntity, boolean bl, boolean bl2, boolean canUseMainHand, boolean canUseOffHand, boolean canUseHelmet, boolean canUseChestplate, boolean canUseLeggings, boolean canUseBoots) {
 		if (!livingEntity.isAlive()) {
 			return;
 		}
@@ -169,6 +180,37 @@ public class Main {
         }, buf -> {
             buf.writeVarInt(livingEntity.getId());
         });
+	}
+	//腾跃
+	public static void WaterLeap(PathfinderMob mob, float strength) {
+		if (mob.tickCount % 10 != 0) {
+			return;
+		}
+		if (!mob.isInWater() || !mob.horizontalCollision) {
+			return;
+		}
+		Path path = mob.getNavigation().getPath();
+		LivingEntity target = mob.getTarget();
+		boolean shouldLeap = false;
+		if (path != null && !mob.getNavigation().isDone()) {
+			BlockPos targetPos = path.getTarget();
+			BlockState targetState = mob.level().getBlockState(targetPos);
+			if (!targetState.getFluidState().isEmpty()) {
+				shouldLeap = true;
+			}
+		}
+		if (!shouldLeap && target != null && target.onGround()) {
+			shouldLeap = true;
+		}
+		if (shouldLeap) {
+			for (int n = 0; n < 18; ++n) {
+				if (mob.level() instanceof ServerLevel serverLevel) {
+					serverLevel.sendParticles(ParticleTypes.BUBBLE, mob.getRandomX(0.5), mob.getY() + 0.5f, mob.getRandomZ(0.5),
+							0, (mob.getRandom().nextFloat() - 0.5) * 0.2f, 0.2, (mob.getRandom().nextFloat() - 0.5) * 0.2f, 0.5);
+				}
+			}
+			mob.setDeltaMovement(mob.getDeltaMovement().add(0, strength, 0));
+		}
 	}
 
 	//摧毁骑乘物
@@ -373,8 +415,6 @@ public class Main {
 		part.setParent(parent);
 	}
 
-
-
 	//生物宽
 	public static float mobWidth(Entity entity) {
 		return (float) ((entity.getBoundingBox().getXsize() + entity.getBoundingBox().getZsize())/2);
@@ -452,8 +492,6 @@ public class Main {
 		}
 		return false;
 	}
-
-
 
 	//附近
 	public static BlockPos findSpawnPositionNear(LevelReader levelReader, BlockPos blockPos, int n) {
@@ -755,8 +793,6 @@ public class Main {
 		}
 	}
 
-
-
 	public static void spearInHandLayerSpear(EntityModel<?> entityModel, LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int n) {
 		if (itemStack.getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase && !itemToolBaseSpearBase.otherAnimSpear()) {
 			if (entityModel.attackTime > 0.0 && livingEntity.getMainArm() == humanoidArm) {
@@ -783,5 +819,110 @@ public class Main {
 				ItemToolBasePike.thirdPersonAttackItem(entityModel.attackTime, poseStack, livingEntity);
 			}
 		}
+	}
+
+
+	//附加手臂
+	public static AddHandEntity spawnAddHand(LivingEntity owner, int tick, int size) {
+		if (owner.level() instanceof ServerLevel serverLevel) {
+			PlayerTeam teams = (PlayerTeam) owner.getTeam();
+			AddHandEntity addHandEntity = JerotesEntityType.ADD_HAND.get().create(serverLevel, (CompoundTag)null, (Consumer<AddHandEntity>)null, BlockPos.containing(owner.getX(), owner.getY(), owner.getZ()), MobSpawnType.MOB_SUMMONED, false, false);
+			if (addHandEntity != null) {
+				addHandEntity.setOwner(owner);
+				if (!addHandEntity.level().isClientSide()) {
+					addHandEntity.setSize(size);
+				}
+				addHandEntity.refreshDimensions();
+				addHandEntity.setMaxLife(tick);
+
+				addHandEntity.setLeftHanded(owner.getMainArm() == HumanoidArm.LEFT);
+
+				addHandEntity.setPos(owner.getX(), owner.getY(), owner.getZ());
+				addHandEntity.setRotSelf(owner.getYRot(), owner.getXRot());
+				addHandEntity.setYRot(owner.getYRot());
+				addHandEntity.setXRot(owner.getXRot());
+				addHandEntity.setYHeadRot(owner.getYHeadRot());
+				addHandEntity.setYBodyRot(owner.yBodyRot);
+
+				addHandEntity.xOld = owner.xOld;
+				addHandEntity.xo = owner.xo;
+				addHandEntity.yOld = owner.yOld;
+				addHandEntity.yo = owner.yo;
+				addHandEntity.zOld = owner.zOld;
+				addHandEntity.zo = owner.zo;
+				addHandEntity.xRotO = owner.xRotO;
+				addHandEntity.yRotO = owner.yRotO;
+				addHandEntity.yHeadRotO = owner.yHeadRotO;
+				addHandEntity.yBodyRotO = owner.yBodyRotO;
+
+				addHandEntity.yRotO = addHandEntity.yBodyRot = addHandEntity.yHeadRot = addHandEntity.getYRot();
+
+				addHandEntity.hasImpulse = true;
+
+				addHandEntity.setDeltaMovement(owner.getDeltaMovement());
+
+				if (teams != null) {
+					serverLevel.getScoreboard().addPlayerToTeam(addHandEntity.getStringUUID(), teams);
+				}
+				serverLevel.addFreshEntity(addHandEntity);
+			}
+			return addHandEntity;
+		}
+		return null;
+	}
+
+
+	//Curios
+	public static ItemStack findCurios(LivingEntity livingEntity, Item item) {
+		if (livingEntity == null || !ModList.get().isLoaded("curios")) {
+			return ItemStack.EMPTY;
+		}
+		try {
+			Class<?> curiosApiClass = Class.forName("top.theillusivec4.curios.api.CuriosApi");
+			Method getCuriosInventory = curiosApiClass.getMethod("getCuriosInventory", LivingEntity.class);
+			Object lazyOptional = getCuriosInventory.invoke(null, livingEntity);
+
+			Method resolve = lazyOptional.getClass().getMethod("resolve");
+			Optional<?> handlerOptional = (Optional<?>) resolve.invoke(lazyOptional);
+
+			if (handlerOptional.isPresent()) {
+				Object handler = handlerOptional.get();
+				Method findFirstCurio = handler.getClass().getMethod("findFirstCurio", Item.class);
+				Optional<?> slotResultOptional = (Optional<?>) findFirstCurio.invoke(handler, item);
+
+				if (slotResultOptional.isPresent()) {
+					Object slotResult = slotResultOptional.get();
+					Method stackMethod = slotResult.getClass().getMethod("stack");
+					return (ItemStack) stackMethod.invoke(slotResult);
+				}
+			}
+		} catch (Exception e) {
+		}
+		return ItemStack.EMPTY;
+	}
+	public static int findCuriosCount(LivingEntity livingEntity, Item item) {
+		if (livingEntity == null || !ModList.get().isLoaded("curios")) {
+			return 0;
+		}
+		try {
+			Class<?> curiosApiClass = Class.forName("top.theillusivec4.curios.api.CuriosApi");
+			Method getCuriosInventory = curiosApiClass.getMethod("getCuriosInventory", LivingEntity.class);
+			Object lazyOptional = getCuriosInventory.invoke(null, livingEntity);
+
+			Method resolve = lazyOptional.getClass().getMethod("resolve");
+			Optional<?> handlerOptional = (Optional<?>) resolve.invoke(lazyOptional);
+
+			if (handlerOptional.isPresent()) {
+				Object handler = handlerOptional.get();
+				Method findCurios = handler.getClass().getMethod("findCurios", Item.class);
+				List<?> slotResults = (List<?>) findCurios.invoke(handler, item);
+				return slotResults.size();
+			}
+		} catch (Exception e) {
+		}
+		return 0;
+	}
+	public static boolean hasCurios(LivingEntity livingEntity, Item item) {
+		return !findCurios(livingEntity, item).isEmpty();
 	}
 }

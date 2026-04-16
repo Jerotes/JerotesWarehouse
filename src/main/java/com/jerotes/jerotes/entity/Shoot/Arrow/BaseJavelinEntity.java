@@ -17,17 +17,22 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -103,7 +108,8 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 		}
 	}
 	public void rebound() {
-		this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01, -0.1, -0.01));
+		if (this.dealtDamage)
+			this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01, -0.1, -0.01));
 	}
 	public void reboundBlock() {
 	}
@@ -114,6 +120,9 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 		return 0;
 	}
 
+	public void setPierceLevel(byte by) {
+		super.setPierceLevel(by);
+	}
 	public byte getPierceLevelBase() {
 		return super.getPierceLevel();
 	}
@@ -242,11 +251,13 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 		Entity entity = this.getOwner();
 		Entity entity2 = entityHitResult.getEntity();
 		float f = damage;
+		float f1 = 0;
 		float special = this.specialDamage(entity2);
-		if (entity2 instanceof LivingEntity) {
-			entity = entity2;
-			f += EnchantmentHelper.getDamageBonus(this.tridentItem, ((LivingEntity)entity).getMobType());
+		if (entity2 instanceof LivingEntity livingEntity) {
+			f += EnchantmentHelper.getDamageBonus(this.tridentItem, livingEntity.getMobType());
 		}
+		f1 += (float) EnchantmentHelper.getItemEnchantmentLevel(Enchantments.KNOCKBACK, this.tridentItem);
+		f1 += (float) EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, this.tridentItem);
 		DamageSource damageSource = this.getDamageSource(entity2);
 		int pierce = this.getPierceLevel();
 		if (pierce > 0) {
@@ -271,6 +282,13 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 		boolean deflectTridents = entity2.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("deflects_tridents")));
 		if (entity2.hurt(damageSource, f + special)) {
 			if (entity2 instanceof LivingEntity livingEntity) {
+				if (f1 > 0) {
+					double d0 = Math.max(0.0D, 1.0D - livingEntity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
+					Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double)f1 * 0.6D * d0);
+					if (vec3.lengthSqr() > 0.0D) {
+						livingEntity.push(vec3.x, 0.1D, vec3.z);
+					}
+				}
 				if (this.breakShield() && (this.entityData.get(ID_LOYALTY) <= 0 || !this.breakShieldOnlyNotLoyalty())) {
 					if (livingEntity.getUseItem().getItem() instanceof ShieldItem) {
 						if (livingEntity instanceof Player player) {
@@ -284,13 +302,15 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 					this.piercedAndKilledEntities.add(livingEntity);
 				}
 			}
+
 			if (entity2 instanceof LivingEntity livingEntity && EntityFactionFind.isEnderman(livingEntity) && !this.canHurtEnderman()) {
 				return;
 			}
+
 			if (entity2 instanceof LivingEntity livingEntity) {
-				if (entity instanceof LivingEntity) {
+				if (entity instanceof LivingEntity living) {
 					EnchantmentHelper.doPostHurtEffects(livingEntity, entity);
-					EnchantmentHelper.doPostDamageEffects((LivingEntity) entity, livingEntity);
+					EnchantmentHelper.doPostDamageEffects(living, livingEntity);
 				}
 				this.doPostHurtEffects(livingEntity);
 			}

@@ -9,5 +9,6 @@ public interface JerotesChangeLivingEntity {
     float getTicksSinceLastKineticHitFeedbackJerotes(float f);
     long getlastKineticHitFeedbackTimeJerotes();
     boolean isTrueInvisibleJerotes();
+    int getCurrentSwingDurationJerotes();
 }
 

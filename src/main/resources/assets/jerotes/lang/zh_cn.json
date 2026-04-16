@@ -13,6 +13,7 @@
   "item.jerotes.aa_spell_javelin": "法术标枪",
   "entity.jerotes.test": "测试",
   "item.jerotes.test_spawn_egg": "测试刷怪蛋",
+  "entity.jerotes.add_hand": "手",
   "entity.jerotes.human": "人类",
   "item.jerotes.human_spawn_egg": "人类刷怪蛋",
   "entity.jerotes.jerotes_player": "玩家",
@@ -146,9 +147,9 @@
   "item.jerotes.crossbow": "[弩]默认 蓄力装填后发射子弹 箭矢速度%1$s 火箭速度%2$s 默认射弹距离%3$s 蓄力持续时间%4$s秒 箭矢精准度偏差%5$s",
   "item.jerotes.shield": "[盾]默认 使用时可以抵挡部分伤害",
   "item.jerotes.parry_shield": "[招架盾]使用时可以招架并反弹伤害 招架间隔%1$s秒 招架持续%2$s秒 招架反弹伤害倍数%3$s倍 招架反弹自身伤害最大倍数%4$s倍 击退力度%5$s倍",
-  "item.jerotes.spear": "[矛]默认 不可破盾 攻击为突刺 使用时冲锋造成伤害",
+  "item.jerotes.spear": "[矛]默认 不可破盾 攻击为突刺 最大攻击范围%1$s 最小攻击范围%2$s 使用时冲锋造成伤害 冲锋伤害%3$s倍",
   "item.jerotes.throwing_spear": "[投矛]默认 潜行状态下使用可以切换标枪与矛之间的状态",
-  "item.jerotes.pike": "[长枪]默认 不可破盾 攻击为突刺 根据双方速度与造成伤害和作用击退 可击落骑手与停住目标的冲锋 使用可造成%3$s倍伤害并击退附近的敌人并短暂格挡 己方速度作用%1$s倍 敌方速度作用%2$s倍",
+  "item.jerotes.pike": "[长枪]默认 不可破盾 攻击为突刺 根据双方速度与造成伤害和作用击退 可击落骑手与停住目标的冲锋 最大攻击范围%1$s 最小攻击范围%2$s 使用可造成%5$s倍伤害并击退附近的敌人并短暂格挡 己方速度作用%3$s倍 敌方速度作用%4$s倍",
   "item.jerotes.javelin": "[标枪]默认 不可破盾 攻击无法造成横扫 可进行投掷 蓄力持续时间%1$s秒 投掷伤害%2$s点",
   "item.jerotes.hammer": "[锤]默认 可破盾 攻击无法造成横扫",
   "item.jerotes.flail": "[锤-链枷]可以蓄力进行范围横扫",
@@ -170,7 +171,7 @@
   "item.jerotes.anesthetized_shoot": "[麻醉]每点发射攻击增加目标%1$s秒麻醉效果",
   "item.jerotes.anesthetized_use": "[麻醉]使用后获得%1$s秒麻醉效果",
   "item.jerotes.two_handed": "[双手]副手为空时，可以进行抵消百分比为%1$s伤害的格挡",
-  "item.jerotes.two_handed_pike": "[双手]副手为空时才能进行攻击",
+  "item.jerotes.two_handed_pike": "[双手]副手为空时才能进行攻击，可以进行抵消百分比为%1$s伤害的格挡",
 
   "effect.jerotes.bleeding": "流血",
   "effect.jerotes.bleeding.description": "会降低生命值直到死亡；依照最大生命值造成伤害；降低攻击速度与移动速度；更高的等级会造成更多的影响。",
@@ -299,6 +300,7 @@
   "talk.jerotes.pose_4": "<%1$s> 游荡",
 
   "boss.jerotes.legendary": "传奇存在",
+  "boss.jerotes.exalted": "至高存在",
 
   "boss.jerotes.can_not_spawn": "此位已存在于附近",
 
@@ -321,6 +323,7 @@
 
   "message.jerotes.spell_level": "法术等级",
   "message.jerotes.effect_click": "点击显示状态效果",
+  "message.jerotes.bed_click": "点击显示玩家相关",
   "message.jerotes.effect": "状态效果列表：",
   "message.jerotes.effect_level": "%1$s级",
   "message.jerotes.effect_second": "%1$s秒",
@@ -378,6 +381,11 @@
   "message.jerotes.enemy": "敌对生物",
   "message.jerotes.boss": "Boss",
   "message.jerotes.elite": "精英",
+  "message.jerotes.player_spawn_point": "玩家重生点：%1$s %2$s %3$s",
+  "message.jerotes.world_spawn_point": "世界出生点：%1$s %2$s %3$s",
+  "message.jerotes.player_spawn_point_dimension": "玩家出生点维度：%1$s",
+  "message.jerotes.xp_level": "经验等级：%1$s",
+  "message.jerotes.drop_xp": "掉落经验：%1$s",
 
   "message.jerotes.change_control_combat_type": "按%1$s键切换战斗控制模式",
   "message.jerotes.change_control_combat_type_0": "战斗控制模式：手动",

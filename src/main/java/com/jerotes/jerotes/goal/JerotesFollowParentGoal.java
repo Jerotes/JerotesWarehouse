@@ -35,7 +35,13 @@ public class JerotesFollowParentGoal extends Goal {
         if (this.animal instanceof TamableAnimal tamableAnimal && tamableAnimal.isInSittingPose()) {
             return false;
         }
+        if (this.animal instanceof TamableAnimal tamableAnimal && tamableAnimal.isOrderedToSit()) {
+            return false;
+        }
         if (this.animal instanceof TameMobEntity tamableAnimal && tamableAnimal.isInSittingPose()) {
+            return false;
+        }
+        if (this.animal instanceof TameMobEntity tamableAnimal && tamableAnimal.isOrderedToSit()) {
             return false;
         }
         if (this.animal instanceof OwnableEntity ownable && ownable.getOwner() != null) {
@@ -73,6 +79,18 @@ public class JerotesFollowParentGoal extends Goal {
             return false;
         }
         if (this.animal.getAge() >= 0) {
+            return false;
+        }
+        if (this.animal instanceof TamableAnimal tamableAnimal && tamableAnimal.isInSittingPose()) {
+            return false;
+        }
+        if (this.animal instanceof TamableAnimal tamableAnimal && tamableAnimal.isOrderedToSit()) {
+            return false;
+        }
+        if (this.animal instanceof TameMobEntity tamableAnimal && tamableAnimal.isInSittingPose()) {
+            return false;
+        }
+        if (this.animal instanceof TameMobEntity tamableAnimal && tamableAnimal.isOrderedToSit()) {
             return false;
         }
         else if (!this.parent.isAlive()) {

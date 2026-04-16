@@ -2,6 +2,7 @@ package com.jerotes.jerotes.entity.Mob;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeServerPlayer;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -250,9 +251,9 @@ public class MirrorImageEntity extends PathfinderMob implements JerotesEntity, O
 				 this.refreshDimensions();
 			 }
 			 //位置
-			this.moveTo(getOwner().getX() + addX + getOwner().getDeltaMovement().x,
-					getOwner().getY() + addY + getOwner().getDeltaMovement().y,
-					getOwner().getZ() + addZ + getOwner().getDeltaMovement().z,
+			this.moveTo(getOwner().getX() + addX + (getOwner() instanceof JerotesChangeServerPlayer jerotesChangeServerPlayer ? jerotesChangeServerPlayer.jerotesGetKnownMovement().x : getOwner().getDeltaMovement().x),
+					getOwner().getY() + addY,
+					getOwner().getZ() + addZ + (getOwner() instanceof JerotesChangeServerPlayer jerotesChangeServerPlayer ? jerotesChangeServerPlayer.jerotesGetKnownMovement().z : getOwner().getDeltaMovement().z),
 					getOwner().getYRot(),
 					getOwner().getXRot());
 			this.setDeltaMovement(getOwner().getDeltaMovement());

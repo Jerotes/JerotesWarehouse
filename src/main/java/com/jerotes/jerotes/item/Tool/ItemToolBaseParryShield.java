@@ -1,14 +1,12 @@
 package com.jerotes.jerotes.item.Tool;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import com.jerotes.jerotes.client.animation.SpearAnimations;
-import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;
+import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
+import com.jerotes.jerotes.item.Interface.MeleeItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -17,17 +15,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.SweepingEdgeEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
@@ -35,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ItemToolBaseParryShield extends ItemToolBaseShield implements ItemSpecialInHand {
+public class ItemToolBaseParryShield extends ItemToolBaseShield implements ItemSpecialInHand, MeleeItem {
 
 	//招架间隔
 	//招架持续
@@ -57,6 +54,10 @@ public class ItemToolBaseParryShield extends ItemToolBaseShield implements ItemS
 		this.knockbackStength = knockbackStength;
 	}
 
+	public boolean isMeleeWeapon() {
+		return false;
+	}
+
 	public void makeParrySound(Entity entity) {
 		entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
 				SoundEvents.PLAYER_ATTACK_CRIT, entity.getSoundSource(), 1.0f, 1.0f);
@@ -64,6 +65,16 @@ public class ItemToolBaseParryShield extends ItemToolBaseShield implements ItemS
 	public void makeParryUseSound(Entity entity) {
 		entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
 				SoundEvents.ANVIL_HIT, entity.getSoundSource(), 1.0f, 1.0f);
+	}
+
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		if (enchantment instanceof DamageEnchantment || enchantment instanceof FireAspectEnchantment || enchantment instanceof LootBonusEnchantment lootBonusEnchantment && lootBonusEnchantment.category == EnchantmentCategory.WEAPON || enchantment instanceof KnockbackEnchantment || enchantment instanceof MeleeEnchantment) {
+			return this.isMeleeWeapon();
+		}
+		if (enchantment instanceof SweepingEdgeEnchantment) {
+			return this instanceof ItemTwoHanded;
+		}
+		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
 	@Override

@@ -70,12 +70,14 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 		if (ModList.get().isLoaded("tacz")) {
 			this.goalSelector.addGoal(1, new TaczGunAttackGoal<>(this, 1.0D, 32.0f));
 		}
+
 		this.goalSelector.addGoal(1, new JerotesMoveToGoal(TestEntity.this, 1.0f, true) {
 			@Override
 			public boolean canUse() {
 				return super.canUse() && TestEntity.this.isCanMove();
 			}
 		});
+
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this, new Class[0]));
 
 	}
@@ -143,7 +145,7 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 		super.defineSynchedData();
 		this.getEntityData().define(IS_FEMALE, false);
 		this.getEntityData().define(IS_CAN_MOVE, false);
-		this.getEntityData().define(ID_SIZE, 180);
+		this.getEntityData().define(ID_SIZE, 100);
 		this.getEntityData().define(SHIELD_LEVEL, 1);
 	}
 	@Override
@@ -200,6 +202,8 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 	@Override
 	public void aiStep() {
 		super.aiStep();
+		this.updateSwingTime();
+		this.updateNoActionTime();
 		//停止战斗
 		if (this.getTarget() != null && (!this.getTarget().isAlive() || this.getTarget() instanceof Player player && (player.isCreative() || player.isSpectator()))) {
 			this.setTarget(null);
@@ -232,6 +236,12 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 		//其他状态下停止使用
 		else {
 			stopUse(this);
+		}
+	}
+	protected void updateNoActionTime() {
+		float f = this.getLightLevelDependentMagicValue();
+		if (f > 0.5f) {
+			this.noActionTime += 1.1;
 		}
 	}
 

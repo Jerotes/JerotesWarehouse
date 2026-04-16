@@ -870,7 +870,7 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 			float f6 = Mth.sqrt(f3 * f3 + f4 * f4 + f5 * f5);
 			float f7 = -0.04f;
 			this.setSprintingCooldown(10);
-			if (this.getDeltaMovement().x <= 0.15 && this.getDeltaMovement().z <= 0.15)
+			if (this.getDeltaMovement().x <= 0.3 && this.getDeltaMovement().z <= 0.3)
 				this.setDeltaMovement(this.getDeltaMovement().add(f3 *= f7 / f6, 0, f5 *= f7 / f6));
 		}
 		//投矛

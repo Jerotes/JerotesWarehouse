@@ -4,6 +4,7 @@ import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
+import com.jerotes.jerotes.entity.Mob.AddHandEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
@@ -18,6 +19,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
@@ -53,6 +55,9 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     public void setTrueInvisibleJerotes(boolean bl) {
         this.getEntityData().set(IS_TRUE_INVISIBLE_JEROTES, bl);
     }
+    public int getCurrentSwingDurationJerotes() {
+        return getCurrentSwingDuration();
+    }
 
     @Shadow public abstract boolean hasEffect(MobEffect p_21024_);
 
@@ -70,6 +75,15 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
 
     @Shadow public abstract ItemStack getMainHandItem();
 
+
+    @Shadow
+    public abstract void setLastHurtByMob(@org.jetbrains.annotations.Nullable LivingEntity p_21039_);
+
+    @Shadow
+    public abstract boolean hurt(DamageSource p_21016_, float p_21017_);
+
+    @Shadow
+    protected abstract int getCurrentSwingDuration();
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
@@ -92,6 +106,14 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
                 if (!this.level().isClientSide())
                     this.entityData.set(IS_TRUE_INVISIBLE_JEROTES, trueInvisible);
             }
+        }
+    }
+
+    @Inject(method = "setLastHurtByMob", at = @At("HEAD"), cancellable = true)
+    public void setLastHurtByMob(LivingEntity livingEntity, CallbackInfo ci) {
+        if (livingEntity instanceof AddHandEntity addHandEntity && addHandEntity.getOwner() != null) {
+            setLastHurtByMob(addHandEntity.getOwner());
+            ci.cancel();
         }
     }
 

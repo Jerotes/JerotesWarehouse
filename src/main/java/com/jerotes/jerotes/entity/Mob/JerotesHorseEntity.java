@@ -72,7 +72,7 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 	public AnimationState eatAnimationState = new AnimationState();
 	public AnimationState eatGrassAnimationState = new AnimationState();
 	private static final Ingredient FOOD_ITEMS = Ingredient.of(
-			ItemTags.create(new ResourceLocation(JerotesWarehouse.MODID, "animal_foods/grass_foods"))
+			ItemTags.create(new ResourceLocation(JerotesWarehouse.MODID, "animal_foods/horse_and_grass_foods"))
 	);
 	protected static final EntityDataAccessor<Integer> DATA_OWNER_ID = SynchedEntityData.defineId(JerotesHorseEntity.class, EntityDataSerializers.INT);
 	public static final EntityDataAccessor<BlockPos> HOME_POS = SynchedEntityData.defineId(JerotesHorseEntity.class, EntityDataSerializers.BLOCK_POS);
@@ -1057,11 +1057,6 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 			this.setAnimTick(20);
 			this.setAnimationState("angry1");
 		}
-	}
-
-	@Override
-	public int getMaxTemper() {
-		return 360;
 	}
 	@Override
 	public boolean hurt(DamageSource damageSource, float amount) {

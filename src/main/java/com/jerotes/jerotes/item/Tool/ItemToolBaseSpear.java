@@ -1,12 +1,17 @@
 package com.jerotes.jerotes.item.Tool;
 
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
+import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.SweepingEdgeEnchantment;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -54,9 +59,19 @@ public class ItemToolBaseSpear extends ItemToolBaseSpearBase implements ItemSpec
         this(tier, properties, 0, (1.0f / f) - 4f, f, f2, f3, f4, f5, f6, f7, f8, f9, false);
     }
 
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (enchantment instanceof DamageEnchantment || enchantment instanceof FireAspectEnchantment || enchantment instanceof LootBonusEnchantment lootBonusEnchantment && lootBonusEnchantment.category == EnchantmentCategory.WEAPON || enchantment instanceof KnockbackEnchantment || enchantment instanceof MeleeEnchantment) {
+            return this.isMeleeWeapon();
+        }
+        if (enchantment instanceof SweepingEdgeEnchantment) {
+            return this instanceof ItemTwoHanded;
+        }
+        return super.canApplyAtEnchantingTable(stack, enchantment);
+    }
+
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("item.jerotes.spear").withStyle(ChatFormatting.YELLOW));
+        list.add(Component.translatable("item.jerotes.spear", maxRange, minRange, damageMultiplier).withStyle(ChatFormatting.YELLOW));
         super.appendHoverText(itemStack, level, list, tooltipFlag);
     }
 }

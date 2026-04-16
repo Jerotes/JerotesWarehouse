@@ -93,12 +93,6 @@ public class SpawnRules {
 		list.removeIf(entity -> entity.getType() != entityType);
 		return list.size() < num && Monster.checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, randomSource);
 	}
-	//暗乱
-	public static boolean DarisorderSpawn(int num, double area, EntityType<? extends Monster> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, RandomSource randomSource) {
-		List<LivingEntity> list = serverLevelAccessor.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()), area, area, area));
-		list.removeIf(entity -> entity.getType() != entityType);
-		return list.size() < num && Monster.checkMonsterSpawnRules(entityType, serverLevelAccessor, mobSpawnType, blockPos, randomSource);
-	}
 	//发光鱿鱼
 	public static boolean GlowSquidSpawn(int num, double area, EntityType<? extends Mob> entityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, RandomSource randomSource) {
 		List<LivingEntity> list = serverLevelAccessor.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()), area, area, area));

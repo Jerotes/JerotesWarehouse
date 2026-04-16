@@ -18,7 +18,7 @@ public class SimpleHammer extends ItemToolBaseHammer {
 			}
 
 			public float getAttackDamageBonus() {
-				return 0;
+				return 7;
 			}
 
 			public int getLevel() {
@@ -32,7 +32,7 @@ public class SimpleHammer extends ItemToolBaseHammer {
 			public Ingredient getRepairIngredient() {
 				return Ingredient.of(ItemTags.PLANKS);
 			}
-		}, 2.0f, -1.8F, new Properties().durability(32));
+		}, -1.0f, -3.3F, new Properties().durability(32));
 	}
 }
 

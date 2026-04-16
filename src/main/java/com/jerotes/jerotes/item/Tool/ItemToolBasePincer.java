@@ -1,6 +1,8 @@
 package com.jerotes.jerotes.item.Tool;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
+import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -13,7 +15,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.SweepingEdgeEnchantment;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
@@ -41,13 +47,24 @@ public class ItemToolBasePincer extends ItemToolBaseShears {
     }
 
     @Override
-    public boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
-        if (blockState.getDestroySpeed(level, blockPos) != 0.0F) {
-            itemStack.hurtAndBreak(1, livingEntity, (player) -> {
-                player.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+    public boolean mineBlock(ItemStack p_43078_, Level p_43079_, BlockState p_43080_, BlockPos p_43081_, LivingEntity p_43082_) {
+        if (!p_43079_.isClientSide && !p_43080_.is(BlockTags.FIRE)) {
+            p_43078_.hurtAndBreak(1, p_43082_, (p_43076_) -> {
+                p_43076_.broadcastBreakEvent(EquipmentSlot.MAINHAND);
             });
         }
-        return true;
+
+        return p_43080_.is(BlockTags.LEAVES) || p_43080_.is(Blocks.COBWEB) || p_43080_.is(Blocks.GRASS) || p_43080_.is(Blocks.FERN) || p_43080_.is(Blocks.DEAD_BUSH) || p_43080_.is(Blocks.HANGING_ROOTS) || p_43080_.is(Blocks.VINE) || p_43080_.is(Blocks.TRIPWIRE) || p_43080_.is(BlockTags.WOOL) || super.mineBlock(p_43078_, p_43079_, p_43080_, p_43081_, p_43082_);
+    }
+
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (enchantment instanceof DamageEnchantment || enchantment instanceof FireAspectEnchantment || enchantment instanceof LootBonusEnchantment lootBonusEnchantment && lootBonusEnchantment.category == EnchantmentCategory.WEAPON || enchantment instanceof KnockbackEnchantment || enchantment instanceof MeleeEnchantment) {
+            return this.isMeleeWeapon();
+        }
+        if (enchantment instanceof SweepingEdgeEnchantment) {
+            return this instanceof ItemTwoHanded;
+        }
+        return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
     @Override

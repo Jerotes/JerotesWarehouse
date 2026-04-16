@@ -13,6 +13,7 @@
     "ConduitBlockEntityMixin",
     "CreeperMixin",
     "CrossbowItemMixin",
+    "DamageSourceMixin",
     "EnderDragonMixin",
     "EntityMixin",
     "EvokerMixin",
