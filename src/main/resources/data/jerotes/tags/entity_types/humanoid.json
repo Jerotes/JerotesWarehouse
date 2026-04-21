@@ -2,7 +2,7 @@
   "__comment": "生物类型：类人生物",
   "replace": false,
   "values": [
-    "#jerotes:humanoid",
+    "#jerotes:human",
 
     "minecraft:giant",
     {
