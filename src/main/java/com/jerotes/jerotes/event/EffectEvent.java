@@ -150,19 +150,19 @@ public class EffectEvent {
 		LivingEntity livingEntity = event.getEntity();
 		if (livingEntity != null) {
 			if (livingEntity.hasEffect(JerotesMobEffects.HOLD_MOB.get())) {
-				if (livingEntity.getPersistentData().getFloat("jerotes_hold_mob_x_rot") < 500) {
-					livingEntity.getPersistentData().putFloat("jerotes_hold_mob_x_rot", livingEntity.getXRot() + 500);
+				if (Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_x_rot") < 500) {
+					Main.getJerotesPersistentData(livingEntity).putFloat("jerotes_hold_mob_x_rot", livingEntity.getXRot() + 500);
 				} else {
-					livingEntity.setXRot(livingEntity.getPersistentData().getFloat("jerotes_hold_mob_x_rot") - 500);
-					livingEntity.xRotO = livingEntity.getPersistentData().getFloat("jerotes_hold_mob_x_rot") - 500;
+					livingEntity.setXRot(Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_x_rot") - 500);
+					livingEntity.xRotO = Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_x_rot") - 500;
 				}
-				if (livingEntity.getPersistentData().getFloat("jerotes_hold_mob_y_rot") < 500) {
-					livingEntity.getPersistentData().putFloat("jerotes_hold_mob_y_rot", livingEntity.getYRot() + 500);
+				if (Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_y_rot") < 500) {
+					Main.getJerotesPersistentData(livingEntity).putFloat("jerotes_hold_mob_y_rot", livingEntity.getYRot() + 500);
 				} else {
-					livingEntity.setYRot(livingEntity.getPersistentData().getFloat("jerotes_hold_mob_y_rot") - 500);
-					livingEntity.yRotO = livingEntity.getPersistentData().getFloat("jerotes_hold_mob_y_rot") - 500;
-					livingEntity.setYHeadRot(livingEntity.getPersistentData().getFloat("jerotes_hold_mob_y_rot") - 500);
-					livingEntity.setYBodyRot(livingEntity.getPersistentData().getFloat("jerotes_hold_mob_y_rot") - 500);
+					livingEntity.setYRot(Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_y_rot") - 500);
+					livingEntity.yRotO = Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_y_rot") - 500;
+					livingEntity.setYHeadRot(Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_y_rot") - 500);
+					livingEntity.setYBodyRot(Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_y_rot") - 500);
 
 				}
 			}
@@ -183,9 +183,9 @@ public class EffectEvent {
 		if (damagesource.getEntity() instanceof LivingEntity living && (EntityAndItemFind.targetBlindnessTrue(living) || living.hasEffect(JerotesMobEffects.TRUESIGHT.get()))) {
 			return;
 		}
-		boolean bl1 = entity.getPersistentData().get("jerotes_has_mirror_image_1_tick") != null;
-		boolean bl2 = entity.getPersistentData().get("jerotes_has_mirror_image_2_tick") != null;
-		boolean bl3 = entity.getPersistentData().get("jerotes_has_mirror_image_3_tick") != null;
+		boolean bl1 = Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_1_tick") != null;
+		boolean bl2 = Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_2_tick") != null;
+		boolean bl3 = Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_3_tick") != null;
 		int n = (bl1 ? 1 : 0) + (bl2 ? 1 : 0) + (bl3 ? 1 : 0);
 		if (n == 0) {
 			return;

@@ -212,8 +212,8 @@ public class EntityFactionFind {
 		if (AttackFind.getOwnerTrue(livingEntity) != null) {
 			return getTrueFaction(AttackFind.getOwnerTrue(livingEntity));
 		}
-		if (!livingEntity.getPersistentData().getString("jerotes_mob_faction").isEmpty()) {
-			return livingEntity.getPersistentData().getString("jerotes_mob_faction");
+		if (!Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction").isEmpty()) {
+			return Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction");
 		}
 		if (livingEntity instanceof JerotesEntity jerotes) {
 			return jerotes.getFactionTypeName();
@@ -228,8 +228,8 @@ public class EntityFactionFind {
 		if (AttackFind.getOwnerTrue(livingEntity) != null) {
 			return getTrueMobTypeNameModId(AttackFind.getOwnerTrue(livingEntity));
 		}
-		if (!livingEntity.getPersistentData().getString("jerotes_mob_faction_mod_id").isEmpty()) {
-			return livingEntity.getPersistentData().getString("jerotes_mob_faction_mod_id");
+		if (!Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction_mod_id").isEmpty()) {
+			return Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction_mod_id");
 		}
 		if (livingEntity instanceof JerotesEntity jerotes && !jerotes.getMobTypeNameModId().isEmpty()) {
 			return jerotes.getMobTypeNameModId();

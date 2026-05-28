@@ -36,6 +36,8 @@ public class ItemToolBaseThrowingSpearOfJavelin extends ItemToolBaseJavelin impl
             itemStack1.setTag(itemStack.getOrCreateTag());
             itemStack1.setDamageValue(itemStack.getDamageValue());
             player.setItemInHand(interactionHand, itemStack1);
+            player.getCooldowns().addCooldown(itemStack.getItem(), 20);
+            player.getCooldowns().addCooldown(itemStack1.getItem(), 20);
             return InteractionResultHolder.success(itemStack);
         }
         return super.use(level, player, interactionHand);

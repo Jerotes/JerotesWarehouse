@@ -4,6 +4,7 @@ import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;
 import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
+import com.jerotes.jerotes.util.Main;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
@@ -101,16 +102,13 @@ public class ItemToolBaseParryShield extends ItemToolBaseShield implements ItemS
 		public boolean applyForgeHandTransform(PoseStack poseStack, LocalPlayer player, HumanoidArm arm,
 											   ItemStack itemInHand, float partialTick, float equipProcess, float swingProcess) {
 			int dir = arm == HumanoidArm.RIGHT ? 1 : -1;
-			double d = player.getPersistentData().getDouble("jerotes_shield_parry_tick");
+			double d = Main.getJerotesPersistentData(player).getDouble("jerotes_shield_parry_tick");
 			if (player.isUsingItem() && player.getUseItem().getItem()instanceof ItemToolBaseParryShield itemToolBaseParryShield && d > 0) {
 				this.applyItemArmTransform(poseStack, arm, 0);
 				//向前挥动
 				firstPersonAttack(((float) d / (float) itemToolBaseParryShield.parryDurationTicks), poseStack, dir, arm);
 			}
-			else {
-				this.applyItemArmTransform(poseStack, arm, equipProcess);
-			}
-			return true;
+			return false;
 		}
 	}
 
@@ -139,7 +137,7 @@ public class ItemToolBaseParryShield extends ItemToolBaseShield implements ItemS
 	@Override
 	public void specialInHandLayer(EntityModel<?> entityModel, LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int n) {
 		if (itemStack.getItem() instanceof ItemToolBaseParryShield itemToolBaseParryShield) {
-			double d = livingEntity.getPersistentData().getDouble("jerotes_shield_parry_tick");
+			double d = Main.getJerotesPersistentData(livingEntity).getDouble("jerotes_shield_parry_tick");
 			float f = (float) d / (float) itemToolBaseParryShield.parryDurationTicks;
 			//后拉
 			if (f > 0 && f <= 0.05) {

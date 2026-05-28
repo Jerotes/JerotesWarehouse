@@ -114,17 +114,17 @@ public class SpellFindUseEvent {
         //闪电吸收
         Main.persistentDataDoubleReduceToZero(caster, "jerotes_lightning_absorption", true);
         //魔法飞弹
-        if (caster.getPersistentData().getDouble("jerotes_magic_missile") > 0) {
-            caster.getPersistentData().putDouble("jerotes_magic_missile", caster.getPersistentData().getDouble("jerotes_magic_missile") - 1);
-            caster.getPersistentData().putDouble("jerotes_spell_cooldown", Math.max(2, caster.getPersistentData().getDouble("jerotes_spell_cooldown")));
-            if (caster.getPersistentData().getDouble("jerotes_magic_missile") % 3 == 0) {
+        if (Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") > 0) {
+            Main.getJerotesPersistentData(caster).putDouble("jerotes_magic_missile", Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") - 1);
+            Main.getJerotesPersistentData(caster).putDouble("jerotes_spell_cooldown", Math.max(2, Main.getJerotesPersistentData(caster).getDouble("jerotes_spell_cooldown")));
+            if (Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") % 3 == 0) {
                 if (caster.level() instanceof ServerLevel serverLevel) {
-                    int spellLevelDamage = caster.getPersistentData().getInt("jerotes_magic_missile_spellLevelDamage");
-                    UUID targetUUID = caster.getPersistentData().getUUID("jerotes_magic_missile_target");
+                    int spellLevelDamage = Main.getJerotesPersistentData(caster).getInt("jerotes_magic_missile_spellLevelDamage");
+                    UUID targetUUID = Main.getJerotesPersistentData(caster).getUUID("jerotes_magic_missile_target");
                     if (!(serverLevel.getEntity(targetUUID) instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) && livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= spellLevelDamage)) {
-                        float spellLevelAccuracy = caster.getPersistentData().getFloat("jerotes_magic_missile_spellLevelAccuracy");
-                        int count = caster.getPersistentData().getInt("jerotes_magic_missile_count");
-                        float distance = caster.getPersistentData().getFloat("jerotes_magic_missile_distance");
+                        float spellLevelAccuracy = Main.getJerotesPersistentData(caster).getFloat("jerotes_magic_missile_spellLevelAccuracy");
+                        int count = Main.getJerotesPersistentData(caster).getInt("jerotes_magic_missile_count");
+                        float distance = Main.getJerotesPersistentData(caster).getFloat("jerotes_magic_missile_distance");
                         MagicMissileEntity spell;
                         for (int i = 0; i < count; ++i) {
                             if (caster instanceof Mob mob && mob.getTarget() != null) {
@@ -150,7 +150,7 @@ public class SpellFindUseEvent {
                 }
             }
         }
-        else if (caster.getPersistentData().get("jerotes_magic_missile") != null) {
+        else if (Main.getJerotesPersistentData(caster).get("jerotes_magic_missile") != null) {
             Main.persistentDataRemove(caster, "jerotes_magic_missile");
             Main.persistentDataRemove(caster, "jerotes_magic_missile_spellLevelDamage");
             Main.persistentDataRemove(caster, "jerotes_magic_missile_target");

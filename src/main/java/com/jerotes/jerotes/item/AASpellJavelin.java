@@ -42,7 +42,7 @@ public class AASpellJavelin extends Item implements MagicItem {
 		if (!(livingEntity instanceof Player player)) {
 			return;
 		}
-		if (player.getPersistentData().getDouble("jerotes_spell_cooldown") > 0) {
+		if (Main.getJerotesPersistentData(player).getDouble("jerotes_spell_cooldown") > 0) {
 			return;
 		}
 		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))) {

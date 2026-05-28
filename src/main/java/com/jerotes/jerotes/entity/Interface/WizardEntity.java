@@ -4,6 +4,7 @@ import com.jerotes.jerotes.item.Interface.MagicItem;
 import com.jerotes.jerotes.spell.MagicType;
 import com.jerotes.jerotes.spell.SpellRegistry;
 import com.jerotes.jerotes.spell.SpellTypeInterface;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
@@ -82,7 +83,7 @@ public interface WizardEntity {
     default List<SpellTypeInterface> SelfMainSpellStringList() {
         List<SpellTypeInterface> spellList = new ArrayList<>();
         if (this instanceof LivingEntity livingEntity) {
-            ListTag listTag = livingEntity.getPersistentData().getList("jerotes_main_spell_string_list", 8);
+            ListTag listTag = Main.getJerotesPersistentData(livingEntity).getList("jerotes_main_spell_string_list", 8);
             if (!listTag.isEmpty()) {
                 for (Tag tag : listTag) {
                     if (tag instanceof StringTag stringTag) {
@@ -97,7 +98,7 @@ public interface WizardEntity {
     default List<SpellTypeInterface> SelfAddSpellStringList() {
         List<SpellTypeInterface> spellList = new ArrayList<>();
         if (this instanceof LivingEntity livingEntity) {
-            ListTag listTag = livingEntity.getPersistentData().getList("jerotes_add_spell_string_list", 8);
+            ListTag listTag = Main.getJerotesPersistentData(livingEntity).getList("jerotes_add_spell_string_list", 8);
             if (!listTag.isEmpty()) {
                 for (Tag tag : listTag) {
                     if (tag instanceof StringTag stringTag) {

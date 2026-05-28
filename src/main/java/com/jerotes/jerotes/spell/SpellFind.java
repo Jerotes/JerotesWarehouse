@@ -50,15 +50,15 @@ public class SpellFind {
 					spell.setTarget(target);
 				}
 				serverLevel.addFreshEntity(spell);
-				caster.getPersistentData().putDouble("jerotes_magic_missile", caster.getPersistentData().getDouble("jerotes_magic_missile") - 3);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_magic_missile", Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") - 3);
 			}
 			if (!caster.level().isClientSide()) {
-				caster.getPersistentData().putUUID("jerotes_magic_missile_target", target != null ? target.getUUID() : null);
-				caster.getPersistentData().putInt("jerotes_magic_missile_spellLevelDamage", spellLevelDamage);
-				caster.getPersistentData().putDouble("jerotes_magic_missile", tickCount * 3 + caster.getPersistentData().getDouble("jerotes_magic_missile"));
-				caster.getPersistentData().putFloat("jerotes_magic_missile_spellLevelAccuracy", spellLevelAccuracy);
-				caster.getPersistentData().putInt("jerotes_magic_missile_count", count);
-				caster.getPersistentData().putFloat("jerotes_magic_missile_distance", distance);
+				Main.getJerotesPersistentData(caster).putUUID("jerotes_magic_missile_target", target != null ? target.getUUID() : null);
+				Main.getJerotesPersistentData(caster).putInt("jerotes_magic_missile_spellLevelDamage", spellLevelDamage);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_magic_missile", tickCount * 3 + Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile"));
+				Main.getJerotesPersistentData(caster).putFloat("jerotes_magic_missile_spellLevelAccuracy", spellLevelAccuracy);
+				Main.getJerotesPersistentData(caster).putInt("jerotes_magic_missile_count", count);
+				Main.getJerotesPersistentData(caster).putFloat("jerotes_magic_missile_distance", distance);
 			}
 		}
 		return true;
@@ -235,13 +235,13 @@ public class SpellFind {
 	//火焰吸收
 	public static boolean FireAbsorption(LivingEntity caster, float amount, double spellLevelPercentage, float spellLevelInterval) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
-			if (caster.getPersistentData().getDouble("jerotes_fire_absorption") <= 0 || caster.getPersistentData().getDouble("jerotes_fire_absorption_last_damage") < amount || caster.getPersistentData().get("jerotes_fire_absorption") == null) {
+			if (Main.getJerotesPersistentData(caster).getDouble("jerotes_fire_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_fire_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_fire_absorption") == null) {
 				caster.heal((float) (amount * (spellLevelPercentage / 100)));
 				for (int i = 0; i < 2; ++i) {
 					serverLevel.sendParticles(ParticleTypes.FLAME, caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
 				}
-				caster.getPersistentData().putDouble("jerotes_fire_absorption", caster.getPersistentData().getDouble("jerotes_fire_absorption") + spellLevelInterval * 20);
-				caster.getPersistentData().putDouble("jerotes_fire_absorption_last_damage", amount);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_fire_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_fire_absorption") + spellLevelInterval * 20);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_fire_absorption_last_damage", amount);
 				if (!caster.isInvisible()) {
 					serverLevel.sendParticles(JerotesParticleTypes.FIRE_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
 				}
@@ -252,13 +252,13 @@ public class SpellFind {
 	//冰霜吸收
 	public static boolean FreezeAbsorption(LivingEntity caster, float amount, double spellLevelPercentage, float spellLevelInterval) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
-			if (caster.getPersistentData().getDouble("jerotes_freeze_absorption") <= 0 || caster.getPersistentData().getDouble("jerotes_freeze_absorption_last_damage") < amount || caster.getPersistentData().get("jerotes_freeze_absorption") == null) {
+			if (Main.getJerotesPersistentData(caster).getDouble("jerotes_freeze_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_freeze_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_freeze_absorption") == null) {
 				caster.heal((float) (amount * (spellLevelPercentage / 100)));
 				for (int i = 0; i < 2; ++i) {
 					serverLevel.sendParticles(ParticleTypes.SNOWFLAKE, caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
 				}
-				caster.getPersistentData().putDouble("jerotes_freeze_absorption", caster.getPersistentData().getDouble("jerotes_freeze_absorption") + spellLevelInterval * 20);
-				caster.getPersistentData().putDouble("jerotes_freeze_absorption_last_damage", amount);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_freeze_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_freeze_absorption") + spellLevelInterval * 20);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_freeze_absorption_last_damage", amount);
 				if (!caster.isInvisible()) {
 					serverLevel.sendParticles(JerotesParticleTypes.FREEZE_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
 				}
@@ -269,13 +269,13 @@ public class SpellFind {
 	//闪电吸收
 	public static boolean LightningAbsorption(LivingEntity caster, float amount, double spellLevelPercentage, float spellLevelInterval) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
-			if (caster.getPersistentData().getDouble("jerotes_lightning_absorption") <= 0 || caster.getPersistentData().getDouble("jerotes_lightning_absorption_last_damage") < amount || caster.getPersistentData().get("jerotes_lightning_absorption") == null) {
+			if (Main.getJerotesPersistentData(caster).getDouble("jerotes_lightning_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_lightning_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_lightning_absorption") == null) {
 				caster.heal((float) (amount * (spellLevelPercentage / 100)));
 				for (int i = 0; i < 2; ++i) {
 					serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK, caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
 				}
-				caster.getPersistentData().putDouble("jerotes_lightning_absorption", caster.getPersistentData().getDouble("jerotes_lightning_absorption") + spellLevelInterval * 20);
-				caster.getPersistentData().putDouble("jerotes_lightning_absorption_last_damage", amount);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_lightning_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_lightning_absorption") + spellLevelInterval * 20);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_lightning_absorption_last_damage", amount);
 				if (!caster.isInvisible()) {
 					serverLevel.sendParticles(JerotesParticleTypes.LIGHTNING_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
 				}

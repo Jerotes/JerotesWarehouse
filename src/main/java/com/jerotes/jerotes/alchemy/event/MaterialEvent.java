@@ -7,6 +7,7 @@ import com.jerotes.jerotes.alchemy.forge.JerotesAlchemyTooltipEvent;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -68,7 +70,7 @@ public class MaterialEvent {
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void Material(JerotesAlchemyMaterialEffectEvent event) {
 		ItemStack itemStack = event.getMaterial();
 		if (itemStack == null)
@@ -283,7 +285,11 @@ public class MaterialEvent {
 			event.setEffect3(new ResistanceAlchemyEffect(2, 1));
 		}
 		//鱼类
-		if (itemStack.is(Items.COD) || itemStack.is(Items.SALMON) || itemStack.is(Items.TROPICAL_FISH)) {
+		if (itemStack.is(Items.COD) || itemStack.is(Items.SALMON) || itemStack.is(Items.TROPICAL_FISH) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_fish"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_fishes"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawfish"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("minecraft:fishes")))) {
 			event.setEffectCount(3);
 			event.setEffect1(new DolphinsGraceAlchemyEffect(1, 1));
 			event.setEffect2(new WaterBreathingAlchemyEffect(1, 1));
@@ -297,14 +303,27 @@ public class MaterialEvent {
 			event.setEffect3(new HasteAlchemyEffect(1, 2));
 		}
 		//肉类
-		if (itemStack.is(Items.BEEF) || itemStack.is(Items.PORKCHOP) || itemStack.is(Items.MUTTON) || itemStack.is(Items.CHICKEN) || itemStack.is(Items.RABBIT)) {
+		if (itemStack.is(Items.BEEF) ||
+				itemStack.is(Items.PORKCHOP) ||
+				itemStack.is(Items.MUTTON) ||
+				itemStack.is(Items.CHICKEN) ||
+				itemStack.is(Items.RABBIT) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_meat"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_meats"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawmeat"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawmeats")))) {
 			event.setEffectCount(3);
 			event.setEffect1(new SpeedAlchemyEffect(1, 1));
 			event.setEffect2(new WeaknessAlchemyEffect(1, 1));
 			event.setEffect3(new HungerAlchemyEffect(1, 1));
 		}
 		//熟肉类
-		if (itemStack.is(Items.COOKED_BEEF) || itemStack.is(Items.COOKED_PORKCHOP) || itemStack.is(Items.COOKED_MUTTON) || itemStack.is(Items.COOKED_CHICKEN) || itemStack.is(Items.COOKED_RABBIT)) {
+		else if (itemStack.is(Items.COOKED_BEEF) ||
+				itemStack.is(Items.COOKED_PORKCHOP) ||
+				itemStack.is(Items.COOKED_MUTTON) ||
+				itemStack.is(Items.COOKED_CHICKEN) ||
+				itemStack.is(Items.COOKED_RABBIT) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("meats")))) {
 			event.setEffectCount(3);
 			event.setEffect1(new SaturationAlchemyEffect(1, 1));
 			event.setEffect2(new SpeedAlchemyEffect(1, 2));

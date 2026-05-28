@@ -293,7 +293,7 @@ public class EntityAboutEvent {
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_1_tick", true);
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_2_tick", true);
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_3_tick", true);
-		if (entity.getPersistentData().get("jerotes_has_mirror_image_1_tick") == null || entity.getPersistentData().getDouble("jerotes_has_mirror_image_1_tick") <= 0) {
+		if (Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_1_tick") == null || Main.getJerotesPersistentData(entity).getDouble("jerotes_has_mirror_image_1_tick") <= 0) {
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_x");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_y");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_z");
@@ -303,7 +303,7 @@ public class EntityAboutEvent {
 				entity.addEffect(new MobEffectInstance(JerotesMobEffects.MIRROR_IMAGE.get(), 5, 0, false, false));
 			}
 		}
-		if (entity.getPersistentData().get("jerotes_has_mirror_image_2_tick") == null && entity.getPersistentData().getDouble("jerotes_has_mirror_image_2_tick") <= 0) {
+		if (Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_2_tick") == null && Main.getJerotesPersistentData(entity).getDouble("jerotes_has_mirror_image_2_tick") <= 0) {
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_2_x");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_2_y");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_2_z");
@@ -313,7 +313,7 @@ public class EntityAboutEvent {
 				entity.addEffect(new MobEffectInstance(JerotesMobEffects.MIRROR_IMAGE.get(), 5, 0, false, false));
 			}
 		}
-		if (entity.getPersistentData().get("jerotes_has_mirror_image_3_tick") == null && entity.getPersistentData().getDouble("jerotes_has_mirror_image_3_tick") <= 0) {
+		if (Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_3_tick") == null && Main.getJerotesPersistentData(entity).getDouble("jerotes_has_mirror_image_3_tick") <= 0) {
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_3_x");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_3_y");
 			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_3_z");
@@ -324,8 +324,8 @@ public class EntityAboutEvent {
 			}
 		}
 		//伤害间隔
-		if (entity.getPersistentData().getFloat("jerotes_boss_hurt_cooldown") > 0) {
-			entity.getPersistentData().putFloat("jerotes_boss_hurt_cooldown", entity.getPersistentData().getFloat("jerotes_boss_hurt_cooldown") - 1);
+		if (Main.getJerotesPersistentData(entity).getFloat("jerotes_boss_hurt_cooldown") > 0) {
+			Main.getJerotesPersistentData(entity).putFloat("jerotes_boss_hurt_cooldown", Main.getJerotesPersistentData(entity).getFloat("jerotes_boss_hurt_cooldown") - 1);
 		}
 		//弹反
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_shield_parry_cooldown", true);
@@ -343,17 +343,17 @@ public class EntityAboutEvent {
 		if (boss instanceof JerotesEntity jerotes) {
 			if (jerotes.hasDamageCooldownTick()) {
 				if (!event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && !boss.isInvulnerableTo(event.getSource())) {
-					boolean breakThis = damage > boss.getPersistentData().getFloat("jerotes_boss_hurt_cooldown_last_damage") * jerotes.BreakHurtCooldownMultiple(event.getSource(), entity);
-					boolean noCooldown = boss.getPersistentData().getFloat("jerotes_boss_hurt_cooldown") <= 0;
+					boolean breakThis = damage > Main.getJerotesPersistentData(boss).getFloat("jerotes_boss_hurt_cooldown_last_damage") * jerotes.BreakHurtCooldownMultiple(event.getSource(), entity);
+					boolean noCooldown = Main.getJerotesPersistentData(boss).getFloat("jerotes_boss_hurt_cooldown") <= 0;
 					if (!breakThis && !noCooldown) {
 						event.setCanceled(true);
 					} else {
-						boss.getPersistentData().putFloat("jerotes_boss_hurt_cooldown", jerotes.DamageCooldownTick(event.getSource(), entity));
-						boss.getPersistentData().putFloat("jerotes_boss_hurt_cooldown_last_damage", damage);
+						Main.getJerotesPersistentData(boss).putFloat("jerotes_boss_hurt_cooldown", jerotes.DamageCooldownTick(event.getSource(), entity));
+						Main.getJerotesPersistentData(boss).putFloat("jerotes_boss_hurt_cooldown_last_damage", damage);
 					}
 				} else {
-					boss.getPersistentData().putFloat("jerotes_boss_hurt_cooldown", jerotes.DamageCooldownTick(event.getSource(), entity));
-					boss.getPersistentData().putFloat("jerotes_boss_hurt_cooldown_last_damage", damage);
+					Main.getJerotesPersistentData(boss).putFloat("jerotes_boss_hurt_cooldown", jerotes.DamageCooldownTick(event.getSource(), entity));
+					Main.getJerotesPersistentData(boss).putFloat("jerotes_boss_hurt_cooldown_last_damage", damage);
 				}
 			}
 		}
@@ -364,17 +364,17 @@ public class EntityAboutEvent {
 					base *= 0.5f;
 				}
 				if (!event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && !boss.isInvulnerableTo(event.getSource())) {
-					boolean breakThis = damage > boss.getPersistentData().getFloat("jerotes_boss_hurt_cooldown_last_damage") * (float) MainConfig.BaseBreakHurtCooldownMultiple;
-					boolean noCooldown = boss.getPersistentData().getFloat("jerotes_boss_hurt_cooldown") <= 0;
+					boolean breakThis = damage > Main.getJerotesPersistentData(boss).getFloat("jerotes_boss_hurt_cooldown_last_damage") * (float) MainConfig.BaseBreakHurtCooldownMultiple;
+					boolean noCooldown = Main.getJerotesPersistentData(boss).getFloat("jerotes_boss_hurt_cooldown") <= 0;
 					if (!breakThis && !noCooldown) {
 						event.setCanceled(true);
 					} else {
-						boss.getPersistentData().putFloat("jerotes_boss_hurt_cooldown", (float) MainConfig.BaseDamageCooldownTick * base);
-						boss.getPersistentData().putFloat("jerotes_boss_hurt_cooldown_last_damage", damage);
+						Main.getJerotesPersistentData(boss).putFloat("jerotes_boss_hurt_cooldown", (float) MainConfig.BaseDamageCooldownTick * base);
+						Main.getJerotesPersistentData(boss).putFloat("jerotes_boss_hurt_cooldown_last_damage", damage);
 					}
 				} else {
-					boss.getPersistentData().putFloat("jerotes_boss_hurt_cooldown", (float) MainConfig.BaseDamageCooldownTick * base);
-					boss.getPersistentData().putFloat("jerotes_boss_hurt_cooldown_last_damage", damage);
+					Main.getJerotesPersistentData(boss).putFloat("jerotes_boss_hurt_cooldown", (float) MainConfig.BaseDamageCooldownTick * base);
+					Main.getJerotesPersistentData(boss).putFloat("jerotes_boss_hurt_cooldown_last_damage", damage);
 				}
 			}
 		}

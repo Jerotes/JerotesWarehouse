@@ -43,10 +43,10 @@ public class CorrosiveMobEffect extends BaseMobEffectTick {
 		float breakLegsLevel = 0.25f;
 		float breakFeetLevel = 0.25f;
 
-		boolean gameRuleArmor = !(livingEntity instanceof Player) && JerotesGameRules.JEROTES_ARMOR_CAN_BREAK != null && livingEntity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_ARMOR_CAN_BREAK);
-		boolean gameRuleMelee = !(livingEntity instanceof Player) && JerotesGameRules.JEROTES_MELEE_CAN_BREAK != null && livingEntity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_MELEE_CAN_BREAK);
-		boolean gameRuleRange = !(livingEntity instanceof Player) && JerotesGameRules.JEROTES_RANGE_CAN_BREAK != null && livingEntity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_RANGE_CAN_BREAK);
-		boolean gameRuleShield = !(livingEntity instanceof Player) && JerotesGameRules.JEROTES_SHIELD_CAN_BREAK != null && livingEntity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_SHIELD_CAN_BREAK);
+		boolean gameRuleArmor = !(livingEntity instanceof Player) && JerotesGameRules.JEROTES_ARMOR_CAN_BREAK != null && !livingEntity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_ARMOR_CAN_BREAK);
+		boolean gameRuleMelee = !(livingEntity instanceof Player) && JerotesGameRules.JEROTES_MELEE_CAN_BREAK != null && !livingEntity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_MELEE_CAN_BREAK);
+		boolean gameRuleRange = !(livingEntity instanceof Player) && JerotesGameRules.JEROTES_RANGE_CAN_BREAK != null && !livingEntity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_RANGE_CAN_BREAK);
+		boolean gameRuleShield = !(livingEntity instanceof Player) && JerotesGameRules.JEROTES_SHIELD_CAN_BREAK != null && !livingEntity.level().getLevelData().getGameRules().getBoolean(JerotesGameRules.JEROTES_SHIELD_CAN_BREAK);
 		boolean gameRuleMainHand =
 						(mainHand.getItem() instanceof ArmorItem && gameRuleArmor) ||
 						(mainHand.getItem() instanceof ShieldItem && gameRuleShield) ||

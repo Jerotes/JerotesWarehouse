@@ -6,6 +6,7 @@ import com.jerotes.jerotes.entity.Mob.HumanEntity;
 import com.jerotes.jerotes.item.Interface.MagicItem;
 import com.jerotes.jerotes.spell.*;
 import com.jerotes.jerotes.util.AttackFind;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -92,10 +93,10 @@ public class JerotesMainSpellAttackGoal extends Goal {
         if (this.mob instanceof WizardEntity wizardEntity && wizardEntity.stopUseMainSpellInGoal()) {
             return;
         }
-        if (this.mob.getPersistentData().getDouble("jerotes_main_spell_cooldown") > 0) {
+        if (Main.getJerotesPersistentData(this.mob).getDouble("jerotes_main_spell_cooldown") > 0) {
             return;
         }
-        if (this.mob.getPersistentData().getDouble("jerotes_spell_cooldown") > 0) {
+        if (Main.getJerotesPersistentData(this.mob).getDouble("jerotes_spell_cooldown") > 0) {
             return;
         }
         Entity finalTarget = this.target;
@@ -182,7 +183,7 @@ public class JerotesMainSpellAttackGoal extends Goal {
             wizardEntity.SpellUseAfterAttack(SpellTypeInterface.getId(), magicSpell.getMagicType(), magicSpell.getMagicType2());
             //施法
             SpellListByString.getSpell(TrueSpellLevel, this.mob, finalTarget, SpellTypeInterface).spellUse();
-            this.mob.getPersistentData().putDouble("jerotes_main_spell_cooldown", Math.max(attackCooldown, this.mob.getPersistentData().getDouble("jerotes_main_spell_cooldown")));
+            Main.getJerotesPersistentData(this.mob).putDouble("jerotes_main_spell_cooldown", Math.max(attackCooldown, Main.getJerotesPersistentData(this.mob).getDouble("jerotes_main_spell_cooldown")));
             this.mob.stopUsingItem();
             //如何损坏
             {

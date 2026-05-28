@@ -34,6 +34,7 @@
     "SpiderMixin",
     "StrayMixin",
     "ThrownEnderPearlMixin",
+    "TrapDoorBlockMixin",
     "WitherBossMixin"
   ],
   "client": [

@@ -9,6 +9,7 @@ import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.item.Interface.ItemAnesthetized;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -62,16 +63,16 @@ public class AnesthetizedEvent {
 				}
 			}
 			//如果无计时
-			if (entity.getPersistentData().getDouble("jerotes_anesthetized") <= 0) {
+			if (Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized") <= 0) {
 				if (anesthetizedTicksMinute >= entity.getMaxHealth() + entity.getHealth() * 3) {
-					entity.getPersistentData().putDouble("jerotes_anesthetized", (double) anesthetizedTicks / 6 + entity.getPersistentData().getDouble("jerotes_anesthetized"));
+					Main.getJerotesPersistentData(entity).putDouble("jerotes_anesthetized", (double) anesthetizedTicks / 6 + Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized"));
 					entity.removeEffect(JerotesMobEffects.ANESTHETIZED.get());
 				}
 
 			}
 			//如果有计时
 			else {
-				entity.getPersistentData().putDouble("jerotes_anesthetized", (double) anesthetizedTicks / 6 + entity.getPersistentData().getDouble("jerotes_anesthetized"));
+				Main.getJerotesPersistentData(entity).putDouble("jerotes_anesthetized", (double) anesthetizedTicks / 6 + Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized"));
 				entity.removeEffect(JerotesMobEffects.ANESTHETIZED.get());
 			}
 		}
@@ -90,32 +91,32 @@ public class AnesthetizedEvent {
 			return;
 		if (EntityAndItemFind.isLegendary(entity))
 			return;
-		if (entity.getPersistentData().getDouble("jerotes_anesthetized") > 0) {
+		if (Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized") > 0) {
 			//散发粒子
 			if (entity.level() instanceof ServerLevel _level && !entity.isInvisible()) {
 				_level.sendParticles(JerotesParticleTypes.ANESTHETIZED_VII.get(), entity.getRandomX(0.5), entity.getRandomY(), entity.getRandomZ(0.5), 0, 0, 0, 0, 0);
 			}
 			//计时降低
-			entity.getPersistentData().putDouble("jerotes_anesthetized", entity.getPersistentData().getDouble("jerotes_anesthetized") - 1);
+			Main.getJerotesPersistentData(entity).putDouble("jerotes_anesthetized", Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized") - 1);
 			//没有buff
 			if (!entity.hasEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get())) {
-				entity.addEffect(new MobEffectInstance(JerotesMobEffects.ANESTHETIZED_HOLD.get(), (int) entity.getPersistentData().getDouble("jerotes_anesthetized"), 0, false, false));
+				entity.addEffect(new MobEffectInstance(JerotesMobEffects.ANESTHETIZED_HOLD.get(), (int) Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized"), 0, false, false));
 			}
 			//有buff
 			else {
 				//如果buff时间大于计时
-				if (entity.getEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()).getDuration() > entity.getPersistentData().getDouble("jerotes_anesthetized")) {
-					entity.getPersistentData().putDouble("jerotes_anesthetized", entity.getEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()).getDuration());
+				if (entity.getEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()).getDuration() > Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized")) {
+					Main.getJerotesPersistentData(entity).putDouble("jerotes_anesthetized", entity.getEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()).getDuration());
 				}
 				//如果buff时间小于计时
 				else {
-					entity.addEffect(new MobEffectInstance(JerotesMobEffects.ANESTHETIZED_HOLD.get(), (int) entity.getPersistentData().getDouble("jerotes_anesthetized"), 0, false, false));
+					entity.addEffect(new MobEffectInstance(JerotesMobEffects.ANESTHETIZED_HOLD.get(), (int) Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized"), 0, false, false));
 				}
 			}
 		}
 		else if (entity.hasEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get())) {
 			//如果buff时间大于计时
-			entity.getPersistentData().putDouble("jerotes_anesthetized", entity.getEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()).getDuration());
+			Main.getJerotesPersistentData(entity).putDouble("jerotes_anesthetized", entity.getEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()).getDuration());
 		}
 	}
 
@@ -133,8 +134,8 @@ public class AnesthetizedEvent {
 		if (EntityAndItemFind.isLegendary(entity))
 			return;
 		//受击降低麻醉
-		if (entity.getPersistentData().getDouble("jerotes_anesthetized") > 0 && entity.hasEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()) && event.getAmount() > 0) {
-			entity.getPersistentData().putDouble("jerotes_anesthetized", entity.getPersistentData().getDouble("jerotes_anesthetized") - 600 * event.getAmount());
+		if (Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized") > 0 && entity.hasEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()) && event.getAmount() > 0) {
+			Main.getJerotesPersistentData(entity).putDouble("jerotes_anesthetized", Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized") - 600 * event.getAmount());
 			entity.removeEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get());
 		}
 	}
@@ -147,8 +148,8 @@ public class AnesthetizedEvent {
 		if (entity.level().isClientSide)
 			return;
 		//死亡清除
-		if (entity.getPersistentData().getDouble("jerotes_anesthetized") > 0) {
-			entity.getPersistentData().putDouble("jerotes_anesthetized", 0);
+		if (Main.getJerotesPersistentData(entity).getDouble("jerotes_anesthetized") > 0) {
+			Main.getJerotesPersistentData(entity).putDouble("jerotes_anesthetized", 0);
 		}
 	}
 

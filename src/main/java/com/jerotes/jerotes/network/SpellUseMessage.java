@@ -74,7 +74,7 @@ import java.util.function.Supplier;
 	}
 
 	public static void MainSpellUse(Player player) {
-		if (player.getPersistentData().getDouble("jerotes_spell_cooldown") > 0) {
+		if (Main.getJerotesPersistentData(player).getDouble("jerotes_spell_cooldown") > 0) {
 			return;
 		}
 		String magic = player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).MainSpellTarget;
@@ -111,7 +111,7 @@ import java.util.function.Supplier;
 		}
 	}
 	public static void AddSpellUse(Player player) {
-		if (player.getPersistentData().getDouble("jerotes_spell_cooldown") > 0) {
+		if (Main.getJerotesPersistentData(player).getDouble("jerotes_spell_cooldown") > 0) {
 			return;
 		}
 		String magic = player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTarget;

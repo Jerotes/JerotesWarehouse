@@ -62,7 +62,7 @@ public enum SpellType implements SpellTypeInterface {
 	}
 	public static void stops(LivingEntity caster, int level, boolean must) {
 		//魔法飞弹
-		if (must || level > caster.getPersistentData().getInt("jerotes_magic_missile_spellLevelDamage")) {
+		if (must || level > Main.getJerotesPersistentData(caster).getInt("jerotes_magic_missile_spellLevelDamage")) {
 			Main.persistentDataRemove(caster, "jerotes_magic_missile");
 			Main.persistentDataRemove(caster, "jerotes_magic_missile_spellLevelDamage");
 			Main.persistentDataRemove(caster, "jerotes_magic_missile_target");

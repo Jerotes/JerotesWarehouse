@@ -446,8 +446,17 @@ public class AttackFind {
                 return true;
             }
             //仆从主人
-            if ((mobAttacker instanceof JerotesEntity || MainConfig.AffectsNonThisModEntities) && mobAttacker instanceof OwnableEntity ownable && ownable.getOwner() == mobHurt) {
-                return true;
+            if ((attacker instanceof JerotesEntity || hurt instanceof JerotesEntity || MainConfig.AffectsNonThisModEntities)) {
+                if (attacker instanceof OwnableEntity || hurt instanceof OwnableEntity) {
+                    if (attacker instanceof OwnableEntity ownable && ownable.getOwner() == hurt)
+                        return true;
+                    else if (hurt instanceof OwnableEntity ownable && ownable.getOwner() == attacker)
+                        return true;
+                    else  if (hurt instanceof OwnableEntity ownable && attacker instanceof OwnableEntity ownable2 && ownable.getOwner() == ownable2.getOwner())
+                        return true;
+                    else  if (hasMasterServantRelation(mobAttacker, hurt))
+                        return true;
+                }
             }
             //铜刻类型生物
             if (EntityFactionFind.isCarved(mobHurt.getType())) {

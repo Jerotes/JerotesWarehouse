@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.effect;
 
 import com.jerotes.jerotes.init.JerotesSoundEvents;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,8 +22,8 @@ public class CloakingMobEffect extends BaseMobEffectAllTick {
 	@Override
 	public void applyEffectTick(LivingEntity livingEntity, int n) {
 		super.applyEffectTick(livingEntity, n);
-		if (livingEntity.getPersistentData().get("jerotes_cloaking_shift_key_down") != null
-				&& !livingEntity.getPersistentData().getBoolean("jerotes_cloaking_shift_key_down")
+		if (Main.getJerotesPersistentData(livingEntity).get("jerotes_cloaking_shift_key_down") != null
+				&& !Main.getJerotesPersistentData(livingEntity).getBoolean("jerotes_cloaking_shift_key_down")
 		&& livingEntity.isShiftKeyDown()) {
 			for (int i = 0; i < 7; ++i) {
 				double d = livingEntity.getRandom().nextGaussian() * 0.02;
@@ -40,6 +41,6 @@ public class CloakingMobEffect extends BaseMobEffectAllTick {
 		}
 
 
-		livingEntity.getPersistentData().putBoolean("jerotes_cloaking_shift_key_down", livingEntity.isShiftKeyDown());
+		Main.getJerotesPersistentData(livingEntity).putBoolean("jerotes_cloaking_shift_key_down", livingEntity.isShiftKeyDown());
 	}
 }

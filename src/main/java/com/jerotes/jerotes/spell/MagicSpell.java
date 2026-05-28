@@ -71,8 +71,8 @@ public class MagicSpell {
 			}
 		});
 		//记录自身上次使用的法术
-		getCaster().getPersistentData().putString("jerotes_last_magic", getSpellModId() + "_" + getSpellId());
-		getCaster().getPersistentData().putDouble("jerotes_spell_cooldown", Math.max(2, caster.getPersistentData().getDouble("jerotes_spell_cooldown")));
+		Main.getJerotesPersistentData(getCaster()).putString("jerotes_last_magic", getSpellModId() + "_" + getSpellId());
+		Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_spell_cooldown", Math.max(2, Main.getJerotesPersistentData(caster).getDouble("jerotes_spell_cooldown")));
 		//正在使用法术 探查
 		if (!canEffect()) {
 			return false;
@@ -104,7 +104,7 @@ public class MagicSpell {
 //		return true;
 //	}
 	public boolean canUse() {
-		if (getCaster() != null && getCaster().getPersistentData().getDouble("jerotes_spell_cooldown") > 0) {
+		if (getCaster() != null && Main.getJerotesPersistentData(getCaster()).getDouble("jerotes_spell_cooldown") > 0) {
 			return false;
 		}
 		return true;

@@ -254,7 +254,7 @@ public class CommandEvent {
 															Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
 															double d = DoubleArgumentType.getDouble(arguments, "number");
 															for (Entity entity : entities) {
-																entity.getPersistentData().putDouble("jerotes_anesthetized", d);
+																Main.getJerotesPersistentData(entity).putDouble("jerotes_anesthetized", d);
 															}
 															return 0;
 														}
@@ -300,7 +300,7 @@ public class CommandEvent {
 															Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
 															String string = StringArgumentType.getString(arguments, "string");
 															for (Entity entity : entities) {
-																entity.getPersistentData().putString("jerotes_mob_faction", string);
+																Main.getJerotesPersistentData(entity).putString("jerotes_mob_faction", string);
 															}
 															return 0;
 														}
@@ -312,7 +312,7 @@ public class CommandEvent {
 															Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
 															String string = StringArgumentType.getString(arguments, "string");
 															for (Entity entity : entities) {
-																entity.getPersistentData().putString("jerotes_mob_faction_mod_id", string);
+																Main.getJerotesPersistentData(entity).putString("jerotes_mob_faction_mod_id", string);
 															}
 															return 0;
 														}
@@ -326,7 +326,7 @@ public class CommandEvent {
 																	Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
 																	String string = StringArgumentType.getString(arguments, "string");
 																	for (Entity entity : entities) {
-																		CompoundTag data = entity.getPersistentData();
+																		CompoundTag data = Main.getJerotesPersistentData(entity);
 																		ListTag spellList = data.getList("jerotes_main_spell_string_list", Tag.TAG_STRING);
 																		spellList.add(StringTag.valueOf(string));
 																		data.put("jerotes_main_spell_string_list", spellList);
@@ -342,7 +342,7 @@ public class CommandEvent {
 																	Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
 																	String string = StringArgumentType.getString(arguments, "string");
 																	for (Entity entity : entities) {
-																		CompoundTag data = entity.getPersistentData();
+																		CompoundTag data = Main.getJerotesPersistentData(entity);
 																		ListTag spellList = data.getList("jerotes_main_spell_string_list", Tag.TAG_STRING);
 																		spellList.remove(StringTag.valueOf(string));
 																		data.put("jerotes_main_spell_string_list", spellList);
@@ -360,7 +360,7 @@ public class CommandEvent {
 																	Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
 																	String string = StringArgumentType.getString(arguments, "string");
 																	for (Entity entity : entities) {
-																		CompoundTag data = entity.getPersistentData();
+																		CompoundTag data = Main.getJerotesPersistentData(entity);
 																		ListTag spellList = data.getList("jerotes_add_spell_string_list", Tag.TAG_STRING);
 																		spellList.add(StringTag.valueOf(string));
 																		data.put("jerotes_add_spell_string_list", spellList);
@@ -376,7 +376,7 @@ public class CommandEvent {
 																	Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
 																	String string = StringArgumentType.getString(arguments, "string");
 																	for (Entity entity : entities) {
-																		CompoundTag data = entity.getPersistentData();
+																		CompoundTag data = Main.getJerotesPersistentData(entity);
 																		ListTag spellList = data.getList("jerotes_add_spell_string_list", Tag.TAG_STRING);
 																		spellList.remove(StringTag.valueOf(string));
 																		data.put("jerotes_add_spell_string_list", spellList);

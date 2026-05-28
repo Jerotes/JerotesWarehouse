@@ -180,7 +180,8 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 							this.spawnAtLocation(this.getPickupItem(), 0.1f);
 						}
 						this.discard();
-					} else {
+					}
+					else {
 						this.setNoPhysics(true);
 						Vec3 vec3 = entity.getEyePosition().subtract(this.position());
 						this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.01, this.getZ());
@@ -190,7 +191,9 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 						double d = 0.3;
 						this.setDeltaMovement(this.getDeltaMovement().scale(0.95).add(vec3.normalize().scale(d)));
 						if (this.clientSideReturnTridentTickCount == 0) {
-							this.playSound(SoundEvents.TRIDENT_RETURN, 10.0f, 1.0f);
+							if (by > 0) {
+								this.playSound(SoundEvents.TRIDENT_RETURN, 10.0f, 1.0f);
+							}
 						}
 						++this.clientSideReturnTridentTickCount;
 					}

@@ -2,6 +2,7 @@ package com.jerotes.jerotes.item;
 
 import com.jerotes.jerotes.entity.Mob.HumanEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ClickEvent;
@@ -69,7 +70,7 @@ public class JerotesPlayerSpawnEgg extends ForgeSpawnEggItem {
 					String string = p_43223_.getItemInHand().getHoverName().getString();
 					if (string.equals("Bandit")) {
 						humanEntity.setFaction("Bandit");
-						mob.getPersistentData().putString("jerotes_mob_faction", "bandit");
+						Main.getJerotesPersistentData(mob).putString("jerotes_mob_faction", "bandit");
 					}
 				}
 				itemstack.shrink(1);
@@ -117,7 +118,7 @@ public class JerotesPlayerSpawnEgg extends ForgeSpawnEggItem {
 						String string = p_43221_.getHoverName().getString();
 						if (string.equals("Bandit")) {
 							humanEntity.setFaction("Bandit");
-							mob.getPersistentData().putString("jerotes_mob_faction", "bandit");
+							Main.getJerotesPersistentData(mob).putString("jerotes_mob_faction", "bandit");
 						}
 						else {
 							((Mob) mob).setCustomName(p_43221_.getHoverName());

@@ -320,13 +320,13 @@ public class SpellList {
 			}
 			public boolean canUse() {
 				if (getCaster() != null) {
-					if (getCaster().getPersistentData().get("jerotes_has_mirror_image_1_tick") != null && getCaster().getPersistentData().getDouble("jerotes_has_mirror_image_1_tick") > 0) {
+					if (Main.getJerotesPersistentData(getCaster()).get("jerotes_has_mirror_image_1_tick") != null && Main.getJerotesPersistentData(getCaster()).getDouble("jerotes_has_mirror_image_1_tick") > 0) {
 						return false;
 					}
-					if (getCaster().getPersistentData().get("jerotes_has_mirror_image_2_tick") != null && getCaster().getPersistentData().getDouble("jerotes_has_mirror_image_2_tick") > 0) {
+					if (Main.getJerotesPersistentData(getCaster()).get("jerotes_has_mirror_image_2_tick") != null && Main.getJerotesPersistentData(getCaster()).getDouble("jerotes_has_mirror_image_2_tick") > 0) {
 						return false;
 					}
-					if (getCaster().getPersistentData().get("jerotes_has_mirror_image_3_tick") != null && getCaster().getPersistentData().getDouble("jerotes_has_mirror_image_3_tick") > 0) {
+					if (Main.getJerotesPersistentData(getCaster()).get("jerotes_has_mirror_image_3_tick") != null && Main.getJerotesPersistentData(getCaster()).getDouble("jerotes_has_mirror_image_3_tick") > 0) {
 						return false;
 					}
 					return super.canUse();

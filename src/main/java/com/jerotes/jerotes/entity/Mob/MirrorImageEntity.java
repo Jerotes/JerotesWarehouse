@@ -222,10 +222,10 @@ public class MirrorImageEntity extends PathfinderMob implements JerotesEntity, O
 			String x = "jerotes_has_mirror_image_" + this.getOrder() + "_x";
 			String y = "jerotes_has_mirror_image_" + this.getOrder() + "_y";
 			String z = "jerotes_has_mirror_image_" + this.getOrder() + "_z";
-			getOwner().getPersistentData().putDouble(tick, 2);
-			getOwner().getPersistentData().putDouble(x, this.addX);
-			getOwner().getPersistentData().putDouble(y, this.addY);
-			getOwner().getPersistentData().putDouble(z, this.addZ);
+			Main.getJerotesPersistentData(getOwner()).putDouble(tick, 2);
+			Main.getJerotesPersistentData(getOwner()).putDouble(x, this.addX);
+			Main.getJerotesPersistentData(getOwner()).putDouble(y, this.addY);
+			Main.getJerotesPersistentData(getOwner()).putDouble(z, this.addZ);
 			getOwner().addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 2, 0, false, false));
 			if (this.level() instanceof ServerLevel serverLevel) {
 				for (int i2 = 0; i2 < Math.min(6 * Main.mobHeight(getOwner()), 120); ++i2) {

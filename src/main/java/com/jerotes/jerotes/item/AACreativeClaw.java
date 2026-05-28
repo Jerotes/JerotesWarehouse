@@ -153,7 +153,7 @@ public class AACreativeClaw extends Item {
 			DamageSource damageSources = new DamageSource(player.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC_KILL), player);
 			livingEntity2.hurt(damageSources, Float.MAX_VALUE);
 			if (!livingEntity2.level().isClientSide()) {
-				livingEntity2.getPersistentData().putDouble("jerotesvillage_variant_zsiein_discard", 666666);
+				Main.getJerotesPersistentData(livingEntity2).putDouble("jerotesvillage_variant_zsiein_discard", 666666);
 			}
 		}
 		entity.swinging = false;

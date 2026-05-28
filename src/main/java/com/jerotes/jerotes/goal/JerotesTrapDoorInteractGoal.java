@@ -1,0 +1,105 @@
+package com.jerotes.jerotes.goal;
+
+import com.jerotes.jerotes.block.Interface.JerotesChangeTrapDoor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.util.GoalUtils;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.Node;
+import net.minecraft.world.level.pathfinder.Path;
+
+public abstract class JerotesTrapDoorInteractGoal
+extends Goal {
+    protected Mob mob;
+    protected BlockPos doorPos = BlockPos.ZERO;
+    protected boolean hasDoor;
+    private boolean passed;
+    private float doorOpenDirX;
+    private float doorOpenDirZ;
+
+    public JerotesTrapDoorInteractGoal(Mob mob) {
+        this.mob = mob;
+        if (!GoalUtils.hasGroundPathNavigation(mob)) {
+            throw new IllegalArgumentException("Unsupported mob type for DoorInteractGoal");
+        }
+    }
+
+    protected boolean isOpen() {
+        if (!this.hasDoor) {
+            return false;
+        }
+        BlockState blockState = this.mob.level().getBlockState(this.doorPos);
+        if (!(blockState.getBlock() instanceof TrapDoorBlock)) {
+            this.hasDoor = false;
+            return false;
+        }
+        return blockState.getValue(TrapDoorBlock.OPEN);
+    }
+
+
+    protected void setOpen(boolean p_25196_) {
+        if (this.hasDoor) {
+            BlockState blockstate = this.mob.level().getBlockState(this.doorPos);
+            if (blockstate.getBlock() instanceof TrapDoorBlock) {
+                this.mob.level().setBlock(this.doorPos, blockstate.setValue(TrapDoorBlock.OPEN, p_25196_), 10);
+            }
+        }
+    }
+
+    @Override
+    public boolean canUse() {
+        if (!GoalUtils.hasGroundPathNavigation(this.mob)) {
+            return false;
+        }
+        if (!this.mob.horizontalCollision) {
+            return false;
+        }
+        GroundPathNavigation groundPathNavigation = (GroundPathNavigation)this.mob.getNavigation();
+        Path path = groundPathNavigation.getPath();
+        if (path == null || path.isDone() || !groundPathNavigation.canOpenDoors()) {
+            return false;
+        }
+        for (int i = 0; i < Math.min(path.getNextNodeIndex() + 2, path.getNodeCount()); ++i) {
+            Node node = path.getNode(i);
+            this.doorPos = new BlockPos(node.x, node.y + 1, node.z);
+            if (this.mob.distanceToSqr(this.doorPos.getX(), this.mob.getY(), this.doorPos.getZ()) > 2.25) continue;
+            this.hasDoor = this.mob.level().getBlockState(this.doorPos).getBlock() instanceof JerotesChangeTrapDoor trapDoorBlock && trapDoorBlock.isJerotesWoodenDoor();
+            if (!this.hasDoor) continue;
+            return true;
+        }
+        this.doorPos = this.mob.blockPosition().above();
+        this.hasDoor = this.mob.level().getBlockState(this.doorPos).getBlock() instanceof JerotesChangeTrapDoor trapDoorBlock && trapDoorBlock.isJerotesWoodenDoor();
+        return this.hasDoor;
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        return !this.passed;
+    }
+
+    @Override
+    public void start() {
+        this.passed = false;
+        this.doorOpenDirX = (float)((double)this.doorPos.getX() + 0.5 - this.mob.getX());
+        this.doorOpenDirZ = (float)((double)this.doorPos.getZ() + 0.5 - this.mob.getZ());
+    }
+
+    @Override
+    public boolean requiresUpdateEveryTick() {
+        return true;
+    }
+
+    @Override
+    public void tick() {
+        float f;
+        float f2 = (float)((double)this.doorPos.getX() + 0.5 - this.mob.getX());
+        float f3 = this.doorOpenDirX * f2 + this.doorOpenDirZ * (f = (float)((double)this.doorPos.getZ() + 0.5 - this.mob.getZ()));
+        if (f3 < 0.0f) {
+            this.passed = true;
+        }
+    }
+}
+

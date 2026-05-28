@@ -1,9 +1,6 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.BossEntity;
-import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
-import com.jerotes.jerotes.entity.Interface.CanNotControlEntity;
-import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseUmbrella;
 import net.minecraft.core.BlockPos;
@@ -24,18 +21,18 @@ import net.minecraft.world.scores.Team;
 import net.minecraftforge.common.extensions.IForgeEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements IForgeEntity {
+public abstract class EntityMixin implements IForgeEntity, JerotesChangeEntity {
     @Shadow public abstract Level level();
 
     @Shadow public abstract double getX();
@@ -53,6 +50,15 @@ public abstract class EntityMixin implements IForgeEntity {
     @Shadow public abstract boolean isVehicle();
 
     @Shadow public abstract InteractionResult interact(Player p_19978_, InteractionHand p_19979_);
+
+    @Unique
+    private CompoundTag jerotesPersistentData;
+    @Override
+    public CompoundTag getJerotesPersistentData() {
+        if (jerotesPersistentData == null)
+            jerotesPersistentData = new CompoundTag();
+        return jerotesPersistentData;
+    }
 
 
     @Inject(method = "isInRain", at = @At("HEAD"), cancellable = true)
@@ -79,10 +85,17 @@ public abstract class EntityMixin implements IForgeEntity {
             cir.setReturnValue(Component.translatable("entity.jerotes.parched"));
     }
 
+    @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
+    private void saveWithoutId(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> cir) {
+        if (jerotesPersistentData != null) compoundTag.put("JerotesData", jerotesPersistentData.copy());
+    }
+
     @Inject(method = "load", at = @At("HEAD"))
     private void load(CompoundTag compoundTag, CallbackInfo ci) {
         if (this instanceof JerotesChangeCamel jerotesChangeCamel)
             jerotesChangeCamel.setJerotesCamelHusk(compoundTag.getBoolean("IsJerotesCamelHusk"));
+        if (compoundTag.contains("JerotesData", 10))
+            jerotesPersistentData = compoundTag.getCompound("JerotesData");
     }
 
     @Inject(method = "setCustomName", at = @At("HEAD"))

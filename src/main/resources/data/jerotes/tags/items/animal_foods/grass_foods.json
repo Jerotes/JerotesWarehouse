@@ -11,6 +11,19 @@
       "required": false
     },
     "minecraft:tall_grass",
-    "minecraft:hay_block"
+    "minecraft:hay_block",
+
+    {
+      "id": "farmersdelight:straw",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:tree_bark",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:rice_panicle",
+      "required": false
+    }
   ]
 }

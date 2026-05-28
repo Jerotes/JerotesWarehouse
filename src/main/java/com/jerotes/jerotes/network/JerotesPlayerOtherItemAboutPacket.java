@@ -3,6 +3,7 @@ package com.jerotes.jerotes.network;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.item.Interface.ItemSpecialAttack;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseParryShield;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -52,9 +53,9 @@ public class JerotesPlayerOtherItemAboutPacket {
         if (type == 1) {
             if (!player.isSpectator()) {
                 Item item = player.getUseItem().getItem();
-                if (player.isUsingItem() && item instanceof ItemToolBaseParryShield itemToolBaseParryShield && !player.getCooldowns().isOnCooldown(itemToolBaseParryShield) && (player.getPersistentData().getDouble("jerotes_shield_parry_cooldown") <= 0 || player.getPersistentData().get("jerotes_shield_parry_cooldown") == null)) {
-                    player.getPersistentData().putDouble("jerotes_shield_parry_cooldown", itemToolBaseParryShield.parryCooldownTicks);
-                    player.getPersistentData().putDouble("jerotes_shield_parry_tick", itemToolBaseParryShield.parryDurationTicks);
+                if (player.isUsingItem() && item instanceof ItemToolBaseParryShield itemToolBaseParryShield && !player.getCooldowns().isOnCooldown(itemToolBaseParryShield) && (Main.getJerotesPersistentData(player).getDouble("jerotes_shield_parry_cooldown") <= 0 || Main.getJerotesPersistentData(player).get("jerotes_shield_parry_cooldown") == null)) {
+                    Main.getJerotesPersistentData(player).putDouble("jerotes_shield_parry_cooldown", itemToolBaseParryShield.parryCooldownTicks);
+                    Main.getJerotesPersistentData(player).putDouble("jerotes_shield_parry_tick", itemToolBaseParryShield.parryDurationTicks);
                     if (!player.level().isClientSide()) {
                         itemToolBaseParryShield.makeParrySound(player);
                     }

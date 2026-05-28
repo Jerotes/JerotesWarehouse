@@ -2,6 +2,7 @@ package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeEntity;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesEarthrendBlock;
@@ -83,6 +84,12 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class Main {
+	public static CompoundTag getJerotesPersistentData(Entity entity) {
+		if (entity instanceof JerotesChangeEntity jerotesChangeEntity)
+			return jerotesChangeEntity.getJerotesPersistentData();
+		return new CompoundTag();
+	}
+
 	//幸运值
 	public static double luck(LivingEntity livingEntity) {
 		return livingEntity.getAttribute(Attributes.LUCK) != null ? livingEntity.getAttributeValue(Attributes.LUCK) : 0;
@@ -127,11 +134,11 @@ public class Main {
 			}
 		}
 
-		if (!livingEntity.getPersistentData().getString("jerotes_mob_faction").isEmpty()) {
-			string = livingEntity.getPersistentData().getString("jerotes_mob_faction");
+		if (!Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction").isEmpty()) {
+			string = Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction");
 		}
-		if (!livingEntity.getPersistentData().getString("jerotes_mob_faction_mod_id").isEmpty()) {
-			string2 = livingEntity.getPersistentData().getString("jerotes_mob_faction_mod_id");
+		if (!Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction_mod_id").isEmpty()) {
+			string2 = Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction_mod_id");
 		}
 		String finalString = string;
 		String finalString2 = string2;
@@ -724,21 +731,21 @@ public class Main {
 
 	//计时
 	public static void persistentDataDoubleReduceToZero(LivingEntity livingEntity, String string, boolean clear) {
-		if (livingEntity.getPersistentData().getDouble(string) > 0) {
-			livingEntity.getPersistentData().putDouble(string, livingEntity.getPersistentData().getDouble(string) - 1);
+		if (Main.getJerotesPersistentData(livingEntity).getDouble(string) > 0) {
+			Main.getJerotesPersistentData(livingEntity).putDouble(string, Main.getJerotesPersistentData(livingEntity).getDouble(string) - 1);
 		}
-		else if (clear && livingEntity.getPersistentData().get(string) != null) {
-			livingEntity.getPersistentData().remove(string);
+		else if (clear && Main.getJerotesPersistentData(livingEntity).get(string) != null) {
+			Main.getJerotesPersistentData(livingEntity).remove(string);
 		}
 	}
 	public static void persistentDataDoubleAddTo(LivingEntity livingEntity, String string, double d) {
-		if (livingEntity.getPersistentData().getDouble(string) < d) {
-			livingEntity.getPersistentData().putDouble(string, livingEntity.getPersistentData().getDouble(string) + 1);
+		if (Main.getJerotesPersistentData(livingEntity).getDouble(string) < d) {
+			Main.getJerotesPersistentData(livingEntity).putDouble(string, Main.getJerotesPersistentData(livingEntity).getDouble(string) + 1);
 		}
 	}
 	public static void persistentDataRemove(LivingEntity livingEntity, String string) {
-		if (livingEntity.getPersistentData().get(string) != null) {
-			livingEntity.getPersistentData().remove(string);
+		if (Main.getJerotesPersistentData(livingEntity).get(string) != null) {
+			Main.getJerotesPersistentData(livingEntity).remove(string);
 		}
 	}
 

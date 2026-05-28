@@ -60,7 +60,10 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
@@ -87,6 +90,8 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 
 	public JerotesPlayerEntity(EntityType<? extends HumanEntity> type, Level world) {
 		super(type, world);
+		this.setPathfindingMalus(BlockPathTypes.TRAPDOOR, 0.0f);
+		this.setPathfindingMalus(BlockPathTypes.FENCE, 2.0f);
 		this.armorDropChances[EquipmentSlot.HEAD.getIndex()] = 2f;
 		this.armorDropChances[EquipmentSlot.CHEST.getIndex()] = 2f;
 		this.armorDropChances[EquipmentSlot.LEGS.getIndex()] = 2f;
@@ -113,6 +118,8 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 	protected void registerGoals() {
 		this.getNavigation().getNodeEvaluator().setCanOpenDoors(true);
 		this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
+		this.goalSelector.addGoal(0, new JerotesOpenTrapdoorGoal(this, true));
+		this.goalSelector.addGoal(0, new JerotesOpenFenceGateGoal(this, true));
 		this.goalSelector.addGoal(0, new JerotesPlayerFloatGoal(this));
 		this.goalSelector.addGoal(1, new JerotesShiftKeyDownGoal(this));
 		//this.goalSelector.addGoal(1, new JerotesPlayerLeapAtTargetAndLookGoal(this, 0.4f));
@@ -903,10 +910,10 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 		if (this.isUsingItem() && this.getUseItem().getItem() instanceof ItemToolBaseParryShield itemToolBaseParryShield &&
 				this.isAggressive() && this.getTarget() != null &&
 				this.getRandom().nextFloat() > 0.2f) {
-			if ((this.getPersistentData().getDouble("jerotes_shield_parry_cooldown") <= 0 ||
-					this.getPersistentData().get("jerotes_shield_parry_cooldown") == null)) {
-				this.getPersistentData().putDouble("jerotes_shield_parry_cooldown", itemToolBaseParryShield.parryCooldownTicks);
-				this.getPersistentData().putDouble("jerotes_shield_parry_tick", itemToolBaseParryShield.parryDurationTicks);
+			if ((Main.getJerotesPersistentData(this).getDouble("jerotes_shield_parry_cooldown") <= 0 ||
+					Main.getJerotesPersistentData(this).get("jerotes_shield_parry_cooldown") == null)) {
+				Main.getJerotesPersistentData(this).putDouble("jerotes_shield_parry_cooldown", itemToolBaseParryShield.parryCooldownTicks);
+				Main.getJerotesPersistentData(this).putDouble("jerotes_shield_parry_tick", itemToolBaseParryShield.parryDurationTicks);
 				if (!this.level().isClientSide()) {
 					itemToolBaseParryShield.makeParrySound(this);
 				}

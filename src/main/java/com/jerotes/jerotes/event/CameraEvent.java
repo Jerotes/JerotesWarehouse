@@ -131,10 +131,10 @@ public class CameraEvent {
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 		Item item = player.getUseItem().getItem();
-		if (player.isUsingItem() && item instanceof ItemToolBaseParryShield && (player.getPersistentData().getDouble("jerotes_shield_parry_cooldown") <= 0 || player.getPersistentData().get("jerotes_shield_parry_cooldown") == null)) {
+		if (player.isUsingItem() && item instanceof ItemToolBaseParryShield && (Main.getJerotesPersistentData(player).getDouble("jerotes_shield_parry_cooldown") <= 0 || Main.getJerotesPersistentData(player).get("jerotes_shield_parry_cooldown") == null)) {
 			event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/parry_shield.png"), w / 2 - 6, h / 2 - 17, 0, 0, 12, 12, 12, 12);
 		}
-		else if (player.isUsingItem() && item instanceof ItemToolBaseParryShield && player.getPersistentData().getDouble("jerotes_shield_parry_tick") > 0) {
+		else if (player.isUsingItem() && item instanceof ItemToolBaseParryShield && Main.getJerotesPersistentData(player).getDouble("jerotes_shield_parry_tick") > 0) {
 			event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/parry_shield_use.png"), w / 2 - 6, h / 2 - 17, 0, 0, 12, 12, 12, 12);
 		}
 		RenderSystem.depthMask(true);

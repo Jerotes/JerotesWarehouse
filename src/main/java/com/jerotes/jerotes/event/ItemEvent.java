@@ -38,6 +38,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -73,7 +74,7 @@ public class ItemEvent {
 				//创造爪
 				if (living.getMainHandItem().getItem() instanceof AACreativeClaw || (living.getOffhandItem().getItem() instanceof AACreativeClaw)) {
 					if (!entity.level().isClientSide()) {
-						entity.getPersistentData().putDouble("jerotesvillage_variant_zsiein_discard", 666666);
+						Main.getJerotesPersistentData(entity).putDouble("jerotesvillage_variant_zsiein_discard", 666666);
 					}
 					event.setAmount(amount + Float.MAX_VALUE);
 				}
@@ -172,7 +173,7 @@ public class ItemEvent {
 		return Float.isFinite(result) ? result : maxOutput;
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void addWeaponEffect(LivingAttackEvent event) {
 		LivingEntity entity = event.getEntity();
 		Entity attackBy = event.getSource().getEntity();
@@ -206,10 +207,49 @@ public class ItemEvent {
 						float baseDamage = (float) living.getAttributeValue(Attributes.ATTACK_DAMAGE);
 						if (baseDamage <= 0)
 							return;
+					}
+				}
+			}
+		}
+	}
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void addWeaponEffect(LivingHurtEvent event) {
+		LivingEntity entity = event.getEntity();
+		Entity attackBy = event.getSource().getEntity();
+		float amount = event.getAmount();
+		if (entity == null || !entity.isAlive())
+			return;
+		//创造爪
+		if (entity.getMainHandItem().getItem() instanceof AACreativeClaw || entity.getOffhandItem().getItem() instanceof AACreativeClaw) {
+			event.setCanceled(true);
+		}
+		if (attackBy != null) {
+			ItemStack handItem = null;
+			ItemStack otherHandItem = null;
+			if (attackBy instanceof LivingEntity living) {
+				handItem = living.getMainHandItem();
+				otherHandItem = living.getOffhandItem();
+				if (!EntityAndItemFind.MeleeDamageFromMainHandNotOffHand(living)) {
+					handItem = living.getOffhandItem();
+					otherHandItem = living.getMainHandItem();
+				}
+			}
+			//探查眼
+			if (attackBy instanceof LivingEntity living && living.getMainHandItem().getItem() instanceof AAExplorationEye aaExplorationEye) {
+				event.setCanceled(true);
+			}
+			//特殊效果
+			if (handItem != null && handItem.getItem() instanceof ItemSpecialEffect specialEffect) {
+				if (attackBy instanceof LivingEntity living &&
+						EntityAndItemFind.isMeleeDamage(event.getSource())) {
+					if (living.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+						float baseDamage = (float) living.getAttributeValue(Attributes.ATTACK_DAMAGE);
+						if (baseDamage <= 0)
+							return;
 						//特殊效果
-						specialEffect.attackUse(living, entity, amount > 0);
+						specialEffect.attackUse(living, entity, amount > 0 && !event.isCanceled());
 						if (handItem.getItem() instanceof ItemToolBaseDagger itemToolBaseDagger) {
-							itemToolBaseDagger.attackEffectUse(living, entity, handItem, amount > 0);
+							itemToolBaseDagger.attackEffectUse(living, entity, handItem, amount > 0 && !event.isCanceled());
 						}
 					}
 				}
@@ -316,7 +356,7 @@ public class ItemEvent {
 
 		if (entity.isUsingItem() && entity.getUseItem().getItem() instanceof ItemToolBaseParryShield itemToolBaseParryShield &&
 				!(entity instanceof Player player && player.getCooldowns().isOnCooldown(itemToolBaseParryShield)) &&
-				isDamageSourceBlocks(damageSource, entity) && entity.getPersistentData().getDouble("jerotes_shield_parry_tick") > 0) {
+				isDamageSourceBlocks(damageSource, entity) && Main.getJerotesPersistentData(entity).getDouble("jerotes_shield_parry_tick") > 0) {
 			if (!entity.isSilent()) {
 				itemToolBaseParryShield.makeParryUseSound(entity);
 			}
