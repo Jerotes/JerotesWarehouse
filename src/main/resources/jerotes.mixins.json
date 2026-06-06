@@ -17,6 +17,7 @@
     "EnderDragonMixin",
     "EntityMixin",
     "EvokerMixin",
+    "FenceGateBlockMixin",
     "HorseMixin",
     "ItemMixin",
     "ItemStackMixin",

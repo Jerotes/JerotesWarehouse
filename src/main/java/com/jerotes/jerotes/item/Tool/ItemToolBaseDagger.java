@@ -168,16 +168,16 @@ public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect,
         }
         return super.use(level, player, interactionHand);
     }
-    public boolean usePotion(Level level, Player player, InteractionHand interactionHand) {
-        ItemStack itemStack = player.getItemInHand(interactionHand);
+    public boolean usePotion(Level level, LivingEntity livingEntity, InteractionHand interactionHand) {
+        ItemStack itemStack = livingEntity.getItemInHand(interactionHand);
         //药水
         if (itemStack.getItem() instanceof ItemToolBaseDagger && interactionHand == InteractionHand.MAIN_HAND) {
-            if (player.getOffhandItem().getItem() instanceof PotionItem && !(PotionUtils.getPotion(player.getOffhandItem()) == JerotesPotions.WASTE.get()) && !(PotionUtils.getPotion(player.getOffhandItem()) == PotionUtils.getPotion(itemStack))) {
-                PotionUtils.setPotion(itemStack, PotionUtils.getPotion(player.getOffhandItem()));
-                if (!player.getAbilities().instabuild) {
-                    PotionUtils.setPotion(player.getOffhandItem(), JerotesPotions.WASTE.get());
+            if (livingEntity.getOffhandItem().getItem() instanceof PotionItem && !(PotionUtils.getPotion(livingEntity.getOffhandItem()) == JerotesPotions.WASTE.get()) && !(PotionUtils.getPotion(livingEntity.getOffhandItem()) == PotionUtils.getPotion(itemStack))) {
+                PotionUtils.setPotion(itemStack, PotionUtils.getPotion(livingEntity.getOffhandItem()));
+                if (livingEntity instanceof Player player && !player.getAbilities().instabuild) {
+                    PotionUtils.setPotion(livingEntity.getOffhandItem(), JerotesPotions.WASTE.get());
                 }
-                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BREWING_STAND_BREW, SoundSource.NEUTRAL, 0.5f, 0.4f / (level.getRandom().nextFloat() * 0.4f + 0.8f));
+                level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.BREWING_STAND_BREW, SoundSource.NEUTRAL, 0.5f, 0.4f / (level.getRandom().nextFloat() * 0.4f + 0.8f));
                 return true;
             }
         }
@@ -189,7 +189,7 @@ public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect,
         list.add(Component.translatable("item.jerotes.dagger").withStyle(ChatFormatting.YELLOW));
         super.appendHoverText(itemStack, level, list, tooltipFlag);
         List<MobEffectInstance> lists = PotionUtils.getMobEffects(itemStack);
-        if (lists.isEmpty()) {
+        if (!lists.isEmpty()) {
             PotionUtils.addPotionTooltip(itemStack, list, 0.2f);
         }
     }

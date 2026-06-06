@@ -156,7 +156,7 @@ public class EntityAndItemFind {
 	}
 	public static boolean isTrueInvisibleBuff(Entity entity) {
 		if (entity instanceof LivingEntity livingEntity) {
-			if (livingEntity.hasEffect(JerotesMobEffects.CLOAKING.get()) && livingEntity.isCrouching()) {
+			if (livingEntity.hasEffect(JerotesMobEffects.CLOAKING.get()) && (livingEntity.isCrouching() || livingEntity.isShiftKeyDown())) {
 				return true;
 			}
 			if (livingEntity.hasEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get())) {
@@ -171,7 +171,7 @@ public class EntityAndItemFind {
 	public static int getTrueInvisibleLevel(Entity entity) {
 		int level = 0;
 		if (entity instanceof LivingEntity livingEntity) {
-			if (livingEntity.hasEffect(JerotesMobEffects.CLOAKING.get()) && livingEntity.isCrouching()) {
+			if (livingEntity.hasEffect(JerotesMobEffects.CLOAKING.get()) && (livingEntity.isCrouching() || livingEntity.isShiftKeyDown())) {
 				if (level < Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.CLOAKING.get())).getAmplifier() + 1)
 					level = Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.CLOAKING.get())).getAmplifier() + 1;
 			}

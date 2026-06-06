@@ -44,6 +44,9 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<TestEntity>> TEST = register("test",
 			EntityType.Builder.<TestEntity>of(TestEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
 					.sized(0.6f, 1.8f));
+	public static final RegistryObject<EntityType<BigBeastEntity>> BIG_BEAST = register("big_beast",
+			EntityType.Builder.<BigBeastEntity>of(BigBeastEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
+					.sized(4f, 4.625f));
 	public static final RegistryObject<EntityType<AddHandEntity>> ADD_HAND = register("add_hand",
 			EntityType.Builder.<AddHandEntity>of(AddHandEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
 					.sized(0.6f, 1.8f));
@@ -149,6 +152,8 @@ public class JerotesEntityType {
 		event.enqueueWork(() -> {
 			SpawnPlacements.register(JerotesEntityType.TEST.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
+			SpawnPlacements.register(JerotesEntityType.BIG_BEAST.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
+					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.ADD_HAND.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.HUMAN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
@@ -165,6 +170,7 @@ public class JerotesEntityType {
 	@SubscribeEvent
 	public static void registerAttributes(EntityAttributeCreationEvent event) {
 		event.put(TEST.get(), TestEntity.createAttributes().build());
+		event.put(BIG_BEAST.get(), BigBeastEntity.createAttributes().build());
 		event.put(ADD_HAND.get(), AddHandEntity.createAttributes().build());
 		event.put(HUMAN.get(), HumanEntity.createAttributes().build());
 		event.put(JEROTES_PLAYER.get(), JerotesPlayerEntity.createAttributes().build());

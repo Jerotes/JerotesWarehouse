@@ -58,7 +58,7 @@ public class RayofSicknessEntity extends BaseRayEntity {
             DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.POISON, this, entity2);
             boolean bl = livingEntity.hurt(damageSource, (spellLevelDamage + 1) * Main.randomReach(RandomSource.create(), 1, 8));
             if (bl) {
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel - 1), this.getEffectSource());
+                livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel - 1), this.getEffectSource());
             }
             this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
             this.setUseful(false);

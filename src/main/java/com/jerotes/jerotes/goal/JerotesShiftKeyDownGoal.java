@@ -40,6 +40,7 @@ public class JerotesShiftKeyDownGoal extends Goal {
     public void stop() {
         if (!this.mob.level().isClientSide()) {
             this.mob.setShiftKeyDown(false);
+            this.mob.setShiftKeyDown(false);
         }
     }
 

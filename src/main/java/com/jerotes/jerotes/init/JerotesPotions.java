@@ -17,6 +17,9 @@ public class JerotesPotions {
     public static final RegistryObject<Potion> CORROSIVE = REGISTRY.register("corrosive", () -> new Potion(new MobEffectInstance(JerotesMobEffects.CORROSIVE.get(), 240, 0)));
     public static final RegistryObject<Potion> LONG_CORROSIVE = REGISTRY.register("long_corrosive", () -> new Potion(new MobEffectInstance(JerotesMobEffects.CORROSIVE.get(), 600, 0)));
     public static final RegistryObject<Potion> STRONG_CORROSIVE = REGISTRY.register("strong_corrosive", () -> new Potion(new MobEffectInstance(JerotesMobEffects.CORROSIVE.get(), 160, 1)));
+    public static final RegistryObject<Potion> DEADLY_POISON = REGISTRY.register("deadly_poison", () -> new Potion(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 240, 0)));
+    public static final RegistryObject<Potion> LONG_DEADLY_POISON = REGISTRY.register("long_deadly_poison", () -> new Potion(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 600, 0)));
+    public static final RegistryObject<Potion> STRONG_DEADLY_POISON = REGISTRY.register("strong_deadly_poison", () -> new Potion(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 160, 1)));
 
     public static void init() {
 

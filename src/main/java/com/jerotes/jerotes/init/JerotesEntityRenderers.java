@@ -15,6 +15,7 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.JEROTES_PLAYER.get(), JerotesPlayerRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_HORSE.get(), JerotesHorseRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.TEST.get(), TestRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.BIG_BEAST.get(), BigBeastRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.ADD_HAND.get(), AddHandRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.TEST_BEAM.get(), BaseBeamRenderer::new);

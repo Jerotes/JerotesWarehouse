@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "minecraft:witch"
+    "minecraft:witch",
+    "#jerotes:witch_raider"
   ]
 }

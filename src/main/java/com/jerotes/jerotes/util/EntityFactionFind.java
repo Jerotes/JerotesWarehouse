@@ -8,8 +8,10 @@ import com.jerotes.jerotes.forge.JerotesFactionEvent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.animal.AbstractGolem;
@@ -146,10 +148,24 @@ public class EntityFactionFind {
 		return construct.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "construct")));
 	}
 
+	//紫沙姐妹会认同
+	public static boolean isPurpleSandSisterhoodIdentifyWith(LivingEntity entity) {
+		if (EntityFactionFind.getTrueFaction(entity).equals("purple_sand_sisterhood"))
+			return true;
+		boolean helmet = entity != null && entity.getItemBySlot(EquipmentSlot.HEAD).is(ItemTags.create(new ResourceLocation("jerotes:purple_sand_sisterhood_clothes")));
+		boolean chestplate = entity != null && entity.getItemBySlot(EquipmentSlot.CHEST).is(ItemTags.create(new ResourceLocation("jerotes:purple_sand_sisterhood_clothes")));
+		boolean legs = entity != null && entity.getItemBySlot(EquipmentSlot.LEGS).is(ItemTags.create(new ResourceLocation("jerotes:purple_sand_sisterhood_clothes")));
+		boolean feet = entity != null && entity.getItemBySlot(EquipmentSlot.FEET).is(ItemTags.create(new ResourceLocation("jerotes:purple_sand_sisterhood_clothes")));
+		return entity != null && !(helmet || chestplate || legs || feet);
+	}
+
 	//袭击
 	public static boolean isRaider(LivingEntity entity) {
-		return entity instanceof Raider
-				|| entity.getMobType() == MobType.ILLAGER
+		return entity instanceof Raider || isIllagerFaction(entity);
+	}
+	//灾厄村民阵营
+	public static boolean isIllagerFaction(LivingEntity entity) {
+		return entity.getMobType() == MobType.ILLAGER
 				|| entity.getType().is(EntityTypeTags.RAIDERS)
 				|| entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("minecraft:illager")))
 				|| entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("minecraft:illager_friends")))

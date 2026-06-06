@@ -18,6 +18,7 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.AA_EXPLORATION_EYE.get());
 				tabData.accept(JerotesItems.AA_SPELL_JAVELIN.get());
 				tabData.accept(JerotesItems.TEST_SPAWN_EGG.get());
+				//tabData.accept(JerotesItems.BIG_BEAST_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.HUMAN_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.JEROTES_PLAYER_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.JEROTES_HORSE_SPAWN_EGG.get());

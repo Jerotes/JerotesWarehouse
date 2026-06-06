@@ -107,13 +107,13 @@ public class AACreativeClaw extends Item {
 //		baseBeamEntity.setOwner(player);
 //		level.addFreshEntity(baseBeamEntity);
 
-		AddHandEntity addHandEntity = Main.spawnAddHand(livingEntity, ((MeleeItem)JerotesItems.IRON_SPEAR.get()).swingTimes(), 100);
-		if (addHandEntity != null) {
-			addHandEntity.setItemInHand(InteractionHand.MAIN_HAND, JerotesItems.IRON_SPEAR.get().getDefaultInstance());
-			if (addHandEntity.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
-				itemToolBaseSpearBase.attack(addHandEntity, EquipmentSlot.MAINHAND);
-			}
-		}
+//		AddHandEntity addHandEntity = Main.spawnAddHand(livingEntity, ((MeleeItem)JerotesItems.IRON_SPEAR.get()).swingTimes(), 100);
+//		if (addHandEntity != null) {
+//			addHandEntity.setItemInHand(InteractionHand.MAIN_HAND, JerotesItems.IRON_SPEAR.get().getDefaultInstance());
+//			if (addHandEntity.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
+//				itemToolBaseSpearBase.attack(addHandEntity, EquipmentSlot.MAINHAND);
+//			}
+//		}
 
 		player.awardStat(Stats.ITEM_USED.get(this));
 	}

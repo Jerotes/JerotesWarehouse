@@ -33,6 +33,7 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> AA_EXPLORATION_EYE = REGISTRY.register("aa_exploration_eye", () -> new AAExplorationEye());
 	public static final RegistryObject<Item> AA_SPELL_JAVELIN = REGISTRY.register("aa_spell_javelin", () -> new AASpellJavelin());
 	public static final RegistryObject<Item> TEST_SPAWN_EGG = REGISTRY.register("test_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.TEST, 0xffffff, 0xffffff, new Item.Properties()));
+	public static final RegistryObject<Item> BIG_BEAST_SPAWN_EGG = REGISTRY.register("big_beast_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.BIG_BEAST, 0xffffff, 0xffffff, new Item.Properties()));
 	public static final RegistryObject<Item> HUMAN_SPAWN_EGG = REGISTRY.register("human_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.HUMAN, 0xffffff, 0xffffff, new Item.Properties()));
 	public static final RegistryObject<Item> JEROTES_PLAYER_SPAWN_EGG = REGISTRY.register("jerotes_player_spawn_egg", () -> new JerotesPlayerSpawnEgg());
 	public static final RegistryObject<Item> JEROTES_HORSE_SPAWN_EGG = REGISTRY.register("jerotes_horse_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_HORSE, 0xffffff, 0xffffff, new Item.Properties()));

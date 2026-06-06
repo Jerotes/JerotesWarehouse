@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.EntityDimensions;
 import com.google.common.collect.ImmutableList;
@@ -47,6 +48,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.InventoryCarrier;
@@ -57,18 +59,19 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
+import net.minecraft.world.level.pathfinder.*;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.entity.PartEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
@@ -91,7 +94,6 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 	public JerotesPlayerEntity(EntityType<? extends HumanEntity> type, Level world) {
 		super(type, world);
 		this.setPathfindingMalus(BlockPathTypes.TRAPDOOR, 0.0f);
-		this.setPathfindingMalus(BlockPathTypes.FENCE, 2.0f);
 		this.armorDropChances[EquipmentSlot.HEAD.getIndex()] = 2f;
 		this.armorDropChances[EquipmentSlot.CHEST.getIndex()] = 2f;
 		this.armorDropChances[EquipmentSlot.LEGS.getIndex()] = 2f;
@@ -540,6 +542,26 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 	public boolean isWithinMeleeAttackRange(LivingEntity livingEntity) {
 		return this.getAttackBoundingBox().intersects(livingEntity.getBoundingBox());
 	}
+	@Override
+	protected PathNavigation createNavigation(Level level) {
+		return new GroundPathNavigation(this, level) {
+			@Override
+			protected @NotNull PathFinder createPathFinder(int maxVisitedNodes) {
+				this.nodeEvaluator = new WalkNodeEvaluator() {
+					@Override
+					public BlockPathTypes getBlockPathType(BlockGetter level, int x, int y, int z) {
+						if (level.getBlockState(new BlockPos(x, y, z)).is(BlockTags.FENCE_GATES)) {
+							return BlockPathTypes.WALKABLE;
+						}
+						return super.getBlockPathType(level, x, y, z);
+					}
+				};
+				this.nodeEvaluator.setCanPassDoors(true);
+				return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
+			}
+		};
+	}
+
 
 	public boolean isLandNavigatorType = true;
 	public int sprintingCooldown;
@@ -852,12 +874,42 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 		//水陆切换
 		if (this.isInWater() && this.isLandNavigatorType) {
 			this.moveControl = new WaterAndGroundMoveControl(this);
-			this.navigation = new WaterAndGroundPathNavigation(this, level());
+			this.navigation = new WaterAndGroundPathNavigation(this, level()) {
+				@Override
+				protected @NotNull PathFinder createPathFinder(int maxVisitedNodes) {
+					this.nodeEvaluator = new AmphibiousNodeEvaluator(false) {
+						@Override
+						public BlockPathTypes getBlockPathType(BlockGetter level, int x, int y, int z) {
+							if (level.getBlockState(new BlockPos(x,y,z)).is(BlockTags.FENCE_GATES)) {
+								return BlockPathTypes.WALKABLE;
+							}
+							return super.getBlockPathType(level, x, y, z);
+						}
+					};
+					this.nodeEvaluator.setCanPassDoors(true);
+					return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
+				}
+			};
 			this.isLandNavigatorType = false;
 		}
 		if (!this.isInWater() && !this.isLandNavigatorType) {
 			this.moveControl = new MoveControl(this);
-			this.navigation = new GroundPathNavigation(this, level());
+			this.navigation = new GroundPathNavigation(this, level()) {
+				@Override
+				protected @NotNull PathFinder createPathFinder(int maxVisitedNodes) {
+					this.nodeEvaluator = new WalkNodeEvaluator() {
+						@Override
+						public BlockPathTypes getBlockPathType(BlockGetter level, int x, int y, int z) {
+							if (level.getBlockState(new BlockPos(x,y,z)).is(BlockTags.FENCE_GATES)) {
+								return BlockPathTypes.WALKABLE;
+							}
+							return super.getBlockPathType(level, x, y, z);
+						}
+					};
+					this.nodeEvaluator.setCanPassDoors(true);
+					return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
+				}
+			};
 			this.isLandNavigatorType = true;
 		}
 		//腾跃
