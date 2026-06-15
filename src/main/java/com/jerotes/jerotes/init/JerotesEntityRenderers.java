@@ -40,15 +40,15 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.THROWN_BONE_THROWING_SPEAR.get(), ThrownBoneThrowingSpearRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.ANESTHETIC_ARROW.get(), AnestheticArrowRenderer::new);
 
-        event.registerEntityRenderer(JerotesEntityType.MAGIC_MISSILE.get(), ShootRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.MAGIC_MISSILE.get(), MagicMissileRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.POISON_BREATH.get(), ShootRenderer::new);
-        event.registerEntityRenderer(JerotesEntityType.RAY_OF_SICKNESS.get(), ShootRenderer::new);
-        event.registerEntityRenderer(JerotesEntityType.RAY_OF_ENFEEBLEMENT.get(), ShootRenderer::new);
-        event.registerEntityRenderer(JerotesEntityType.LIGHTNING_BOLT.get(), LargeShootRenderer::new);
-        event.registerEntityRenderer(JerotesEntityType.VICIOUS_MOCKERY.get(), ShootRenderer::new);
-        event.registerEntityRenderer(JerotesEntityType.HOLD_PERSON.get(), ShootRenderer::new);
-        event.registerEntityRenderer(JerotesEntityType.BESTOW_CURSE.get(), ShootRenderer::new);
-        event.registerEntityRenderer(JerotesEntityType.PHANTASMAL_KILLER.get(), ShootRenderer::new);
-        event.registerEntityRenderer(JerotesEntityType.EYEBITE.get(), ShootRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.RAY_OF_SICKNESS.get(), RayRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.RAY_OF_ENFEEBLEMENT.get(), RayRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.LIGHTNING_BOLT.get(), RayRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.VICIOUS_MOCKERY.get(), TargetRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.HOLD_PERSON.get(), TargetRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.BESTOW_CURSE.get(), TargetRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.PHANTASMAL_KILLER.get(), TargetRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.EYEBITE.get(), TargetRenderer::new);
     }
 }

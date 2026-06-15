@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  a",
+    "bc ",
+    "bb "
+  ],
+  "key": {
+    "a": {
+      "tag": "forge:ingots/copper"
+    },
+    "b": {
+      "tag": "forge:rods/wooden"
+    },
+    "c": {
+      "item": "jerotes:simple_pike"
+    }
+  },
+  "result": {
+    "item": "jerotes:copper_pike",
+    "count": 1
+  }
+}

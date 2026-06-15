@@ -66,8 +66,8 @@ public class ReturnShockwaveParticle extends TextureSheetParticle {
 	@Override
 	public void render(VertexConsumer vertexConsumer, Camera camera, float f) {
 		this.alpha = 1.0f - Mth.clamp(((float)this.age + f) / (float)this.lifetime, 0.0f, 1.0f);
-		this.renderRotatedParticle(vertexConsumer, camera, f, quaternionf -> quaternionf.mul((Quaternionfc)new Quaternionf().rotationYXZ(0.0f, 1.5707963f, 0.0f)));
-		this.renderRotatedParticleDown(vertexConsumer, camera, f, quaternionf -> quaternionf.mul((Quaternionfc)new Quaternionf().rotationYXZ(0.0f, 1.5707963f, 0.0f)));
+		this.renderRotatedParticle(vertexConsumer, camera, f, quaternionf -> quaternionf.mul((Quaternionfc)new Quaternionf().rotationYXZ(0.0f, Mth.HALF_PI, 0.0f)));
+		this.renderRotatedParticleDown(vertexConsumer, camera, f, quaternionf -> quaternionf.mul((Quaternionfc)new Quaternionf().rotationYXZ(0.0f, Mth.HALF_PI, 0.0f)));
 	}
 	private void renderRotatedParticle(VertexConsumer vertexConsumer, Camera camera, float f, Consumer<Quaternionf> consumer) {
 		int n;

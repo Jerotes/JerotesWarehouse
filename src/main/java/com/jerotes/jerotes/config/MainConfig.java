@@ -26,6 +26,7 @@ public final class MainConfig {
 
     public static int CorrosiveStopDurabilityValue;
     public static boolean ScreenShake;
+    public static boolean RestoreVanillaToolDisplayInfo;
     public static boolean ShieldCanBreakBaseInGameRule;
     public static boolean ArmorCanBreakBaseInGameRule;
     public static boolean MeleeCanBreakBaseInGameRule;
@@ -79,7 +80,8 @@ public final class MainConfig {
         AffectsNonThisModEntities = COMMON.AffectsNonThisModEntities.get();
 
         CorrosiveStopDurabilityValue = COMMON.CorrosiveStopDurabilityValue.get();
-        ScreenShake = COMMON.ScreenShake.get();
+                ScreenShake = COMMON.ScreenShake.get();
+        RestoreVanillaToolDisplayInfo = COMMON.RestoreVanillaToolDisplayInfo.get();
         ShieldCanBreakBaseInGameRule = COMMON.ShieldCanBreakBaseInGameRule.get();
         ArmorCanBreakBaseInGameRule = COMMON.ArmorCanBreakBaseInGameRule.get();
         MeleeCanBreakBaseInGameRule = COMMON.MeleeCanBreakBaseInGameRule.get();
@@ -131,6 +133,7 @@ public final class MainConfig {
 
         public final ForgeConfigSpec.IntValue CorrosiveStopDurabilityValue;
         public final ForgeConfigSpec.BooleanValue ScreenShake;
+        public final ForgeConfigSpec.BooleanValue RestoreVanillaToolDisplayInfo;
         public final ForgeConfigSpec.BooleanValue ShieldCanBreakBaseInGameRule;
         public final ForgeConfigSpec.BooleanValue ArmorCanBreakBaseInGameRule;
         public final ForgeConfigSpec.BooleanValue MeleeCanBreakBaseInGameRule;
@@ -180,6 +183,8 @@ public final class MainConfig {
                     .defineInRange("腐蚀中止耐久值", 8, 0, Integer.MAX_VALUE);
             ScreenShake = builder.comment("Screen Shake")
                     .define("屏幕抖动", true);
+            RestoreVanillaToolDisplayInfo = builder.comment("Restore the Vanilla Tool Display Info")
+                    .define("还原原版工具显示简介", false);
             ShieldCanBreakBaseInGameRule = builder.comment("Shield Can Break Base In Game Rule")
                     .define("基础游戏规则盾牌物品损坏", true);
             ArmorCanBreakBaseInGameRule = builder.comment("Armor Can Break Base In Game Rule")

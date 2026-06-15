@@ -1,6 +1,12 @@
 {
   "replace": false,
   "values": [
-    "jerotes:iron_pike"
+    "jerotes:simple_pike",
+    "jerotes:wooden_pike",
+    "jerotes:stone_pike",
+    "jerotes:copper_pike",
+    "jerotes:iron_pike",
+    "jerotes:diamond_pike",
+    "jerotes:netherite_pike"
   ]
 }

@@ -326,17 +326,14 @@ public class Main {
 		}
 		Vec3 vec3 = new Vec3(self.getX(), self.getEyeY(), self.getZ());
 		Vec3 vec32 = new Vec3(target.getX(), target.getEyeY(), target.getZ());
-		if (vec32.distanceTo(vec3) > 128.0) {
-			return false;
-		}
 		return self.level().clip(new ClipContext(vec3, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, self)).getType() == HitResult.Type.MISS;
 	}
 	public static boolean hasLineOfSightPos(Vec3 vec3, Entity self) {
 		Vec3 vec32 = new Vec3(self.getX(), self.getEyeY(), self.getZ());
-		if (vec3.distanceTo(vec32) > 128.0) {
-			return false;
-		}
 		return self.level().clip(new ClipContext(vec32, vec3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, self)).getType() == HitResult.Type.MISS;
+	}
+	public static boolean hasLineOfSightPos(Vec3 vec3, Vec3 self, Entity entity, Level level) {
+		return level.clip(new ClipContext(self, vec3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
 	}
 	//玩家视线
 	public static Entity getTargetedEntityBase(Player player, double maxDistance, boolean bl) {

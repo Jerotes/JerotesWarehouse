@@ -46,34 +46,27 @@ public class LightningBoltEntity extends BaseRayEntity {
         this.summonTod3 = d3;
     }
 
-    protected void customHurt(Entity entity) {
-        super.customHurt(entity);
-        if (!this.level().isClientSide()) {
-            if (entity instanceof LivingEntity livingEntity) {
-                DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.LIGHTNING_BOLT), this, this.getOwner());
-                double noUse = 0;
-                if (livingEntity.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
-                    noUse = livingEntity.getAttributeBaseValue(Attributes.MOVEMENT_SPEED);
-                }
-                if (this.random.nextFloat() > (noUse / 3 + 35) / 100){
-                    livingEntity.hurt(damageSource, (spellLevelDamage + 5) * Main.randomReach(RandomSource.create(), 1, 6));
-                }
-                else{
-                    livingEntity.hurt(damageSource, (float) ((spellLevelDamage + 5) * Main.randomReach(RandomSource.create(), 1, 6)) /2);
-                }
-                this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 10.0f, 1.0f);
-            }
+    protected void hitEntity(Entity entity) {
+        super.hitEntity(entity);
+        if (!this.isUseful())
+            return;
+        if (this.level().isClientSide) {
+            return;
         }
-    }
-    @Override
-    public void tick() {
-        if (this.isUseful()) {
-            List<Entity> list = this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox());
-            for (Entity findEntity : list) {
-                this.customHurt(findEntity);
+        if (entity instanceof LivingEntity livingEntity) {
+            DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.LIGHTNING_BOLT), this, this.getOwner());
+            double noUse = 0;
+            if (livingEntity.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
+                noUse = livingEntity.getAttributeBaseValue(Attributes.MOVEMENT_SPEED);
             }
+            if (this.random.nextFloat() > (noUse / 3 + 35) / 100){
+                livingEntity.hurt(damageSource, (spellLevelDamage + 5) * Main.randomReach(RandomSource.create(), 1, 6));
+            }
+            else{
+                livingEntity.hurt(damageSource, (float) ((spellLevelDamage + 5) * Main.randomReach(RandomSource.create(), 1, 6)) /2);
+            }
+            this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 10.0f, 1.0f);
         }
-        super.tick();
     }
 
     public boolean canNotHurtLastHurt() {
@@ -124,5 +117,15 @@ public class LightningBoltEntity extends BaseRayEntity {
     //@Override
     protected float getLiquidInertia() {
         return 1.0f;
+    }
+
+    public float beamScale() {
+        return 8.0f;
+    }
+    public int beamLightI() {
+        return 0x6a68ff;
+    }
+    public int beamLightII() {
+        return 0x9998eb;
     }
 }

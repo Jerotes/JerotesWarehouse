@@ -19,6 +19,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -176,6 +177,16 @@ public class EntityFactionFind {
 	public static boolean isPiglin(LivingEntity livingEntity) {
 		return livingEntity instanceof AbstractPiglin
 				|| livingEntity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "piglin")));
+	}
+	//凋灵骷髅
+	public static boolean isWitherSkeleton(LivingEntity livingEntity) {
+		return livingEntity instanceof WitherSkeleton
+				|| livingEntity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "wither_skeleton")));
+	}
+	//凋灵类
+	public static boolean isWither(LivingEntity livingEntity) {
+		return livingEntity instanceof WitherBoss
+				|| livingEntity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "wither")));
 	}
 	//末影人
 	public static boolean isEnderman(LivingEntity livingEntity) {

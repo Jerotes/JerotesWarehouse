@@ -11,12 +11,14 @@ import net.minecraft.core.Position;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
@@ -105,7 +107,95 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> BONE_THROWING_SPEAR_OF_SPEAR = REGISTRY.register("bone_throwing_spear_of_spear", () -> new BoneThrowingSpear.BoneThrowingSpearOfSpear());
 	public static final RegistryObject<Item> BONE_THROWING_SPEAR_OF_JAVELIN = REGISTRY.register("bone_throwing_spear_of_javelin", () -> new BoneThrowingSpear.BoneThrowingSpearOfJavelin());
 
-	public static final RegistryObject<Item> IRON_PIKE = REGISTRY.register("iron_pike", () -> new IronPike());
+	public static final RegistryObject<Item> SIMPLE_PIKE = REGISTRY.register("simple_pike", () -> new ItemToolBasePike(new Tier() {
+		public int getUses() {
+			return 32;
+		}
+
+		public float getSpeed() {
+			return 2f;
+		}
+
+		public float getAttackDamageBonus() {
+			return 0;
+		}
+
+		public int getLevel() {
+			return 0;
+		}
+
+		public int getEnchantmentValue() {
+			return 15;
+		}
+
+		public Ingredient getRepairIngredient() {
+			return Ingredient.of(ItemTags.PLANKS);
+		}
+	}, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
+			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			0.9f, 1.1f, 4f,
+			JerotesSoundEvents.SPEAR_ATTACK,
+			JerotesSoundEvents.SPEAR_HIT,
+			JerotesSoundEvents.SPEAR_WOOD_HIT,
+			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
+	public static final RegistryObject<Item> WOODEN_PIKE = REGISTRY.register("wooden_pike", () -> new ItemToolBasePike(
+			Tiers.WOOD, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
+			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			0.9f, 1.1f, 4f,
+			JerotesSoundEvents.SPEAR_WOOD_ATTACK,
+			JerotesSoundEvents.SPEAR_WOOD_HIT,
+			JerotesSoundEvents.SPEAR_WOOD_HIT,
+			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
+	public static final RegistryObject<Item> STONE_PIKE = REGISTRY.register("stone_pike", () -> new ItemToolBasePike(
+			Tiers.STONE, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
+			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			0.9f, 1.1f, 4f,
+			JerotesSoundEvents.SPEAR_ATTACK,
+			JerotesSoundEvents.SPEAR_HIT,
+			JerotesSoundEvents.SPEAR_WOOD_HIT,
+			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
+	public static final RegistryObject<Item> COPPER_PIKE = REGISTRY.register("copper_pike", () -> new ItemToolBasePike(
+			JerotesTiers.COPPER, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
+			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			0.9f, 1.1f, 4f,
+			JerotesSoundEvents.SPEAR_ATTACK,
+			JerotesSoundEvents.SPEAR_HIT,
+			JerotesSoundEvents.SPEAR_WOOD_HIT,
+			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
+	public static final RegistryObject<Item> IRON_PIKE = REGISTRY.register("iron_pike", () -> new ItemToolBasePike(
+			Tiers.IRON, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
+			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			0.9f, 1.1f, 4f,
+			JerotesSoundEvents.SPEAR_ATTACK,
+			JerotesSoundEvents.SPEAR_HIT,
+			JerotesSoundEvents.SPEAR_WOOD_HIT,
+			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
+	public static final RegistryObject<Item> GOLDEN_PIKE = REGISTRY.register("golden_pike", () -> new ItemToolBasePike(
+			Tiers.GOLD, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
+			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			0.9f, 1.1f, 4f,
+			JerotesSoundEvents.SPEAR_ATTACK,
+			JerotesSoundEvents.SPEAR_HIT,
+			JerotesSoundEvents.SPEAR_WOOD_HIT,
+			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
+	public static final RegistryObject<Item> DIAMOND_PIKE = REGISTRY.register("diamond_pike", () -> new ItemToolBasePike(
+			Tiers.DIAMOND, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
+			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			0.9f, 1.1f, 4f,
+			JerotesSoundEvents.SPEAR_ATTACK,
+			JerotesSoundEvents.SPEAR_HIT,
+			JerotesSoundEvents.SPEAR_WOOD_HIT,
+			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
+	public static final RegistryObject<Item> NETHERITE_PIKE = REGISTRY.register("netherite_pike", () -> new ItemToolBasePike(
+			Tiers.NETHERITE, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
+			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			0.9f, 1.1f, 4f,
+			JerotesSoundEvents.SPEAR_ATTACK,
+			JerotesSoundEvents.SPEAR_HIT,
+			JerotesSoundEvents.SPEAR_HIT,
+			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
+
+
 	public static final RegistryObject<Item> IRON_PARRY_SHIELD = REGISTRY.register("iron_parry_shield", () -> new IronParryShield());
 
 	public static final RegistryObject<Item> BEAST_ARMOR = REGISTRY.register("beast_armor_base", () -> new Item(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON)));

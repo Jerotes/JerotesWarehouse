@@ -1,0 +1,6 @@
+{
+  "parent": "jerotes:item/pike_in_hand",
+  "textures": {
+    "layer0": "jerotes:item/netherite_pike_in_hand"
+  }
+}

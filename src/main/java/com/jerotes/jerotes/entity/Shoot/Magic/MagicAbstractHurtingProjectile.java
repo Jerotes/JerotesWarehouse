@@ -1,6 +1,8 @@
 package com.jerotes.jerotes.entity.Shoot.Magic;
 
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.BaseMagicMissileEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.BaseRayEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.spell.SpellFind;
 import com.jerotes.jerotes.util.AttackFind;
@@ -101,17 +103,21 @@ public abstract class MagicAbstractHurtingProjectile extends Projectile implemen
         double d3 = this.getZ() + vec3.z;
         ProjectileUtil.rotateTowardsMovement(this, 0.2f);
         if (this.isInWater()) {
-            for (int i = 0; i < 4; ++i) {
-                this.level().addParticle(ParticleTypes.BUBBLE, d - vec3.x * 0.25, d2 - vec3.y * 0.25, d3 - vec3.z * 0.25, vec3.x, vec3.y, vec3.z);
+            if (!(this instanceof BaseRayEntity)) {
+                for (int i = 0; i < 4; ++i) {
+                    this.level().addParticle(ParticleTypes.BUBBLE, d - vec3.x * 0.25, d2 - vec3.y * 0.25, d3 - vec3.z * 0.25, vec3.x, vec3.y, vec3.z);
+                }
             }
             f = this.getLiquidInertia();
         } else {
             f = this.getInertia();
         }
         this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower).scale(f));
-        ParticleOptions particleOptions = this.getTrailParticle();
-        if (particleOptions != null) {
-            this.level().addParticle(particleOptions, d, d2 + this.getBbHeight() / 2, d3, 0.0, 0.0, 0.0);
+        if (!(this instanceof BaseRayEntity) && !(this instanceof BaseMagicMissileEntity)) {
+            ParticleOptions particleOptions = this.getTrailParticle();
+            if (particleOptions != null) {
+                this.level().addParticle(particleOptions, d, d2 + this.getBbHeight() / 2, d3, 0.0, 0.0, 0.0);
+            }
         }
         this.setPos(d, d2, d3);
     }

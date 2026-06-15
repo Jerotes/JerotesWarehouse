@@ -89,4 +89,10 @@ public class HoldPersonEntity extends BaseTargetEntity {
     protected float getLiquidInertia() {
         return 1.0f;
     }
+    public int roundLightI() {
+        return 0x35555e;
+    }
+    public int roundLightII() {
+        return 0x4c7f8e;
+    }
 }

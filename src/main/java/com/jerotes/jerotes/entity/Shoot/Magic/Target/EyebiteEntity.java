@@ -84,4 +84,10 @@ public class EyebiteEntity extends BaseTargetEntity {
     protected float getLiquidInertia() {
         return 1.0f;
     }
+    public int roundLightI() {
+        return 0x814c35;
+    }
+    public int roundLightII() {
+        return 0xc58870;
+    }
 }

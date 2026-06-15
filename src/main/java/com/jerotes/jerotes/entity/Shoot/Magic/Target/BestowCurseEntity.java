@@ -85,4 +85,10 @@ public class BestowCurseEntity extends BaseTargetEntity {
     protected float getLiquidInertia() {
         return 1.0f;
     }
+    public int roundLightI() {
+        return 0x27263d;
+    }
+    public int roundLightII() {
+        return 0x383751;
+    }
 }

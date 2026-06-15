@@ -11,6 +11,7 @@ public class JerotesModels {
 	@SubscribeEvent
 	public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
 		event.registerLayerDefinition(Modelnull.LAYER_LOCATION, Modelnull::createBodyLayer);
+		event.registerLayerDefinition(Modelblock.LAYER_LOCATION, Modelblock::createBodyLayer);
 		event.registerLayerDefinition(Modeljavelin.LAYER_LOCATION, Modeljavelin::createBodyLayer);
 		event.registerLayerDefinition(Modelbone_throwing_spear.LAYER_LOCATION, Modelbone_throwing_spear::createBodyLayer);
 		event.registerLayerDefinition(Modelhumanoid.LAYER_LOCATION, Modelhumanoid::createBodyLayer);

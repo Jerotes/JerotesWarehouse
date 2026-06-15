@@ -3,7 +3,7 @@
   "category": "equipment",
   "pattern": [
     "  a",
-    "bb ",
+    "bc ",
     "bb "
   ],
   "key": {
@@ -12,6 +12,9 @@
     },
     "b": {
       "tag": "forge:rods/wooden"
+    },
+    "c": {
+      "item": "jerotes:simple_pike"
     }
   },
   "result": {

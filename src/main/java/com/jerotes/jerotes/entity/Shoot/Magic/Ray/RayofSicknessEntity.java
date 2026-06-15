@@ -44,15 +44,13 @@ public class RayofSicknessEntity extends BaseRayEntity {
         this.summonTod3 = d3;
     }
 
-    protected void onHitEntity(EntityHitResult entityHitResult) {
-        super.onHitEntity(entityHitResult);
+    protected void hitEntity(Entity entity) {
+        super.hitEntity(entity);
         if (!this.isUseful())
             return;
         if (this.level().isClientSide) {
             return;
         }
-        Entity entity = entityHitResult.getEntity();
-
         if (entity instanceof LivingEntity livingEntity) {
             Entity entity2 = this.getOwner();
             DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.POISON, this, entity2);
@@ -65,10 +63,18 @@ public class RayofSicknessEntity extends BaseRayEntity {
             this.discard();
         }
     }
-
     @Override
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
+        if (!this.isUseful())
+            return;
+        if (!this.level().isClientSide) {
+            this.setUseful(false);
+            this.discard();
+        }
+    }
+    protected void afterHasLineOfSight() {
+        super.afterHasLineOfSight();
         if (!this.isUseful())
             return;
         if (!this.level().isClientSide) {
@@ -108,5 +114,12 @@ public class RayofSicknessEntity extends BaseRayEntity {
     //@Override
     protected float getLiquidInertia() {
         return 1.0f;
+    }
+
+    public int beamLightI() {
+        return 0x64a63a;
+    }
+    public int beamLightII() {
+        return 0xbfe970;
     }
 }

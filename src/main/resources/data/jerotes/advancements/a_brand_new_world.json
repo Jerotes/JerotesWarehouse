@@ -52,6 +52,8 @@
       "jerotes:copper_ingot_craft",
       "jerotes:copper_nugget_craft",
 
+      "jerotes:iron_parry_shield_craft",
+
       "jerotes:high_strength_string_craft",
       "jerotes:high_strength_string_string_craft",
       "jerotes:anesthetic_arrow_craft",
@@ -96,7 +98,16 @@
       "jerotes:netherite_spear_smithing",
       "jerotes:stone_spear_craft",
       "jerotes:wooden_spear_craft",
+
+
+      "jerotes:copper_pike_craft",
+      "jerotes:diamond_pike_craft",
+      "jerotes:golden_pike_craft",
       "jerotes:iron_pike_craft",
+      "jerotes:netherite_pike_smithing",
+      "jerotes:stone_pike_craft",
+      "jerotes:wooden_pike_craft",
+
       "jerotes:copper_nugget_from_other_blast",
       "jerotes:copper_nugget_from_other_smelt",
       "jerotes:gold_nugget_from_other_blast",

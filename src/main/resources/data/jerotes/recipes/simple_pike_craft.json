@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  a",
+    "bb ",
+    "bb "
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:flint"
+    },
+    "b": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "result": {
+    "item": "jerotes:simple_pike",
+    "count": 1
+  }
+}

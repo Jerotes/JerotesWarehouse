@@ -53,35 +53,35 @@ public class JerotesHelpCarvedGoal extends NearestAttackableTargetGoal<LivingEnt
                     if (this.mob instanceof OwnableEntity ownable && ownable.getOwner() != null) {
                         //不攻击主人
                         if (carved.getTarget() == ownable.getOwner()) {
-                            break;
+                            continue;
                         }
                         //不攻击同主人
                         if (carved.getTarget() instanceof OwnableEntity ownableHurt) {
                             if (ownableHurt.getOwner() == ownable.getOwner()) {
-                                break;
+                                continue;
                             }
                             if (ownableHurt.getOwner() == ownable.getOwner()) {
-                                break;
+                                continue;
                             }
                         }
                         //不攻击主人队友
                         if (carved.getTarget().isAlliedTo(ownable.getOwner())) {
-                            break;
+                            continue;
                         }
                     }
                     //不攻击信任者
                     if (self.trusts(carved.getTarget().getUUID())) {
-                        break;
+                        continue;
                     }
                     //不攻击信任者的驯服生物
                     if (carved.getTarget() instanceof OwnableEntity ownable && ownable.getOwner() != null) {
                         if (self.trusts(ownable.getOwner().getUUID())) {
-                            break;
+                            continue;
                         }
                     }
                     //不攻击队友及内讧
                     if (carved.getTarget().isAlliedTo(carved) || carved.getTarget().isAlliedTo(this.mob)) {
-                        break;
+                        continue;
                     }
                     attack = carved.getTarget();
                     return true;
@@ -101,35 +101,35 @@ public class JerotesHelpCarvedGoal extends NearestAttackableTargetGoal<LivingEnt
                     if (this.mob instanceof OwnableEntity ownable && ownable.getOwner() != null) {
                         //不攻击主人
                         if (carved.getLastHurtByMob() == ownable.getOwner()) {
-                            break;
+                            continue;
                         }
                         //不攻击同主人
                         if (carved.getLastHurtByMob() instanceof OwnableEntity ownableHurt) {
                             if (ownableHurt.getOwner() == ownable.getOwner()) {
-                                break;
+                                continue;
                             }
                             if (ownableHurt.getOwner() == ownable.getOwner()) {
-                                break;
+                                continue;
                             }
                         }
                         //不攻击主人队友
                         if (carved.getLastHurtByMob().isAlliedTo(ownable.getOwner())) {
-                            break;
+                            continue;
                         }
                     }
                     //不攻击信任者
                     if (self.trusts(carved.getLastHurtByMob().getUUID())) {
-                        break;
+                        continue;
                     }
                     //不攻击信任者的驯服生物
                     if (carved.getLastHurtByMob() instanceof OwnableEntity ownable && ownable.getOwner() != null) {
                         if (self.trusts(ownable.getOwner().getUUID())) {
-                            break;
+                            continue;
                         }
                     }
                     //不攻击队友及内讧
                     if (carved.getLastHurtByMob().isAlliedTo(carved) || carved.getLastHurtByMob().isAlliedTo(this.mob)) {
-                        break;
+                        continue;
                     }
                     attack = carved.getLastHurtByMob();
                     return true;

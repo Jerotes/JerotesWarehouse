@@ -1,8 +1,11 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.Ray;
 
 import com.jerotes.jerotes.init.*;
+import com.jerotes.jerotes.util.AttackFind;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -41,15 +44,13 @@ public class RayofEnfeeblementEntity extends BaseRayEntity {
         this.summonTod3 = d3;
     }
 
-    protected void onHitEntity(EntityHitResult entityHitResult) {
-        super.onHitEntity(entityHitResult);
+    protected void hitEntity(Entity entity) {
+        super.hitEntity(entity);
         if (!this.isUseful())
             return;
         if (this.level().isClientSide) {
             return;
         }
-        Entity entity = entityHitResult.getEntity();
-
         if (entity instanceof LivingEntity livingEntity) {
             DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.MAGIC_EFFECT), this, this.getOwner());
             livingEntity.hurt(damageSource, 0f);
@@ -59,10 +60,18 @@ public class RayofEnfeeblementEntity extends BaseRayEntity {
             this.discard();
         }
     }
-
     @Override
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
+        if (!this.isUseful())
+            return;
+        if (!this.level().isClientSide) {
+            this.setUseful(false);
+            this.discard();
+        }
+    }
+    protected void afterHasLineOfSight() {
+        super.afterHasLineOfSight();
         if (!this.isUseful())
             return;
         if (!this.level().isClientSide) {
@@ -102,5 +111,12 @@ public class RayofEnfeeblementEntity extends BaseRayEntity {
     //@Override
     protected float getLiquidInertia() {
         return 1.0f;
+    }
+
+    public int beamLightI() {
+        return 0x444444;
+    }
+    public int beamLightII() {
+        return 0x6b6b6b;
     }
 }

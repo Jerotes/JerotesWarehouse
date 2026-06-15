@@ -18,8 +18,6 @@ public final class ColorEvent {
 
     @SubscribeEvent
     public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
-        BlockColors blockColors = event.getBlockColors();
-
         //皮革兽铠
         event.register((itemStack, n) -> n > 0 ? -1 :
                 ((DyeableLeatherItem)((Object)itemStack.getItem())).getColor(itemStack), JerotesItems.LEATHER_WAR_BEAST_ARMOR.get(), JerotesItems.LEATHER_GIANT_BEAST_ARMOR.get());

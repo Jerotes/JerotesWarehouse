@@ -1,10 +1,12 @@
 package com.jerotes.jerotes.item.Tool;
 
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
 import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +42,8 @@ public class ItemToolBaseHoe extends HoeItem implements ItemSpecialEffect, Melee
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("item.jerotes.hoe").withStyle(ChatFormatting.YELLOW));
+        if (!BuiltInRegistries.ITEM.getKey(itemStack.getItem()).getNamespace().equals("jerotes") && MainConfig.RestoreVanillaToolDisplayInfo)
+            list.add(Component.translatable("item.jerotes.hoe").withStyle(ChatFormatting.YELLOW));
         super.appendHoverText(itemStack, level, list, tooltipFlag);
     }
 }

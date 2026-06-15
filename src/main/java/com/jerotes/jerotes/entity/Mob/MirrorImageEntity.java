@@ -214,6 +214,7 @@ public class MirrorImageEntity extends PathfinderMob implements JerotesEntity, O
 	public void tick() {
 		super.tick();
 		this.noPhysics = true;
+		this.setInvisible(true);
 		this.setNoGravity(true);
 		//复制位置
 		if (getOwner() != null) {

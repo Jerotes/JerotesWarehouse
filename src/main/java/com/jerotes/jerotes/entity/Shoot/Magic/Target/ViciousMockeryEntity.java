@@ -79,5 +79,11 @@ public class ViciousMockeryEntity extends BaseTargetEntity {
     protected float getLiquidInertia() {
         return 1.0f;
     }
+    public int roundLightI() {
+        return 0xb30e0b;
+    }
+    public int roundLightII() {
+        return 0xff6461;
+    }
 }
 

@@ -179,4 +179,14 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
     protected float getLiquidInertia() {
         return 1.0f;
     }
+
+    public boolean showRound() {
+        return true;
+    }
+    public int roundLightI() {
+        return 0x64a63a;
+    }
+    public int roundLightII() {
+        return 0xbfe970;
+    }
 }

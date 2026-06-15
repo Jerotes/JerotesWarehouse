@@ -54,28 +54,28 @@ public class JerotesHelpSameFactionGoal extends NearestAttackableTargetGoal<Livi
                 if (mob instanceof OwnableEntity ownable && ownable.getOwner() != null){
                     //不攻击主人
                     if (findMob.getTarget() == ownable.getOwner()) {
-                        break;
+                        continue;
                     }
                     //不攻击同主人
                     if (findMob.getTarget() instanceof OwnableEntity ownableHurt) {
                         if (ownableHurt.getOwner() == ownable.getOwner()){
-                            break;
+                            continue;
                         }
                     }
                     //不攻击主人队友
                     if (Objects.requireNonNull(findMob.getTarget()).isAlliedTo(ownable.getOwner())){
-                        break;
+                        continue;
                     }
                 }
                 //不攻击同阵营的驯服生物
                 if (findMob.getTarget() instanceof OwnableEntity ownable && ownable.getOwner() != null) {
                     if (!isCanAttack(mob, findMob, ownable.getOwner())){
-                        break;
+                        continue;
                     }
                 }
                 //不攻击队友及内讧
                 if (findMob.getTarget().isAlliedTo(mob) || findMob.getTarget().isAlliedTo(findMob)) {
-                    break;
+                    continue;
                 }
                 attack = findMob.getTarget();
                 return true;
@@ -100,28 +100,28 @@ public class JerotesHelpSameFactionGoal extends NearestAttackableTargetGoal<Livi
                 if (mob instanceof OwnableEntity ownable && ownable.getOwner() != null){
                     //不攻击主人
                     if (findMob.getLastHurtByMob() == ownable.getOwner()) {
-                        break;
+                        continue;
                     }
                     //不攻击同主人
                     if (findMob.getLastHurtByMob() instanceof OwnableEntity ownableHurt) {
                         if (ownableHurt.getOwner() == ownable.getOwner()){
-                            break;
+                            continue;
                         }
                     }
                     //不攻击主人队友
                     if (Objects.requireNonNull(findMob.getLastHurtByMob()).isAlliedTo(ownable.getOwner())){
-                        break;
+                        continue;
                     }
                 }
                 //不攻击同阵营的驯服生物
                 if (findMob.getLastHurtByMob() instanceof OwnableEntity ownable && ownable.getOwner() != null) {
                     if (!isCanAttack(mob, findMob, ownable.getOwner())){
-                        break;
+                        continue;
                     }
                 }
                 //不攻击队友及内讧
                 if (findMob.getLastHurtByMob().isAlliedTo(mob) || findMob.getLastHurtByMob().isAlliedTo(findMob)) {
-                    break;
+                    continue;
                 }
                 attack = findMob.getLastHurtByMob();
                 return true;

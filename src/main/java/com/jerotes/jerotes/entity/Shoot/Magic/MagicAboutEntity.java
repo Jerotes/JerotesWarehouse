@@ -280,7 +280,7 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
         this.getEntityData().define(DATA_ITEM_STACK, ItemStack.EMPTY);
         this.getEntityData().define(HURT_ID, Optional.empty());
     }
-    boolean isHurt(UUID uUID) {
+    public boolean isHurt(UUID uUID) {
         return this.getHurtUUIDs().contains(uUID);
     }
 

@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = JerotesWarehouse.MODID)
 public class MaterialEvent {
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void Material(ItemTooltipEvent event) {
 		ItemStack itemStack = event.getItemStack();
 		JerotesAlchemyTooltipEvent eventss = new JerotesAlchemyTooltipEvent(event.getEntity());
@@ -79,6 +79,36 @@ public class MaterialEvent {
 			event.setEffectCount(99999);
 			event.setMaxCount(99999);
 		}
+		if (itemStack.is(ItemTags.DIRT)) {
+			event.setEffectCount(3);
+			event.setEffect1(new MiningFatigueAlchemyEffect(1, 1));
+			event.setEffect2(new SaturationAlchemyEffect(1, 1));
+			event.setEffect3(new WeaknessAlchemyEffect(1, 1));
+		}
+		if (itemStack.is(ItemTags.SAND)) {
+			event.setEffectCount(3);
+			event.setEffect1(new CloakingAlchemyEffect(1, 1));
+			event.setEffect2(new SaturationAlchemyEffect(1, 1));
+			event.setEffect3(new FogAlchemyEffect(1, 1));
+		}
+		if (itemStack.is(ItemTags.STONE_CRAFTING_MATERIALS)) {
+			event.setEffectCount(3);
+			event.setEffect1(new ResistanceAlchemyEffect(1, 2));
+			event.setEffect2(new MiningFatigueAlchemyEffect(1, 2));
+			event.setEffect3(new SlowFallingAlchemyEffect(1, 1));
+		}
+		if (itemStack.is(ItemTags.PLANKS) || itemStack.is(ItemTags.LOGS)) {
+			event.setEffectCount(3);
+			event.setEffect1(new HasteAlchemyEffect(1, 1));
+			event.setEffect2(new WeaknessAlchemyEffect(1, 1));
+			event.setEffect3(new PoisonAlchemyEffect(1, 1));
+		}
+		if (itemStack.is(ItemTags.WOOL)) {
+			event.setEffectCount(3);
+			event.setEffect1(new SlowFallingAlchemyEffect(1, 1));
+			event.setEffect2(new FreezeAbsorptionAlchemyEffect(1, 1));
+			event.setEffect3(new SaturationAlchemyEffect(1, 1));
+		}
 		//毒马铃薯
 		if (itemStack.is(Items.POISONOUS_POTATO)) {
 			event.setEffectCount(3);
@@ -122,6 +152,13 @@ public class MaterialEvent {
 			event.setEffect2(new RegenerationAlchemyEffect(1, 2));
 			event.setEffect3(new SpeedAlchemyEffect(2, 1));
 			event.setEffect4(new ResistanceAlchemyEffect(3, 2));
+		}
+		//不死图腾
+		if (itemStack.is(Items.TOTEM_OF_UNDYING)) {
+			event.setEffectCount(3);
+			event.setEffect1(new ResistanceAlchemyEffect(1, 1));
+			event.setEffect2(new RegenerationAlchemyEffect(1, 2));
+			event.setEffect3(new HealthBoostAlchemyEffect(2, 1));
 		}
 		//火药
 		if (itemStack.is(Items.GUNPOWDER)) {
@@ -257,7 +294,7 @@ public class MaterialEvent {
 			event.setEffect3(new InstantDamageAlchemyEffect(2, 1));
 		}
 		//海晶砂粒
-		if (itemStack.is(Items.NAUTILUS_SHELL)) {
+		if (itemStack.is(Items.PRISMARINE_SHARD)) {
 			event.setEffectCount(3);
 			event.setEffect1(new DolphinsGraceAlchemyEffect(2, 1));
 			event.setEffect2(new NightVisionAlchemyEffect(1, 2));
@@ -363,6 +400,27 @@ public class MaterialEvent {
 			event.setEffect2(new ResistanceAlchemyEffect(2, 3));
 			event.setEffect3(new FireResistanceAlchemyEffect(1, 2));
 		}
+		//钻石
+		if (itemStack.is(Items.DIAMOND) || itemStack.is(Items.DIAMOND_BLOCK)) {
+			event.setEffectCount(3);
+			event.setEffect1(new InstantHealthAlchemyEffect(2, 1));
+			event.setEffect2(new ResistanceAlchemyEffect(1, 2));
+			event.setEffect3(new FogAlchemyEffect(1, 1));
+		}
+		//铁
+		if (itemStack.is(Items.IRON_INGOT) || itemStack.is(Items.IRON_BLOCK) || itemStack.is(Items.IRON_NUGGET) || itemStack.is(Items.RAW_IRON)) {
+			event.setEffectCount(3);
+			event.setEffect1(new StrengthAlchemyEffect(1, 1));
+			event.setEffect2(new ResistanceAlchemyEffect(1, 1));
+			event.setEffect3(new HasteAlchemyEffect(1, 1));
+		}
+		//铜
+		if (itemStack.is(Items.COPPER_INGOT) || itemStack.is(Items.COPPER_BLOCK) || itemStack.is(Items.RAW_COPPER)) {
+			event.setEffectCount(3);
+			event.setEffect1(new HasteAlchemyEffect(1, 2));
+			event.setEffect2(new SpeedAlchemyEffect(1, 1));
+			event.setEffect3(new SlowFallingAlchemyEffect(1, 1));
+		}
 		//凋灵玫瑰 凋灵骷髅头颅
 		if (itemStack.is(Items.WITHER_ROSE) || itemStack.is(Items.WITHER_SKELETON_SKULL)) {
 			event.setEffectCount(3);
@@ -385,14 +443,14 @@ public class MaterialEvent {
 			event.setEffect3(new FogAlchemyEffect(1, 2));
 		}
 		//原色玻璃类
-		if (itemStack.is(Items.GLASS) || itemStack.is(Items.GLASS_PANE)) {
+		if (itemStack.is(Items.GLASS) || itemStack.is(Items.GLASS_PANE) || itemStack.is(Items.TINTED_GLASS)) {
 			event.setEffectCount(3);
 			event.setEffect1(new InvisiblePassageAlchemyEffect(1, 1));
 			event.setEffect2(new InvisbilityAlchemyEffect(1, 2));
 			event.setEffect3(new GlowingAlchemyEffect(1, 1));
 		}
 		//恶魂之泪
-		if (itemStack.is(Items.HONEY_BOTTLE)) {
+		if (itemStack.is(Items.GHAST_TEAR)) {
 			event.setEffectCount(3);
 			event.setEffect1(new NauseaAlchemyEffect(1, 2));
 			event.setEffect2(new InvisiblePassageAlchemyEffect(1, 2));

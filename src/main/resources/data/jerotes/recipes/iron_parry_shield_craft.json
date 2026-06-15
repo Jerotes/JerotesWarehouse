@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " b ",
+    "bab",
+    " b "
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:shield"
+    },
+    "b": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "jerotes:iron_parry_shield",
+    "count": 1
+  }
+}

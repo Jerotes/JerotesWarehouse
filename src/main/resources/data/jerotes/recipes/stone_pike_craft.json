@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  a",
+    "bc ",
+    "bb "
+  ],
+  "key": {
+    "a": {
+      "tag": "minecraft:stone_tool_materials"
+    },
+    "b": {
+      "tag": "forge:rods/wooden"
+    },
+    "c": {
+      "item": "jerotes:simple_pike"
+    }
+  },
+  "result": {
+    "item": "jerotes:stone_pike",
+    "count": 1
+  }
+}

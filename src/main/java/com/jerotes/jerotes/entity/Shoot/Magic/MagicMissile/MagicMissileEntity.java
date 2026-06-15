@@ -1,11 +1,13 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile;
 
+import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -66,5 +68,11 @@ public class MagicMissileEntity extends BaseMagicMissileEntity {
     public ItemStack getItem() {
         ItemStack itemStack = this.getItemRaw();
         return itemStack.isEmpty() ? new ItemStack(JerotesItems.MAGIC_MISSILE.get()) : itemStack;
+    }
+    public int beamLightI() {
+        return 0xbe1d8f;
+    }
+    public ResourceLocation TextureLocation() {
+        return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/projectiles/magic_missile.png");
     }
 }

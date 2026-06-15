@@ -78,7 +78,14 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.NETHERITE_SPEAR.get());
 				tabData.accept(JerotesItems.BONE_THROWING_SPEAR_OF_SPEAR.get());
 				tabData.accept(JerotesItems.BONE_THROWING_SPEAR_OF_JAVELIN.get());
+				tabData.accept(JerotesItems.SIMPLE_PIKE.get());
+				tabData.accept(JerotesItems.WOODEN_PIKE.get());
+				tabData.accept(JerotesItems.STONE_PIKE.get());
+				tabData.accept(JerotesItems.COPPER_PIKE.get());
 				tabData.accept(JerotesItems.IRON_PIKE.get());
+				tabData.accept(JerotesItems.GOLDEN_PIKE.get());
+				tabData.accept(JerotesItems.DIAMOND_PIKE.get());
+				tabData.accept(JerotesItems.NETHERITE_PIKE.get());
 				tabData.accept(JerotesItems.IRON_PARRY_SHIELD.get());
 				tabData.accept(JerotesItems.BEAST_ARMOR.get());
 				tabData.accept(JerotesItems.WAR_BEAST_ARMOR_BASE.get());
