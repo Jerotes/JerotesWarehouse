@@ -44,7 +44,7 @@ public class MagicMissileRenderer<T extends BaseMagicMissileEntity> extends Enti
 
         poseStack.pushPose();
         VertexConsumer vb = bufferIn.getBuffer(JerotesRenderType.glowDoubleSidedTranslucent(this.getTextureLocation(entityIn)));
-        poseStack.scale(0.25f, -0.25f, 0.25f);
+        poseStack.scale(-0.25f, -0.25f, 0.25f);
         poseStack.translate(0f, -0.125f * 10, 0f);
         model.renderToBuffer(poseStack, vb, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 0.5f);
         poseStack.popPose();

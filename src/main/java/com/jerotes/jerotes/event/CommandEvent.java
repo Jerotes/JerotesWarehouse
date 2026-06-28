@@ -39,9 +39,9 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.checkerframework.framework.qual.DefaultQualifier;
 
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 @Mod.EventBusSubscriber
 public class CommandEvent {
@@ -296,15 +296,85 @@ public class CommandEvent {
 										)
 								)
 								.then(Commands.literal("mob_faction")
-										.then(Commands.argument("string", StringArgumentType.word()).executes(arguments -> {
+										.then(Commands.literal("add")
+												.then(Commands.argument("string", StringArgumentType.word()).executes(arguments -> {
+																	Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
+																	String string = StringArgumentType.getString(arguments, "string");
+																	for (Entity entity : entities) {
+																		CompoundTag persistentData = Main.getJerotesPersistentData(entity);
+																		ListTag factionList = persistentData.getList("jerotes_mob_faction", Tag.TAG_STRING);
+																		String newFaction = string;
+																		factionList.add(StringTag.valueOf(newFaction));
+																		persistentData.put("jerotes_mob_faction", factionList);
+																	}
+																	return 0;
+																}
+														)
+												)
+										)
+										.then(Commands.literal("remove")
+												.then(Commands.argument("string", StringArgumentType.word()).executes(arguments -> {
+													Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
+													String string = StringArgumentType.getString(arguments, "string");
+													for (Entity entity : entities) {
+														CompoundTag persistentData = Main.getJerotesPersistentData(entity);
+														ListTag factionList = persistentData.getList("jerotes_mob_faction", Tag.TAG_STRING);
+                                                        factionList.removeIf(tag -> tag.getAsString().equals(string));
+														persistentData.put("jerotes_mob_faction", factionList);
+													}
+													return 0;
+												}))
+										)
+										.then(Commands.literal("get")
+												.then(Commands.argument("string", StringArgumentType.word())
+														.executes(arguments -> {
 															Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
-															String string = StringArgumentType.getString(arguments, "string");
+															String target = StringArgumentType.getString(arguments, "string");
 															for (Entity entity : entities) {
-																Main.getJerotesPersistentData(entity).putString("jerotes_mob_faction", string);
+																CompoundTag persistentData = Main.getJerotesPersistentData(entity);
+																ListTag factionList = persistentData.getList("jerotes_mob_faction", Tag.TAG_STRING);
+																boolean found = false;
+																for (Tag tag : factionList) {
+																	if (tag.getAsString().equals(target)) {
+																		found = true;
+																		break;
+																	}
+																}
+																Component message = Component.literal(entity.getName().getString())
+																		.append(Component.literal(" "))
+																		.append(found ? Component.translatable("message.jerotes.has_faction") : Component.translatable("message.jerotes.not_has_faction"))
+																		.append(Component.literal(" \"" + target + "\""))
+																		.withStyle(found ? ChatFormatting.GREEN : ChatFormatting.RED);
+																arguments.getSource().sendSuccess(() -> message, false);
 															}
 															return 0;
-														}
+														})
 												)
+												.executes(arguments -> {
+													Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
+													for (Entity entity : entities) {
+														CompoundTag persistentData = Main.getJerotesPersistentData(entity);
+														ListTag factionList = persistentData.getList("jerotes_mob_faction", Tag.TAG_STRING);
+														if (factionList.isEmpty()) {
+															Component message = Component.literal(entity.getName().getString())
+																	.append(Component.literal(" has no factions."))
+																	.withStyle(ChatFormatting.GRAY);
+															arguments.getSource().sendSuccess(() -> message, false);
+														} else {
+															// 收集所有阵营字符串
+															List<String> factions = new ArrayList<>();
+															for (Tag tag : factionList) {
+																factions.add(tag.getAsString());
+															}
+															String joined = String.join(", ", factions);
+															Component message = Component.literal(entity.getName().getString())
+																	.append(Component.literal(" factions: "))
+																	.append(Component.literal(joined).withStyle(ChatFormatting.GOLD));
+															arguments.getSource().sendSuccess(() -> message, false);
+														}
+													}
+													return 0;
+												})
 										)
 								)
 								.then(Commands.literal("mob_faction_mod_id")
@@ -486,6 +556,25 @@ public class CommandEvent {
 																}
 																else {
 																	player.sendSystemMessage(Component.translatable("message.jerotes.is_avoid_damage_no").withStyle(ChatFormatting.WHITE));
+																}														}
+															return 0;
+														}
+												)
+										)
+								)
+						)
+						.then(Commands.literal("allay")
+								.then(Commands.argument("attacker", EntityArgument.entity())
+										.then(Commands.argument("hurt", EntityArgument.entity()).executes(arguments -> {
+															Entity entity = EntityArgument.getEntity(arguments, "attacker");
+															Entity entity2 = EntityArgument.getEntity(arguments, "hurt");
+															Entity entitys = arguments.getSource().getEntity();
+															if (entitys instanceof Player player && entity instanceof LivingEntity living && entity2 instanceof LivingEntity living2) {
+																if (AttackFind.SameFactionAvoidDamage(living,living2, false)) {
+																	player.sendSystemMessage(Component.translatable("message.jerotes.is_ally_yes").withStyle(ChatFormatting.WHITE));
+																}
+																else {
+																	player.sendSystemMessage(Component.translatable("message.jerotes.is_ally_no").withStyle(ChatFormatting.WHITE));
 																}														}
 															return 0;
 														}

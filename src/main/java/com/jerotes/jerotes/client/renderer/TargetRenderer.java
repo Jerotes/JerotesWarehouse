@@ -58,7 +58,7 @@ public class TargetRenderer<T extends BaseTargetEntity> extends EntityRenderer<T
                        MultiBufferSource buffer,
                        int packedLight) {
 
-        if (entity.showRound()) {
+        if (entity.showRound() && entity.getTargetHeight() > 0) {
             renderRound(entity, partialTick, poseStack, buffer);
         }
 
@@ -104,8 +104,8 @@ public class TargetRenderer<T extends BaseTargetEntity> extends EntityRenderer<T
             fadeAlpha = Mth.clamp(fadeAlpha, 0F, 1F);
         }
 
-        float halfWidth = entity.getSize() * growProgress * 2;
-        float height = entity.getSize() * growProgress * 3.0F;
+        float halfWidth = entity.getSize() * growProgress * 1.1f + 0.15f;
+        float height = entity.getSize() * growProgress * 1.2F + 0.5f;
 
         int topColor = entity.roundLightI();
         int bottomColor = entity.roundLightII();
@@ -127,7 +127,7 @@ public class TargetRenderer<T extends BaseTargetEntity> extends EntityRenderer<T
         Matrix4f matrix = pose.pose();
         Matrix3f normal = pose.normal();
 
-        float yBottom = 0.0F;
+        float yBottom = 0.0F - entity.getTargetHeight() / 2f;
         float yTop = height;
 
         addQuad(consumer, matrix, normal, -halfWidth, yBottom, halfWidth, -halfWidth, yTop, halfWidth, halfWidth, yTop, halfWidth, halfWidth, yBottom, halfWidth, br, bg, bb, tr, tg, tb, bottomAlpha);

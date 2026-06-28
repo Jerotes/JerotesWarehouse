@@ -117,8 +117,8 @@ public class JerotesAddSpellAttackGoal extends Goal {
                         if (livingEntity == null) continue;
                         if (livingEntity == this.mob) continue;
                         if (livingEntity == this.mob.getTarget()) continue;
-                        if (!AttackFind.FindCanNotAttack(this.mob, livingEntity) || !EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity)) continue;
-                        finalTarget = livingEntity;
+                        if (!AttackFind.SameFactionAvoidDamage(this.mob, livingEntity, false)) continue;
+                       finalTarget = livingEntity;
                         bl = true;
                     }
                 }

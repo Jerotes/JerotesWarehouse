@@ -25,6 +25,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class MagicSpell {
 	public int spellLevel;
@@ -53,6 +54,11 @@ public class MagicSpell {
 		if (!canUse()) {
 			return false;
 		}
+		//结束正在蓄力的技能
+		Main.getJerotesPersistentData(getCaster()).putString("jerotes_using_magic", "");
+		Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_spell_tick", 0);
+		Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_using_magic_level", 0);
+		Main.getJerotesPersistentData(getCaster()).putUUID("jerotes_using_magic_target", UUID.fromString("00000000-0000-0000-0000-000000000000"));
 		//图标
 		if (getCaster().level() instanceof ServerLevel serverLevel) {
 			serverLevel.sendParticles(getSpellDisplayParticle(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
@@ -70,16 +76,25 @@ public class MagicSpell {
 				}
 			}
 		});
+		//等级高了
+		if (baseSpellLevel() > spellLevel) {
+			spellLevel = baseSpellLevel();
+		}
 		//记录自身上次使用的法术
 		Main.getJerotesPersistentData(getCaster()).putString("jerotes_last_magic", getSpellModId() + "_" + getSpellId());
+		Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_last_magic_level", spellLevel);
 		Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_spell_cooldown", Math.max(2, Main.getJerotesPersistentData(caster).getDouble("jerotes_spell_cooldown")));
 		//正在使用法术 探查
 		if (!canEffect()) {
 			return false;
 		}
-		//等级高了
-		if (baseSpellLevel() > spellLevel) {
-			spellLevel = baseSpellLevel();
+		if (this.getUsingTicks() > 0) {
+			Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_spell_tick", this.getUsingTicks() + 5);
+			Main.getJerotesPersistentData(getCaster()).putString("jerotes_using_magic", getSpellModId() + "_" + getSpellId());
+			Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_using_magic_level", spellLevel);
+			Main.getJerotesPersistentData(getCaster()).putUUID("jerotes_using_magic_target", getTarget().getUUID());
+			spellAfterUse();
+			return true;
 		}
 		//施法
 		boolean bl = spellFindUse();
@@ -168,6 +183,9 @@ public class MagicSpell {
 	}
 	public int baseSpellLevel() {
 		return 1;
+	}
+	public int getUsingTicks() {
+		return 0;
 	}
 	public int getSpellLevel() {
 		return Math.max(baseSpellLevel(), spellLevel);

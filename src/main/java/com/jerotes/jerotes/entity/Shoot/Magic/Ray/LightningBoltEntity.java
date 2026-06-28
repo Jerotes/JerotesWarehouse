@@ -82,7 +82,6 @@ public class LightningBoltEntity extends BaseRayEntity {
             return;
         if (!this.level().isClientSide) {
             this.setUseful(false);
-            this.discard();
         }
     }
 

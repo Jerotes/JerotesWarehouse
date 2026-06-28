@@ -84,7 +84,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDaggerEntity, PlayerSkinEntity, SkinEntity, ShiftKeyDownEntity, WizardEntity, UseThrowEntity, UseThrownJavelinEntity, InventoryEntity, CrossbowAttackMob, NeutralMob, RangedAttackMob, InventoryCarrier, Npc, UseCrossbowEntity, UseBowEntity, UseShieldEntity, JerotesEntity {
+public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDaggerEntity, FactionEntity, PlayerSkinEntity, SkinEntity, ShiftKeyDownEntity, WizardEntity, UseThrowEntity, UseThrownJavelinEntity, InventoryEntity, CrossbowAttackMob, NeutralMob, RangedAttackMob, InventoryCarrier, Npc, UseCrossbowEntity, UseBowEntity, UseShieldEntity, JerotesEntity {
 	private static final EntityDataAccessor<Integer> COMBAT_STYLE = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> USE_SELF_NOT_SPELL_LIST = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.BOOLEAN);
@@ -155,16 +155,19 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 		);
 	}
 	@Override
-	public String getFactionTypeName() {
+	public String getFirstFactionTypeName() {
 		return getFaction();
 	}
-
 	@Override
-	public boolean isFactionWith(Entity entity) {
-		if (getFaction().isEmpty()) {
+	public boolean isFriendFaction(Entity entity) {
+		if (getFactionTypeList().isEmpty()) {
 			return entity instanceof LivingEntity livingEntity && livingEntity.getType() == JerotesEntityType.HUMAN.get() && this.getType() == JerotesEntityType.HUMAN.get();
 		}
-		return entity instanceof LivingEntity livingEntity && EntityFactionFind.getTrueFaction(livingEntity).equals(getFaction());
+		return isFriendFactionBase(entity);
+	}
+	@Override
+	public boolean helpSelfType() {
+		return getFirstFactionTypeName() == null;
 	}
 
 	@VisibleForDebug

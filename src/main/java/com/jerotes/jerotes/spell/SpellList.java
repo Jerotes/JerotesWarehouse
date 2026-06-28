@@ -360,7 +360,7 @@ public class SpellList {
 	}
 	//法术反制
 	public static MagicSpell Counterspell(int n, LivingEntity caster, Entity target) {
-		return new MagicSpell(n, caster, target, MagicType.SELF, MagicType.ADD, "counterspell", JerotesParticleTypes.COUNTERSPELL_DISPLAY.get(), JerotesSoundEvents.MAGIC_COUNTERSPELL){
+		return new MagicSpell(n, caster, target, MagicType.SELF, MagicType.MAIN, "counterspell", JerotesParticleTypes.COUNTERSPELL_DISPLAY.get(), JerotesSoundEvents.MAGIC_COUNTERSPELL){
 			public boolean spellFindUse() {
 				return !caster.level().isClientSide() && caster.addEffect(new MobEffectInstance(JerotesMobEffects.COUNTERSPELL.get(), 12 * 20, getSpellLevel() - 1));
 			}
@@ -408,6 +408,26 @@ public class SpellList {
 					return false;
 				}
 				return super.canUse();
+			}
+		};
+	}
+	//匕首之云
+	public static MagicSpell CloudOfDaggers(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "cloud_of_daggers", JerotesParticleTypes.CLOUD_OF_DAGGERS_DISPLAY.get(), JerotesSoundEvents.MAGIC_CLOUD_OF_DAGGERS){
+			public boolean spellFindUse() {
+				return SpellFind.CloudOfDaggers(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel());
+			}
+			public int baseSpellLevel() {
+				return 2;
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public float getSpellDistance() {
+				return 32;
+			}
+			public boolean canUseTargetNone() {
+				return true;
 			}
 		};
 	}

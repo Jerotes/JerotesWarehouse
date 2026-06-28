@@ -1,6 +1,8 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.client.particle.SummonParticleOptions;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -19,6 +21,12 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> ANESTHETIZED_VI = REGISTRY.register("anesthetized_6", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> ANESTHETIZED_VII = REGISTRY.register("anesthetized_7", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> ANESTHETIZED_VIII = REGISTRY.register("anesthetized_8", () -> new SimpleParticleType(true));
+	public static final RegistryObject<ParticleType<SummonParticleOptions>> SUMMON_PARTICLE = REGISTRY.register("summon", () -> new ParticleType<SummonParticleOptions>(false, SummonParticleOptions.DESERIALIZER) {
+		@Override
+		public Codec<SummonParticleOptions> codec() {
+			return null;
+		}
+	});
 
 	public static final RegistryObject<SimpleParticleType> MAGIC_MISSILE = REGISTRY.register("magic_missile", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> POISON_BREATH = REGISTRY.register("poison_breath", () -> new SimpleParticleType(true));
@@ -54,4 +62,5 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> MAGIC_ABSORPTION_DISPLAY = REGISTRY.register("magic_absorption_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> BEAST_TOUGH_DISPLAY = REGISTRY.register("beast_tough_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> ACTION_SURGE_DISPLAY = REGISTRY.register("action_surge_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> CLOUD_OF_DAGGERS_DISPLAY = REGISTRY.register("cloud_of_daggers_display", () -> new SimpleParticleType(true));
 }

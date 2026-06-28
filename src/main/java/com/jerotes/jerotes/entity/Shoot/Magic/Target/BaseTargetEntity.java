@@ -29,7 +29,8 @@ import java.util.UUID;
 
 public abstract class BaseTargetEntity extends MagicAboutEntity {
     private static final EntityDataAccessor<Float> ID_SIZE = SynchedEntityData.defineId(BaseTargetEntity.class, EntityDataSerializers.FLOAT);
-    
+    private static final EntityDataAccessor<Float> TARGET_HEIGHT = SynchedEntityData.defineId(BaseTargetEntity.class, EntityDataSerializers.FLOAT);
+
     public BaseTargetEntity(EntityType<? extends MagicAboutEntity> entityType, Level level) {
         super(entityType, level);
         this.fixupDimensions();
@@ -70,6 +71,12 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
         }
         this.target = entity;
         this.targetUUID = entity == null ? null : entity.getUUID();
+        if (entity != null) {
+            this.entityData.set(TARGET_HEIGHT, entity.getBbHeight());
+        }
+    }
+    public float getSize() {
+        return this.entityData.get(ID_SIZE);
     }
     @VisibleForTesting
     public void setSize(float f) {
@@ -78,8 +85,12 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
         this.reapplyPosition();
         this.refreshDimensions();
     }
-    public float getSize() {
-        return this.entityData.get(ID_SIZE);
+    public float getTargetHeight() {
+        return this.entityData.get(TARGET_HEIGHT);
+    }
+    @VisibleForTesting
+    public void setTargetHeight(float f) {
+        this.entityData.set(TARGET_HEIGHT, f);
     }
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
@@ -88,6 +99,7 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
             compoundTag.putUUID("Target", this.targetUUID);
         }
         compoundTag.putFloat("Size", this.getSize());
+        compoundTag.putFloat("TargetHeight", this.getTargetHeight());
     }
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
@@ -96,11 +108,13 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
             this.targetUUID = compoundTag.getUUID("Target");
         }
         this.setSize(compoundTag.getFloat("Size"));
+        this.setTargetHeight(compoundTag.getFloat("TargetHeight"));
     }
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.getEntityData().define(ID_SIZE, 1f);
+        this.getEntityData().define(TARGET_HEIGHT, 1f);
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> entityDataAccessor) {

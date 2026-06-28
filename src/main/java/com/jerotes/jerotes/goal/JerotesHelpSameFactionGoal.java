@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.goal;
 
+import com.jerotes.jerotes.entity.Interface.FactionEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.util.AttackFind;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -42,13 +44,13 @@ public class JerotesHelpSameFactionGoal extends NearestAttackableTargetGoal<Livi
             if (!isCanAttack(mob, findMob, findMob.getTarget())) continue;
             if ((findMob.getTeam() != null || mob.getTeam() != null) && !mob.isAlliedTo(findMob)) continue;
             //如果自己不是帮助所有人 也不是帮助同类的人 并且不帮助对方
-            if (mob instanceof JerotesEntity jerotesEntity && !jerotesEntity.helpAllSameFaction() && !jerotesEntity.helpSameType() && !jerotesEntity.canBeHelp(findMob)) continue;
+            if (mob instanceof FactionEntity jerotesEntity && !jerotesEntity.helpAllSameFaction() && !jerotesEntity.helpSameType() && !jerotesEntity.canBeHelp(findMob)) continue;
             //如果自己是只帮助同类类型
-            if (mob instanceof JerotesEntity jerotesEntity && !jerotesEntity.helpAllSameFaction() && jerotesEntity.helpSameType() && mob.getType() != findMob.getType()) continue;
+            if (mob instanceof FactionEntity jerotesEntity && !jerotesEntity.helpAllSameFaction() && jerotesEntity.helpSameType() && mob.getType() != findMob.getType()) continue;
             //如果对方是不被所有帮助 也不是被帮助同类类型 并且不被帮助对方
-            if (findMob instanceof JerotesEntity jerotesEntity && !jerotesEntity.helpByAllSameFaction() && !(jerotesEntity.helpSameType() && mob.getType() != findMob.getType()) && !(jerotesEntity.canBeHelp(mob))) continue;
+            if (findMob instanceof FactionEntity jerotesEntity && !jerotesEntity.helpByAllSameFaction() && !(jerotesEntity.helpSameType() && mob.getType() != findMob.getType()) && !(jerotesEntity.canBeHelp(mob))) continue;
             if (AttackFind.FindCanNotAttack(this.mob, findMob.getTarget())) continue;
-            if (!AttackFind.FindCanNotAttack(this.mob, findMob) || !EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(findMob)) continue;
+            if (!AttackFind.SameFactionAvoidDamage(this.mob, findMob, false)) continue;
             if ((mob.canAttack(findMob.getTarget()) && mob.canAttackType(findMob.getTarget().getType()))) {
                 //如果自身为可驯服生物
                 if (mob instanceof OwnableEntity ownable && ownable.getOwner() != null){
@@ -88,13 +90,13 @@ public class JerotesHelpSameFactionGoal extends NearestAttackableTargetGoal<Livi
             if (!isCanAttack(mob, findMob, findMob.getLastHurtByMob())) continue;
             if ((findMob.getTeam() != null || mob.getTeam() != null) && !mob.isAlliedTo(findMob)) continue;
             //如果自己不是帮助所有人 也不是帮助同类的人 并且不帮助对方
-            if (mob instanceof JerotesEntity jerotesEntity && !jerotesEntity.helpAllSameFaction() && !jerotesEntity.helpSameType() && !jerotesEntity.canBeHelp(findMob)) continue;
+            if (mob instanceof FactionEntity jerotesEntity && !jerotesEntity.helpAllSameFaction() && !jerotesEntity.helpSameType() && !jerotesEntity.canBeHelp(findMob)) continue;
             //如果自己是只帮助同类类型
-            if (mob instanceof JerotesEntity jerotesEntity && !jerotesEntity.helpAllSameFaction() && jerotesEntity.helpSameType() && mob.getType() != findMob.getType()) continue;
+            if (mob instanceof FactionEntity jerotesEntity && !jerotesEntity.helpAllSameFaction() && jerotesEntity.helpSameType() && mob.getType() != findMob.getType()) continue;
             //如果对方是不被所有帮助 也不是被帮助同类类型 并且不被帮助对方
-            if (findMob instanceof JerotesEntity jerotesEntity && !jerotesEntity.helpByAllSameFaction() && !(jerotesEntity.helpSameType() && mob.getType() != findMob.getType()) && !(jerotesEntity.canBeHelp(mob))) continue;
+            if (findMob instanceof FactionEntity jerotesEntity && !jerotesEntity.helpByAllSameFaction() && !(jerotesEntity.helpSameType() && mob.getType() != findMob.getType()) && !(jerotesEntity.canBeHelp(mob))) continue;
             if (AttackFind.FindCanNotAttack(this.mob, findMob.getLastHurtByMob())) continue;
-            if (!AttackFind.FindCanNotAttack(this.mob, findMob) || !EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(findMob)) continue;
+            if (!AttackFind.SameFactionAvoidDamage(this.mob, findMob, false)) continue;
             if ((mob.canAttack(findMob.getLastHurtByMob()) && mob.canAttackType(findMob.getLastHurtByMob().getType()))) {
                 //如果自身为可驯服生物
                 if (mob instanceof OwnableEntity ownable && ownable.getOwner() != null){
@@ -137,16 +139,16 @@ public class JerotesHelpSameFactionGoal extends NearestAttackableTargetGoal<Livi
     }
 
     public boolean isCanAttacks(Mob mob, Mob findMob, LivingEntity findMobTarget) {
-        //蛇龙阵营
-        if (EntityFactionFind.isFactionSerponCombatTeam(mob)) {
-            AtomicBoolean canNot = new AtomicBoolean(false);
-            findMobTarget.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTagOrEmpty(JerotesMobEffectTags.SERPON_FACTION).forEach(effect -> {
-                if (findMobTarget.hasEffect(effect.get())) {
-                    canNot.set(true);
-                }
-            });
-            return !canNot.get();
-        }
+//        //蛇龙阵营
+//        if (EntityFactionFind.isFactionSerponCombatTeam(mob)) {
+//            AtomicBoolean canNot = new AtomicBoolean(false);
+//            findMobTarget.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTagOrEmpty(JerotesMobEffectTags.SERPON_FACTION).forEach(effect -> {
+//                if (findMobTarget.hasEffect(effect.get())) {
+//                    canNot.set(true);
+//                }
+//            });
+//            return !canNot.get();
+//        }
         return true;
     }
 

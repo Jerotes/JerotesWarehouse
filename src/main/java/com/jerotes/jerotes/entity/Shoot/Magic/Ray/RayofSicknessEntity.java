@@ -60,7 +60,6 @@ public class RayofSicknessEntity extends BaseRayEntity {
             }
             this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
             this.setUseful(false);
-            this.discard();
         }
     }
     @Override
@@ -70,7 +69,6 @@ public class RayofSicknessEntity extends BaseRayEntity {
             return;
         if (!this.level().isClientSide) {
             this.setUseful(false);
-            this.discard();
         }
     }
     protected void afterHasLineOfSight() {
@@ -79,7 +77,6 @@ public class RayofSicknessEntity extends BaseRayEntity {
             return;
         if (!this.level().isClientSide) {
             this.setUseful(false);
-            this.discard();
         }
     }
 

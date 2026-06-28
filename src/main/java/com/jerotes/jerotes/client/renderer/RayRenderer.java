@@ -52,17 +52,14 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
     }
 
     private void renderBeam(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-        // 获取起点绝对坐标
         float startX = entity.getLastX();
         float startY = entity.getLastY();
         float startZ = entity.getLastZ();
-        // 获取终点绝对坐标（插值）
         Vec3 currentPos = entity.getPosition(partialTick);
         float endX = (float) currentPos.x;
         float endY = (float) currentPos.y;
         float endZ = (float) currentPos.z;
 
-        // 计算方向向量和距离
         float dx = endX - startX;
         float dy = endY - startY;
         float dz = endZ - startZ;
@@ -72,7 +69,7 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         Vec3 startLocal = new Vec3(startX, startY, startZ).subtract(entity.position());
         Vec3 endLocal   = new Vec3(endX, endY, endZ).subtract(entity.position());
 
-        double raiseY = entity.getBbHeight()/3;  // 可调整
+        double raiseY = entity.getBbHeight()/3;
         startLocal = startLocal.add(0, raiseY, 0);
         endLocal   = endLocal.add(0, raiseY, 0);
 
@@ -83,7 +80,6 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         poseStack.pushPose();
         poseStack.translate(startLocal.x, startLocal.y, startLocal.z);
 
-        // ========== 修复垂直方向的角度计算 ==========
         float horizontalDistance = Mth.sqrt((float)(dirLocal.x * dirLocal.x + dirLocal.z * dirLocal.z));
         float yaw, pitch;
         if (horizontalDistance < 1e-4f) {
@@ -96,12 +92,10 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         poseStack.mulPose(Axis.YP.rotation(yaw));
         poseStack.mulPose(Axis.XP.rotation(pitch));
 
-        // 获取渲染器
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix = pose.pose();
         Matrix3f normal = pose.normal();
 
-        // 颜色解析（完全保留）
         int colorI = entity.beamLightI();
         int colorII = entity.beamLightII();
         int innerR = (colorI >> 16) & 0xFF;
@@ -110,20 +104,20 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         int outerR = (colorII >> 16) & 0xFF;
         int outerG = (colorII >> 8) & 0xFF;
         int outerB = colorII & 0xFF;
-        int innerAlpha = 250;
-        int outerAlpha = 200;
+        float half = entity.getMaxLife() / 2.0f;
+        float alpha = 1.0f - Mth.clamp((entity.life - half) / half, 0.0f, 1.0f);
+        int innerAlpha = (int) (250 * alpha);
+        int outerAlpha = (int) (200 * alpha);
 
         float scale = entity.beamScale();
         float outerWidth = 0.06f * scale;
         float innerWidth = 0.045f * scale;
         float halfOuter = outerWidth / 2.0f;
         float halfInner = innerWidth / 2.0f;
-
-        // 渲染两层管道
-        VertexConsumer consumer2 = buffer.getBuffer(RenderType.lightning());
-        renderQuadrilateralPipe(consumer2, matrix, normal, len, halfInner, outerR, outerG, outerB, outerAlpha, packedLight, false);
+        VertexConsumer consumer2 = buffer.getBuffer(JerotesRenderType.glowDoubleSidedTranslucent(new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png")));
         VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutout(new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png")));
-        renderQuadrilateralPipe(consumer, matrix, normal, len, halfOuter, innerR, innerG, innerB, innerAlpha, packedLight, false);
+        renderQuadrilateralPipe(consumer2, matrix, normal, len, halfOuter, outerR, outerG, outerB, outerAlpha, packedLight, false);
+        renderQuadrilateralPipe(consumer, matrix, normal, len, halfInner, innerR, innerG, innerB, innerAlpha, packedLight, false);
 
         poseStack.popPose();
     }
@@ -131,38 +125,31 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
                                          float distance, float halfWidth,
                                          int r, int g, int b, int a, int light, boolean bl) {
         if (bl) {
-            // 正面（远端）
             consumer.vertex(matrix, -halfWidth, -halfWidth, distance).color(r, g, b, a).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, 1).endVertex();
             consumer.vertex(matrix, halfWidth, -halfWidth, distance).color(r, g, b, a).uv(1, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, 1).endVertex();
             consumer.vertex(matrix, halfWidth, halfWidth, distance).color(r, g, b, a).uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, 1).endVertex();
             consumer.vertex(matrix, -halfWidth, halfWidth, distance).color(r, g, b, a).uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, 1).endVertex();
 
-            // 背面（近端）
             consumer.vertex(matrix, -halfWidth, halfWidth, 0).color(r, g, b, a).uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, -1).endVertex();
             consumer.vertex(matrix, halfWidth, halfWidth, 0).color(r, g, b, a).uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, -1).endVertex();
             consumer.vertex(matrix, halfWidth, -halfWidth, 0).color(r, g, b, a).uv(1, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, -1).endVertex();
             consumer.vertex(matrix, -halfWidth, -halfWidth, 0).color(r, g, b, a).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, -1).endVertex();
-
         }
-        // 上面
         consumer.vertex(matrix, -halfWidth,  halfWidth, 0).color(r,g,b,a).uv(0,0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0,1,0).endVertex();
         consumer.vertex(matrix,  halfWidth,  halfWidth, 0).color(r,g,b,a).uv(1,0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0,1,0).endVertex();
         consumer.vertex(matrix,  halfWidth,  halfWidth, distance).color(r,g,b,a).uv(1,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0,1,0).endVertex();
         consumer.vertex(matrix, -halfWidth,  halfWidth, distance).color(r,g,b,a).uv(0,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0,1,0).endVertex();
 
-        // 下面
         consumer.vertex(matrix, -halfWidth, -halfWidth, distance).color(r,g,b,a).uv(0,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0,-1,0).endVertex();
         consumer.vertex(matrix,  halfWidth, -halfWidth, distance).color(r,g,b,a).uv(1,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0,-1,0).endVertex();
         consumer.vertex(matrix,  halfWidth, -halfWidth, 0).color(r,g,b,a).uv(1,0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0,-1,0).endVertex();
         consumer.vertex(matrix, -halfWidth, -halfWidth, 0).color(r,g,b,a).uv(0,0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0,-1,0).endVertex();
 
-        // 左面
         consumer.vertex(matrix, -halfWidth, -halfWidth, distance).color(r,g,b,a).uv(0,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, -1,0,0).endVertex();
         consumer.vertex(matrix, -halfWidth, -halfWidth, 0).color(r,g,b,a).uv(0,0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, -1,0,0).endVertex();
         consumer.vertex(matrix, -halfWidth,  halfWidth, 0).color(r,g,b,a).uv(1,0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, -1,0,0).endVertex();
         consumer.vertex(matrix, -halfWidth,  halfWidth, distance).color(r,g,b,a).uv(1,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, -1,0,0).endVertex();
 
-        // 右面
         consumer.vertex(matrix,  halfWidth, -halfWidth, 0).color(r,g,b,a).uv(0,0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 1,0,0).endVertex();
         consumer.vertex(matrix,  halfWidth, -halfWidth, distance).color(r,g,b,a).uv(0,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 1,0,0).endVertex();
         consumer.vertex(matrix,  halfWidth,  halfWidth, distance).color(r,g,b,a).uv(1,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 1,0,0).endVertex();

@@ -3,6 +3,7 @@ package com.jerotes.jerotes.event;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
+import com.jerotes.jerotes.entity.Interface.FactionEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Mob.TestEntity;
 import com.jerotes.jerotes.entity.Interface.UseBowEntity;
@@ -33,18 +34,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -75,8 +73,10 @@ public class EntityAboutEvent {
 			return;
 
 
-		boolean faction = livingEntity instanceof JerotesEntity jerotes && jerotes.isFactionWith(livingEntity2) ||
-				livingEntity2 instanceof JerotesEntity jerotes2 && jerotes2.isFactionWith(livingEntity);
+		boolean faction = false;
+		if (livingEntity instanceof FactionEntity factions && livingEntity2 instanceof FactionEntity factions2) {
+			faction = factions.isFriendFaction(livingEntity2) || factions2.isFriendFaction(livingEntity);
+		}
 		boolean owner1 = livingEntity instanceof OwnableEntity ownable && ownable.getOwner() != null;
 		boolean owner2 = livingEntity2 instanceof OwnableEntity ownable && ownable.getOwner() != null;
 		boolean factionWitch = faction && !owner1 && !owner2;
@@ -88,11 +88,12 @@ public class EntityAboutEvent {
 			event.setFriend(true);
 			return;
 		}
-		boolean enmey = livingEntity instanceof JerotesEntity jerotes && jerotes.isHateFaction(livingEntity2) ||
-				livingEntity2 instanceof JerotesEntity jerotes2 && jerotes2.isHateFaction(livingEntity);
-		if (enmey) {
-			event.setEnemy(true);
-        }
+		if (livingEntity instanceof FactionEntity factions && livingEntity2 instanceof FactionEntity factions2) {
+			boolean enmey = factions.isHateFaction(livingEntity2) || factions2.isHateFaction(livingEntity);
+			if (enmey) {
+				event.setEnemy(true);
+			}
+		}
 	}
 
 

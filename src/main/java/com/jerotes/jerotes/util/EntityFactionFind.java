@@ -3,6 +3,7 @@ package com.jerotes.jerotes.util;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.CanBeIllagerFactionEntity;
 import com.jerotes.jerotes.entity.Interface.CanBeSerponFactionEntity;
+import com.jerotes.jerotes.entity.Interface.FactionEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.forge.JerotesFactionEvent;
 import net.minecraft.core.registries.Registries;
@@ -240,10 +241,10 @@ public class EntityFactionFind {
 			return getTrueFaction(AttackFind.getOwnerTrue(livingEntity));
 		}
 		if (!Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction").isEmpty()) {
-			return Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction");
+			return Main.getJerotesPersistentData(livingEntity).getList("jerotes_mob_faction", 8).getString(0);
 		}
-		if (livingEntity instanceof JerotesEntity jerotes) {
-			return jerotes.getFactionTypeName();
+		if (livingEntity instanceof FactionEntity jerotes && !jerotes.getFactionTypeList().isEmpty()) {
+			return !jerotes.getFirstFactionTypeName().isEmpty() ? jerotes.getFirstFactionTypeName() : jerotes.getFactionTypeList().get(0);
 		}
 		return base;
 	}
@@ -258,8 +259,8 @@ public class EntityFactionFind {
 		if (!Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction_mod_id").isEmpty()) {
 			return Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction_mod_id");
 		}
-		if (livingEntity instanceof JerotesEntity jerotes && !jerotes.getMobTypeNameModId().isEmpty()) {
-			return jerotes.getMobTypeNameModId();
+		if (livingEntity instanceof FactionEntity jerotes && !jerotes.getMobTypeNameModId().isEmpty()) {
+			return jerotes.getFirstFactionTypeName();
 		}
 		return base;
 	}

@@ -531,5 +531,15 @@
         "volume": 1.0
       }
     ]
+  },
+  "magic_cloud_of_daggers": {
+    "subtitle": "subtitle.jerotes.magic_cloud_of_daggers",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
   }
 }

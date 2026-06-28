@@ -4,6 +4,7 @@ import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.alchemy.effect.*;
 import com.jerotes.jerotes.alchemy.forge.JerotesAlchemyMaterialEffectEvent;
 import com.jerotes.jerotes.alchemy.forge.JerotesAlchemyTooltipEvent;
+import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -38,6 +39,16 @@ public class MaterialEvent {
 				events.getEffect4() != null && !(events.getEffect4() instanceof AAANullAlchemyEffect) ||
 				events.getEffect5() != null && !(events.getEffect5() instanceof AAANullAlchemyEffect)) {
 			event.getToolTip().add(Component.translatable("alchemy.jerotes.effect").withStyle(ChatFormatting.GREEN));
+			if (events.isDiscard()) {
+				event.getToolTip().add(Component.translatable("alchemy.jerotes.can_discard").withStyle(ChatFormatting.GREEN));
+				int n = event.getItemStack().getTag() != null && event.getItemStack().getTag().get("JerotesRemainingAlchemyUses") != null ? event.getItemStack().getTag().getInt("JerotesRemainingAlchemyUses") : 0;
+				if (events.getDiscardTime() > 1 || n > 1) {
+					event.getToolTip().add(Component.translatable("alchemy.jerotes.can_discard_time", events.getDiscardTime() - n, events.getDiscardTime()).withStyle(ChatFormatting.GREEN));
+				}
+			}
+			else {
+				event.getToolTip().add(Component.translatable("alchemy.jerotes.can_not_discard").withStyle(ChatFormatting.GREEN));
+			}
 		}
 		if (events.getEffect1() != null && !(events.getEffect1() instanceof AAANullAlchemyEffect)) {
 			AAAAlchemyEffect alchemyEffect = events.getEffect1();
@@ -136,6 +147,20 @@ public class MaterialEvent {
 			event.setEffect1(new LuckAlchemyEffect(1, 1));
 			event.setEffect2(new RegenerationAlchemyEffect(1, 2));
 			event.setEffect3(new SpeedAlchemyEffect(1, 1));
+		}
+		//发光浆果
+		if (itemStack.is(Items.GLOW_BERRIES)) {
+			event.setEffectCount(3);
+			event.setEffect1(new GlowingAlchemyEffect(1, 2));
+			event.setEffect2(new NightVisionAlchemyEffect(1, 1));
+			event.setEffect1(new LuckAlchemyEffect(1, 1));
+		}
+		//荧光墨囊
+		if (itemStack.is(Items.GLOW_INK_SAC)) {
+			event.setEffectCount(3);
+			event.setEffect1(new GlowingAlchemyEffect(1, 2));
+			event.setEffect2(new FogAlchemyEffect(1, 1));
+			event.setEffect3(new DarknessAlchemyEffect(1, 1));
 		}
 		//金苹果
 		if (itemStack.is(Items.GOLDEN_APPLE)) {
@@ -376,6 +401,7 @@ public class MaterialEvent {
 		//下界之星
 		if (itemStack.is(Items.NETHER_STAR)) {
 			event.setEffectCount(3);
+			event.setDiscardTime(3);
 			event.setEffect1(new WitherAlchemyEffect(2, 2));
 			event.setEffect2(new GlowingAlchemyEffect(1, 1));
 			event.setEffect3(new NightVisionAlchemyEffect(2, 1));
@@ -415,7 +441,7 @@ public class MaterialEvent {
 			event.setEffect3(new HasteAlchemyEffect(1, 1));
 		}
 		//铜
-		if (itemStack.is(Items.COPPER_INGOT) || itemStack.is(Items.COPPER_BLOCK) || itemStack.is(Items.RAW_COPPER)) {
+		if (itemStack.is(Items.COPPER_INGOT) || itemStack.is(Items.COPPER_BLOCK) || itemStack.is(Items.RAW_COPPER) || itemStack.is(JerotesItems.COPPER_NUGGET.get())) {
 			event.setEffectCount(3);
 			event.setEffect1(new HasteAlchemyEffect(1, 2));
 			event.setEffect2(new SpeedAlchemyEffect(1, 1));
@@ -454,6 +480,13 @@ public class MaterialEvent {
 			event.setEffectCount(3);
 			event.setEffect1(new NauseaAlchemyEffect(1, 2));
 			event.setEffect2(new InvisiblePassageAlchemyEffect(1, 2));
+			event.setEffect3(new SlowFallingAlchemyEffect(1, 2));
+		}
+		//下界石英
+		if (itemStack.is(Items.QUARTZ)) {
+			event.setEffectCount(3);
+			event.setEffect1(new FireResistanceAlchemyEffect(1, 2));
+			event.setEffect2(new WeaknessAlchemyEffect(1, 2));
 			event.setEffect3(new SlowFallingAlchemyEffect(1, 2));
 		}
 		//蜘蛛眼

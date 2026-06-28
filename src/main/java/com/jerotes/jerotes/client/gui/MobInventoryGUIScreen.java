@@ -1,10 +1,7 @@
 package com.jerotes.jerotes.client.gui;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Interface.BossEntity;
-import com.jerotes.jerotes.entity.Interface.EliteEntity;
-import com.jerotes.jerotes.entity.Interface.InventoryEntity;
-import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.network.*;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
@@ -22,14 +19,11 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -380,6 +374,13 @@ public class MobInventoryGUIScreen extends AbstractContainerScreen<MobInventoryG
                     List<Component> tooltip = new ArrayList<>();
                     //阵营
                     tooltip.add(Component.translatable("message." + string2 + "." + string).withStyle(ChatFormatting.GOLD));
+                    if (livingEntity instanceof FactionEntity && !this.menu.getFactionTypeList().isEmpty()) {
+                        List<String> stringList = this.menu.getFactionTypeList();
+                        for (String stringFaction : stringList) {
+                            string2 = this.menu.getFactionTypeEvenThoughTame().contains(string2) ? this.menu.getMobFactionModIdSelf() : this.menu.getMobFactionModId();
+                            tooltip.add(Component.translatable("message." + string2 + "." + stringFaction).withStyle(ChatFormatting.DARK_GRAY));
+                        }
+                    }
                     //类型
                     tooltip.add(livingEntity.getType().getDescription());
                     //体型

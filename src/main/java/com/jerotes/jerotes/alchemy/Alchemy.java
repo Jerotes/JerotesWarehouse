@@ -6,6 +6,7 @@ import com.jerotes.jerotes.alchemy.forge.JerotesAlchemyMaterialConflictEvent;
 import com.jerotes.jerotes.alchemy.forge.JerotesAlchemyMaterialEffectEvent;
 import com.jerotes.jerotes.alchemy.forge.JerotesAlchemySpecialEvent;
 import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -311,5 +312,29 @@ public class Alchemy {
             return itemStack;
         }
         return Items.AIR.getDefaultInstance();
+    }
+
+    //记得让物品销毁，参考
+    public static boolean discardItem(ItemStack itemStack) {
+        JerotesAlchemyMaterialEffectEvent events = new JerotesAlchemyMaterialEffectEvent(itemStack);
+        MinecraftForge.EVENT_BUS.post(events);
+        if (!events.isDiscard())
+            return false;
+        if (events.getDiscardTime() <= 1) {
+            itemStack.shrink(1);
+            return true;
+        }
+        int n = itemStack.getTag() != null && itemStack.getTag().get("JerotesRemainingAlchemyUses") != null ? itemStack.getTag().getInt("JerotesRemainingAlchemyUses") : 0;
+        if (events.getDiscardTime() - n <= 1) {
+            itemStack.shrink(1);
+            return true;
+        }
+        else {
+            CompoundTag compoundtag = itemStack.getOrCreateTag();
+            int ns = compoundtag.getInt("JerotesRemainingAlchemyUses");
+            compoundtag.putInt("JerotesRemainingAlchemyUses", ns + 1);
+            itemStack.setTag(compoundtag);
+        }
+        return false;
     }
 }

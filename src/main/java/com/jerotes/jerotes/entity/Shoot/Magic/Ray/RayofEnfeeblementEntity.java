@@ -57,7 +57,6 @@ public class RayofEnfeeblementEntity extends BaseRayEntity {
             livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel - 1), this.getEffectSource());
             this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
             this.setUseful(false);
-            this.discard();
         }
     }
     @Override
@@ -67,7 +66,6 @@ public class RayofEnfeeblementEntity extends BaseRayEntity {
             return;
         if (!this.level().isClientSide) {
             this.setUseful(false);
-            this.discard();
         }
     }
     protected void afterHasLineOfSight() {
@@ -76,7 +74,6 @@ public class RayofEnfeeblementEntity extends BaseRayEntity {
             return;
         if (!this.level().isClientSide) {
             this.setUseful(false);
-            this.discard();
         }
     }
 

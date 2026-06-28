@@ -2,6 +2,7 @@ package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.init.JerotesRenderType;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseDagger;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;

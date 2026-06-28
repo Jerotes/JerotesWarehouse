@@ -16,6 +16,7 @@ public class JerotesDamageTypes {
 	private final Registry<DamageType> damageTypes;
 	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_SHOOT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_shoot"));
 	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_MELEE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_melee"));
+	public static final ResourceKey<DamageType> CLOUD_OF_DAGGERS = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "cloud_of_daggers"));
 	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_MAGIC = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_magic"));
 	public static final ResourceKey<DamageType> SYRINGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "syringe"));
 	public static final ResourceKey<DamageType> SPEAR = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "spear"));

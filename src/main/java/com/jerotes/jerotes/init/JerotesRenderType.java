@@ -87,6 +87,24 @@ public class JerotesRenderType extends RenderType {
 		return create("flow_glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 1536, false, true, CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new TextureStateShard(resourceLocation, false, false)).setTexturingState(new OffsetTexturingStateShard(f, f2)).setTransparencyState(ADDITIVE_TRANSPARENCY).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setOverlayState(OVERLAY).createCompositeState(false));
 	}
 
+	public static RenderType flowGlowOneSide(ResourceLocation resourceLocation, float f, float f2) {
+		return create("flow_glow_one_side",
+				DefaultVertexFormat.NEW_ENTITY,
+				VertexFormat.Mode.QUADS,
+				1536,
+				false,
+				true,
+				CompositeState.builder()
+						.setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER)
+						.setTextureState(new TextureStateShard(resourceLocation, false, false))
+						.setTexturingState(new OffsetTexturingStateShard(f, f2))
+						.setTransparencyState(ADDITIVE_TRANSPARENCY)
+						.setCullState(CullStateShard.CULL)
+						.setLightmapState(LIGHTMAP)
+						.setOverlayState(OVERLAY)
+						.createCompositeState(false));
+	}
+
 	private static final BiFunction<ResourceLocation, TransparencyStateShard, RenderType> GLOW = Util.memoize((resourceLocation, transparencyStateShard) -> {
 		TextureStateShard textureStateShard = new TextureStateShard((ResourceLocation)resourceLocation, false, false);
 		return RenderType.create("glow", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 1536, false, true, CompositeState.builder().setShaderState(RENDERTYPE_EYES_SHADER).setTextureState(textureStateShard).setTransparencyState((TransparencyStateShard)transparencyStateShard).setWriteMaskState(COLOR_WRITE).createCompositeState(false));

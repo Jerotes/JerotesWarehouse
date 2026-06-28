@@ -1,6 +1,9 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.client.renderer.*;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +22,9 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.ADD_HAND.get(), AddHandRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.TEST_BEAM.get(), BaseBeamRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.SPELL_CLOUD.get(), NoopRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.RAIN_SPELL_CLOUD.get(), NoopRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.CLOUD_OF_DAGGERS.get(), CloudOfDaggersRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.JEROTES_FALLING_BLOCK.get(), BaseFallingBlockRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_EARTHREND_BLOCK.get(), BaseFallingBlockRenderer::new);

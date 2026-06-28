@@ -1,6 +1,8 @@
 package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.CloudOfDaggersEntity;
+import com.jerotes.jerotes.entity.Other.SpellCloud.SpellCloudEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.Breath.PoisonBreathEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.Ray.LightningBoltEntity;
@@ -18,6 +20,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
@@ -364,7 +368,7 @@ public class SpellFind {
 		}
 		return true;
 	}
-	//紫沙幻影
+	//镜影术
 	public static boolean MirrorImage(LivingEntity caster, int count, int spellLevelDamage) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			PlayerTeam teams = (PlayerTeam) caster.getTeam();
@@ -390,6 +394,37 @@ public class SpellFind {
 					}
 				}
 			}
+			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
+		}
+		return true;
+	}
+
+	//匕首之云$法术
+	public static boolean CloudOfDaggers(LivingEntity caster, LivingEntity target, int spellLevelDamage) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			Vec3 targetPos = caster.getPosition(0);
+			if (target != null) {
+				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+			}
+			if (caster instanceof Player && (target == null || target == caster)) {
+				Vec3 startPos = caster.getEyePosition(1.0f);
+				Vec3 viewVector = caster.getViewVector(1.0f);
+				Vec3 endPos = startPos.add(viewVector.scale(32));
+
+				BlockHitResult hitResult = serverLevel.clip(new ClipContext(
+						startPos, endPos,
+						ClipContext.Block.OUTLINE,
+						ClipContext.Fluid.ANY,
+						caster
+				));
+				targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, 32);
+			}
+			//目标位置
+			CloudOfDaggersEntity cloud = new CloudOfDaggersEntity(serverLevel, caster);
+			cloud.setSpellLevelDamage(spellLevelDamage);
+			cloud.setPos(targetPos.x, targetPos.y + 2/16f, targetPos.z);
+			cloud.setOwner(caster);
+			serverLevel.addFreshEntity(cloud);
 			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
 		}
 		return true;

@@ -31,7 +31,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -59,7 +61,10 @@ public class MobInventoryGUIMenu extends AbstractContainerMenu {
     public final ContainerData data;
     public String string = "";
     public String string2 = "";
-    private InventoryArmor invs;
+    public String string3 = "";
+    public List<String> stringList = new ArrayList<>();
+    public List<String> stringList2 = new ArrayList<>();
+    private SimpleContainer invs;
     private Container invAdds;
     public MobInventoryGUIMenu(int id, Inventory inv, FriendlyByteBuf extraData, boolean bl, boolean bl2,
                                boolean canUseMainHand, boolean canUseOffHand, boolean canUseHelmet, boolean canUseChestplate, boolean canUseLeggings, boolean canUseBoots, boolean canUseInventory) {
@@ -134,6 +139,8 @@ public class MobInventoryGUIMenu extends AbstractContainerMenu {
         if (boundEntity != null && boundEntity instanceof LivingEntity livingEntity) {
             this.invs = new InventoryArmor(livingEntity);
             this.invs.startOpen(player);
+        } else {
+            this.invs = new SimpleContainer(6);
         }
 
         //栏位
@@ -643,6 +650,9 @@ public class MobInventoryGUIMenu extends AbstractContainerMenu {
         if (extraData != null) {
             string = extraData.readUtf();
             string2 = extraData.readUtf();
+            string3 = extraData.readUtf();
+            stringList = extraData.readList(FriendlyByteBuf::readUtf);
+            stringList2 = extraData.readList(FriendlyByteBuf::readUtf);
         }
     }
 
@@ -736,7 +746,8 @@ public class MobInventoryGUIMenu extends AbstractContainerMenu {
             if (boundEntity instanceof LivingEntity livingEntity) {
                 for (int x = 0; x < 6; x++) {
                     ItemStack stack = livingEntity.getItemBySlot(JerotesWarehouse.slot[x]);
-                    invs.updateSlotContents(x, stack);
+                    if (invs instanceof InventoryArmor inventoryArmor)
+                        inventoryArmor.updateSlotContents(x, stack);
                 }
             }
         }
@@ -747,6 +758,15 @@ public class MobInventoryGUIMenu extends AbstractContainerMenu {
     }
     public String getMobFactionModId() {
         return string2;
+    }
+    public String getMobFactionModIdSelf() {
+        return string3;
+    }
+    public List<String> getFactionTypeList() {
+        return stringList;
+    }
+    public List<String> getFactionTypeEvenThoughTame() {
+        return stringList2;
     }
     public double getAttackDamage() {
         return this.data.get(0);

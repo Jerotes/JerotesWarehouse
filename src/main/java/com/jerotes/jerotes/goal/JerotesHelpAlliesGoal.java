@@ -37,7 +37,7 @@ public class JerotesHelpAlliesGoal extends NearestAttackableTargetGoal<LivingEnt
             if (findMob.getTarget() == null) continue;
             if (!findMob.isAlliedTo(this.mob) || this.mob.isAlliedTo(findMob.getTarget())) continue;
             if (AttackFind.FindCanNotAttack(this.mob, findMob.getTarget())) continue;
-            if (!AttackFind.FindCanNotAttack(this.mob, findMob) || !EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(findMob)) continue;
+            if (!AttackFind.SameFactionAvoidDamage(this.mob, findMob, false)) continue;
             if ((this.mob.canAttack(findMob.getTarget()) && this.mob.canAttackType(findMob.getTarget().getType()))) {
                 //如果自身为可驯服生物
                 if (this.mob instanceof OwnableEntity ownable && ownable.getOwner() != null){
@@ -77,7 +77,7 @@ public class JerotesHelpAlliesGoal extends NearestAttackableTargetGoal<LivingEnt
             if (findMob.getLastHurtByMob() == null) continue;
             if (!findMob.isAlliedTo(this.mob) || this.mob.isAlliedTo(findMob.getLastHurtByMob())) continue;
             if (AttackFind.FindCanNotAttack(this.mob, findMob.getLastHurtByMob())) continue;
-            if (!AttackFind.FindCanNotAttack(this.mob, findMob) || !EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(findMob)) continue;
+            if (!AttackFind.SameFactionAvoidDamage(this.mob, findMob, false)) continue;
             if ((this.mob.canAttack(findMob.getLastHurtByMob()) && this.mob.canAttackType(findMob.getLastHurtByMob().getType()))) {
                 //如果自身为可驯服生物
                 if (this.mob instanceof OwnableEntity ownable && ownable.getOwner() != null){

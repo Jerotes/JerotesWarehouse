@@ -2,6 +2,7 @@ package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.entity.Interface.FactionEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeEntity;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
@@ -142,7 +143,10 @@ public class Main {
 		}
 		String finalString = string;
 		String finalString2 = string2;
+		String finalString3 = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getMobTypeNameModId() : "";
 
+		List<String> finalStringList = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getFactionTypeList() : new ArrayList<>();
+		List<String> finalStringList2 = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getFactionTypeListEvenThoughTame() : new ArrayList<>();
       NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
             @Override
             public Component getDisplayName() {
@@ -156,15 +160,21 @@ public class Main {
                 packetBuffer.writeByte(0);
                 packetBuffer.writeVarInt(livingEntity.getId());
                 packetBuffer.writeUtf(finalString);
-                packetBuffer.writeUtf(finalString2);
+				packetBuffer.writeUtf(finalString2);
+				packetBuffer.writeUtf(finalString3);
+				packetBuffer.writeCollection(finalStringList, FriendlyByteBuf::writeUtf);
+				packetBuffer.writeCollection(finalStringList2, FriendlyByteBuf::writeUtf);
                 return new MobInventoryGUIMenu(id, inventory, packetBuffer, bl, bl2, canUseMainHand, canUseOffHand, canUseHelmet, canUseChestplate, canUseLeggings, canUseBoots);
 			}
         }, buf -> {
-            buf.writeBlockPos(serverPlayer.blockPosition());
-            buf.writeByte(0);
-            buf.writeVarInt(livingEntity.getId());
-        buf.writeUtf(finalString);
-        buf.writeUtf(finalString2);
+		  buf.writeBlockPos(serverPlayer.blockPosition());
+		  buf.writeByte(0);
+		  buf.writeVarInt(livingEntity.getId());
+		  buf.writeUtf(finalString);
+		  buf.writeUtf(finalString2);
+		  buf.writeUtf(finalString3);
+		  buf.writeCollection(finalStringList, FriendlyByteBuf::writeUtf);
+		  buf.writeCollection(finalStringList2, FriendlyByteBuf::writeUtf);
         });
 	}
 	//打开gui

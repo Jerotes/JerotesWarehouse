@@ -6,10 +6,13 @@ import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -48,6 +51,39 @@ public class SpellFindUseEvent {
                 .orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTargetLevel;
     }
 
+    public static LivingEntity getTargetSpellUseTarget(Level level, UUID uuid) {
+        if (!level.isClientSide()){
+            return uuid == null ? null : getLivingEntityByUUID(level, uuid);
+        } else {
+            return null;
+        }
+    }
+    public static LivingEntity getLivingEntityByUUID(Level level, UUID uuid) {
+        return getLivingEntityByUUID(level.getServer(), uuid);
+    }
+    public static LivingEntity getLivingEntityByUUID(MinecraftServer server, UUID uuid){
+        if (uuid != null && server != null) {
+            for (ServerLevel world : server.getAllLevels()) {
+                Entity entity = world.getEntity(uuid);
+                if (entity instanceof LivingEntity livingEntity){
+                    return livingEntity;
+                }
+            }
+        }
+        return null;
+    }
+    public static void TargetSpellUse(LivingEntity living) {
+        if (living.level() instanceof ServerLevel) {
+            String magic = Main.getJerotesPersistentData(living).getString("jerotes_using_magic");
+            int level = (int) Main.getJerotesPersistentData(living).getDouble("jerotes_using_magic_level");
+            LivingEntity livingEntity = getTargetSpellUseTarget(living.level(), Main.getJerotesPersistentData(living).getUUID("jerotes_using_magic_target"));
+            if (!magic.isEmpty() && SpellRegistry.spellExists(magic)) {
+                int trueLevel = SpellListByString.getSpell(level, living, livingEntity, SpellRegistry.getSpellTypeById(magic)).getSpellLevel();
+                SpellListByString.getSpell(trueLevel, living, livingEntity, SpellRegistry.getSpellTypeById(magic)).spellFindUse();
+            }
+        }
+    }
+
     @SubscribeEvent
     public static void SpellTick(LivingEvent.LivingTickEvent event) {
         LivingEntity caster = event.getEntity();
@@ -57,6 +93,10 @@ public class SpellFindUseEvent {
         Main.persistentDataDoubleReduceToZero(caster, "jerotes_main_spell_cooldown", true);
         Main.persistentDataDoubleReduceToZero(caster, "jerotes_add_spell_cooldown", true);
         Main.persistentDataDoubleReduceToZero(caster, "jerotes_spell_cooldown", true);
+        Main.persistentDataDoubleReduceToZero(caster, "jerotes_spell_tick", true);
+        if (Main.getJerotesPersistentData(caster).getDouble("jerotes_spell_tick") == 5) {
+            TargetSpellUse(caster);
+        }
         //法术间隔
         if (caster instanceof Player player) {
             if (GetMainSpellUseCoolDownTick(player) > GetMainSpellUseCoolDownTickMax(player)) {

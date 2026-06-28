@@ -42,7 +42,7 @@ public class JerotesIllagerFactionEntityHelpIllagerGoal extends NearestAttackabl
             if (!EntityFactionFind.isRaider(findMob) || EntityFactionFind.isRaider(findMob.getTarget())) continue;
             if ((findMob.getTeam() != null || this.mob.getTeam() != null) && !this.mob.isAlliedTo(findMob)) continue;
             if (AttackFind.FindCanNotAttack(this.mob, findMob.getTarget())) continue;
-            if (!AttackFind.FindCanNotAttack(this.mob, findMob) || !EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(findMob)) continue;
+            if (!AttackFind.SameFactionAvoidDamage(this.mob, findMob, false)) continue;
             if ((findMob.getTarget() != null && mob.canAttack(findMob.getTarget()) && mob.canAttackType(findMob.getTarget().getType()))) {
                 //如果自身为可驯服生物
                 if (this.mob instanceof OwnableEntity ownable && ownable.getOwner() != null){
@@ -83,7 +83,7 @@ public class JerotesIllagerFactionEntityHelpIllagerGoal extends NearestAttackabl
             if (!EntityFactionFind.isRaider(findMob) || EntityFactionFind.isRaider(findMob.getLastHurtByMob())) continue;
             if ((findMob.getTeam() != null || this.mob.getTeam() != null) && !this.mob.isAlliedTo(findMob)) continue;
             if (AttackFind.FindCanNotAttack(this.mob, findMob.getLastHurtByMob())) continue;
-            if (!AttackFind.FindCanNotAttack(this.mob, findMob) || !EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(findMob)) continue;
+            if (!AttackFind.SameFactionAvoidDamage(this.mob, findMob, false)) continue;
             if ((findMob.getLastHurtByMob() != null && mob.canAttack(findMob.getLastHurtByMob()) && mob.canAttackType(findMob.getLastHurtByMob().getType()))) {
                 //如果自身为可驯服生物
                 if (this.mob instanceof OwnableEntity ownable && ownable.getOwner() != null){

@@ -45,7 +45,7 @@ public class JerotesHelpCarvedGoal extends NearestAttackableTargetGoal<LivingEnt
             if (carved.getTarget() == null) continue;
             if ((carved.getTeam() != null || this.mob.getTeam() != null) && !this.mob.isAlliedTo(carved)) continue;
             if (AttackFind.FindCanNotAttack(this.mob, carved.getTarget())) continue;
-            if (!AttackFind.FindCanNotAttack(this.mob, carved) || !EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(carved)) continue;
+            if (!AttackFind.SameFactionAvoidDamage(this.mob, carved, false)) continue;
             if (this.mob instanceof Allay && carved instanceof Allay) continue;
             if (EntityFactionFind.isCarved(carved.getType())) {
                 if (this.mob.canAttack(carved.getTarget()) && this.mob.canAttackType(carved.getTarget().getType())) {
@@ -94,7 +94,7 @@ public class JerotesHelpCarvedGoal extends NearestAttackableTargetGoal<LivingEnt
             if (carved.getLastHurtByMob() == null) continue;
             if ((carved.getTeam() != null || this.mob.getTeam() != null) && !this.mob.isAlliedTo(carved)) continue;
             if (AttackFind.FindCanNotAttack(this.mob, carved.getLastHurtByMob())) continue;
-            if (!AttackFind.FindCanNotAttack(this.mob, carved) || !EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(carved)) continue;
+            if (!AttackFind.SameFactionAvoidDamage(this.mob, carved, false)) continue;
             if (EntityFactionFind.isCarved(carved.getType())) {
                 if (this.mob.canAttack(carved.getLastHurtByMob()) && this.mob.canAttackType(carved.getLastHurtByMob().getType())) {
                     //如果自身为可驯服生物

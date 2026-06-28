@@ -16,22 +16,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public interface JerotesEntity {
-    //协助所有同伴
-    default boolean helpAllSameFaction() {
-        return true;
-    }
-    //被所有同伴协助
-    default boolean helpByAllSameFaction() {
-        return true;
-    }
-    //同类协助
-    default boolean helpSameType() {
-        return true;
-    }
-    //特例协助
-    default boolean canBeHelp(Entity entity) {
-        return true;
-    }
 
     default void setCustomNameUseNameTag(@Nullable Component component, Entity self, Entity source, InteractionHand interactionHand) {
     }
@@ -67,22 +51,6 @@ public interface JerotesEntity {
         return true;
     }
 
-    //是同一阵营
-    default boolean isFactionWith(Entity entity) {
-        return false;
-    }
-    //憎恨阵营
-    default boolean isHateFaction(Entity entity) {
-        return false;
-    }
-
-    //阵营
-    default String getFactionTypeName() {
-        return "";
-    }
-    default String getMobTypeNameModId() {
-        return "";
-    }
 
 
     default boolean isOffHandItem(ItemStack itemStack) {

@@ -190,7 +190,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
 
         if (this.isUseful()) {
             if (this.life > 1) {
-                if (!Main.hasLineOfSightPos(new Vec3(this.xStartRay, this.yStartRay, this.zStartRay), this.getPosition(0), getOwner(), this.level())) {
+                if (!Main.hasLineOfSightPos(new Vec3(this.getLastX(), this.getLastY(), this.getLastZ()), this.getPosition(0), getOwner(), this.level())) {
                     this.afterHasLineOfSight();
                 }
             }
@@ -350,12 +350,15 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         return 1.0f;
     }
 
+    public boolean isOnFire() {
+        return false;
+    }
 
     public boolean showBeam() {
         return true;
     }
     public float beamScale() {
-        return 1.0f;
+        return 1.5f;
     }
     public int beamLightI() {
         return 0x64a63a;

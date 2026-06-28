@@ -10,6 +10,8 @@ import com.jerotes.jerotes.item.Interface.MeleeItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -25,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.*;
@@ -101,7 +104,6 @@ public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect,
         return true;
     }
 
-    //匕首
     public static final Set<ToolAction> ONE_HANDED_BREAK_SHIELD_ACTIONS = of(SWORD_DIG);
     private static Set<ToolAction> of(ToolAction... actions) {
         return Stream.of(actions).collect(Collectors.toCollection(Sets::newIdentityHashSet));
@@ -153,32 +155,66 @@ public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect,
                             livingEntity.addEffect(new MobEffectInstance(mobEffect, duration, amplifier, bl, bl2));
                         }
                     }
-                    PotionUtils.setPotion(itemStack, Potions.WATER);
+                    clearPotionEffects(itemStack);
                 }
             }
+        }
+    }
+    private static void clearPotionEffects(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag != null) {
+            tag.remove("CustomPotionEffects");
+            tag.remove("CustomPotionColor");
+            tag.remove("Potion");
         }
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
-        //药水
         if (usePotion(level, player, interactionHand)) {
             return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
         }
         return super.use(level, player, interactionHand);
     }
     public boolean usePotion(Level level, LivingEntity livingEntity, InteractionHand interactionHand) {
-        ItemStack itemStack = livingEntity.getItemInHand(interactionHand);
-        //药水
-        if (itemStack.getItem() instanceof ItemToolBaseDagger && interactionHand == InteractionHand.MAIN_HAND) {
-            if (livingEntity.getOffhandItem().getItem() instanceof PotionItem && !(PotionUtils.getPotion(livingEntity.getOffhandItem()) == JerotesPotions.WASTE.get()) && !(PotionUtils.getPotion(livingEntity.getOffhandItem()) == PotionUtils.getPotion(itemStack))) {
-                PotionUtils.setPotion(itemStack, PotionUtils.getPotion(livingEntity.getOffhandItem()));
-                if (livingEntity instanceof Player player && !player.getAbilities().instabuild) {
-                    PotionUtils.setPotion(livingEntity.getOffhandItem(), JerotesPotions.WASTE.get());
+        ItemStack main = livingEntity.getItemInHand(interactionHand);
+        ItemStack off = livingEntity.getOffhandItem();
+        if (main.getItem() instanceof ItemToolBaseDagger && interactionHand == InteractionHand.MAIN_HAND) {
+            if (off.getItem() instanceof PotionItem) {
+                Potion offPotion = PotionUtils.getPotion(off);
+                Potion mainPotion = PotionUtils.getPotion(main);
+                if (!Objects.equals(offPotion, JerotesPotions.WASTE.get()) && !Objects.equals(offPotion, mainPotion)) {
+                    CompoundTag offTag = off.getTag();
+                    CompoundTag mainTag = main.getOrCreateTag();
+                    if (offTag != null && offTag.contains("Potion", Tag.TAG_STRING)) {
+                        mainTag.putString("Potion", offTag.getString("Potion"));
+                    } else {
+                        mainTag.putString("Potion", "minecraft:water");
+                    }
+                    if (offTag != null && offTag.contains("CustomPotionEffects", Tag.TAG_LIST)) {
+                        mainTag.put("CustomPotionEffects", offTag.getList("CustomPotionEffects", Tag.TAG_COMPOUND).copy());
+                    } else {
+                        mainTag.remove("CustomPotionEffects");
+                    }
+                    if (offTag != null && offTag.contains("CustomPotionColor", Tag.TAG_INT)) {
+                        mainTag.putInt("CustomPotionColor", offTag.getInt("CustomPotionColor"));
+                    } else {
+                        mainTag.remove("CustomPotionColor");
+                    }
+                    if (livingEntity instanceof Player player && !player.getAbilities().instabuild) {
+                        PotionUtils.setPotion(off, JerotesPotions.WASTE.get());
+                        CompoundTag offTag2 = off.getTag();
+                        if (offTag2 != null) {
+                            offTag2.remove("CustomPotionEffects");
+                            offTag2.remove("CustomPotionColor");
+                        }
+                    }
+                    level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
+                            SoundEvents.BREWING_STAND_BREW, SoundSource.NEUTRAL,
+                            0.5f, 0.4f / (level.getRandom().nextFloat() * 0.4f + 0.8f));
+                    return true;
                 }
-                level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.BREWING_STAND_BREW, SoundSource.NEUTRAL, 0.5f, 0.4f / (level.getRandom().nextFloat() * 0.4f + 0.8f));
-                return true;
             }
         }
         return false;
@@ -194,4 +230,3 @@ public class ItemToolBaseDagger extends TieredItem implements ItemSpecialEffect,
         }
     }
 }
-

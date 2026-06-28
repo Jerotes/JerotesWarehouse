@@ -13,11 +13,15 @@ public class JerotesAlchemyMaterialEffectEvent extends Event {
     private AAAAlchemyEffect effect3 = new AAANullAlchemyEffect(1,1);
     private AAAAlchemyEffect effect4 = new AAANullAlchemyEffect(1,1);
     private AAAAlchemyEffect effect5 = new AAANullAlchemyEffect(1,1);
+    private boolean discard = true;
+    private int discardTime = 1;
     private int maxCount = 1;
 
     public JerotesAlchemyMaterialEffectEvent(ItemStack material) {
         this.material = material;
         this.effectCount = 0;
+        this.discard = true;
+        this.discardTime = 1;
     }
 
     public ItemStack getMaterial() {
@@ -36,6 +40,13 @@ public class JerotesAlchemyMaterialEffectEvent extends Event {
     }
     public void setMaxCount(int maxCount) {
         this.maxCount = maxCount;
+    }
+
+    public int getDiscardTime() {
+        return discardTime;
+    }
+    public void setDiscardTime(int discardTime) {
+        this.discardTime = discardTime;
     }
 
     public AAAAlchemyEffect getEffect1() {
@@ -76,5 +87,13 @@ public class JerotesAlchemyMaterialEffectEvent extends Event {
 
     public void setEffect5(AAAAlchemyEffect effect5) {
         this.effect5 = effect5;
+    }
+
+    public boolean isDiscard() {
+        return discard;
+    }
+
+    public void setDiscard(boolean bl) {
+        this.discard = bl;
     }
 }

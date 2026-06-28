@@ -2,6 +2,9 @@ package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Mob.*;
+import com.jerotes.jerotes.entity.Other.OtherSpell.CloudOfDaggersEntity;
+import com.jerotes.jerotes.entity.Other.SpellCloud.RainSpellCloudEntity;
+import com.jerotes.jerotes.entity.Other.SpellCloud.SpellCloudEntity;
 import com.jerotes.jerotes.entity.Shoot.Arrow.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.Breath.PoisonBreathEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
@@ -57,6 +60,17 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<BaseBeamEntity>> TEST_BEAM = register("test_beam",
 			EntityType.Builder.<BaseBeamEntity>of(BaseBeamEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(0.6f, 0.6f));
+
+	public static final RegistryObject<EntityType<SpellCloudEntity>> SPELL_CLOUD = register("spell_cloud",
+			EntityType.Builder.<SpellCloudEntity>of(SpellCloudEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(6.0F, 0.5F));
+	public static final RegistryObject<EntityType<RainSpellCloudEntity>> RAIN_SPELL_CLOUD = register("rain_spell_cloud",
+			EntityType.Builder.<RainSpellCloudEntity>of(RainSpellCloudEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(6.0F, 0.5F));
+
+	public static final RegistryObject<EntityType<CloudOfDaggersEntity>> CLOUD_OF_DAGGERS = register("cloud_of_daggers",
+			EntityType.Builder.<CloudOfDaggersEntity>of(CloudOfDaggersEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(5.0F, 4.5F));
 
 	public static final RegistryObject<EntityType<JerotesFallingBlock>> JEROTES_FALLING_BLOCK = register("jerotes_falling_block",
 			EntityType.Builder.<JerotesFallingBlock>of(JerotesFallingBlock::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)

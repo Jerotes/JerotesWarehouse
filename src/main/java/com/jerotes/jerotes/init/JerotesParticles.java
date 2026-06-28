@@ -1,6 +1,8 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.client.particle.*;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,6 +22,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VI.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VII.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VIII.get(), ShootParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.SUMMON_PARTICLE.get(), SummonParticle.Provider::create);
 
 		event.registerSpriteSet(JerotesParticleTypes.MAGIC_MISSILE.get(), MagicMissileParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.POISON_BREATH.get(), ShootParticle::provider);
@@ -55,5 +58,6 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.MAGIC_ABSORPTION_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.BEAST_TOUGH_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ACTION_SURGE_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.CLOUD_OF_DAGGERS_DISPLAY.get(), DisplayParticle::provider);
 	}
 }

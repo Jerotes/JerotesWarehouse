@@ -429,14 +429,17 @@ public class AttackFind {
         }
     }
 
-    //阵营免伤
     public static boolean SameFactionAvoidDamage(Entity attacker, LivingEntity hurt) {
+        return SameFactionAvoidDamage(attacker, hurt, true);
+    }
+    //阵营免伤
+    public static boolean SameFactionAvoidDamage(Entity attacker, LivingEntity hurt, boolean shouldJerotesEntity) {
         if (!MainConfig.SameFactionAvoidDamage)
             return false;
         if (!(attacker instanceof Mob mobAttacker) || !(hurt instanceof Mob mobHurt))
             return false;
         if (mobAttacker.getTarget() != mobHurt && mobHurt.getTarget() != mobAttacker && (mobAttacker.getTeam() == null && mobHurt.getTeam() == null || mobAttacker.isAlliedTo(mobHurt))) {
-            if (EntityFactionFind.isFaction(mobHurt, mobAttacker) && (mobHurt instanceof JerotesEntity && mobAttacker instanceof JerotesEntity || MainConfig.AffectsNonThisModEntities)) {
+            if (EntityFactionFind.isFaction(mobHurt, mobAttacker) && (mobHurt instanceof JerotesEntity && mobAttacker instanceof JerotesEntity || !shouldJerotesEntity || MainConfig.AffectsNonThisModEntities)) {
                 return true;
             }
             //event
@@ -446,7 +449,7 @@ public class AttackFind {
                 return true;
             }
             //仆从主人
-            if ((attacker instanceof JerotesEntity || hurt instanceof JerotesEntity || MainConfig.AffectsNonThisModEntities)) {
+            if ((attacker instanceof JerotesEntity || hurt instanceof JerotesEntity || !shouldJerotesEntity || MainConfig.AffectsNonThisModEntities)) {
                 if (attacker instanceof OwnableEntity || hurt instanceof OwnableEntity) {
                     if (attacker instanceof OwnableEntity ownable && ownable.getOwner() == hurt)
                         return true;
@@ -465,7 +468,7 @@ public class AttackFind {
             }
 
 
-            if (mobAttacker instanceof JerotesEntity || mobHurt instanceof JerotesEntity || MainConfig.AffectsNonThisModEntities) {
+            if (mobAttacker instanceof JerotesEntity || mobHurt instanceof JerotesEntity || !shouldJerotesEntity || MainConfig.AffectsNonThisModEntities) {
                 //信任生物不误伤信任者的宠物
                 if (mobHurt instanceof OwnableEntity ownable && ownable.getOwner() != null
                         && Main.isTrusted(mobAttacker, ownable.getOwner(), true)) {

@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.Breath;
 
+import com.jerotes.jerotes.entity.Other.SpellCloud.SpellCloudEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
@@ -46,12 +47,13 @@ public class BaseBreathEntity extends MagicAboutEntity {
     public boolean Cloud(double x, double y, double z) {
         List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(4.0, 2.0, 4.0));
         list.removeIf(livingEntity -> livingEntity == this.getOwner());
-        AreaEffectCloud areaEffectCloud = new AreaEffectCloud(this.level(), x, y, z);
+        SpellCloudEntity areaEffectCloud = new SpellCloudEntity(this.level(), x, y, z);
         Entity entity = this.getOwner();
         if (entity instanceof LivingEntity) {
             areaEffectCloud.setOwner((LivingEntity)entity);
         }
         areaEffectCloud.setParticle(this.getCloudParticle());
+        areaEffectCloud.setParticleScaleMultiple(0.5f);
         areaEffectCloud.setRadius(this.getCloudRadius());
         areaEffectCloud.setDuration((int) (20 * spellLevelMainEffectTime * this.getCloudEffectTimeMultiple()));
         areaEffectCloud.setRadiusPerTick((2.0f - areaEffectCloud.getRadius()) / (float)areaEffectCloud.getDuration());
