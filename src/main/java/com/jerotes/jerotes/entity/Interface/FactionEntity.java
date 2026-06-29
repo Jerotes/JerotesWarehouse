@@ -52,7 +52,7 @@ public interface FactionEntity {
     default String getMobTypeNameModId() {
         if (this instanceof LivingEntity entity && EntityFactionFind.getTrueFaction(entity) != null) {
             String s = EntityFactionFind.getTrueFaction(entity);
-            if (s.contains("raider") || s.contains("piglin") || s.contains("illager") || s.contains("witch") || s.contains("wither_skeleton") || s.contains("villager")) {
+            if (s.equals("raider") || s.equals("piglin") || s.equals("illager") || s.equals("witch") || s.equals("wither") || s.contains("villager")) {
                 return "jerotes";
             }
         }

@@ -21,7 +21,7 @@ public class ItemWarBeastArmorDyeable extends DyeableHorseArmorItem implements I
 	private final int color;
 	private final ResourceLocation texture;
 	private final String modIdString;
-	private final String trxtureString;
+	private final String textureString;
 
 	public ItemWarBeastArmorDyeable(int n, int color, String string, String string2, Properties properties) {
 		this(n, color, new ResourceLocation(string, "textures/entity/war_beast_armor/" + string2 + ".png"), string, string2, properties);
@@ -39,7 +39,7 @@ public class ItemWarBeastArmorDyeable extends DyeableHorseArmorItem implements I
 		this.color = color;
 		this.texture = resourceLocation2;
 		this.modIdString = string;
-		this.trxtureString = string2;
+		this.textureString = string2;
 	}
 
 	public ItemWarBeastArmorDyeable(int n, double n2, double n3, int color, ResourceLocation resourceLocation2, String string, String string2, Properties properties) {
@@ -50,15 +50,19 @@ public class ItemWarBeastArmorDyeable extends DyeableHorseArmorItem implements I
 		this.color = color;
 		this.texture = resourceLocation2;
 		this.modIdString = string;
-		this.trxtureString = string2;
+		this.textureString = string2;
 	}
 
+	@Override
+	public String getTextureString() {
+		return textureString;
+	}
 	@Override
 	public ResourceLocation getTexture() {
 		return texture;
 	}
 	public ResourceLocation getTextureOverlay() {
-		return new ResourceLocation(modIdString, "textures/entity/war_beast_armor/" + trxtureString + "_overlay" + ".png");
+		return new ResourceLocation(modIdString, "textures/entity/war_beast_armor/" + textureString + "_overlay" + ".png");
 	}
 
 	@Override

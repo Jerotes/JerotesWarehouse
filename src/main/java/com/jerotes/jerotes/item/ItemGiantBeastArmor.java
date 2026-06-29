@@ -20,7 +20,7 @@ public class ItemGiantBeastArmor extends Item implements ItemBeastArmor, ItemBas
 	private final int color;
 	private final ResourceLocation texture;
 	private final String modIdString;
-	private final String trxtureString;
+	private final String textureString;
 
 	public ItemGiantBeastArmor(int n, int color, String string, String string2, Properties properties) {
 		this(n, color, new ResourceLocation(string, "textures/entity/giant_beast_armor/" + string2 + ".png"), string, string2, properties);
@@ -38,7 +38,7 @@ public class ItemGiantBeastArmor extends Item implements ItemBeastArmor, ItemBas
 		this.color = color;
 		this.texture = resourceLocation;
 		modIdString = string;
-		trxtureString = string2;
+		textureString = string2;
 	}
 
 	public ItemGiantBeastArmor(int n, double n2, double n3, int color, ResourceLocation resourceLocation, String string, String string2, Properties properties) {
@@ -49,14 +49,18 @@ public class ItemGiantBeastArmor extends Item implements ItemBeastArmor, ItemBas
 		this.color = color;
 		this.texture = resourceLocation;
 		this.modIdString = string;
-		this.trxtureString = string2;
+		this.textureString = string2;
 	}
 
+	@Override
+	public String getTextureString() {
+		return textureString;
+	}
 	public ResourceLocation getTexture() {
 		return texture;
 	}
 	public ResourceLocation getTextureOverlay() {
-		return new ResourceLocation(modIdString, "textures/entity/giant_beast_armor/" + trxtureString + "_overlay" + ".png");
+		return new ResourceLocation(modIdString, "textures/entity/giant_beast_armor/" + textureString + "_overlay" + ".png");
 	}
 
 	@Override

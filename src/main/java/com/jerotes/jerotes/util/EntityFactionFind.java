@@ -184,10 +184,14 @@ public class EntityFactionFind {
 		return livingEntity instanceof WitherSkeleton
 				|| livingEntity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "wither_skeleton")));
 	}
-	//凋灵类
+	//凋灵
 	public static boolean isWither(LivingEntity livingEntity) {
 		return livingEntity instanceof WitherBoss
 				|| livingEntity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "wither")));
+	}
+	//凋灵类
+	public static boolean isWitherType(LivingEntity livingEntity) {
+		return isWitherSkeleton(livingEntity) || isWither(livingEntity);
 	}
 	//末影人
 	public static boolean isEnderman(LivingEntity livingEntity) {
@@ -322,6 +326,10 @@ public class EntityFactionFind {
 		else if (EntityFactionFind.isThisEntity(livingEntity.getType(), "jerotes:used_faction/stress_piglin")) {
 			return "piglin";
 		}
+		//凋灵
+		else if (EntityFactionFind.isThisEntity(livingEntity.getType(), "jerotes:used_faction/stress_wither")) {
+			return "wither";
+		}
 		//亡灵
 		else if (EntityFactionFind.isThisEntity(livingEntity.getType(), "jerotes:used_faction/stress_undead")) {
 			return "undead";
@@ -422,6 +430,10 @@ public class EntityFactionFind {
 		//猪灵
 		else if (isPiglin(livingEntity) || livingEntity instanceof AbstractPiglin) {
 			return "piglin";
+		}
+		//凋灵
+		else if (isWitherType(livingEntity)) {
+			return "wither";
 		}
 		//亡灵
 		else if (livingEntity.getMobType() == MobType.UNDEAD) {
@@ -537,6 +549,11 @@ public class EntityFactionFind {
 		if (bl || isPiglin(livingEntity) || livingEntity instanceof AbstractPiglin
 				|| EntityFactionFind.isThisEntity(livingEntity.getType(), "jerotes:used_faction/stress_piglin")) {
 			stringList.add("piglin");
+		}
+		//末影
+		if (bl || isWitherType(livingEntity) || livingEntity instanceof WitherSkeleton || livingEntity instanceof WitherBoss
+				|| EntityFactionFind.isThisEntity(livingEntity.getType(), "jerotes:used_faction/stress_wither")) {
+			stringList.add("wither");
 		}
 		//亡灵
 		if (bl || livingEntity.getMobType() == MobType.UNDEAD || EntityFactionFind.isThisEntity(livingEntity.getType(), "minecraft:undead")

@@ -378,6 +378,9 @@ public class MobInventoryGUIScreen extends AbstractContainerScreen<MobInventoryG
                         List<String> stringList = this.menu.getFactionTypeList();
                         for (String stringFaction : stringList) {
                             string2 = this.menu.getFactionTypeEvenThoughTame().contains(string2) ? this.menu.getMobFactionModIdSelf() : this.menu.getMobFactionModId();
+                            if (stringFaction.equals("raider") || stringFaction.equals("piglin") || stringFaction.equals("illager") || stringFaction.equals("witch") || stringFaction.equals("wither") || stringFaction.equals("villager")) {
+                                string2 = "jerotes";
+                            }
                             tooltip.add(Component.translatable("message." + string2 + "." + stringFaction).withStyle(ChatFormatting.DARK_GRAY));
                         }
                     }

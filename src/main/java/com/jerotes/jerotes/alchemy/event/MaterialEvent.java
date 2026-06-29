@@ -90,35 +90,85 @@ public class MaterialEvent {
 			event.setEffectCount(99999);
 			event.setMaxCount(99999);
 		}
+		//土类
 		if (itemStack.is(ItemTags.DIRT)) {
 			event.setEffectCount(3);
 			event.setEffect1(new MiningFatigueAlchemyEffect(1, 1));
 			event.setEffect2(new SaturationAlchemyEffect(1, 1));
 			event.setEffect3(new WeaknessAlchemyEffect(1, 1));
 		}
+		//沙类
 		if (itemStack.is(ItemTags.SAND)) {
 			event.setEffectCount(3);
 			event.setEffect1(new CloakingAlchemyEffect(1, 1));
 			event.setEffect2(new SaturationAlchemyEffect(1, 1));
 			event.setEffect3(new FogAlchemyEffect(1, 1));
 		}
+		//石类
 		if (itemStack.is(ItemTags.STONE_CRAFTING_MATERIALS)) {
 			event.setEffectCount(3);
 			event.setEffect1(new ResistanceAlchemyEffect(1, 2));
 			event.setEffect2(new MiningFatigueAlchemyEffect(1, 2));
 			event.setEffect3(new SlowFallingAlchemyEffect(1, 1));
 		}
+		//木类
 		if (itemStack.is(ItemTags.PLANKS) || itemStack.is(ItemTags.LOGS)) {
 			event.setEffectCount(3);
 			event.setEffect1(new HasteAlchemyEffect(1, 1));
 			event.setEffect2(new WeaknessAlchemyEffect(1, 1));
 			event.setEffect3(new PoisonAlchemyEffect(1, 1));
 		}
+		//羊毛
 		if (itemStack.is(ItemTags.WOOL)) {
 			event.setEffectCount(3);
 			event.setEffect1(new SlowFallingAlchemyEffect(1, 1));
 			event.setEffect2(new FreezeAbsorptionAlchemyEffect(1, 1));
 			event.setEffect3(new SaturationAlchemyEffect(1, 1));
+		}
+		//鱼类
+		if (itemStack.is(Items.COD) || itemStack.is(Items.SALMON) || itemStack.is(Items.TROPICAL_FISH) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_fish"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_fishes"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawfish"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("minecraft:fishes")))) {
+			event.setEffectCount(3);
+			event.setEffect1(new DolphinsGraceAlchemyEffect(1, 1));
+			event.setEffect2(new WaterBreathingAlchemyEffect(1, 1));
+			event.setEffect3(new HasteAlchemyEffect(1, 1));
+		}
+		//熟鱼类
+		if (itemStack.is(Items.COOKED_COD) || itemStack.is(Items.COOKED_SALMON)) {
+			event.setEffectCount(3);
+			event.setEffect1(new SaturationAlchemyEffect(1, 1));
+			event.setEffect2(new WaterBreathingAlchemyEffect(1, 2));
+			event.setEffect3(new HasteAlchemyEffect(1, 2));
+		}
+		//肉类
+		if (itemStack.is(Items.BEEF) ||
+				itemStack.is(Items.PORKCHOP) ||
+				itemStack.is(Items.MUTTON) ||
+				itemStack.is(Items.CHICKEN) ||
+				itemStack.is(Items.RABBIT) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_meat"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_meats"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawmeat"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawmeats")))) {
+			event.setEffectCount(3);
+			event.setEffect1(new SpeedAlchemyEffect(1, 1));
+			event.setEffect2(new WeaknessAlchemyEffect(1, 1));
+			event.setEffect3(new HungerAlchemyEffect(1, 1));
+		}
+		//熟肉类
+		else if (itemStack.is(Items.COOKED_BEEF) ||
+				itemStack.is(Items.COOKED_PORKCHOP) ||
+				itemStack.is(Items.COOKED_MUTTON) ||
+				itemStack.is(Items.COOKED_CHICKEN) ||
+				itemStack.is(Items.COOKED_RABBIT) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("meats")))) {
+			event.setEffectCount(3);
+			event.setEffect1(new SaturationAlchemyEffect(1, 1));
+			event.setEffect2(new SpeedAlchemyEffect(1, 2));
+			event.setEffect3(new WeaknessAlchemyEffect(1, 2));
 		}
 		//毒马铃薯
 		if (itemStack.is(Items.POISONOUS_POTATO)) {
@@ -346,51 +396,6 @@ public class MaterialEvent {
 			event.setEffect2(new WaterBreathingAlchemyEffect(1, 3));
 			event.setEffect3(new ResistanceAlchemyEffect(2, 1));
 		}
-		//鱼类
-		if (itemStack.is(Items.COD) || itemStack.is(Items.SALMON) || itemStack.is(Items.TROPICAL_FISH) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_fish"))) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_fishes"))) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawfish"))) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("minecraft:fishes")))) {
-			event.setEffectCount(3);
-			event.setEffect1(new DolphinsGraceAlchemyEffect(1, 1));
-			event.setEffect2(new WaterBreathingAlchemyEffect(1, 1));
-			event.setEffect3(new HasteAlchemyEffect(1, 1));
-		}
-		//熟鱼类
-		if (itemStack.is(Items.COOKED_COD) || itemStack.is(Items.COOKED_SALMON)) {
-			event.setEffectCount(3);
-			event.setEffect1(new SaturationAlchemyEffect(1, 1));
-			event.setEffect2(new WaterBreathingAlchemyEffect(1, 2));
-			event.setEffect3(new HasteAlchemyEffect(1, 2));
-		}
-		//肉类
-		if (itemStack.is(Items.BEEF) ||
-				itemStack.is(Items.PORKCHOP) ||
-				itemStack.is(Items.MUTTON) ||
-				itemStack.is(Items.CHICKEN) ||
-				itemStack.is(Items.RABBIT) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_meat"))) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_meats"))) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawmeat"))) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawmeats")))) {
-			event.setEffectCount(3);
-			event.setEffect1(new SpeedAlchemyEffect(1, 1));
-			event.setEffect2(new WeaknessAlchemyEffect(1, 1));
-			event.setEffect3(new HungerAlchemyEffect(1, 1));
-		}
-		//熟肉类
-		else if (itemStack.is(Items.COOKED_BEEF) ||
-				itemStack.is(Items.COOKED_PORKCHOP) ||
-				itemStack.is(Items.COOKED_MUTTON) ||
-				itemStack.is(Items.COOKED_CHICKEN) ||
-				itemStack.is(Items.COOKED_RABBIT) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("meats")))) {
-			event.setEffectCount(3);
-			event.setEffect1(new SaturationAlchemyEffect(1, 1));
-			event.setEffect2(new SpeedAlchemyEffect(1, 2));
-			event.setEffect3(new WeaknessAlchemyEffect(1, 2));
-		}
 		//奶桶
 		if (itemStack.is(Items.MILK_BUCKET)) {
 			event.setEffectCount(3);
@@ -497,10 +502,10 @@ public class MaterialEvent {
 			event.setEffect3(new BlindnessAlchemyEffect(1, 1));
 		}
 		//发酵蛛眼
-		if (itemStack.is(Items.SPIDER_EYE)) {
+		if (itemStack.is(Items.FERMENTED_SPIDER_EYE)) {
 			event.setEffectCount(3);
 			event.setEffect1(new TruesightAlchemyEffect(1, 2));
-			event.setEffect2(new DeadlyPoisonAlchemyEffect(2, 1));
+			event.setEffect2(new WeaknessAlchemyEffect(2, 1));
 			event.setEffect3(new BlindnessAlchemyEffect(1, 2));
 		}
 		//蜂蜜瓶
