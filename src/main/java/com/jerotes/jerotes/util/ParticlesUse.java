@@ -24,7 +24,7 @@ public class ParticlesUse {
         float w = (float) (entity.getBbWidth() * xzScale);
         float h = (float) (entity.getBbHeight() * yScale);
         SummonParticleOptions options = SummonParticleOptions.withColorsAndSize(
-                h * 1.2f, w * 1.2f,
+                h, w,
                 rBottom, gBottom, bBottom,
                 rTop, gTop, bTop,
                 alphaBottom, alphaTop
@@ -32,7 +32,7 @@ public class ParticlesUse {
         serverLevel.sendParticles(options, x, y, z, 0, 0, 0, 0, 0);
     }
     public static void summonParticle(ServerLevel serverLevel, Entity entity, double x, double y, double z, int colorBottom, int colorTop) {
-        summonParticle(serverLevel, entity, 1.25f, 1.25f, x, y, z, colorBottom, colorTop);
+        summonParticle(serverLevel, entity, 1.65, 1.65, x, y, z, colorBottom, colorTop);
     }
 }
 

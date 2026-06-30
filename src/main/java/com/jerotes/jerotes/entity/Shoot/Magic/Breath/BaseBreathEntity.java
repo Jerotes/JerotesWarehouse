@@ -35,6 +35,7 @@ public class BaseBreathEntity extends MagicAboutEntity {
     public void tick() {
         if (this.life >= this.getMaxLife() && this.hasCloud()) {
             this.Cloud(this.getX(), this.getY(), this.getZ());
+            this.discard();
         }
         super.tick();
         if (this.getTrailParticle() != null) {
@@ -53,7 +54,7 @@ public class BaseBreathEntity extends MagicAboutEntity {
             areaEffectCloud.setOwner((LivingEntity)entity);
         }
         areaEffectCloud.setParticle(this.getCloudParticle());
-        areaEffectCloud.setParticleScaleMultiple(0.5f);
+        areaEffectCloud.setParticleScaleMultiple(0.125f);
         areaEffectCloud.setRadius(this.getCloudRadius());
         areaEffectCloud.setDuration((int) (20 * spellLevelMainEffectTime * this.getCloudEffectTimeMultiple()));
         areaEffectCloud.setRadiusPerTick((2.0f - areaEffectCloud.getRadius()) / (float)areaEffectCloud.getDuration());

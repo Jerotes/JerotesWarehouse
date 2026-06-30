@@ -15,7 +15,6 @@ import net.minecraft.core.particles.ParticleType;
 
 public class SummonParticleOptions implements ParticleOptions {
 
-	// ---------- 默认常量（原硬编码值） ----------
 	public static final float DEFAULT_INNER_HALF_WIDTH_START = 0.35F;
 	public static final float DEFAULT_INNER_HALF_WIDTH_PEAK = 0.6F;
 	public static final float DEFAULT_INNER_HALF_WIDTH_END = 0.6F;

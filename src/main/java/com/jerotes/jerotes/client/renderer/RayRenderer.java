@@ -52,43 +52,40 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
     }
 
     private void renderBeam(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-        float startX = entity.getLastX();
-        float startY = entity.getLastY();
-        float startZ = entity.getLastZ();
-        Vec3 currentPos = entity.getPosition(partialTick);
-        float endX = (float) currentPos.x;
-        float endY = (float) currentPos.y;
-        float endZ = (float) currentPos.z;
+        Vec3 renderPos = entity.getPosition(partialTick);
 
-        float dx = endX - startX;
-        float dy = endY - startY;
-        float dz = endZ - startZ;
-        float distance = Mth.sqrt(dx * dx + dy * dy + dz * dz);
-        if (distance < 0.01f) return;
+        Vec3 startWorld = new Vec3(entity.getLastX(), entity.getLastY(), entity.getLastZ());
+        Vec3 endWorld = renderPos;
 
-        Vec3 startLocal = new Vec3(startX, startY, startZ).subtract(entity.position());
-        Vec3 endLocal   = new Vec3(endX, endY, endZ).subtract(entity.position());
+        double raiseY = entity.getBbHeight() / 3.0;
 
-        double raiseY = entity.getBbHeight()/3;
-        startLocal = startLocal.add(0, raiseY, 0);
-        endLocal   = endLocal.add(0, raiseY, 0);
+        Vec3 startLocal = startWorld.subtract(renderPos).add(0.0, raiseY, 0.0);
+        Vec3 endLocal = new Vec3(0.0, raiseY, 0.0);
 
         Vec3 dirLocal = endLocal.subtract(startLocal);
-        float len = (float) dirLocal.length();
-        if (len < 0.01f) return;
+        float len = (float)dirLocal.length();
+
+        if (len < 0.001F) {
+            return;
+        }
 
         poseStack.pushPose();
+
         poseStack.translate(startLocal.x, startLocal.y, startLocal.z);
 
         float horizontalDistance = Mth.sqrt((float)(dirLocal.x * dirLocal.x + dirLocal.z * dirLocal.z));
-        float yaw, pitch;
-        if (horizontalDistance < 1e-4f) {
-            yaw = 0;
-            pitch = (float) (dirLocal.y > 0 ? -Math.PI / 2 : Math.PI / 2);
+
+        float yaw;
+        float pitch;
+
+        if (horizontalDistance < 1.0E-4F) {
+            yaw = 0.0F;
+            pitch = dirLocal.y > 0.0 ? -(float)Math.PI / 2F : (float)Math.PI / 2F;
         } else {
-            yaw = (float) Math.atan2(dirLocal.x, dirLocal.z);
-            pitch = (float) -Math.atan2(dirLocal.y, horizontalDistance);
+            yaw = (float)Math.atan2(dirLocal.x, dirLocal.z);
+            pitch = (float)-Math.atan2(dirLocal.y, horizontalDistance);
         }
+
         poseStack.mulPose(Axis.YP.rotation(yaw));
         poseStack.mulPose(Axis.XP.rotation(pitch));
 
@@ -107,17 +104,42 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         float half = entity.getMaxLife() / 2.0f;
         float alpha = 1.0f - Mth.clamp((entity.life - half) / half, 0.0f, 1.0f);
         int innerAlpha = (int) (250 * alpha);
-        int outerAlpha = (int) (200 * alpha);
+        int outerAlpha = (int) (100 * alpha);
 
         float scale = entity.beamScale();
-        float outerWidth = 0.06f * scale;
-        float innerWidth = 0.045f * scale;
+        float outerWidth = 0.065f * scale;
+        float innerWidth = 0.038f * scale;
         float halfOuter = outerWidth / 2.0f;
         float halfInner = innerWidth / 2.0f;
         VertexConsumer consumer2 = buffer.getBuffer(JerotesRenderType.glowDoubleSidedTranslucent(new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png")));
-        VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutout(new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png")));
-        renderQuadrilateralPipe(consumer2, matrix, normal, len, halfOuter, outerR, outerG, outerB, outerAlpha, packedLight, false);
-        renderQuadrilateralPipe(consumer, matrix, normal, len, halfInner, innerR, innerG, innerB, innerAlpha, packedLight, false);
+        VertexConsumer consumer = buffer.getBuffer(JerotesRenderType.glowDoubleSidedTranslucent(new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png")));
+        float overlap = outerWidth * 0.35F;
+
+        renderQuadrilateralPipe(
+                consumer2,
+                matrix,
+                normal,
+                len,
+                halfOuter,
+                outerR,
+                outerG,
+                outerB,
+                outerAlpha,
+                packedLight,
+                false);
+
+        renderQuadrilateralPipe(
+                consumer,
+                matrix,
+                normal,
+                len,
+                halfInner,
+                innerR,
+                innerG,
+                innerB,
+                innerAlpha,
+                packedLight,
+                false);
 
         poseStack.popPose();
     }

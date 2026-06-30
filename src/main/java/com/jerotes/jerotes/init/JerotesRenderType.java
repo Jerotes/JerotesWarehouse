@@ -124,13 +124,13 @@ public class JerotesRenderType extends RenderType {
 						false,
 						true,
 						CompositeState.builder()
-								.setShaderState(RENDERTYPE_EYES_SHADER)
+								.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
 								.setTextureState(textureStateShard)
 								.setTransparencyState(transparencyStateShard)
-								.setWriteMaskState(COLOR_WRITE)
+								.setWriteMaskState(COLOR_DEPTH_WRITE)
 								.setCullState(NO_CULL)
 								.setDepthTestState(LEQUAL_DEPTH_TEST)
-								.setOutputState(TRANSLUCENT_TARGET)
+								.setOutputState(MAIN_TARGET)
 								.createCompositeState(false)
 				);
 			});
