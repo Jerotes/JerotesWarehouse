@@ -1,5 +1,6 @@
 {
   "item_group.jerotes.jerotes_stab": "Jerotes实用仓库",
+  "key.categories.jerotes": "Jerotes实用仓库",
 
   "advancements.jerotes.a_brand_new_world.title": "崭新世界",
   "advancements.jerotes.a_brand_new_world.desc": "<铜刻佣兵团> 世界似乎变得不一样了",
@@ -157,6 +158,7 @@
   "item.jerotes.pincer": "[剪刀-钳刀]可以快速拆除部分方块",
   "item.jerotes.bow": "[弓]默认 蓄力发射箭矢 箭矢速度%1$s 默认射弹距离%2$s 最大蓄力时间%3$s秒 箭矢精准度偏差%4$s",
   "item.jerotes.crossbow": "[弩]默认 蓄力装填后发射子弹 箭矢速度%1$s 火箭速度%2$s 默认射弹距离%3$s 蓄力持续时间%4$s秒 箭矢精准度偏差%5$s",
+  "item.jerotes.crossbow_repeater": "[弩]默认 蓄力装填后发射子弹 箭矢速度%1$s 火箭速度%2$s 默认射弹距离%3$s 蓄力持续时间%4$s秒 箭矢精准度偏差%5$s 连续发射次数%6$s次",
   "item.jerotes.shield": "[盾]默认 使用时可以抵挡部分伤害",
   "item.jerotes.parry_shield": "[招架盾]使用时可以招架并反弹伤害 招架间隔%1$s秒 招架持续%2$s秒 招架反弹伤害倍数%3$s倍 招架反弹自身伤害最大倍数%4$s倍 击退力度%5$s倍",
   "item.jerotes.spear": "[矛]默认 不可破盾 攻击为突刺 最大攻击范围%1$s 最小攻击范围%2$s 使用时冲锋造成伤害 冲锋伤害%3$s倍",
@@ -429,6 +431,8 @@
 
   "message.jerotes.legend_true": "你已晋升传奇存在",
   "message.jerotes.legend_false": "你已失去传奇之身",
+
+  "argument.entity.options.jerotes_faction.description": "实体阵营(Jerotes实用仓库)",
 
   "key.jerotes.main_spell_use": "主要施法",
   "key.jerotes.add_spell_use": "附加施法",

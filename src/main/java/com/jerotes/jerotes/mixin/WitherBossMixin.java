@@ -1,11 +1,14 @@
 package com.jerotes.jerotes.mixin;
 
+import com.jerotes.jerotes.entity.Interface.FactionEntity;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -17,8 +20,26 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
 @Mixin(WitherBoss.class)
-public abstract class WitherBossMixin extends Monster {
+public abstract class WitherBossMixin extends Monster implements FactionEntity {
+    @Override
+    public String getFirstFactionTypeName() {
+        return "wither";
+    }
+    @Override
+    public List<String> getFactionTypeUntilTame() {
+        List<String> list = new ArrayList<>();
+        list.add(getFirstFactionTypeName());
+        return list;
+    }   private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (p_31504_) -> {
+        return p_31504_.getMobType() != MobType.UNDEAD && p_31504_.attackable();
+    };
+
+
     @Shadow public abstract int getInvulnerableTicks();
 
     @Shadow public abstract boolean isPowered();

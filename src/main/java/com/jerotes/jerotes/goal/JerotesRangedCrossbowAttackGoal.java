@@ -185,7 +185,7 @@ public class JerotesRangedCrossbowAttackGoal<T extends Mob & CrossbowAttackMob> 
         } else if (this.crossbowState == CrossbowState.READY_TO_ATTACK && bl3 && this.attackCooldown <= 0) {
             ItemStack itemStack = this.mob.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this.mob, handItem.getItem()));
             this.mob.performRangedAttack(livingEntity, 1.0f);
-            if (ItemToolBaseCrossbow.getBullet(itemStack) > 0) {
+            if (ItemToolBaseCrossbow.getBullet(itemStack) > 1) {
                 ItemToolBaseCrossbow.setBullet(itemStack, ItemToolBaseCrossbow.getBullet(itemStack)-1);
                 int n = 5;
                 if (handItem.getItem() instanceof ItemToolBaseCrossbow itemToolBaseCrossbow) {

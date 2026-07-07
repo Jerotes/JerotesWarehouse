@@ -9,6 +9,8 @@
     "jerotes:bypasses_cooldown_melee",
     "jerotes:cloud_of_daggers",
     "jerotes:bypasses_armor_melee",
+    "jerotes:bypasses_shield_melee",
+    "jerotes:bypasses_armor_and_shield_melee",
     "jerotes:fire_melee",
     "jerotes:freeze_melee",
     "jerotes:lightning_melee",

@@ -202,16 +202,16 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 		}
 		super.tick();
 	}
-	protected boolean canHitEntity(Entity p_36743_) {
-		if (this.getOwner() != null && p_36743_ instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity)) {
-			return false;
-		}
+	protected boolean canHitEntity(Entity entity) {
 		if (this.piercingIgnoreEntityIds != null && this.piercingIgnoreEntityIds.size() >= (int) this.getPierceLevel()) {
 			return false;
 		}
-		return super.canHitEntity(p_36743_) &&
+		if (this.allayEntities != null && this.allayEntities.contains(entity)) {
+			return false;
+		}
+		return super.canHitEntity(entity) &&
 				(this.piercingIgnoreEntityIds == null ||
-						!this.piercingIgnoreEntityIds.contains(p_36743_.getId()));
+						!this.piercingIgnoreEntityIds.contains(entity.getId()));
 	}
 
 	private void resetPiercedEntities() {
@@ -253,6 +253,18 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 		}
 		Entity entity = this.getOwner();
 		Entity entity2 = entityHitResult.getEntity();
+		if (this.allayEntities != null && this.allayEntities.contains(entity2)) {
+			return;
+		}
+		if (this.allayEntities == null) {
+			this.allayEntities = Lists.newArrayListWithCapacity((int)5);
+		}
+		if (this.getOwner() != null && entity2 instanceof LivingEntity livingEntity) {
+			if (AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity)) {
+				this.allayEntities.add(livingEntity);
+				return;
+			}
+		}
 		float f = damage;
 		float f1 = 0;
 		float special = this.specialDamage(entity2);
@@ -342,6 +354,7 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 		super.onHitBlock(blockHitResult);
 		this.reboundBlock();
 		this.resetPiercedEntities();
+		this.resetAllayEntities();
 	}
 
 	@Override

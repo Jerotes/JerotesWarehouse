@@ -83,9 +83,21 @@ public class BaseArrowEntity extends BaseAbstractArrowEntity {
         if (this.piercingIgnoreEntityIds != null && this.piercingIgnoreEntityIds.size() >= (int) this.getPierceLevel()) {
             return;
         }
-        Entity entity;
+        Entity entity = this.getOwner();
         DamageSource damageSource;
         Entity entity2 = entityHitResult.getEntity();
+        if (this.allayEntities != null && this.allayEntities.contains(entity2)) {
+            return;
+        }
+        if (this.allayEntities == null) {
+            this.allayEntities = Lists.newArrayListWithCapacity((int)5);
+        }
+        if (this.getOwner() != null && entity2 instanceof LivingEntity livingEntity) {
+            if (AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity)) {
+                this.allayEntities.add(livingEntity);
+                return;
+            }
+        }
         float special = this.specialDamage(entity2);
         float f = (float)this.getDeltaMovement().length();
         int n = Mth.ceil(Mth.clamp((double)f * this.baseDamage, 0.0,  (double)Integer.MAX_VALUE));
@@ -109,9 +121,9 @@ public class BaseArrowEntity extends BaseAbstractArrowEntity {
             n = (int)Math.min(l + (long)n, Integer.MAX_VALUE);
         }
         damageSource = this.getDamageSource(entity2);
-        if (!((entity = this.getOwner()) == null)) {
-            if (entity instanceof LivingEntity) {
-                ((LivingEntity)entity).setLastHurtMob(entity2);
+        if (entity != null) {
+            if (entity instanceof LivingEntity livingEntity) {
+                livingEntity.setLastHurtMob(entity2);
             }
         }
         boolean bl = entity2 instanceof LivingEntity livingEntity && EntityFactionFind.isEnderman(livingEntity);
@@ -142,14 +154,13 @@ public class BaseArrowEntity extends BaseAbstractArrowEntity {
                     EnchantmentHelper.doPostDamageEffects((LivingEntity)entity, livingEntity);
                 }
                 this.doPostHurtEffects(livingEntity);
-                if (entity != null && livingEntity != entity && livingEntity instanceof Player && entity instanceof ServerPlayer && !this.isSilent()) {
-                    ((ServerPlayer)entity).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0f));
+                if (entity != null && livingEntity != entity && livingEntity instanceof Player && entity instanceof ServerPlayer serverPlayer && !this.isSilent()) {
+                    serverPlayer.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0f));
                 }
                 if (!entity2.isAlive() && this.piercedAndKilledEntities != null) {
                     this.piercedAndKilledEntities.add(livingEntity);
                 }
-                if (!this.level().isClientSide && entity instanceof ServerPlayer) {
-                    ServerPlayer serverPlayer = (ServerPlayer)entity;
+                if (!this.level().isClientSide && entity instanceof ServerPlayer serverPlayer) {
                     if (this.piercedAndKilledEntities != null && this.shotFromCrossbow()) {
                         CriteriaTriggers.KILLED_BY_CROSSBOW.trigger(serverPlayer, this.piercedAndKilledEntities);
                     } else if (!entity2.isAlive() && this.shotFromCrossbow()) {
@@ -220,14 +231,14 @@ public class BaseArrowEntity extends BaseAbstractArrowEntity {
         return true;
     }
 
-    protected boolean canHitEntity(Entity p_36743_) {
-        if (this.getOwner() != null && p_36743_ instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity)) {
-            return false;
-        }
+    protected boolean canHitEntity(Entity entity) {
         if (this.piercingIgnoreEntityIds != null && this.piercingIgnoreEntityIds.size() >= (int) this.getPierceLevel()) {
             return false;
         }
-        return super.canHitEntity(p_36743_) && (this.piercingIgnoreEntityIds == null || !this.piercingIgnoreEntityIds.contains(p_36743_.getId()));
+        if (this.allayEntities != null && this.allayEntities.contains(entity)) {
+            return false;
+        }
+        return super.canHitEntity(entity) && (this.piercingIgnoreEntityIds == null || !this.piercingIgnoreEntityIds.contains(entity.getId()));
     }
 
     private void resetPiercedEntities() {
@@ -241,6 +252,7 @@ public class BaseArrowEntity extends BaseAbstractArrowEntity {
     protected void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
         this.resetPiercedEntities();
+        this.resetAllayEntities();
     }
 
     @Override

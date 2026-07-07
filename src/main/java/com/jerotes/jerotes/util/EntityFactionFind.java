@@ -244,11 +244,11 @@ public class EntityFactionFind {
 		if (AttackFind.getOwnerTrue(livingEntity) != null) {
 			return getTrueFaction(AttackFind.getOwnerTrue(livingEntity));
 		}
-		if (!Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction").isEmpty()) {
+		if (!Main.getJerotesPersistentData(livingEntity).getList("jerotes_mob_faction", 8).isEmpty()) {
 			return Main.getJerotesPersistentData(livingEntity).getList("jerotes_mob_faction", 8).getString(0);
 		}
-		if (livingEntity instanceof FactionEntity jerotes && !jerotes.getFactionTypeList().isEmpty()) {
-			return !jerotes.getFirstFactionTypeName().isEmpty() ? jerotes.getFirstFactionTypeName() : jerotes.getFactionTypeList().get(0);
+		if (!FactionEntity.getFactionTypeListAll(livingEntity).isEmpty()) {
+			return livingEntity instanceof FactionEntity jerotes && !jerotes.getFirstFactionTypeName().isEmpty() ? jerotes.getFirstFactionTypeName() : FactionEntity.getFactionTypeListAll(livingEntity).get(0);
 		}
 		return base;
 	}

@@ -25,7 +25,7 @@ import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = {Dist.CLIENT})
 public class JerotesKeyMappings {
-	public static final KeyMapping MAIN_SPELL_USE = new KeyMapping("key.jerotes.main_spell_use", GLFW.GLFW_KEY_Y, "key.categories.gameplay") {
+	public static final KeyMapping MAIN_SPELL_USE = new KeyMapping("key.jerotes.main_spell_use", GLFW.GLFW_KEY_Y, "key.categories.jerotes") {
 		private boolean isDownOld = false;
 		@Override
 		public void setDown(boolean isDown) {
@@ -39,7 +39,7 @@ public class JerotesKeyMappings {
 			isDownOld = isDown;
 		}
 	};
-	public static final KeyMapping ADD_SPELL_USE = new KeyMapping("key.jerotes.add_spell_use", GLFW.GLFW_KEY_U, "key.categories.gameplay") {
+	public static final KeyMapping ADD_SPELL_USE = new KeyMapping("key.jerotes.add_spell_use", GLFW.GLFW_KEY_U, "key.categories.jerotes") {
 		private boolean isDownOld = false;
 		@Override
 		public void setDown(boolean isDown) {
@@ -53,7 +53,7 @@ public class JerotesKeyMappings {
 			isDownOld = isDown;
 		}
 	};
-	public static final KeyMapping CHANGE_CONTROL_COMBAT_TYPE = new KeyMapping("key.jerotes.change_control_combat_type", GLFW.GLFW_KEY_K, "key.categories.gameplay") {
+	public static final KeyMapping CHANGE_CONTROL_COMBAT_TYPE = new KeyMapping("key.jerotes.change_control_combat_type", GLFW.GLFW_KEY_K, "key.categories.jerotes") {
 		private boolean isDownOld = false;
 		@Override
 		public void setDown(boolean isDown) {
@@ -68,7 +68,7 @@ public class JerotesKeyMappings {
 			isDownOld = isDown;
 		}
 	};
-	public static final KeyMapping CHANGE_CONTROL_STEERING_TYPE = new KeyMapping("key.jerotes.change_control_steering_type", GLFW.GLFW_KEY_J, "key.categories.gameplay") {
+	public static final KeyMapping CHANGE_CONTROL_STEERING_TYPE = new KeyMapping("key.jerotes.change_control_steering_type", GLFW.GLFW_KEY_J, "key.categories.jerotes") {
 		private boolean isDownOld = false;
 		@Override
 		public void setDown(boolean isDown) {
@@ -84,7 +84,7 @@ public class JerotesKeyMappings {
 			isDownOld = isDown;
 		}
 	};
-	public static final KeyMapping VEHICLE_CONTROL_MOUSE_MAIN = new KeyMapping("key.jerotes.vehicle_control_mouse_main", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_LEFT, "key.categories.gameplay") {
+	public static final KeyMapping VEHICLE_CONTROL_MOUSE_MAIN = new KeyMapping("key.jerotes.vehicle_control_mouse_main", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_LEFT, "key.categories.jerotes") {
 		private boolean isDownOld = false;
 
 		@Override
@@ -104,7 +104,7 @@ public class JerotesKeyMappings {
 			isDownOld = isDown;
 		}
 	};
-	public static final KeyMapping VEHICLE_CONTROL_MOUSE_ADD = new KeyMapping("key.jerotes.vehicle_control_mouse_add", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_RIGHT, "key.categories.gameplay") {
+	public static final KeyMapping VEHICLE_CONTROL_MOUSE_ADD = new KeyMapping("key.jerotes.vehicle_control_mouse_add", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_RIGHT, "key.categories.jerotes") {
 		private boolean isDownOld = false;
 		@Override
 		public void setDown(boolean isDown) {
@@ -122,9 +122,9 @@ public class JerotesKeyMappings {
 			isDownOld = isDown;
 		}
 	};
-	public static final KeyMapping VEHICLE_CONTROL_LEFT = new KeyMapping("key.jerotes.vehicle_control_mouse_left", GLFW.GLFW_KEY_A, "key.categories.gameplay");
-	public static final KeyMapping VEHICLE_CONTROL_RIGHT = new KeyMapping("key.jerotes.vehicle_control_mouse_right", GLFW.GLFW_KEY_D, "key.categories.gameplay");
-	public static final KeyMapping PARRY_SHIELD_PARRY = new KeyMapping("key.jerotes.parry_shield_parry", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_LEFT, "key.categories.gameplay") {
+	public static final KeyMapping VEHICLE_CONTROL_LEFT = new KeyMapping("key.jerotes.vehicle_control_mouse_left", GLFW.GLFW_KEY_A, "key.categories.jerotes");
+	public static final KeyMapping VEHICLE_CONTROL_RIGHT = new KeyMapping("key.jerotes.vehicle_control_mouse_right", GLFW.GLFW_KEY_D, "key.categories.jerotes");
+	public static final KeyMapping PARRY_SHIELD_PARRY = new KeyMapping("key.jerotes.parry_shield_parry", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_LEFT, "key.categories.jerotes") {
 		private boolean isDownOld = false;
 		@Override
 		public void setDown(boolean isDown) {

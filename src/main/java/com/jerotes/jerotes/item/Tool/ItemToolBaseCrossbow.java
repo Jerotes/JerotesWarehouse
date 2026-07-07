@@ -91,14 +91,29 @@ public class ItemToolBaseCrossbow extends CrossbowItem implements ItemSpecialEff
         CompoundTag compoundTag = itemStack.getOrCreateTag();
         compoundTag.putInt("JerotesBullet", bl);
     }
+    public int maxBullet() {
+        return 0;
+    }
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("item.jerotes.crossbow",
-                getShootingPower(Items.ARROW.getDefaultInstance()),
-                getShootingPower(Items.FIREWORK_ROCKET.getDefaultInstance()),
-                getDefaultProjectileRange(),
-                getChargeDurations(itemStack)/20f,
-                getArrowInaccuracy()
-        ).withStyle(ChatFormatting.YELLOW));
+        if ((itemStack.getItem() instanceof ItemToolBaseCrossbow crossbowItem && crossbowItem.maxBullet() != 0)) {
+            list.add(Component.translatable("item.jerotes.crossbow_repeater",
+                    getShootingPower(Items.ARROW.getDefaultInstance()),
+                    getShootingPower(Items.FIREWORK_ROCKET.getDefaultInstance()),
+                    getDefaultProjectileRange(),
+                    getChargeDurations(itemStack)/20f,
+                    getArrowInaccuracy(),
+                    maxBullet()
+            ).withStyle(ChatFormatting.YELLOW));
+        }
+        else {
+            list.add(Component.translatable("item.jerotes.crossbow",
+                    getShootingPower(Items.ARROW.getDefaultInstance()),
+                    getShootingPower(Items.FIREWORK_ROCKET.getDefaultInstance()),
+                    getDefaultProjectileRange(),
+                    getChargeDurations(itemStack)/20f,
+                    getArrowInaccuracy()
+            ).withStyle(ChatFormatting.YELLOW));
+        }
         super.appendHoverText(itemStack, level, list, tooltipFlag);
     }
 }

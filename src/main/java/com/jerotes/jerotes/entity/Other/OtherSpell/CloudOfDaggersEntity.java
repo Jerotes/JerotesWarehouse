@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.entity.Other.OtherSpell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.util.AttackFind;
@@ -20,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class CloudOfDaggersEntity extends Entity implements TraceableEntity, OwnableEntity {
+public class CloudOfDaggersEntity extends Entity implements TraceableEntity, OwnableEntity, MagicAbout {
 
     public CloudOfDaggersEntity(EntityType<? extends CloudOfDaggersEntity> entityType, Level level) {
         super(entityType, level);
@@ -164,6 +165,11 @@ public class CloudOfDaggersEntity extends Entity implements TraceableEntity, Own
     }
     public ResourceLocation getDaggersTextureLocation() {
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/other/cloud_of_daggers_daggers.png");
+    }
+
+    @Override
+    public int getSpellLevel() {
+        return this.spellLevelDamage;
     }
 }
 

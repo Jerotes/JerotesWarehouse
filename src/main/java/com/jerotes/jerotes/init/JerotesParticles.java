@@ -13,6 +13,7 @@ public class JerotesParticles {
 	@SubscribeEvent
 	public static void registerParticles(RegisterParticleProvidersEvent event) {
 		event.registerSpriteSet(JerotesParticleTypes.NULL.get(), ShootParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.ABACK.get(), SymbolParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.BLOOD.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_I.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_II.get(), ShootParticle::provider);
@@ -22,6 +23,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VI.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VII.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VIII.get(), ShootParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.TARGET.get(), TargetOtherParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.SUMMON_PARTICLE.get(), SummonParticle.Provider::create);
 
 		event.registerSpriteSet(JerotesParticleTypes.MAGIC_MISSILE.get(), MagicMissileParticle::provider);

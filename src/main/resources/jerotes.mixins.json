@@ -20,6 +20,7 @@
     "DamageSourceMixin",
     "EnderDragonMixin",
     "EntityMixin",
+    "EntitySelectorOptionsMixin",
     "EvokerMixin",
     "FenceGateBlockMixin",
     "HorseMixin",
@@ -31,6 +32,7 @@
     "NameTagItemMixin",
     "NearestAttackableTargetGoalMixin",
     "PlayerMixin",
+    "PotionBrewingMixin",
     "RaiderMixin",
     "RangedBowAttackGoalMixin",
     "RavagerMixin",
@@ -42,7 +44,8 @@
     "StrayMixin",
     "ThrownEnderPearlMixin",
     "TrapDoorBlockMixin",
-    "WitherBossMixin"
+    "WitherBossMixin",
+    "WitherSkeletonMixin"
   ],
   "client": [
     "AbstractZombieModelMixin",

@@ -56,6 +56,7 @@ public class MagicMissileRenderer<T extends BaseMagicMissileEntity> extends Enti
     }
 
     private void renderTrail(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer) {
+        if (!entity.showBeam()) return;
         List<BaseMagicMissileEntity.TrailPoint> points = entity.getTrailPoints();
         if (points.size() < 2) return;
 
@@ -67,7 +68,6 @@ public class MagicMissileRenderer<T extends BaseMagicMissileEntity> extends Enti
         int currentLife = entity.life;
         int maxLife = 120;
 
-        // 预计算宽度和透明度（保持您原来的逻辑不变）
         int n = points.size();
         float[] widths = new float[n];
         float[] alphas = new float[n];
@@ -118,8 +118,6 @@ public class MagicMissileRenderer<T extends BaseMagicMissileEntity> extends Enti
             Vec3 p1l = local1.add(right.scale(-w1));
             Vec3 p1r = local1.add(right.scale(w1));
 
-            // 直接提交四个顶点（逆时针顺序），形成一个四边形，没有内部对角线
-            // 顺序：左下 -> 右下 -> 右上 -> 左上
             addVertex(consumer, matrix, normal, p0l, r, g, b, (int)(a0 * 200), 0, 0);
             addVertex(consumer, matrix, normal, p0r, r, g, b, (int)(a0 * 200), 1, 0);
             addVertex(consumer, matrix, normal, p1r, r, g, b, (int)(a1 * 200), 1, 1);
@@ -133,7 +131,7 @@ public class MagicMissileRenderer<T extends BaseMagicMissileEntity> extends Enti
                 .color(r, g, b, a)
                 .uv(u, v)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(15728880)  // 最大亮度
+                .uv2(15728880)
                 .normal(normal, 0, 1, 0)
                 .endVertex();
     }

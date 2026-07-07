@@ -154,7 +154,12 @@ public abstract class CrossbowItemMixin extends ProjectileWeaponItem {
                         }
                     }
                     //背包箭矢
-                    crossbowattackmob.shootCrossbowProjectile(Objects.requireNonNull(crossbowattackmob.getTarget()), itemStack, projectile, f4);
+                    if (crossbowattackmob.getTarget() != null) {
+                        crossbowattackmob.shootCrossbowProjectile(Objects.requireNonNull(crossbowattackmob.getTarget()), itemStack, projectile, f4);
+                    }
+                    else {
+                        crossbowattackmob.shootCrossbowProjectile(livingEntity, itemStack, projectile, f4);
+                    }
                 }
                 else {
                     Vec3 vec3 = livingEntity.getUpVector(1.0F);

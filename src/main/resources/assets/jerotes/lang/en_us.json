@@ -1,5 +1,6 @@
 {
   "item_group.jerotes.jerotes_stab": "Jerotes Warehouse",
+  "key.categories.jerotes": "Jerotes Warehouse",
 
   "advancements.jerotes.a_brand_new_world.title": "A Brand New World",
   "advancements.jerotes.a_brand_new_world.desc": "<Copper Carved Company> The world seems to have changed",
@@ -157,6 +158,7 @@
   "item.jerotes.pincer": "[Shears-Pincer]Can quickly remove some blocks",
   "item.jerotes.bow": "[Bow]Default - Charge and release arrow - Arrow Speed %1$s - Default Projectile Range %2$s - Max Draw Duration %3$s seconds - Arrow Accuracy Deviation %4$s",
   "item.jerotes.crossbow": "[Crossbow]Default - Charge and load before firing bullets - Arrow Speed %1$s - Firework Rocket Speed %2$s - Default Projectile Range %3$s - Charge Duration %4$s seconds - Arrow Accuracy Deviation %5$s",
+  "item.jerotes.crossbow_repeater": "[Crossbow]Default - Charge and load before firing bullets - Arrow Speed %1$s - Firework Rocket Speed %2$s - Default Projectile Range %3$s - Charge Duration %4$s seconds - Arrow Accuracy Deviation %5$s - Shots per Reload %%5$s",
   "item.jerotes.shield": "[Shield]Default - Deflects partial damage when used",
   "item.jerotes.parry_shield": "[Parry Shield]Can parry and reflect damage on use - Parry Cooldown %1$s seconds - Parry Duration %2$s seconds - Parry Damage Multiplier %3$s - Max Parry Self Damage Multiplier %4$s - Knockback Strength %5$s",
   "item.jerotes.spear": "[Spear]Default - Can't break shield - Attack type is lunge - Max Attack Range %1$s - Min Attack Range %2$s - Charges forward when used to deal damage - Charge Damage Multiplier %3$s",
@@ -429,6 +431,8 @@
 
   "message.jerotes.legend_true": "You Have Ascended to a Legendary Being",
   "message.jerotes.legend_false": "You Have Lost Your Legendary Form",
+
+  "argument.entity.options.jerotes_faction.description": "Entities with faction (Jerotes Warehouse)",
 
   "key.jerotes.main_spell_use": "Main Spell Use",
   "key.jerotes.add_spell_use": "Add Spell Use",

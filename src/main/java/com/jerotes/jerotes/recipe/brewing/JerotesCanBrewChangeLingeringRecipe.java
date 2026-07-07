@@ -28,17 +28,8 @@ public class JerotesCanBrewChangeLingeringRecipe implements IBrewingRecipe {
 			return ItemStack.EMPTY;
 		}
 		ItemStack output = new ItemStack(Items.LINGERING_POTION, input.getCount());
-		PotionUtils.setPotion(output, PotionUtils.getPotion(input));
-		PotionUtils.setCustomEffects(output, PotionUtils.getCustomEffects(input));
 		CompoundTag inputTag = input.getTag();
-		if (inputTag != null) {
-			CompoundTag outputTag = output.getOrCreateTag();
-			for (String key : inputTag.getAllKeys()) {
-				if (!key.equals("Potion") && !key.equals("CustomPotionEffects")) {
-					outputTag.put(key, Objects.requireNonNull(inputTag.get(key)).copy());
-				}
-			}
-		}
+		output.setTag(inputTag == null ? null : inputTag.copy());
 		return output;
 	}
 }

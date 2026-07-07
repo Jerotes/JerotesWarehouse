@@ -1,4 +1,4 @@
-package com.jerotes.jerotes.world.inventory;
+package com.jerotes.jerotes.inventory;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.InventoryEntity;

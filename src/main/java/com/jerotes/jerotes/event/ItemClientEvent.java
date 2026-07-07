@@ -51,5 +51,11 @@ public class ItemClientEvent {
 		if (held.getItem() instanceof ItemSpecialEffect && !held.getItem().canAttackBlock(event.getLevel().getBlockState(event.getPos()), event.getLevel(), event.getPos(), player)) {
 			event.setCanceled(true);
 		}
+		//控制战斗
+		if (player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
+				controlVehicleEntity.isManuallyControlCombatJerotes()) {
+			event.setCanceled(true);
+			return;
+		}
 	}
 }

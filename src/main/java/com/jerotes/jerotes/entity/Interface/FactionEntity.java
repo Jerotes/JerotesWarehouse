@@ -17,7 +17,7 @@ public interface FactionEntity {
         return isFriendFactionBase(entity);
     }
     default boolean isFriendFactionBase(Entity entity) {
-        return entity instanceof FactionEntity factions && !Collections.disjoint(getFactionTypeList(), factions.getFactionTypeList()) || helpSelfType() && this instanceof Entity entity2 && entity.getType() == entity2.getType();
+        return !Collections.disjoint(getFactionTypeList(), FactionEntity.getFactionTypeListAll(entity)) || helpSelfType() && this instanceof Entity entity2 && entity.getType() == entity2.getType();
     }
     default boolean helpSelfType() {
         return false;
@@ -78,6 +78,16 @@ public interface FactionEntity {
             }
         }
         list.removeIf(String::isEmpty);
+        return list;
+    }
+    static List<String> getFactionTypeListAll(Entity entity) {
+        if (entity instanceof FactionEntity factionEntity) return factionEntity.getFactionTypeList();
+        List<String> list = new ArrayList<>();
+        if (entity instanceof LivingEntity living) {
+            for (Tag tag : Main.getJerotesPersistentData(living).getList("jerotes_mob_faction", 8)) {
+                list.add(tag.getAsString());
+            }
+        }
         return list;
     }
 }

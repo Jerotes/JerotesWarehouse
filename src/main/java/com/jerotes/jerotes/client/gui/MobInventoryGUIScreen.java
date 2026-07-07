@@ -6,7 +6,7 @@ import com.jerotes.jerotes.network.*;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
-import com.jerotes.jerotes.world.inventory.MobInventoryGUIMenu;
+import com.jerotes.jerotes.inventory.MobInventoryGUIMenu;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

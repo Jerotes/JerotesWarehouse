@@ -3,6 +3,7 @@ package com.jerotes.jerotes.entity.Other.SpellCloud;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbstractHurtingProjectile;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesMobEffects;
@@ -45,7 +46,7 @@ import org.slf4j.Logger;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class SpellCloudEntity extends AreaEffectCloud {
+public class SpellCloudEntity extends AreaEffectCloud implements MagicAbout {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int TIME_BETWEEN_APPLICATIONS = 5;
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SpellCloudEntity.class, EntityDataSerializers.FLOAT);
@@ -284,7 +285,7 @@ public class SpellCloudEntity extends AreaEffectCloud {
     }
     public void addEffectAbout(LivingEntity livingEntity, MobEffectInstance mobEffectInstance) {
         if (this.getOwner() != null) {
-            boolean isAlly = AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity, false);
+            boolean isAlly = AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity, false) || AttackFind.FindCanNotAttack(this.getOwner(), livingEntity);
             if (isAlly) {
                 if (mobEffectInstance.getEffect().getCategory() == MobEffectCategory.BENEFICIAL && !beneficialEffectCanApplyToAlly()) {
                     return;
@@ -454,6 +455,11 @@ public class SpellCloudEntity extends AreaEffectCloud {
     }
     public boolean neutralEffectCanApplyToOther() {
         return true;
+    }
+
+    @Override
+    public int getSpellLevel() {
+        return this.spellLevelDamage;
     }
 }
 

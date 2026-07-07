@@ -53,6 +53,7 @@ public class BaseBreathEntity extends MagicAboutEntity {
         if (entity instanceof LivingEntity) {
             areaEffectCloud.setOwner((LivingEntity)entity);
         }
+        areaEffectCloud.spellLevelDamage = spellLevelMainEffectLevel;
         areaEffectCloud.setParticle(this.getCloudParticle());
         areaEffectCloud.setParticleScaleMultiple(0.125f);
         areaEffectCloud.setRadius(this.getCloudRadius());

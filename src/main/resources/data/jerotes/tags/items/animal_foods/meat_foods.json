@@ -3,6 +3,16 @@
   "values": [
     "#minecraft:meat",
 
+    "#forge:raw_meats",
+    "#forge:rawmeats",
+    "#forge:raw_meat",
+    "#forge:rawmeat",
+
+    "#forge:cooked_meats",
+    "#forge:cookedmeats",
+    "#forge:cooked_meat",
+    "#forge:cookedmeat",
+
     "#jerotes:raw_meats",
     "#jerotes:fat_meats",
     "#jerotes:cooked_meats"

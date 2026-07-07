@@ -20,6 +20,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.naming.ldap.SortControl;
+
 @Mod.EventBusSubscriber(modid = JerotesWarehouse.MODID)
 public class MaterialEvent {
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -130,14 +132,15 @@ public class MaterialEvent {
 				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_fish"))) ||
 				itemStack.is(ItemTags.create(new ResourceLocation("forge:raw_fishes"))) ||
 				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawfish"))) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("minecraft:fishes")))) {
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:rawfishes")))) {
 			event.setEffectCount(3);
 			event.setEffect1(new DolphinsGraceAlchemyEffect(1, 1));
 			event.setEffect2(new WaterBreathingAlchemyEffect(1, 1));
 			event.setEffect3(new HasteAlchemyEffect(1, 1));
 		}
 		//熟鱼类
-		if (itemStack.is(Items.COOKED_COD) || itemStack.is(Items.COOKED_SALMON)) {
+		else if (itemStack.is(Items.COOKED_COD) || itemStack.is(Items.COOKED_SALMON) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("minecraft:fishes")))) {
 			event.setEffectCount(3);
 			event.setEffect1(new SaturationAlchemyEffect(1, 1));
 			event.setEffect2(new WaterBreathingAlchemyEffect(1, 2));
@@ -164,7 +167,8 @@ public class MaterialEvent {
 				itemStack.is(Items.COOKED_MUTTON) ||
 				itemStack.is(Items.COOKED_CHICKEN) ||
 				itemStack.is(Items.COOKED_RABBIT) ||
-				itemStack.is(ItemTags.create(new ResourceLocation("meats")))) {
+				itemStack.is(ItemTags.create(new ResourceLocation("forge:meats"))) ||
+				itemStack.is(ItemTags.create(new ResourceLocation("meat")))) {
 			event.setEffectCount(3);
 			event.setEffect1(new SaturationAlchemyEffect(1, 1));
 			event.setEffect2(new SpeedAlchemyEffect(1, 2));
@@ -253,7 +257,7 @@ public class MaterialEvent {
 		if (itemStack.is(Items.BLAZE_ROD)) {
 			event.setEffectCount(3);
 			event.setEffect1(new ExplosionAlchemyEffect(2, 1));
-			event.setEffect2(new FireAbsorptionAlchemyEffect(1, 2));
+			event.setEffect2(new FireAbsorptionAlchemyEffect(2, 2));
 			event.setEffect3(new FireResistanceAlchemyEffect(1, 2));
 		}
 		//山羊角
@@ -474,7 +478,7 @@ public class MaterialEvent {
 			event.setEffect3(new FogAlchemyEffect(1, 2));
 		}
 		//原色玻璃类
-		if (itemStack.is(Items.GLASS) || itemStack.is(Items.GLASS_PANE) || itemStack.is(Items.TINTED_GLASS)) {
+		if (itemStack.is(Items.GLASS) || itemStack.is(Items.GLASS_PANE) || itemStack.is(ItemTags.create(new ResourceLocation("forge:glass")))|| itemStack.is(ItemTags.create(new ResourceLocation("forge:glass_panes"))) || itemStack.is(Items.TINTED_GLASS)) {
 			event.setEffectCount(3);
 			event.setEffect1(new InvisiblePassageAlchemyEffect(1, 1));
 			event.setEffect2(new InvisbilityAlchemyEffect(1, 2));

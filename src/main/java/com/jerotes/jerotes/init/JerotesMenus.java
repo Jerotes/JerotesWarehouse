@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.world.inventory.MobInventoryGUIMenu;
-import com.jerotes.jerotes.world.inventory.SuchInventoryMenu;
+import com.jerotes.jerotes.inventory.MobInventoryGUIMenu;
+import com.jerotes.jerotes.inventory.SuchInventoryMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;

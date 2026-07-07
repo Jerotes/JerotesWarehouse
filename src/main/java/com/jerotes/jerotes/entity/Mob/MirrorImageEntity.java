@@ -3,6 +3,7 @@ package com.jerotes.jerotes.entity.Mob;
 import com.google.common.annotations.VisibleForTesting;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeServerPlayer;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +30,7 @@ import net.minecraft.world.scores.Team;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class MirrorImageEntity extends PathfinderMob implements JerotesEntity, OwnableEntity {
+public class MirrorImageEntity extends PathfinderMob implements JerotesEntity, OwnableEntity, MagicAbout {
 	private static final EntityDataAccessor<Float> WIDTH = SynchedEntityData.defineId(MirrorImageEntity.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Float> HEIGHT = SynchedEntityData.defineId(MirrorImageEntity.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Integer> ORDER = SynchedEntityData.defineId(MirrorImageEntity.class, EntityDataSerializers.INT);
@@ -69,6 +70,10 @@ public class MirrorImageEntity extends PathfinderMob implements JerotesEntity, O
 	}
 
 	public int spellLevelDamage = 1;
+	@Override
+	public int getSpellLevel() {
+		return this.spellLevelDamage;
+	}
 	private int life;
 	@Nullable
 	private LivingEntity owner;

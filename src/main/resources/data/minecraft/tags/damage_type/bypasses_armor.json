@@ -3,6 +3,7 @@
   "values": [
     "jerotes:bypasses_cooldown_magic",
     "jerotes:bypasses_armor_melee",
+    "jerotes:bypasses_armor_and_shield_melee",
     "jerotes:bypasses_armor_shoot",
     "jerotes:syringe",
     "jerotes:magic_effect",

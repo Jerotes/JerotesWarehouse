@@ -5,20 +5,18 @@ import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.FactionEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeEntity;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
-import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesEarthrendBlock;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesUnevenBlock;
 import com.jerotes.jerotes.entity.Part.BasePartEntity;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
 import com.jerotes.jerotes.entity.Interface.SpecialItemInHandEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
-import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.AAExplorationEye;
 import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
-import com.jerotes.jerotes.world.inventory.MobInventoryGUIMenu;
-import com.jerotes.jerotes.world.inventory.SuchInventoryMenu;
+import com.jerotes.jerotes.inventory.MobInventoryGUIMenu;
+import com.jerotes.jerotes.inventory.SuchInventoryMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
@@ -62,8 +60,10 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -77,8 +77,6 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.SlotResult;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -145,7 +143,7 @@ public class Main {
 		String finalString2 = string2;
 		String finalString3 = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getMobTypeNameModId() : "";
 
-		List<String> finalStringList = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getFactionTypeList() : new ArrayList<>();
+		List<String> finalStringList = FactionEntity.getFactionTypeListAll(livingEntity);
 		List<String> finalStringList2 = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getFactionTypeListEvenThoughTame() : new ArrayList<>();
       NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
             @Override
@@ -470,41 +468,61 @@ public class Main {
 		}
 		return aABB;
 	}
-	//生物破坏方块范围
 	public static boolean BlockDestroy(Mob mob, float destroy) {
-		if (!mob.level().isClientSide) {
-			boolean bl = mob.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && MainConfig.MobDestroyBlock;
-			boolean bl1 = mob instanceof OwnableEntity ownable && ownable.getOwner() != null && MainConfig.TamedMobDestroyBlock || !(mob instanceof OwnableEntity ownables) || ownables.getOwner() == null;
-			if (bl && bl1) {
-				AABB aABB = Main.blockDestroyAABB(mob);
-				boolean bl2 = false;
-				for (BlockPos blockPos : BlockPos.betweenClosed(Mth.floor(aABB.minX), Mth.floor(aABB.minY), Mth.floor(aABB.minZ), Mth.floor(aABB.maxX), Mth.floor(aABB.maxY), Mth.floor(aABB.maxZ))) {
-					BlockState blockState = mob.level().getBlockState(blockPos);
-					float block = blockState.getDestroySpeed(mob.level(), blockPos);
-					if (blockState.isAir()) continue;
-					if (block >= destroy || block < 0f) continue;
-					if (!ForgeEventFactory.onEntityDestroyBlock(mob, blockPos, blockState)) continue;
-					if ((blockState.is(BlockTags.REPLACEABLE_BY_TREES)
-							|| blockState.is(BlockTags.DIRT)
-							|| blockState.is(BlockTags.SCULK_REPLACEABLE)
-							|| blockState.is(BlockTags.SAND)
-							|| blockState.is(BlockTags.STONE_ORE_REPLACEABLES)) && mob.getRandom().nextFloat() > 0.005) {
-						boolean bl3 = mob.level().setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
-						if (bl3) {
-							bl2 = true;
+		Level level = mob.level();
+		if (level.isClientSide) return false;
+		if (!level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || !MainConfig.MobDestroyBlock) {
+			return false;
+		}
+		if (mob instanceof OwnableEntity ownable) {
+			if (ownable.getOwner() != null && !MainConfig.TamedMobDestroyBlock) {
+				return false;
+			}
+		}
+		AABB aabb = Main.blockDestroyAABB(mob);
+		int minX = Mth.floor(aabb.minX);
+		int minY = Mth.floor(aabb.minY);
+		int minZ = Mth.floor(aabb.minZ);
+		int maxX = Mth.floor(aabb.maxX);
+		int maxY = Mth.floor(aabb.maxY);
+		int maxZ = Mth.floor(aabb.maxZ);
+		boolean anyDestroyed = false;
+		RandomSource random = mob.getRandom();
+		BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+		for (int x = minX; x <= maxX; x++) {
+			for (int y = minY; y <= maxY; y++) {
+				for (int z = minZ; z <= maxZ; z++) {
+					mutablePos.set(x, y, z);
+					BlockState state = level.getBlockState(mutablePos);
+					if (state.isAir()) continue;
+
+					float hardness = state.getDestroySpeed(level, mutablePos);
+					if (hardness < 0f || hardness >= destroy) continue;
+
+					if (!ForgeEventFactory.onEntityDestroyBlock(mob, mutablePos, state)) continue;
+
+					boolean isReplaceable = state.is(BlockTags.REPLACEABLE_BY_TREES)
+							|| state.is(BlockTags.SCULK_REPLACEABLE)
+							|| state.is(BlockTags.STONE_ORE_REPLACEABLES);
+
+					boolean success;
+					if (isReplaceable && random.nextFloat() > 0.005f) {
+						success = level.setBlock(mutablePos, Blocks.AIR.defaultBlockState(), 3);
+						if (success) {
+							level.levelEvent(2001, mutablePos, Block.getId(state));
+							level.gameEvent(GameEvent.BLOCK_DESTROY, mutablePos, GameEvent.Context.of(mob, state));
+							anyDestroyed = true;
 						}
-					}
-					else {
-						boolean bl3 = mob.level().destroyBlock(blockPos, true, mob);
-						if (bl3) {
-							bl2 = true;
+					} else {
+						success = level.destroyBlock(mutablePos, true, mob);
+						if (success) {
+							anyDestroyed = true;
 						}
 					}
 				}
-				return bl2;
 			}
 		}
-		return false;
+		return anyDestroyed;
 	}
 
 	//附近
@@ -631,7 +649,7 @@ public class Main {
 			level.addFreshEntity(fallingBlock);
 		}
 	}
-	public static void spawnUnevenBlockByPos(ServerLevel level, BlockPos blockPos, int reach) {
+	public static void spawnUnevenBlockByPos(ServerLevel level, BlockPos blockPos, float reach) {
 		Vec3 startPos = blockPos.getCenter().add(0,8,0);
 		AABB aabb = AABB.ofSize(blockPos.getCenter(), reach * 2 + 1, reach, reach * 2 + 1).move(0, Math.min(0, -(reach - 2)),0);
 		for (BlockPos pos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {

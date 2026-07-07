@@ -1,19 +1,24 @@
 package com.jerotes.jerotes.recipe.brewing;
+import com.jerotes.jerotes.JerotesWarehouse;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 
+import java.util.Collection;
 import java.util.Objects;
 
 public class JerotesCanBrewChangeSplashRecipe implements IBrewingRecipe {
-
 	@Override
 	public boolean isInput(ItemStack input) {
 		if (input.isEmpty()) return false;
-		if (!(input.getItem() instanceof PotionItem)) return false;
+		if (input.is(Items.POTION)) return false;
 		CompoundTag tag = input.getTag();
 		return tag != null && tag.getBoolean("JerotesCanBrewChange");
 	}
@@ -29,17 +34,8 @@ public class JerotesCanBrewChangeSplashRecipe implements IBrewingRecipe {
 			return ItemStack.EMPTY;
 		}
 		ItemStack output = new ItemStack(Items.SPLASH_POTION, input.getCount());
-		PotionUtils.setPotion(output, PotionUtils.getPotion(input));
-		PotionUtils.setCustomEffects(output, PotionUtils.getCustomEffects(input));
 		CompoundTag inputTag = input.getTag();
-		if (inputTag != null) {
-			CompoundTag outputTag = output.getOrCreateTag();
-			for (String key : inputTag.getAllKeys()) {
-				if (!key.equals("Potion") && !key.equals("CustomPotionEffects")) {
-					outputTag.put(key, Objects.requireNonNull(inputTag.get(key)).copy());
-				}
-			}
-		}
+		output.setTag(inputTag == null ? null : inputTag.copy());
 		return output;
 	}
 }
