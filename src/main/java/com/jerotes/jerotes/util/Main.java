@@ -81,6 +81,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class Main {
 	public static CompoundTag getJerotesPersistentData(Entity entity) {
@@ -469,6 +470,9 @@ public class Main {
 		return aABB;
 	}
 	public static boolean BlockDestroy(Mob mob, float destroy) {
+		return BlockDestroy(mob, destroy, blockState -> true);
+	}
+	public static boolean BlockDestroy(Mob mob, float destroy, Predicate<BlockState> filter) {
 		Level level = mob.level();
 		if (level.isClientSide) return false;
 		if (!level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || !MainConfig.MobDestroyBlock) {
@@ -651,7 +655,7 @@ public class Main {
 	}
 	public static void spawnUnevenBlockByPos(ServerLevel level, BlockPos blockPos, float reach) {
 		Vec3 startPos = blockPos.getCenter().add(0,8,0);
-		AABB aabb = AABB.ofSize(blockPos.getCenter(), reach * 2 + 1, reach, reach * 2 + 1).move(0, Math.min(0, -(reach - 2)),0);
+		AABB aabb = AABB.ofSize(blockPos.getCenter(), reach * 2 + 1, reach, reach * 2 + 1).move(0.0D, -0.5D, 0.0D); ;
 		for (BlockPos pos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
 			double distance = blockPos.getCenter().distanceTo(pos.getCenter());
 			if (distance <= reach) {

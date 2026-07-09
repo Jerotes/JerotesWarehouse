@@ -8,6 +8,7 @@ import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -158,6 +159,7 @@ public class SpellFindUseEvent {
             Main.getJerotesPersistentData(caster).putDouble("jerotes_magic_missile", Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") - 1);
             Main.getJerotesPersistentData(caster).putDouble("jerotes_spell_cooldown", Math.max(2, Main.getJerotesPersistentData(caster).getDouble("jerotes_spell_cooldown")));
             if (Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") % 3 == 0) {
+                caster.swing(InteractionHand.MAIN_HAND, true);
                 if (caster.level() instanceof ServerLevel serverLevel) {
                     int spellLevelDamage = Main.getJerotesPersistentData(caster).getInt("jerotes_magic_missile_spellLevelDamage");
                     UUID targetUUID = Main.getJerotesPersistentData(caster).getUUID("jerotes_magic_missile_target");
@@ -183,8 +185,8 @@ public class SpellFindUseEvent {
                             serverLevel.addFreshEntity(spell);
                         }
                         if (!caster.isSilent()) {
-                            caster.playSound(JerotesSoundEvents.MAGIC_MAGIC_MISSILE,
-                                    1.0f, 1.0F);
+                            caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), JerotesSoundEvents.MAGIC_MAGIC_MISSILE,
+                                    caster.getSoundSource(), 1.0f, 1.0F);
                         }
                     }
                 }

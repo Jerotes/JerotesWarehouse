@@ -7,6 +7,7 @@ import com.jerotes.jerotes.init.JerotesRenderType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -84,27 +85,31 @@ public class MagicMissileRenderer<T extends BaseMagicMissileEntity> extends Enti
                 Mth.lerp(partialTick, entity.xOld, entity.getX()),
                 Mth.lerp(partialTick, entity.yOld, entity.getY()),
                 Mth.lerp(partialTick, entity.zOld, entity.getZ())
-        ).add(0.0D, 0.0D, 0.0D);
+        );
         Vec3 cameraRight = new Vec3(1, 0, 0);
         Vec3 cameraUp = new Vec3(0, 1, 0);
 
         for (int i = 0; i < n - 1; i++) {
             BaseMagicMissileEntity.TrailPoint tp0 = points.get(i);
-            BaseMagicMissileEntity.TrailPoint tp1 = points.get(i+1);
+            BaseMagicMissileEntity.TrailPoint tp1 = points.get(i + 1);
             Vec3 point0 = tp0.getPosition(partialTick);
             Vec3 point1 = tp1.getPosition(partialTick);
             Vec3 local0 = point0.subtract(currentPos);
             Vec3 local1 = point1.subtract(currentPos);
-            Vec3 dir = local1.subtract(local0).normalize();
+
+            Vec3 dirVec = local1.subtract(local0);
+            double lenSq = dirVec.lengthSqr();
+            if (lenSq < 1e-8) continue;
+            Vec3 dir = dirVec.normalize();
 
             Vec3 right = cameraUp.cross(dir);
             if (right.lengthSqr() < 1e-4) right = cameraRight.cross(dir);
             right = right.normalize();
 
             float w0 = widths[i];
-            float w1 = widths[i+1];
+            float w1 = widths[i + 1];
             float a0 = alphas[i];
-            float a1 = alphas[i+1];
+            float a1 = alphas[i + 1];
 
             int colorI = entity.beamLightI();
             int innerR = (colorI >> 16) & 0xFF;
@@ -118,10 +123,10 @@ public class MagicMissileRenderer<T extends BaseMagicMissileEntity> extends Enti
             Vec3 p1l = local1.add(right.scale(-w1));
             Vec3 p1r = local1.add(right.scale(w1));
 
-            addVertex(consumer, matrix, normal, p0l, r, g, b, (int)(a0 * 200), 0, 0);
-            addVertex(consumer, matrix, normal, p0r, r, g, b, (int)(a0 * 200), 1, 0);
-            addVertex(consumer, matrix, normal, p1r, r, g, b, (int)(a1 * 200), 1, 1);
-            addVertex(consumer, matrix, normal, p1l, r, g, b, (int)(a1 * 200), 0, 1);
+            addVertex(consumer, matrix, normal, p0l, r, g, b, (int) (a0 * 200), 0, 0);
+            addVertex(consumer, matrix, normal, p0r, r, g, b, (int) (a0 * 200), 1, 0);
+            addVertex(consumer, matrix, normal, p1r, r, g, b, (int) (a1 * 200), 1, 1);
+            addVertex(consumer, matrix, normal, p1l, r, g, b, (int) (a1 * 200), 0, 1);
         }
         poseStack.popPose();
     }

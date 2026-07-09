@@ -4,6 +4,7 @@ import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
@@ -193,8 +194,8 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     @Inject(method = "canAttack(Lnet/minecraft/world/entity/LivingEntity;)Z", at = @At("HEAD"), cancellable = true)
     private void canAttack(LivingEntity livingEntity, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity self = (LivingEntity)(Object) this;
-        if (((this.getTeam() == null && livingEntity.getTeam() == null) || this.getTeam() == livingEntity.getTeam())
-                && EntityFactionFind.isFaction(self, livingEntity)
+        if ((((this.getTeam() == null && livingEntity.getTeam() == null) || this.getTeam() == livingEntity.getTeam())
+                && EntityFactionFind.isFaction(self, livingEntity)) && (self instanceof JerotesEntity || livingEntity instanceof JerotesEntity)
         ) {
             cir.setReturnValue(false);
             cir.cancel();

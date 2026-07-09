@@ -84,6 +84,14 @@ public class LightningBoltEntity extends BaseRayEntity {
             this.setUseful(false);
         }
     }
+    protected void afterHasLineOfSight() {
+        super.afterHasLineOfSight();
+        if (!this.isUseful())
+            return;
+        if (!this.level().isClientSide) {
+            this.setUseful(false);
+        }
+    }
 
     public BaseRayEntity getRay() {
         return new LightningBoltEntity(this.spellLevelDamage, this.level(), (LivingEntity) this.getOwner(), summonTod, summonTod2, summonTod3);

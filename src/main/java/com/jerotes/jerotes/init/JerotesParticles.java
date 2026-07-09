@@ -61,5 +61,6 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.BEAST_TOUGH_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ACTION_SURGE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.CLOUD_OF_DAGGERS_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.FIREBALL_DISPLAY.get(), DisplayParticle::provider);
 	}
 }

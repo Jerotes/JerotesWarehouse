@@ -431,4 +431,24 @@ public class SpellList {
 			}
 		};
 	}
+	//火球术
+	public static MagicSpell Fireball(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "fireball", JerotesParticleTypes.FIREBALL_DISPLAY.get(), JerotesSoundEvents.MAGIC_FIREBALL){
+			public boolean spellFindUse() {
+				return SpellFind.Fireball(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel());
+			}
+			public int baseSpellLevel() {
+				return 3;
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public float getSpellDistance() {
+				return 32;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+		};
+	}
 }

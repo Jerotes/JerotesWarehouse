@@ -541,5 +541,15 @@
         "volume": 1.0
       }
     ]
+  },
+  "magic_fireball": {
+    "subtitle": "subtitle.jerotes.magic_fireball",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
   }
 }

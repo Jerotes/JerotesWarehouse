@@ -10,6 +10,7 @@ import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -26,6 +27,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class MagicSpell {
 	public int spellLevel;
@@ -265,5 +267,14 @@ public class MagicSpell {
 			return 120;
 		}
 		return 120;
+	}
+
+	public static void MagicTooltip(List<Component> list, MagicSpell magicSpell, int level) {
+		list.add(magicSpell.getSpellName().copy()
+				.append(Component.translatable("spell.jerotes.spell_base", level).withStyle(ChatFormatting.DARK_PURPLE)));
+		list.add(magicSpell.getSpellDesc().copy()
+				.withStyle(ChatFormatting.LIGHT_PURPLE));
+		list.add(Component.translatable("spell.jerotes.spell_max_distance", magicSpell.getSpellDistance())
+				.withStyle(ChatFormatting.LIGHT_PURPLE));
 	}
 }

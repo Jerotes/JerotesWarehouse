@@ -250,7 +250,7 @@ public class EntityFactionFind {
 		if (!FactionEntity.getFactionTypeListAll(livingEntity).isEmpty()) {
 			return livingEntity instanceof FactionEntity jerotes && !jerotes.getFirstFactionTypeName().isEmpty() ? jerotes.getFirstFactionTypeName() : FactionEntity.getFactionTypeListAll(livingEntity).get(0);
 		}
-		return base;
+		return livingEntity instanceof FactionEntity jerotes && !jerotes.getFirstFactionTypeName().isEmpty() ? jerotes.getFirstFactionTypeName() : base;
 	}
 	public static String getTrueMobTypeNameModId(LivingEntity livingEntity) {
 		if (livingEntity == null) {

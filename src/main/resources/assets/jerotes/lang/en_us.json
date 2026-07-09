@@ -491,6 +491,7 @@
   "item.jerotes.eyebite": "Eyebite",
   "entity.jerotes.eyebite": "Eyebite",
   "entity.jerotes.mirror_image": "Mirror Image",
+  "entity.jerotes.fireball": "Fireball",
 
   "spell.jerotes.spell_base": "：%1$s Level",
   "spell.jerotes.spell_max_distance": "%1$s Max Distance",
@@ -533,7 +534,9 @@
   "spell.jerotes.magic_absorption": "Magic Absorption",
   "spell.jerotes.magic_absorption.desc": "Reduce Magic damage and gain gains",
   "spell.jerotes.cloud_of_daggers": "Cloud of Daggers",
-  "spell.jerotes.cloud_of_daggers.desc": "Summon an Dagger Cloud that causes Melee damage at the target location",
+  "spell.jerotes.cloud_of_daggers.desc": "Summon a Dagger Cloud that causes Melee damage at the target location",
+  "spell.jerotes.fireball": "Fireball",
+  "spell.jerotes.fireball.desc": "Shoot a Fireball that deals Fire damage at the target location",
 
   "subtitle.jerotes.magic_magic_missile": "Magic Missile",
   "subtitle.jerotes.magic_poison_breath": "Poison Breath",
@@ -555,6 +558,7 @@
   "subtitle.jerotes.magic_counterspell": "Counterspell",
   "subtitle.jerotes.magic_magic_absorption": "Magic Absorption",
   "subtitle.jerotes.magic_cloud_of_daggers": "Cloud of Daggers",
+  "subtitle.jerotes.magic_fireball": "Fireball",
 
   "alchemy.jerotes.base" : "Alchemy Product",
   "alchemy.jerotes.effect" : "Alchemy Effect",

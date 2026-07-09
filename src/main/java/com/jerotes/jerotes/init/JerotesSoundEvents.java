@@ -59,6 +59,7 @@ public class JerotesSoundEvents {
     public static final SoundEvent MAGIC_COUNTERSPELL = createSoundEvent("magic_counterspell");
     public static final SoundEvent MAGIC_MAGIC_ABSORPTION = createSoundEvent("magic_magic_absorption");
     public static final SoundEvent MAGIC_CLOUD_OF_DAGGERS = createSoundEvent("magic_cloud_of_daggers");
+    public static final SoundEvent MAGIC_FIREBALL = createSoundEvent("magic_fireball");
 
     private static SoundEvent createSoundEvent(final String soundName) {
         final ResourceLocation soundID = new ResourceLocation(JerotesWarehouse.MODID, soundName);

@@ -55,6 +55,12 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     @Override
     public void setDeltaMovement(Vec3 vec3){
     }
+    protected boolean shouldBubble() {
+        return false;
+    }
+    protected boolean shouldTail() {
+        return false;
+    }
     @Override
     public void shoot(double p_37266_, double p_37267_, double p_37268_, float p_37269_, float p_37270_) {
         Vec3 vec3 = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize().add(this.random.triangle(0.0D, 0.0172275D * (double)p_37270_), this.random.triangle(0.0D, 0.0172275D * (double)p_37270_), this.random.triangle(0.0D, 0.0172275D * (double)p_37270_)).scale((double)p_37269_);

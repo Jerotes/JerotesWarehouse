@@ -103,7 +103,7 @@ public abstract class MagicAbstractHurtingProjectile extends Projectile implemen
         double d3 = this.getZ() + vec3.z;
         ProjectileUtil.rotateTowardsMovement(this, 0.2f);
         if (this.isInWater()) {
-            if (!(this instanceof BaseRayEntity)) {
+            if (shouldBubble()) {
                 for (int i = 0; i < 4; ++i) {
                     this.level().addParticle(ParticleTypes.BUBBLE, d - vec3.x * 0.25, d2 - vec3.y * 0.25, d3 - vec3.z * 0.25, vec3.x, vec3.y, vec3.z);
                 }
@@ -113,7 +113,7 @@ public abstract class MagicAbstractHurtingProjectile extends Projectile implemen
             f = this.getInertia();
         }
         this.setDeltaMovement(vec3.add(this.xPower, this.yPower, this.zPower).scale(f));
-        if (!(this instanceof BaseRayEntity) && !(this instanceof BaseMagicMissileEntity)) {
+        if (shouldTail()) {
             ParticleOptions particleOptions = this.getTrailParticle();
             if (particleOptions != null) {
                 this.level().addParticle(particleOptions, d, d2 + this.getBbHeight() / 2, d3, 0.0, 0.0, 0.0);
@@ -139,6 +139,12 @@ public abstract class MagicAbstractHurtingProjectile extends Projectile implemen
 
     protected boolean shouldBurn() {
         return false;
+    }
+    protected boolean shouldBubble() {
+        return true;
+    }
+    protected boolean shouldTail() {
+        return true;
     }
 
     @Nullable

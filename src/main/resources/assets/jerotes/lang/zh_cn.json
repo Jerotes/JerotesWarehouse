@@ -491,6 +491,7 @@
   "item.jerotes.eyebite": "摄心目光",
   "entity.jerotes.eyebite": "摄心目光",
   "entity.jerotes.mirror_image": "镜影术",
+  "entity.jerotes.fireball": "火球术",
 
   "spell.jerotes.spell_base": "：%1$s级",
   "spell.jerotes.spell_max_distance": "%1$s最大距离",
@@ -534,6 +535,8 @@
   "spell.jerotes.magic_absorption.desc": "减免魔法伤害并获得增益",
   "spell.jerotes.cloud_of_daggers": "匕首之云",
   "spell.jerotes.cloud_of_daggers.desc": "在目标处召唤一个造成近战伤害的匕首云",
+  "spell.jerotes.fireball": "火球术",
+  "spell.jerotes.fireball.desc": "向目标处发射一个造成火焰伤害的火球",
 
   "subtitle.jerotes.magic_magic_missile": "魔法飞弹",
   "subtitle.jerotes.magic_poison_breath": "毒性吐息",
@@ -555,6 +558,7 @@
   "subtitle.jerotes.magic_counterspell": "法术反制",
   "subtitle.jerotes.magic_magic_absorption": "魔法吸收",
   "subtitle.jerotes.magic_cloud_of_daggers": "匕首之云",
+  "subtitle.jerotes.magic_fireball": "火球术",
 
   "alchemy.jerotes.base" : "炼金产物",
   "alchemy.jerotes.effect" : "炼金效果",

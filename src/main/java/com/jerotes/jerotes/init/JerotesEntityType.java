@@ -3,6 +3,7 @@ package com.jerotes.jerotes.init;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Mob.*;
 import com.jerotes.jerotes.entity.Other.OtherSpell.CloudOfDaggersEntity;
+import com.jerotes.jerotes.entity.Other.ShootTargetSpell.FireballEntity;
 import com.jerotes.jerotes.entity.Other.SpellCloud.RainSpellCloudEntity;
 import com.jerotes.jerotes.entity.Other.SpellCloud.SpellCloudEntity;
 import com.jerotes.jerotes.entity.Shoot.Arrow.*;
@@ -36,29 +37,29 @@ public class JerotesEntityType {
 
 
 	public static final RegistryObject<EntityType<HumanEntity>> HUMAN = register("human",
-			EntityType.Builder.<HumanEntity>of(HumanEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
+			EntityType.Builder.of(HumanEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
 					.sized(0.6f, 1.8f));
 	public static final RegistryObject<EntityType<JerotesPlayerEntity>> JEROTES_PLAYER = register("jerotes_player",
-			EntityType.Builder.<JerotesPlayerEntity>of(JerotesPlayerEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
+			EntityType.Builder.of(JerotesPlayerEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
 					.sized(0.6f, 1.8f));
 	public static final RegistryObject<EntityType<JerotesHorseEntity>> JEROTES_HORSE = register("jerotes_horse",
-			EntityType.Builder.<JerotesHorseEntity>of(JerotesHorseEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
+			EntityType.Builder.of(JerotesHorseEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(1.4F, 1.6F));
 	public static final RegistryObject<EntityType<TestEntity>> TEST = register("test",
-			EntityType.Builder.<TestEntity>of(TestEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
+			EntityType.Builder.of(TestEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
 					.sized(0.6f, 1.8f));
 	public static final RegistryObject<EntityType<BigBeastEntity>> BIG_BEAST = register("big_beast",
-			EntityType.Builder.<BigBeastEntity>of(BigBeastEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
+			EntityType.Builder.of(BigBeastEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
 					.sized(4f, 4.625f));
 	public static final RegistryObject<EntityType<AddHandEntity>> ADD_HAND = register("add_hand",
-			EntityType.Builder.<AddHandEntity>of(AddHandEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
+			EntityType.Builder.of(AddHandEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
 					.sized(0.6f, 1.8f));
 	public static final RegistryObject<EntityType<MirrorImageEntity>> MIRROR_IMAGE = register("mirror_image",
-			EntityType.Builder.<MirrorImageEntity>of(MirrorImageEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
+			EntityType.Builder.of(MirrorImageEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(1.0f, 1.0f));
 
 	public static final RegistryObject<EntityType<BaseBeamEntity>> TEST_BEAM = register("test_beam",
-			EntityType.Builder.<BaseBeamEntity>of(BaseBeamEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+			EntityType.Builder.of(BaseBeamEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(0.6f, 0.6f));
 
 	public static final RegistryObject<EntityType<SpellCloudEntity>> SPELL_CLOUD = register("spell_cloud",
@@ -71,6 +72,10 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<CloudOfDaggersEntity>> CLOUD_OF_DAGGERS = register("cloud_of_daggers",
 			EntityType.Builder.<CloudOfDaggersEntity>of(CloudOfDaggersEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
 					.sized(5.0F, 4.5F));
+	public static final RegistryObject<EntityType<FireballEntity>> FIREBALL = register("fireball",
+			EntityType.Builder.<FireballEntity>of(FireballEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
+					.sized(1.0f, 1.0f));
+
 
 	public static final RegistryObject<EntityType<JerotesFallingBlock>> JEROTES_FALLING_BLOCK = register("jerotes_falling_block",
 			EntityType.Builder.<JerotesFallingBlock>of(JerotesFallingBlock::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)

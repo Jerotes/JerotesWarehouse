@@ -59,6 +59,9 @@ public class MagicMissileEntity extends BaseMagicMissileEntity {
     public int getMaxLife() {
         return 40;
     }
+    protected boolean shouldTail() {
+        return false;
+    }
 
     @Override
     protected ParticleOptions getTrailParticle() {

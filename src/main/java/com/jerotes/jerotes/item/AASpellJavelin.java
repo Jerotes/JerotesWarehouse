@@ -45,6 +45,7 @@ public class AASpellJavelin extends Item implements MagicItem {
 		if (Main.getJerotesPersistentData(player).getDouble("jerotes_spell_cooldown") > 0) {
 			return;
 		}
+		livingEntity.swing(InteractionHand.MAIN_HAND, true);
 		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))) {
 			Entity target = player;
 			int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), player, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
@@ -75,13 +76,7 @@ public class AASpellJavelin extends Item implements MagicItem {
 		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))) {
 			int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
 			MagicSpell magicSpellStart = SpellListByString.getSpell(trueLevel, null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack)));
-
-			list.add(magicSpellStart.getSpellName().copy()
-					.append(Component.translatable("spell.jerotes.spell_base", trueLevel(itemStack))).withStyle(ChatFormatting.DARK_PURPLE));
-			list.add(magicSpellStart.getSpellDesc().copy()
-					.withStyle(ChatFormatting.LIGHT_PURPLE));
-			list.add(Component.translatable("spell.jerotes.spell_max_distance", magicSpellStart.getSpellDistance())
-					.withStyle(ChatFormatting.LIGHT_PURPLE));
+			MagicSpell.MagicTooltip(list, magicSpellStart, trueLevel(itemStack));
 		}
 	}
 
@@ -130,6 +125,11 @@ public class AASpellJavelin extends Item implements MagicItem {
 
 	public String getSpellId(ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
+		if (tag.getString(SPELL).isEmpty()) {
+			if (stack.hasCustomHoverName()) {
+				return stack.getHoverName().getString();
+			}
+		}
 		return tag.getString(SPELL);
 	}
 	@Override
