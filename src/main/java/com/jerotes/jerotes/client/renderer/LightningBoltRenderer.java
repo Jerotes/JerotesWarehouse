@@ -62,11 +62,11 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
             return;
         }
 
-        int timeSeed = entity.life / 2;
+        int timeSeed = entity.getLifeRay() / 2;
         RandomSource random = entity.level().getRandom();
         int uuidHash = entity.getUUID().hashCode();
         float half = entity.getMaxLife() / 2.0f;
-        float rawProgress = (entity.life - half) / half;
+        float rawProgress = (entity.getLifeRay() - half) / half;
         float fadeFactor = 1.0f - Mth.clamp(rawProgress, 0.0f, 1.0f);
         float currentAmplitude = 0.8f * fadeFactor;
         int numStrands = 4 + random.nextInt(2);
@@ -75,13 +75,12 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
 
         int colorI = entity.beamLightI();
         int colorII = entity.beamLightII();
-        int colorShift = (timeSeed % 3 - 1) * 6;
-        int innerR = Math.max(0, Math.min(255, ((colorI >> 16) & 0xFF) + colorShift));
-        int innerG = Math.max(0, Math.min(255, ((colorI >> 8) & 0xFF) + colorShift * 2));
-        int innerB = Math.max(0, Math.min(255, (colorI & 0xFF) - colorShift));
-        int outerR = Math.max(0, Math.min(255, ((colorII >> 16) & 0xFF) + colorShift * 2));
-        int outerG = Math.max(0, Math.min(255, ((colorII >> 8) & 0xFF) + colorShift));
-        int outerB = Math.max(0, Math.min(255, (colorII & 0xFF) - colorShift * 2));
+        int baseInnerR = (colorI >> 16) & 0xFF;
+        int baseInnerG = (colorI >> 8) & 0xFF;
+        int baseInnerB = colorI & 0xFF;
+        int baseOuterR = (colorII >> 16) & 0xFF;
+        int baseOuterG = (colorII >> 8) & 0xFF;
+        int baseOuterB = colorII & 0xFF;
 
         int lineAlpha = (int) (200 * fadeFactor);
         ResourceLocation tex = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png");
@@ -134,9 +133,9 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
             }
             points.add(endPoint);
 
-            for (int i = 0; i < points.size() - 1; i++) {
-                Vec3 p1 = points.get(i);
-                Vec3 p2 = points.get(i + 1);
+            for (int segIdx = 0; segIdx < points.size() - 1; segIdx++) {
+                Vec3 p1 = points.get(segIdx);
+                Vec3 p2 = points.get(segIdx + 1);
                 Vec3 segDir = p2.subtract(p1);
                 float segLen = (float) segDir.length();
                 if (segLen < 0.001F) continue;
@@ -160,13 +159,26 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
                 Matrix4f matrix = pose.pose();
                 Matrix3f normal = pose.normal();
 
-                float brightFactor = 0.7f + 0.3f * ((strand % 3) / 2.0f);
-                int r = (int)(innerR * brightFactor);
-                int g = (int)(innerG * brightFactor);
-                int b = (int)(innerB * brightFactor);
-                int rOut = (int)(outerR * brightFactor);
-                int gOut = (int)(outerG * brightFactor);
-                int bOut = (int)(outerB * brightFactor);
+                long colorSeed = (long) strand * 137L + (long) segIdx * 331L + (long) timeSeed * 7L;
+                RandomSource colorRandom = RandomSource.create(colorSeed);
+                int shiftR = colorRandom.nextInt(41) - 20;
+                int shiftG = colorRandom.nextInt(41) - 20;
+                int shiftB = colorRandom.nextInt(41) - 20;
+
+                int r = Math.max(0, Math.min(255, baseInnerR + shiftR));
+                int g = Math.max(0, Math.min(255, baseInnerG + shiftG));
+                int b = Math.max(0, Math.min(255, baseInnerB + shiftB));
+                int rOut = Math.max(0, Math.min(255, baseOuterR + shiftR / 2));
+                int gOut = Math.max(0, Math.min(255, baseOuterG + shiftG / 2));
+                int bOut = Math.max(0, Math.min(255, baseOuterB + shiftB / 2));
+
+                float brightFactor = 0.7f + 0.3f * (strand % 3) / 2.0f;
+                r = (int)(r * brightFactor);
+                g = (int)(g * brightFactor);
+                b = (int)(b * brightFactor);
+                rOut = (int)(rOut * brightFactor);
+                gOut = (int)(gOut * brightFactor);
+                bOut = (int)(bOut * brightFactor);
 
                 float halfWidth = strandWidth / 2f;
                 float widthFade = 0.5f + 0.5f * fadeFactor;

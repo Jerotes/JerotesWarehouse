@@ -502,8 +502,10 @@ public class Main {
 
 					float hardness = state.getDestroySpeed(level, mutablePos);
 					if (hardness < 0f || hardness >= destroy) continue;
+					if (!filter.test(state)) continue;
 
 					if (!ForgeEventFactory.onEntityDestroyBlock(mob, mutablePos, state)) continue;
+					if (!ForgeHooks.canEntityDestroy(mob.level(), mutablePos, mob)) continue;
 
 					boolean isReplaceable = state.is(BlockTags.REPLACEABLE_BY_TREES)
 							|| state.is(BlockTags.SCULK_REPLACEABLE)
@@ -513,9 +515,12 @@ public class Main {
 					if (isReplaceable && random.nextFloat() > 0.005f) {
 						success = level.setBlock(mutablePos, Blocks.AIR.defaultBlockState(), 3);
 						if (success) {
-							level.levelEvent(2001, mutablePos, Block.getId(state));
-							level.gameEvent(GameEvent.BLOCK_DESTROY, mutablePos, GameEvent.Context.of(mob, state));
-							anyDestroyed = true;
+//							level.levelEvent(2001, mutablePos, Block.getId(state));
+//							level.gameEvent(GameEvent.BLOCK_DESTROY, mutablePos, GameEvent.Context.of(mob, state));
+							success = level.destroyBlock(mutablePos, false, mob);
+							if (success) {
+								anyDestroyed = true;
+							}
 						}
 					} else {
 						success = level.destroyBlock(mutablePos, true, mob);
@@ -678,6 +683,16 @@ public class Main {
 		}
 	}
 
+	public static Vec3 getPositionThroughFluid(Level level, Entity caster, Vec3 startPos, Vec3 viewVector, double maxDistance) {
+		Vec3 endPos = startPos.add(viewVector.scale(maxDistance));
+		BlockHitResult hitResult = level.clip(new ClipContext(
+				startPos, endPos,
+				ClipContext.Block.COLLIDER,
+				ClipContext.Fluid.NONE,
+				caster
+		));
+		return adjustPositionForSolidHit(hitResult, startPos, viewVector, maxDistance);
+	}
 	//判定位置
 	public static Vec3 adjustPositionForSolidHit(BlockHitResult hitResult, Vec3 startPos, Vec3 viewVector, double maxDistance) {
 		Vec3 adjustedPos = hitResult.getLocation();

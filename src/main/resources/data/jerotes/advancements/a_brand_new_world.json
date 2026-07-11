@@ -31,9 +31,7 @@
   },
   "requirements": [
     [
-      "grannysfarewellgift_self",
-      "grannysfarewellgift_monster",
-      "grannysfarewellgift_item"
+      "a_brand_new_world"
     ]
   ],
   "rewards": {

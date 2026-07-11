@@ -77,7 +77,7 @@ public class SpellFind {
 					mob.lookAt(target, 360.0f, 360.0f);
 				}
 				breath = new PoisonBreathEntity(spellLevelDamage, spellLevelMaxDamage, spellLevelMainEffectTime, spellLevelMainEffectLevel, serverLevel, caster, caster.getLookAngle().x, caster.getLookAngle().y, caster.getLookAngle().z);
-				breath.setPos(caster.getX(), caster.getY(0.7) - breath.getBbHeight()/2, caster.getZ());
+				breath.setPos(caster.getX(), caster.getY(0.7), caster.getZ());
 				breath.shootFromRotation(caster, caster.getXRot(), (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
 				breath.setOwner(caster);
 				serverLevel.addFreshEntity(breath);
@@ -332,29 +332,44 @@ public class SpellFind {
 				}
 			}
 			else {
-				final double maxDistance = 30.0;
+//				final double maxDistance = 30.0;
+//				Vec3 startPos = caster.getEyePosition(1.0f);
+//				Vec3 viewVector = caster.getViewVector(1.0f);
+//				Vec3 endPos = startPos.add(viewVector.scale(maxDistance));
+//				BlockHitResult hitResult = serverLevel.clip(new ClipContext(
+//						startPos, endPos,
+//						ClipContext.Block.OUTLINE,
+//						ClipContext.Fluid.NONE,
+//						caster
+//				));
+//				Vec3 targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, maxDistance);
+//				BlockPos safePos = Main.findSafePosition(serverLevel, targetPos);
+//				if (safePos != null) {
+//					boolean success = caster.randomTeleport(
+//							safePos.getX() + 0.5,
+//							safePos.getY(),
+//							safePos.getZ() + 0.5,
+//							true
+//					);
+//
+//					if (success) {
+//						return true;
+//					}
+//				}
 				Vec3 startPos = caster.getEyePosition(1.0f);
 				Vec3 viewVector = caster.getViewVector(1.0f);
-				Vec3 endPos = startPos.add(viewVector.scale(maxDistance));
+				Vec3 endPos = startPos.add(viewVector.scale(30));
+
 				BlockHitResult hitResult = serverLevel.clip(new ClipContext(
 						startPos, endPos,
 						ClipContext.Block.OUTLINE,
 						ClipContext.Fluid.NONE,
 						caster
 				));
-				Vec3 targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, maxDistance);
-				BlockPos safePos = Main.findSafePosition(serverLevel, targetPos);
-				if (safePos != null) {
-					boolean success = caster.randomTeleport(
-							safePos.getX() + 0.5,
-							safePos.getY(),
-							safePos.getZ() + 0.5,
-							true
-					);
-
-					if (success) {
-						return true;
-					}
+				Vec3 targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, 30);
+				boolean success = caster.randomTeleport(targetPos.x, targetPos.y, targetPos.z, true);
+				if (success) {
+					return true;
 				}
 			}
 		}
@@ -409,7 +424,7 @@ public class SpellFind {
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
 				Vec3 viewVector = caster.getViewVector(1.0f);
-				Vec3 endPos = startPos.add(viewVector.scale(32));
+				Vec3 endPos = startPos.add(viewVector.scale(18));
 
 				BlockHitResult hitResult = serverLevel.clip(new ClipContext(
 						startPos, endPos,
@@ -417,7 +432,7 @@ public class SpellFind {
 						ClipContext.Fluid.NONE,
 						caster
 				));
-				targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, 32);
+				targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, 18);
 			}
 			//目标位置
 			CloudOfDaggersEntity cloud = new CloudOfDaggersEntity(serverLevel, caster);
@@ -439,7 +454,7 @@ public class SpellFind {
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
 				Vec3 viewVector = caster.getViewVector(1.0f);
-				Vec3 endPos = startPos.add(viewVector.scale(32));
+				Vec3 endPos = startPos.add(viewVector.scale(45));
 
 				BlockHitResult hitResult = serverLevel.clip(new ClipContext(
 						startPos, endPos,
@@ -447,7 +462,7 @@ public class SpellFind {
 						ClipContext.Fluid.NONE,
 						caster
 				));
-				targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, 32);
+				targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, 45);
 			}
 			//目标位置
 			FireballEntity cloud = new FireballEntity(serverLevel, caster);

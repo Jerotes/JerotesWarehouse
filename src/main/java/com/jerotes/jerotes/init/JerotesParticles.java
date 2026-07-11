@@ -29,8 +29,8 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.MAGIC_MISSILE.get(), MagicMissileParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.POISON_BREATH.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.POISON_BREATH_FOG.get(), FogParticle::provider);
-		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_SICKNESS.get(), ShootParticle::provider);
-		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_ENFEEBLEMENT.get(), ShootParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_SICKNESS.get(), RayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_ENFEEBLEMENT.get(), RayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.LIGHTNING_BOLT.get(), LargeShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.VICIOUS_MOCKERY.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.HOLD_PERSON.get(), ShootParticle::provider);

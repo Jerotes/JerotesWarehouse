@@ -6,38 +6,39 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+
 @OnlyIn(Dist.CLIENT)
-public class DisplayParticle extends TextureSheetParticle {
-	public static DisplayParticleProvider provider(SpriteSet spriteSet) {
-		return new DisplayParticleProvider(spriteSet);
+public class RayParticle extends TextureSheetParticle {
+	public static RayParticleProvider provider(SpriteSet spriteSet) {
+		return new RayParticleProvider(spriteSet);
 	}
 
-	public static class DisplayParticleProvider implements ParticleProvider<SimpleParticleType> {
+	public static class RayParticleProvider implements ParticleProvider<SimpleParticleType> {
 		private final SpriteSet spriteSet;
 
-		public DisplayParticleProvider(SpriteSet spriteSet) {
+		public RayParticleProvider(SpriteSet spriteSet) {
 			this.spriteSet = spriteSet;
 		}
 
 		public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z,
 									   double xSpeed, double ySpeed, double zSpeed) {
-			return new DisplayParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
+			return new RayParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		}
 	}
 
 	private final SpriteSet spriteSet;
 	private float initialScale = 0f;
-	private float peakScale = 0.3f;
+	private float peakScale = 0.225f;
 	private int fadeInTime = 5;
-	private int fadeOutTime = 5;
+	private int fadeOutTime = 25;
 
-	protected DisplayParticle(ClientLevel world, double x, double y, double z,
+	protected RayParticle(ClientLevel world, double x, double y, double z,
 							  double vx, double vy, double vz, SpriteSet spriteSet) {
 		super(world, x, y, z);
 		this.spriteSet = spriteSet;
 		this.setSize(0f, 0f);
 		this.quadSize = initialScale;
-		this.lifetime = 20;
+		this.lifetime = 40;
 		this.gravity = 0f;
 		this.hasPhysics = false;
 		this.xd = vx;
@@ -76,7 +77,7 @@ public class DisplayParticle extends TextureSheetParticle {
 		} else {
 			alpha = 1.0f;
 		}
-		this.setAlpha(alpha);
+		this.setAlpha(alpha * 0.75f);
 	}
 
 	private float lerp(float start, float end, float progress) {

@@ -9,11 +9,13 @@ import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.spell.SpellFind;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
+import com.jerotes.jerotes.util.ParticlesUse;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -35,10 +37,12 @@ import java.util.UUID;
 
 public abstract class BaseRayEntity extends MagicAboutEntity {
     public static final EntityDataAccessor<Boolean> USEFUL = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> HIT_USEFUL = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> FIRST = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> LAST_X = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> LAST_Y = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> LAST_Z = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> LIFE_RAY = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.INT);
 
     public BaseRayEntity(EntityType<? extends MagicAboutEntity> entityType, Level level) {
         super(entityType, level);
@@ -77,6 +81,14 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.setXRot((float)(Mth.atan2(vec3.y, d0) * (double)(180F / (float)Math.PI)));
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
+        if (showHitParticle()) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                Vec3 center = this.position().add(0, this.getBbHeight() * 0.4F, 0);
+                Vec3 lastPos = center.add(getRayDeltaMovement());
+                Vec3 direction = center.subtract(lastPos);
+                ParticlesUse.spawnDirectionalHemisphereParticles(serverLevel, center, direction, false, 0.5f, this.getTrailParticle(), 0.005f, 0.015f, 20);
+            }
+        }
     }
     @Override
     public void shootFromRotation(Entity entity, float p_37253_, float p_37254_, float p_37255_, float p_37256_, float p_37257_) {
@@ -106,6 +118,10 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     public float getLastX() { return this.entityData.get(LAST_X); }
     public float getLastY() { return this.entityData.get(LAST_Y); }
     public float getLastZ() { return this.entityData.get(LAST_Z); }
+    public void setLifeRay(int n) {
+        this.entityData.set(LIFE_RAY, n);
+    }
+    public int getLifeRay() { return this.entityData.get(LIFE_RAY); }
     public void setRayDeltaMovement(double p_20335_, double p_20336_, double p_20337_) {
         this.setRayDeltaMovement(new Vec3(p_20335_, p_20336_, p_20337_));
     }
@@ -125,6 +141,32 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     }
     public void setUseful(boolean bl) {
         this.getEntityData().set(USEFUL, bl);
+        if (showHitParticle()) {
+            if (this.isHitUseful() && this.getTrailParticle() != null && !bl) {
+                if (this.level() instanceof ServerLevel serverLevel) {
+                    Vec3 center = this.position().add(0,this.getBbHeight()*0.4F,0);
+                    Vec3 lastPos = new Vec3(this.getLastX(), this.getLastY(), this.getLastZ()).add(0,this.getBbHeight()*0.4F,0);
+                    Vec3 direction = center.subtract(lastPos);
+                    ParticlesUse.spawnDirectionalHemisphereParticles(serverLevel, center, direction, false,0.35f, this.getTrailParticle(), 0.005f, 0.25f, 120);
+                    ParticlesUse.spawnDirectionalHemisphereParticles(serverLevel, center, direction, false,0.35f, this.getTrailParticle(), 0.005f, 0.15f, 100);
+                    ParticlesUse.spawnDirectionalHemisphereParticles(serverLevel, center, direction, false,0.35f, this.getTrailParticle(), 0.005f, 0.05f, 80);
+                }
+            }
+//            if (this.getTrailParticle() != null && bl) {
+//                if (this.level() instanceof ServerLevel serverLevel) {
+//                    Vec3 center = this.position().add(0,this.getBbHeight()*0.4F,0);
+//                    Vec3 lastPos = new Vec3(this.getLastX(), this.getLastY(), this.getLastZ()).add(0,this.getBbHeight()*0.4F,0);
+//                    Vec3 direction = center.subtract(lastPos);
+//                    ParticlesUse.spawnDirectionalHemisphereParticles(serverLevel, center, direction, false,0.5f, this.getTrailParticle(), 0.25f, 0.015f, 24);
+//                }
+//            }
+        }
+    }
+    public boolean isHitUseful() {
+        return this.getEntityData().get(HIT_USEFUL);
+    }
+    public void setHitUseful(boolean bl) {
+        this.getEntityData().set(HIT_USEFUL, bl);
     }
     public boolean isFirst() {
         return this.getEntityData().get(FIRST);
@@ -138,6 +180,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         compoundTag.putInt("SpellLevelMainEffectTime", this.spellLevelMainEffectTime);
         compoundTag.putInt("SpellLevelMainEffectLevel", this.spellLevelMainEffectLevel);
         compoundTag.putInt("Life", life);
+        compoundTag.putInt("LifeRay", getLifeRay());
         compoundTag.putDouble("SummonTod", summonTod);
         compoundTag.putDouble("SummonTod2", summonTod2);
         compoundTag.putDouble("SummonTod3", summonTod3);
@@ -151,6 +194,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         compoundTag.putDouble("YLastRay", getLastY());
         compoundTag.putDouble("ZLastRay", getLastZ());
         compoundTag.putBoolean("IsUseful", this.isUseful());
+        compoundTag.putBoolean("IsHitUseful", this.isHitUseful());
         compoundTag.putBoolean("IsFirst", this.isFirst());
     }
     @Override
@@ -159,6 +203,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.spellLevelMainEffectTime = compoundTag.getInt("SpellLevelMainEffectTime");
         this.spellLevelMainEffectLevel = compoundTag.getInt("SpellLevelMainEffectLevel");
         this.life = compoundTag.getInt("Life");
+        this.setLifeRay(compoundTag.getInt("LifeRay"));
         this.summonTod = compoundTag.getDouble("SummonTod");
         this.summonTod2 = compoundTag.getDouble("SummonTod2");
         this.summonTod3 = compoundTag.getDouble("SummonTod3");
@@ -168,12 +213,15 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.setRayStartPos(new Vec3(compoundTag.getDouble("XStartRay"), compoundTag.getDouble("YStartRay"), compoundTag.getDouble("ZStartRay")));
         this.setRayLastPos(new Vec3(compoundTag.getDouble("XLastRay"), compoundTag.getDouble("YLastRay"), compoundTag.getDouble("ZLastRay")));
         this.setUseful(compoundTag.getBoolean("IsUseful"));
+        this.setHitUseful(compoundTag.getBoolean("IsHitUseful"));
         this.setFirst(compoundTag.getBoolean("IsFirst"));
     }
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.getEntityData().define(USEFUL, true);
+        this.getEntityData().define(HIT_USEFUL, true);
+        this.getEntityData().define(LIFE_RAY, 0);
         this.getEntityData().define(FIRST, false);
         this.getEntityData().define(LAST_X, 0.0f);
         this.getEntityData().define(LAST_Y, 0.0f);
@@ -189,32 +237,32 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
 
     @Override
     public void tick() {
+        if (!this.level().isClientSide()) {
+            this.setLifeRay(this.getLifeRay() + 1);
+        }
         if (this.life >= this.getMaxLife()) {
-            this.setUseful(false);
+            if (!this.level().isClientSide()) {
+                this.setHitUseful(false);
+                this.setUseful(false);
+            }
         }
         super.tick();
 
         if (this.isUseful()) {
+            //撞墙
             if (this.life > 1) {
                 if (!Main.hasLineOfSightPos(new Vec3(this.getLastX(), this.getLastY(), this.getLastZ()), this.getPosition(0), getOwner(), this.level())) {
                     this.afterHasLineOfSight();
                 }
             }
-
-
-            // ----- 射线碰撞检测 -----
+            //选择目标
             Vec3 start = new Vec3(getLastX(), getLastY(), getLastZ());
             Vec3 end = this.position();
-
-// 命中宽度
             double radius = this.getBbWidth();
             if (radius < 0.25D) {
                 radius = 0.25D;
             }
-
-// 用于快速筛选
             AABB beamBox = new AABB(start, end).inflate(radius);
-
             List<LivingEntity> targets = this.level().getEntitiesOfClass(LivingEntity.class, beamBox, livingEntity -> livingEntity != this.getOwner() && this.canHitEntity(livingEntity) && !AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity) && !isHurt(livingEntity.getUUID()));
             Vec3 direction = end.subtract(start);
             double lenSq = direction.lengthSqr();
@@ -230,6 +278,10 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
                     this.hitEntity(target);
                 }
             }
+            //超过距离
+            if (this.position().distanceTo(new Vec3(this.xStartRay, this.yStartRay, this.zStartRay)) > getMaxReach()) {
+                this.setUseful(false);
+            }
         }
 
         if (this.getOwner() != null && this.isUseful()) {
@@ -237,13 +289,15 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
             ray.setOwner(this.getOwner());
             ray.setPos(this.getX() + this.xSpeedRay, this.getY() + this.ySpeedRay, this.getZ() + this.zSpeedRay);
             ray.setRot(this.getYRot(), this.getXRot());
+            ray.setRayStartPos(new Vec3(this.xStartRay, this.yStartRay, this.zStartRay));
             ray.setRayDeltaMovement(this.getRayDeltaMovement());
             if (!this.level().isClientSide()) {
                 ray.setUseful(true);
                 ray.setFirst(false);
+                ray.setLifeRay(this.getLifeRay());
                 ray.setRayLastPos(new Vec3(this.getX(), this.getY(), this.getZ()));
             }
-            ray.life = this.life;
+            ray.life = this.life;;
             ray.setLastHurt(this.getLastHurt());
             List<UUID> listTag = this.getHurtUUIDs();
             for (UUID uuid : listTag) {
@@ -251,6 +305,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
             }
             this.level().addFreshEntity(ray);
 
+            this.setHitUseful(false);
             this.setUseful(false);
             if (this.showParticle()) {
                 xSpeedRay = this.getDeltaMovement().x;
@@ -304,6 +359,9 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     public int getMaxLife() {
         return 40;
     }
+    public int getMaxReach() {
+        return 18;
+    }
 
     @Override
     protected ParticleOptions getTrailParticle() {
@@ -320,6 +378,9 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     }
     public boolean showParticle() {
         return false;
+    }
+    public boolean showHitParticle() {
+        return true;
     }
     protected void afterHasLineOfSight() {
     }

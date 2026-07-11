@@ -163,7 +163,11 @@ public class SpellFindUseEvent {
                 if (caster.level() instanceof ServerLevel serverLevel) {
                     int spellLevelDamage = Main.getJerotesPersistentData(caster).getInt("jerotes_magic_missile_spellLevelDamage");
                     UUID targetUUID = Main.getJerotesPersistentData(caster).getUUID("jerotes_magic_missile_target");
-                    if (!(serverLevel.getEntity(targetUUID) instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) && livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= spellLevelDamage)) {
+                    Entity entity = serverLevel.getEntity(targetUUID);
+                    if (caster instanceof Player player && Main.getTargetedEntity(player, 36) != null) {
+                        entity = Main.getTargetedEntity(player, 36);
+                    }
+                    if (!(entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) && livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= spellLevelDamage)) {
                         float spellLevelAccuracy = Main.getJerotesPersistentData(caster).getFloat("jerotes_magic_missile_spellLevelAccuracy");
                         int count = Main.getJerotesPersistentData(caster).getInt("jerotes_magic_missile_count");
                         float distance = Main.getJerotesPersistentData(caster).getFloat("jerotes_magic_missile_distance");
@@ -179,8 +183,8 @@ public class SpellFindUseEvent {
                             spell.setPos(caster.getX(), caster.getY(0.7), caster.getZ());
                             spell.shootFromRotation(caster, caster.getXRot(), (float) (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
                             spell.setOwner(caster);
-                            if (serverLevel.getEntity(targetUUID) != null && serverLevel.getEntity(targetUUID) != caster) {
-                                spell.setTarget(serverLevel.getEntity(targetUUID));
+                            if (entity != null && entity != caster) {
+                                spell.setTarget(entity);
                             }
                             serverLevel.addFreshEntity(spell);
                         }

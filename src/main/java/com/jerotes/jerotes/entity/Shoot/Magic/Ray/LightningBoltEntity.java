@@ -1,8 +1,10 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.Ray;
 
+import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
@@ -54,7 +56,7 @@ public class LightningBoltEntity extends BaseRayEntity {
             return;
         }
         if (entity instanceof LivingEntity livingEntity) {
-            DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.LIGHTNING_BOLT), this, this.getOwner());
+            DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.LIGHTNING_MAGIC, this, this.getOwner());
             double noUse = 0;
             if (livingEntity.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
                 noUse = livingEntity.getAttributeBaseValue(Attributes.MOVEMENT_SPEED);
@@ -96,7 +98,13 @@ public class LightningBoltEntity extends BaseRayEntity {
     public BaseRayEntity getRay() {
         return new LightningBoltEntity(this.spellLevelDamage, this.level(), (LivingEntity) this.getOwner(), summonTod, summonTod2, summonTod3);
     }
+    public int getMaxReach() {
+        return 30;
+    }
 
+    public boolean showHitParticle() {
+        return false;
+    }
     @Override
     public int getMaxLife() {
         return 40;

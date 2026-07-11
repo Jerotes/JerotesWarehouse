@@ -27,6 +27,9 @@ public class SpellList {
 			public boolean canUseTargetNone() {
 				return true;
 			}
+			public float getSpellDistance() {
+				return 36;
+			}
 		};
 	}
 	//毒性吐息
@@ -49,6 +52,9 @@ public class SpellList {
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
 			}
+			public float getSpellDistance() {
+				return 18;
+			}
 		};
 	}
 	//虚弱射线
@@ -62,6 +68,9 @@ public class SpellList {
 			}
 			public int baseSpellLevel() {
 				return 2;
+			}
+			public float getSpellDistance() {
+				return 18;
 			}
 		};
 	}
@@ -77,6 +86,9 @@ public class SpellList {
 			public int baseSpellLevel() {
 				return 3;
 			}
+			public float getSpellDistance() {
+				return 30;
+			}
 		};
 	}
 	//恶毒嘲笑
@@ -89,7 +101,7 @@ public class SpellList {
 				return JerotesWarehouse.MODID;
 			}
 			public float getSpellDistance() {
-				return 32;
+				return 18;
 			}
 		};
 	}
@@ -106,7 +118,7 @@ public class SpellList {
 				return 2;
 			}
 			public float getSpellDistance() {
-				return 32;
+				return 18;
 			}
 			public boolean canUseToEntity(Entity entity) {
 				return entity instanceof LivingEntity livingEntity && EntityFactionFind.isHumanoid(livingEntity) && super.canUseToEntity(entity);
@@ -146,7 +158,7 @@ public class SpellList {
 				return 4;
 			}
 			public float getSpellDistance() {
-				return 32;
+				return 36;
 			}
 			public boolean canUseToEntity(Entity entity) {
 				if (entity instanceof LivingEntity livingEntity &&
@@ -171,7 +183,7 @@ public class SpellList {
 				return 6;
 			}
 			public float getSpellDistance() {
-				return 32;
+				return 18;
 			}
 		};
 	}
@@ -293,9 +305,6 @@ public class SpellList {
 				return JerotesWarehouse.MODID;
 			}
 			public boolean canUse() {
-				if (getCaster() != null && !(getCaster().onGround() || Main.isInFluid(getCaster()))) {
-					return false;
-				}
 				return super.canUse();
 			}
 		};
@@ -424,7 +433,7 @@ public class SpellList {
 				return JerotesWarehouse.MODID;
 			}
 			public float getSpellDistance() {
-				return 32;
+				return 18;
 			}
 			public boolean canUseTargetNone() {
 				return true;
@@ -444,7 +453,7 @@ public class SpellList {
 				return JerotesWarehouse.MODID;
 			}
 			public float getSpellDistance() {
-				return 32;
+				return 45;
 			}
 			public boolean canUseTargetNone() {
 				return true;

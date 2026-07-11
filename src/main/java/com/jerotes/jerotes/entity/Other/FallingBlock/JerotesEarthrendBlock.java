@@ -21,6 +21,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Team;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -316,10 +318,12 @@ public class JerotesEarthrendBlock extends BaseFallingBlock implements OwnableEn
 					BlockState blockState = this.level().getBlockState(blockPos);
 					float block = blockState.getDestroySpeed(this.level(), blockPos);
 					if (block >= getBreakBlockLevel() || block < 0f) continue;
+					if (!ForgeEventFactory.onEntityDestroyBlock(this.getOwner(), blockPos, blockState)) continue;
+					if (!ForgeHooks.canEntityDestroy(this.level(), blockPos, this.getOwner())) continue;
 					if ((blockState.is(BlockTags.REPLACEABLE_BY_TREES) || blockState.is(BlockTags.DIRT) || blockState.is(BlockTags.SCULK_REPLACEABLE) || blockState.is(BlockTags.STONE_ORE_REPLACEABLES)) && this.random.nextFloat() > 0.05) {
-						bl = this.level().destroyBlock(blockPos, false, this) || bl;
+						bl = this.level().destroyBlock(blockPos, false, this.getOwner() != null ? this.getOwner() : this) || bl;
 					} else {
-						bl = this.level().destroyBlock(blockPos, true, this) || bl;
+						bl = this.level().destroyBlock(blockPos, true, this.getOwner() != null ? this.getOwner() : this) || bl;
 					}
 				}
 			}

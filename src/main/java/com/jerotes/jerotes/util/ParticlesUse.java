@@ -4,6 +4,7 @@
 package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.client.particle.SummonParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -44,10 +45,10 @@ public class ParticlesUse {
 
 
     //球粒子
-    public static void sendBallParticles(Entity entity, SimpleParticleType simpleParticleType) {
+    public static void sendBallParticles(Entity entity, ParticleOptions simpleParticleType) {
         sendBallParticles(entity, simpleParticleType, false, 3.0f, 0.15f);
     }
-    public static void sendBallParticles(Entity entity, SimpleParticleType simpleParticleType, boolean selfToOther, float radius, float speed) {
+    public static void sendBallParticles(Entity entity, ParticleOptions simpleParticleType, boolean selfToOther, float radius, float speed) {
         if (entity.level() instanceof ServerLevel serverLevel) {
             Vec3 playerPos = entity.position().add(0, entity.getY(0.5) - entity.getY(), 0);
             int particleCount = 40;
@@ -75,6 +76,45 @@ public class ParticlesUse {
                 serverLevel.sendParticles(simpleParticleType,
                         particlePos.x, particlePos.y, particlePos.z,
                         0, velocity.x, velocity.y, velocity.z, 1.0f);
+            }
+        }
+    }
+    public static void spawnDirectionalHemisphereParticles(ServerLevel level, Vec3 center, Vec3 direction, boolean positive, float coverage, ParticleOptions particle, float radius, float speed, int count) {
+        if (coverage <= 0 || level == null || particle == null) return;
+        if (direction.lengthSqr() < 1e-6) return;
+
+        Vec3 axis = !positive ? direction.normalize() : direction.normalize().scale(-1);
+        float maxAngle = (float) (coverage * Math.PI);
+        RandomSource random = RandomSource.create();
+
+        for (int i = 0; i < count; i++) {
+            double theta = random.nextDouble() * 2 * Math.PI;
+            double phi = random.nextDouble() * Math.PI;
+
+            double x = radius * Math.sin(phi) * Math.cos(theta);
+            double y = radius * Math.cos(phi);
+            double z = radius * Math.sin(phi) * Math.sin(theta);
+            Vec3 worldPos = new Vec3(x, y, z);
+
+            // 2. 计算该方向与轴的夹角
+            Vec3 worldDir = worldPos.normalize();
+            double dot = worldDir.dot(axis);
+            double angle = Math.acos(Math.min(1, Math.max(-1, dot)));
+
+            if (angle <= maxAngle) {
+                Vec3 pos = center.add(worldPos.multiply(-1,-1,-1));
+                Vec3 velocity = worldDir.scale(-speed);
+                level.sendParticles(
+                        particle,
+                        pos.x,
+                        pos.y,
+                        pos.z,
+                        0,
+                        velocity.x,
+                        velocity.y,
+                        velocity.z,
+                        1.0f
+                );
             }
         }
     }
