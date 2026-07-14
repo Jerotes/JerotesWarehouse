@@ -1,18 +1,24 @@
 package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.EliteEntity;
 import com.jerotes.jerotes.entity.Interface.FireAbsorptionEntity;
 import com.jerotes.jerotes.entity.Interface.FreezeAbsorptionEntity;
 import com.jerotes.jerotes.entity.Interface.LightningAbsorptionEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.spell.SpellFind;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -201,6 +207,46 @@ public class EffectEvent {
 				mirrorImageEntity.discard();
 				event.setCanceled(true);
 				break;
+			}
+		}
+	}
+
+	//法术反制
+	@SubscribeEvent
+	public static void Counterspell(JerotesStopSpellEvent event) {
+		Entity entity = event.getTarget();
+		Entity spellEntity = event.getSpellEntity();
+		Entity caster = event.getCaster();
+		if (spellEntity instanceof MagicAboutEntity magicAbout && entity != null) {
+			//法术反制
+			if (!magicAbout.isHelp() && entity != caster && entity instanceof LivingEntity livingEntity &&
+					livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())
+					&&
+					livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= event.getLevel() &&
+					!(caster != null &&
+							AttackFind.SameFactionAvoidDamage(caster, livingEntity, false))) {
+				if (!livingEntity.level().isClientSide()) {
+					livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
+				}
+				livingEntity.swing(InteractionHand.OFF_HAND);
+				SpellFind.Counterspell(livingEntity);
+				event.setCanceled(true);
+			}
+		}
+		if (event.getType() == 1) {
+			//法术反制
+			if (entity != caster && entity instanceof LivingEntity livingEntity &&
+					livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())
+					&&
+					livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= event.getLevel() &&
+					!(caster != null &&
+							AttackFind.SameFactionAvoidDamage(caster, livingEntity, false))) {
+				if (!livingEntity.level().isClientSide()) {
+					livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
+				}
+				livingEntity.swing(InteractionHand.OFF_HAND);
+				SpellFind.Counterspell(livingEntity);
+				event.setCanceled(true);
 			}
 		}
 	}

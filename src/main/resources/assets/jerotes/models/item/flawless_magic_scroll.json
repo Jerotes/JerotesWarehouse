@@ -1,0 +1,18 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jerotes:item/flawless_magic_scroll"
+  },
+  "overrides": [
+    { "predicate": { "jerotes_flawless_magic_scroll": 1 }, "model": "jerotes:item/flawless_magic_scroll_abjuration" },
+    { "predicate": { "jerotes_flawless_magic_scroll": 2 }, "model": "jerotes:item/flawless_magic_scroll_conjuration" },
+    { "predicate": { "jerotes_flawless_magic_scroll": 3 }, "model": "jerotes:item/flawless_magic_scroll_divination" },
+    { "predicate": { "jerotes_flawless_magic_scroll": 4 }, "model": "jerotes:item/flawless_magic_scroll_enchantment" },
+    { "predicate": { "jerotes_flawless_magic_scroll": 5 }, "model": "jerotes:item/flawless_magic_scroll_evocation" },
+    { "predicate": { "jerotes_flawless_magic_scroll": 6 }, "model": "jerotes:item/flawless_magic_scroll_illusion" },
+    { "predicate": { "jerotes_flawless_magic_scroll": 7 }, "model": "jerotes:item/flawless_magic_scroll_necromancy" },
+    { "predicate": { "jerotes_flawless_magic_scroll": 8 }, "model": "jerotes:item/flawless_magic_scroll_transmutation" },
+    { "predicate": { "jerotes_flawless_magic_scroll": 9 }, "model": "jerotes:item/flawless_magic_scroll_psionics" },
+    { "predicate": { "jerotes_flawless_magic_scroll": 10 }, "model": "jerotes:item/flawless_magic_scroll_skill" }
+  ]
+}

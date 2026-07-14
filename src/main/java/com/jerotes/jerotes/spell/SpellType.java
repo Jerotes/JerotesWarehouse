@@ -25,7 +25,10 @@ public enum SpellType implements SpellTypeInterface {
 	JEROTES_COUNTERSPELL("jerotes_counterspell"),
 	JEROTES_MAGIC_ABSORPTION("jerotes_magic_absorption"),
 	JEROTES_CLOUD_OF_DAGGERS("jerotes_cloud_of_daggers"),
-	JEROTES_FIREBALL("jerotes_fireball");
+	JEROTES_FIREBALL("jerotes_fireball"),
+	JEROTES_LINEAR_EVOKER_FANG("jerotes_linear_evoker_fang"),
+	JEROTES_CIRCULAR_EVOKER_FANG("jerotes_circular_evoker_fang"),
+	JEROTES_CONJURE_VEX("jerotes_conjure_vex");
 
 	private final String id;
 	SpellType(String id) {
@@ -58,6 +61,9 @@ public enum SpellType implements SpellTypeInterface {
 			case JEROTES_MAGIC_ABSORPTION -> SpellList.MagicAbsorption(level, caster, target);
 			case JEROTES_CLOUD_OF_DAGGERS -> SpellList.CloudOfDaggers(level, caster, target);
 			case JEROTES_FIREBALL -> SpellList.Fireball(level, caster, target);
+			case JEROTES_LINEAR_EVOKER_FANG -> SpellList.LinearEvokerFang(level, caster, target);
+			case JEROTES_CIRCULAR_EVOKER_FANG -> SpellList.CircularEvokerFang(level, caster, target);
+			case JEROTES_CONJURE_VEX -> SpellList.ConjureVex(level, caster, target);
 		};
 	}
 

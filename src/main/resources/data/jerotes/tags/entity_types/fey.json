@@ -3,7 +3,7 @@
   "replace": false,
   "values": [
     "minecraft:allay",
-    "minecraft:vex",
+    "#jerotes:vex",
     "#jerotes:hag"
   ]
 }

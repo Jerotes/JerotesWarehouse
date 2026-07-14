@@ -1,6 +1,8 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
@@ -145,6 +147,46 @@ public class JerotesRenderType extends RenderType {
 		return GLOW_DOUBLE_SIDED.apply(resourceLocation, NO_TRANSPARENCY);
 	}
 
+	private static final BiFunction<ResourceLocation, TransparencyStateShard, RenderType> GLOW_DOUBLE_SIDED_LIGHTNING =
+			Util.memoize((resourceLocation, transparencyStateShard) -> {
+				TextureStateShard textureStateShard = new TextureStateShard(resourceLocation, false, false);
+				return RenderType.create(
+						"glow_double_sided_lightning",
+						DefaultVertexFormat.NEW_ENTITY,
+						VertexFormat.Mode.QUADS,
+						1536,
+						false,
+						true,
+						CompositeState.builder()
+								.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+								.setTextureState(textureStateShard)
+								.setTransparencyState(transparencyStateShard)
+								.setWriteMaskState(COLOR_DEPTH_WRITE)
+								.setCullState(NO_CULL)
+								.setDepthTestState(LEQUAL_DEPTH_TEST)
+								.setOutputState(MAIN_TARGET)
+								.createCompositeState(false)
+				);
+			});
+
+	public static RenderType glowDoubleSidedLightning(ResourceLocation resourceLocation) {
+		return GLOW_DOUBLE_SIDED_LIGHTNING.apply(resourceLocation, LIGHTNING_TRANSPARENCY);
+	}
+	public static RenderType glowDoubleSidedLightningAdd(ResourceLocation resourceLocation) {
+		return GLOW_DOUBLE_SIDED_LIGHTNING.apply(resourceLocation, LIGHTNING_TRANSPARENCY);
+	}
+	public static final TransparencyStateShard PREMULTIPLIED_ADDITIVE = new TransparencyStateShard(
+			"premultiplied_additive",
+			() -> {
+				RenderSystem.enableBlend();
+				RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			},
+			() -> {
+				RenderSystem.disableBlend();
+				RenderSystem.defaultBlendFunc();
+			}
+	);
+
 	private static final RenderType GLOWING_OUTLINE = create("glowing_outline",
 			DefaultVertexFormat.POSITION_COLOR_TEX,
 			VertexFormat.Mode.QUADS,
@@ -156,7 +198,7 @@ public class JerotesRenderType extends RenderType {
 					.setTextureState(new TextureStateShard(new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/truesight.png"), true, false))
 					.setWriteMaskState(COLOR_WRITE)
 					.setCullState(NO_CULL)
-					.setDepthTestState(NO_DEPTH_TEST)
+					.setDepthTestState(LEQUAL_DEPTH_TEST)
 					.setTransparencyState(GLINT_TRANSPARENCY)
 					.setTexturingState(GLINT_TEXTURING)
 					.createCompositeState(false));

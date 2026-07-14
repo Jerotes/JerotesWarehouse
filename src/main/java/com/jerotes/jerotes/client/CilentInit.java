@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.client;
 
 import com.jerotes.jerotes.init.JerotesItems;
+import com.jerotes.jerotes.item.FlawlessMagicScroll;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +14,7 @@ public class CilentInit
             ItemProperties.register(item.get(), new ResourceLocation("throwing"), (itemStack, clientLevel, livingEntity, n) -> livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == itemStack ? 1.0f : 0.0f);
             ItemProperties.register(item.get(), new ResourceLocation("jerotes_swing"), (itemStack, clientLevel, livingEntity, n) -> livingEntity != null && livingEntity.getMainHandItem() == itemStack && livingEntity.swinging ? 1.0f : 0.0f);
             ItemProperties.register(item.get(), new ResourceLocation("jerotes_shift"), (itemStack, clientLevel, livingEntity, n) -> livingEntity != null && livingEntity.isShiftKeyDown() ? 1.0f : 0.0f);
+            ItemProperties.register(item.get(), new ResourceLocation("jerotes_flawless_magic_scroll"), (itemStack, clientLevel, livingEntity, n) -> itemStack.getItem() instanceof FlawlessMagicScroll flawlessMagicScroll ? flawlessMagicScroll.getSchool(itemStack) : 0.0f);
             ItemProperties.register(item.get(), new ResourceLocation("jerotes_charge_stage"), (itemStack, clientLevel, livingEntity, n) -> {
                 if (livingEntity == null || !livingEntity.isUsingItem() || livingEntity.getUseItem() != itemStack) {
                     return 0.0f;

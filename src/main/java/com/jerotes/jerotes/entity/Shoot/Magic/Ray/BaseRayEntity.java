@@ -2,6 +2,7 @@ package com.jerotes.jerotes.entity.Shoot.Magic.Ray;
 
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +45,8 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     private static final EntityDataAccessor<Float> LAST_Y = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> LAST_Z = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> LIFE_RAY = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> LIFE_RAY_LAST = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> RAY_COUNT = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.INT);
 
     public BaseRayEntity(EntityType<? extends MagicAboutEntity> entityType, Level level) {
         super(entityType, level);
@@ -122,6 +126,14 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.entityData.set(LIFE_RAY, n);
     }
     public int getLifeRay() { return this.entityData.get(LIFE_RAY); }
+    public void setLifeRayLast(int n) {
+        this.entityData.set(LIFE_RAY_LAST, n);
+    }
+    public int getLifeRayLast() { return this.entityData.get(LIFE_RAY_LAST); }
+    public void setRayCount(int n) {
+        this.entityData.set(RAY_COUNT, n);
+    }
+    public int getRayCount() { return this.entityData.get(RAY_COUNT); }
     public void setRayDeltaMovement(double p_20335_, double p_20336_, double p_20337_) {
         this.setRayDeltaMovement(new Vec3(p_20335_, p_20336_, p_20337_));
     }
@@ -181,6 +193,8 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         compoundTag.putInt("SpellLevelMainEffectLevel", this.spellLevelMainEffectLevel);
         compoundTag.putInt("Life", life);
         compoundTag.putInt("LifeRay", getLifeRay());
+        compoundTag.putInt("LifeRayLast", getLifeRayLast());
+        compoundTag.putInt("RayCount", getRayCount());
         compoundTag.putDouble("SummonTod", summonTod);
         compoundTag.putDouble("SummonTod2", summonTod2);
         compoundTag.putDouble("SummonTod3", summonTod3);
@@ -204,6 +218,8 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.spellLevelMainEffectLevel = compoundTag.getInt("SpellLevelMainEffectLevel");
         this.life = compoundTag.getInt("Life");
         this.setLifeRay(compoundTag.getInt("LifeRay"));
+        this.setLifeRayLast(compoundTag.getInt("LifeRayLast"));
+        this.setRayCount(compoundTag.getInt("RayCount"));
         this.summonTod = compoundTag.getDouble("SummonTod");
         this.summonTod2 = compoundTag.getDouble("SummonTod2");
         this.summonTod3 = compoundTag.getDouble("SummonTod3");
@@ -222,6 +238,8 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.getEntityData().define(USEFUL, true);
         this.getEntityData().define(HIT_USEFUL, true);
         this.getEntityData().define(LIFE_RAY, 0);
+        this.getEntityData().define(LIFE_RAY_LAST, 0);
+        this.getEntityData().define(RAY_COUNT, 0);
         this.getEntityData().define(FIRST, false);
         this.getEntityData().define(LAST_X, 0.0f);
         this.getEntityData().define(LAST_Y, 0.0f);
@@ -239,6 +257,8 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     public void tick() {
         if (!this.level().isClientSide()) {
             this.setLifeRay(this.getLifeRay() + 1);
+            if (this.isHitUseful() && !this.isUseful())
+                this.setLifeRayLast(this.getLifeRayLast() + 1);
         }
         if (this.life >= this.getMaxLife()) {
             if (!this.level().isClientSide()) {
@@ -295,6 +315,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
                 ray.setUseful(true);
                 ray.setFirst(false);
                 ray.setLifeRay(this.getLifeRay());
+                ray.setRayCount(this.getRayCount() + 1);
                 ray.setRayLastPos(new Vec3(this.getX(), this.getY(), this.getZ()));
             }
             ray.life = this.life;;
@@ -394,14 +415,11 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         if (entity == this.getOwner()) {
             return;
         }
-        //法术反制
-        if (!isHelp() && entity != this.getOwner() && entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())
-                && livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= this.getSpellLevel() && !(this.getOwner() != null && MainConfig.SameFactionAvoidDamage && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity))) {
-            if (!livingEntity.level().isClientSide()) {
-                livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
-            }
-            livingEntity.swing(InteractionHand.MAIN_HAND);
-            SpellFind.Counterspell(livingEntity);
+        //法术取消
+        //event
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.isCanceled()) {
             return;
         }
         this.setLastHurt(entity);

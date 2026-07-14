@@ -2,9 +2,11 @@ package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypeTags;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.init.JerotesMobEffects;
@@ -19,6 +21,7 @@ import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
@@ -217,5 +220,59 @@ public class EntityAndItemFind {
 			totalValue += add * weight;
 		}
 		return totalValue;
+	}
+
+	public static boolean canSelfResistMagic(DamageSource damageSource, float amount, LivingEntity entity, int selfLevel) {
+		if (!(entity instanceof SpellUseEntity spellUse))
+			return false;
+		if (damageSource.getEntity() instanceof SpellUseEntity ||
+				damageSource.getDirectEntity() instanceof SpellUseEntity ||
+				damageSource.getEntity() instanceof MagicAbout ||
+				damageSource.getDirectEntity() instanceof MagicAbout) {
+			int otherLevl = getOtherLevl(damageSource);
+			return selfLevel <= otherLevl;
+		}
+		else {
+			int spelllevel = Math.max(0, spellUse.getSpellLevel() - 1);
+			float maxResistance = spelllevel * spelllevel * 10;
+			float afterDamage = amount * Math.max(0.05f, ((100f - spelllevel * spelllevel)/100f));
+			if (Float.isNaN(afterDamage) || Float.isInfinite(afterDamage)) {
+				return false;
+			}
+			return afterDamage <= maxResistance;
+		}
+	}
+	public static boolean canSelfResistMagic(DamageSource damageSource, float amount, LivingEntity entity) {
+		if (!(entity instanceof SpellUseEntity spellUse))
+			return false;
+		return canSelfResistMagic(damageSource, amount, entity, spellUse.getSpellLevel());
+	}
+	public static int getOtherLevl(DamageSource damageSource) {
+		int ownerSpellUseLevel = damageSource.getEntity() instanceof SpellUseEntity spellUse1 ? spellUse1.getSpellLevel() : 1;
+		int magicSpellUseLevel = damageSource.getDirectEntity() instanceof SpellUseEntity spellUse1 ? spellUse1.getSpellLevel() : 1;
+		int ownerMagicAboutLevel = damageSource.getEntity() instanceof MagicAbout magicAbout ? magicAbout.getSpellLevel() : 1;
+		int magicMagicAboutLevel = damageSource.getDirectEntity() instanceof MagicAbout magicAbout ? magicAbout.getSpellLevel() : 1;
+		int otherLevl = Math.max(Math.max(ownerSpellUseLevel, magicSpellUseLevel),Math.max(ownerMagicAboutLevel, magicMagicAboutLevel));
+		return otherLevl;
+	}
+
+	//dnd属性值获得
+	//体质
+	public static int getConstitution(LivingEntity livingEntity) {
+		double health = livingEntity.getAttributeBaseValue(Attributes.MAX_HEALTH);
+		int score;
+		if (health <= 1) {
+			score = 1;
+		} else if (health <= 20) {
+			score = Math.toIntExact(Math.round(1 + (health - 1) * 9f / 19f));
+		} else if (health <= 100) {
+			score = Math.toIntExact(Math.round(10 + (health - 20) * 10f / 80f));
+		} else {
+			score = Math.toIntExact(Math.round(20 + (health - 100) * 10f / 900f));
+		}
+		return score;
+	}
+	public static int getModifier(int n) {
+		return (n - 10) / 2;
 	}
 }

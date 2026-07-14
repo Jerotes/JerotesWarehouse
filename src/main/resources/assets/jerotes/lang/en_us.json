@@ -1,5 +1,6 @@
 {
-  "item_group.jerotes.jerotes_stab": "Jerotes Warehouse",
+  "item_group.jerotes.jerotes_tab": "Jerotes Warehouse",
+  "item_group.jerotes.jerotes_tab_flawless_magic_scroll_tab": "Flawless Magic Scroll",
   "key.categories.jerotes": "Jerotes Warehouse",
 
   "advancements.jerotes.a_brand_new_world.title": "A Brand New World",
@@ -15,6 +16,7 @@
   "item.jerotes.aa_creative_claw": "Creative Claw",
   "item.jerotes.aa_exploration_eye": "Exploration Eye",
   "item.jerotes.aa_spell_javelin": "Spell Javelin",
+  "item.jerotes.flawless_magic_scroll": "Flawless Magic Scroll",
   "entity.jerotes.test": "Test",
   "item.jerotes.test_spawn_egg": "Test Spawn Egg",
   "entity.jerotes.big_beast": "Big Beast",
@@ -26,6 +28,9 @@
   "item.jerotes.jerotes_player_spawn_egg": "Player Spawn Egg",
   "entity.jerotes.jerotes_horse": "Horse",
   "item.jerotes.jerotes_horse_spawn_egg": "Horse Spawn Egg",
+  "entity.jerotes.jerotes_vex": "Vex",
+  "item.jerotes.jerotes_vex_spawn_egg": "Vex Spawn Egg",
+  "entity.jerotes.jerotes_exokoer_fangs": "Evoker Fang",
   "entity.jerotes.camel_husk": "Camel Husk",
   "entity.jerotes.parched": "Parched",
 
@@ -470,6 +475,19 @@
   "subtitle.jerotes.spear_attack": "Spear jabs",
   "subtitle.jerotes.armor_equip_copper": "Copper armor clonks",
 
+  "spell.jerotes.school.abjuration": "Abjuration",
+  "spell.jerotes.school.conjuration": "Conjuration",
+  "spell.jerotes.school.divination": "Divination",
+  "spell.jerotes.school.enchantment": "Enchantment",
+  "spell.jerotes.school.evocation": "Evocation",
+  "spell.jerotes.school.illusion": "Illusion",
+  "spell.jerotes.school.necromancy": "Necromancy",
+  "spell.jerotes.school.transmutation": "Transmutation",
+  "spell.jerotes.school.psionics": "Psionics",
+  "spell.jerotes.school.skill": "Skill",
+  "spell.jerotes.type.main": "Cast",
+  "spell.jerotes.type.add": "Bonus Cast",
+
   "item.jerotes.magic_missile": "Magic Missile",
   "entity.jerotes.magic_missile": "Magic Missile",
   "item.jerotes.poison_breath": "Poison Breath",
@@ -492,7 +510,17 @@
   "entity.jerotes.eyebite": "Eyebite",
   "entity.jerotes.mirror_image": "Mirror Image",
   "entity.jerotes.fireball": "Fireball",
+  "spell.jerotes.linear_evoker_fang": "Linear Evoker Fang",
+  "spell.jerotes.linear_evoker_fang.desc": "Summon multiple Evoker Fangs towards the target direction",
+  "spell.jerotes.circular_evoker_fang": "Circular Evoker Fang",
+  "spell.jerotes.circular_evoker_fang.desc": "Summon multiple Evoker Fangs around self",
+  "spell.jerotes.conjure_vex": "Conjure Vex",
+  "spell.jerotes.conjure_vex.desc": "Summon multiple Vexs around the caster",
 
+  "subtitle.jerotes.magic_linear_evoker_fang": "Linear Evoker Fang",
+  "subtitle.jerotes.magic_circular_evoker_fang": "Circular Evoker Fang",
+  "subtitle.jerotes.magic_conjure_vex": "Conjure Relief",
+  
   "spell.jerotes.spell_base": "：%1$s Level",
   "spell.jerotes.spell_max_distance": "%1$s Max Distance",
   "spell.jerotes.magic_missile": "Magic Missile",

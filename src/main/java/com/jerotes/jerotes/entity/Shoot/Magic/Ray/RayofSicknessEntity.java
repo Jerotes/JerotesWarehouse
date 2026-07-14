@@ -2,19 +2,18 @@ package com.jerotes.jerotes.entity.Shoot.Magic.Ray;
 
 import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.util.AttackFind;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class RayofSicknessEntity extends BaseRayEntity {
@@ -56,8 +55,11 @@ public class RayofSicknessEntity extends BaseRayEntity {
             DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.POISON, this, entity2);
             boolean bl = livingEntity.hurt(damageSource, (spellLevelDamage + 1) * Main.randomReach(RandomSource.create(), 1, 8));
             if (bl) {
-                livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel - 1), this.getEffectSource());
-            }
+                //体质判定
+                if (this.random.nextFloat() > (EntityAndItemFind.getModifier(EntityAndItemFind.getConstitution(livingEntity)) + 8f) / 20f){
+                    livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel - 1), this.getEffectSource());
+                }
+           }
             this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
             this.setUseful(false);
         }

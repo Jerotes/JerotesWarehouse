@@ -434,7 +434,7 @@ public class AttackFind {
     }
     //阵营免伤
     public static boolean SameFactionAvoidDamage(Entity attacker, LivingEntity hurt, boolean shouldJerotesEntity) {
-        if (!MainConfig.SameFactionAvoidDamage)
+        if (!MainConfig.SameFactionAvoidDamage && shouldJerotesEntity)
             return false;
         if (!(attacker instanceof Mob mobAttacker) || !(hurt instanceof Mob mobHurt))
             return false;

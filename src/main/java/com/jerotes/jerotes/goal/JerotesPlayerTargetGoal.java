@@ -62,7 +62,7 @@ public class JerotesPlayerTargetGoal<T extends LivingEntity> extends TargetGoal 
         this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(this.targetType, this.getTargetSearchArea(this.getFollowDistance()), (find) -> {
             return find instanceof Mob mobs && mobs.getTarget() == this.mob && this.mob.canBeSeenAsEnemy() && !AttackFind.FindCanNotAttack(this.mob, find) &&
                     !AttackFind.FindCanNotAttack(find, this.mob) &&
-                    !AttackFind.SameFactionAvoidDamage(this.mob, find) &&
+                    !AttackFind.SameFactionAvoidDamage(this.mob, find, false) &&
                     Main.canSeeAngle(this.mob, find.getEyePosition(), this.mob instanceof JerotesPlayerEntity jerotesPlayerEntity ? (160 + (Math.min(200, jerotesPlayerEntity.getLookLevel() * 10f))) : 180f);
         }), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
     }

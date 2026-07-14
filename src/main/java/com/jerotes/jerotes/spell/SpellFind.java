@@ -1,7 +1,10 @@
 package com.jerotes.jerotes.spell;
 
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
 import com.jerotes.jerotes.entity.Other.OtherSpell.CloudOfDaggersEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.JerotesEvokerFangEntity;
 import com.jerotes.jerotes.entity.Other.ShootTargetSpell.FireballEntity;
 import com.jerotes.jerotes.entity.Other.SpellCloud.SpellCloudEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.Breath.PoisonBreathEntity;
@@ -13,14 +16,12 @@ import com.jerotes.jerotes.entity.Shoot.Magic.Target.*;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
-import com.jerotes.jerotes.util.AttackFind;
-import com.jerotes.jerotes.util.EntityAndItemFind;
-import com.jerotes.jerotes.util.EntityFactionFind;
-import com.jerotes.jerotes.util.Main;
+import com.jerotes.jerotes.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.scores.PlayerTeam;
 
 import java.util.List;
@@ -359,6 +361,7 @@ public class SpellFind {
 				Vec3 startPos = caster.getEyePosition(1.0f);
 				Vec3 viewVector = caster.getViewVector(1.0f);
 				Vec3 endPos = startPos.add(viewVector.scale(30));
+				Vec3 targetPos = caster.getPosition(0);
 
 				BlockHitResult hitResult = serverLevel.clip(new ClipContext(
 						startPos, endPos,
@@ -366,7 +369,7 @@ public class SpellFind {
 						ClipContext.Fluid.NONE,
 						caster
 				));
-				Vec3 targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, 30);
+				targetPos = hitResult.getLocation();
 				boolean success = caster.randomTeleport(targetPos.x, targetPos.y, targetPos.z, true);
 				if (success) {
 					return true;
@@ -466,7 +469,7 @@ public class SpellFind {
 			}
 			//目标位置
 			FireballEntity cloud = new FireballEntity(serverLevel, caster);
-			cloud.setStartPos(new Vec3(caster.getX(), caster.getY(0.7) - cloud.getBbHeight()/2, caster.getZ()));
+			cloud.setStartPos(new Vec3(caster.getX(), caster.getY(0.7), caster.getZ()));
 			cloud.setSpellLevelDamage(spellLevelDamage);
 			cloud.setPos(targetPos.x, targetPos.y + 2/16f, targetPos.z);
 			cloud.setOwner(caster);
@@ -474,5 +477,135 @@ public class SpellFind {
 			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
 		}
 		return true;
+	}
+	//召唤恼鬼$法术
+	public static boolean ConjureVex(LivingEntity caster, int countMin, int countMax, int summonDistance) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			PlayerTeam teams = (PlayerTeam) caster.getTeam();
+			int count = countMin;
+			if (countMin < countMax) {
+				count = Main.randomReach(caster.getRandom(), countMin, countMax);
+			}
+			for (int i = 0; i < count; ++i) {
+				BlockPos summonPos = Main.findSpawnPositionNearFillOnBlock(caster, summonDistance);
+				JerotesVexEntity jerotesVexEntity = JerotesEntityType.JEROTES_VEX.get().spawn(serverLevel, BlockPos.containing(summonPos.getX(), summonPos.getY(), summonPos.getZ()), MobSpawnType.MOB_SUMMONED);
+				if (jerotesVexEntity != null) {
+					jerotesVexEntity.setLimitedLife(20 * (30 + caster.getRandom().nextInt(90)));
+					jerotesVexEntity.setTame(true);
+					jerotesVexEntity.setOwnerUUID(caster.getUUID());
+					jerotesVexEntity.setOrderedToSit(false);
+					if (teams != null) {
+						serverLevel.getScoreboard().addPlayerToTeam(jerotesVexEntity.getStringUUID(), teams);
+					}
+					if (caster instanceof Mob mob && mob.getTarget() != null) {
+						jerotesVexEntity.setTarget(mob.getTarget());
+					}
+					ParticlesUse.summonParticle(serverLevel, jerotesVexEntity, jerotesVexEntity.getX(), jerotesVexEntity.getY(), jerotesVexEntity.getZ(), 0x7992aa, 0xa2bcd5);
+				}
+			}
+			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
+		}
+		return true;
+	}
+	//线形唤魔者尖牙$法术
+	public static boolean LinearEvokerFang(LivingEntity caster, LivingEntity target, int spellLevelDamage, int count, float summonDistance) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			boolean sameEntity = caster == target;
+			double baseY = sameEntity ? caster.getY() : Math.min(target.getY(), caster.getY());
+			double maxY = sameEntity ? caster.getY() + 1.0 : Math.max(target.getY(), caster.getY()) + 1.0;
+			float yRotRad = sameEntity ?
+					(caster.getYRot() + 90) * ((float)Math.PI / 180F) :
+					(float)Mth.atan2(target.getZ() - caster.getZ(), target.getX() - caster.getX());
+			for (int i = 0; i < count; ++i) {
+				double offset = summonDistance * (i + 1);
+				double x = caster.getX() + (double) Mth.cos(yRotRad) * offset;
+				double z = caster.getZ() + (double) Mth.sin(yRotRad) * offset;
+				LinearEvokerFang(caster, target, spellLevelDamage, x, z, baseY, maxY, yRotRad);
+			}
+		}
+		return true;
+	}
+	static void LinearEvokerFang(LivingEntity caster, LivingEntity target, int spellLevelDamage, double d, double d2, double d3, double d4, float f) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			PlayerTeam teams = (PlayerTeam) caster.getTeam();
+
+			BlockPos blockPos = BlockPos.containing(d, d4, d2);
+			boolean bl = false;
+			double d5 = 0.0;
+			do {
+				BlockState blockState;
+				VoxelShape voxelShape;
+				BlockPos blockPos2 = blockPos.below();
+				BlockState blockState2 = caster.level().getBlockState(blockPos2);
+				if (!blockState2.isFaceSturdy(caster.level(), blockPos2, Direction.UP)) continue;
+				if (!caster.level().isEmptyBlock(blockPos) && !(voxelShape = (blockState = caster.level().getBlockState(blockPos)).getCollisionShape(caster.level(), blockPos)).isEmpty()) {
+					d5 = voxelShape.max(Direction.Axis.Y);
+				}
+				bl = true;
+				break;
+			} while ((blockPos = blockPos.below()).getY() >= Mth.floor(d3) - 1);
+			if (bl) {
+				JerotesEvokerFangEntity evokerFangEntity = new JerotesEvokerFangEntity(caster.level(), d, (double) blockPos.getY() + d5, d2, f, 0, caster);
+				evokerFangEntity.setSpellLevelDamage(spellLevelDamage);
+				evokerFangEntity.setOwner(caster);
+				if (teams != null) {
+					serverLevel.getScoreboard().addPlayerToTeam(evokerFangEntity.getStringUUID(), teams);
+				}
+				caster.level().addFreshEntity(evokerFangEntity);
+			}
+		}
+	}
+
+	//环形唤魔者尖牙$法术
+	public static boolean CircularEvokerFang(LivingEntity caster, LivingEntity target, int spellLevelDamage) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			boolean sameEntity = caster == target;
+			//全圈
+			int n;
+			for (n = 0; n < 8; ++n) {
+				float f2 = 4 + (float) n * (float) Math.PI * 2.0f / 8.0f;
+				SpellFind.CircularEvokerFang(caster, target, spellLevelDamage, caster.getX() + (double) Mth.cos(f2) * 1.5, caster.getZ() + (double) Mth.sin(f2) * 1.5, caster.getY(), caster.getY() + 1, f2);
+			}
+			for (n = 0; n < 12; ++n) {
+				float f2 = 4 + (float) n * (float) Math.PI * 2.0f / 12.0f;
+				SpellFind.CircularEvokerFang(caster, target, spellLevelDamage, caster.getX() + (double) Mth.cos(f2) * 2.5, caster.getZ() + (double) Mth.sin(f2) * 2.5, caster.getY(), caster.getY() + 1, f2);
+			}
+			for (n = 0; n < 16; ++n) {
+				float f2 = 4 + (float) n * (float) Math.PI * 2.0f / 16.0f;
+				SpellFind.CircularEvokerFang(caster, target, spellLevelDamage, caster.getX() + (double) Mth.cos(f2) * 3.5, caster.getZ() + (double) Mth.sin(f2) * 3.5, caster.getY(), caster.getY() + 1, f2);
+			}
+		}
+		return true;
+	}
+	static void CircularEvokerFang(LivingEntity caster, LivingEntity target, int spellLevelDamage, double d, double d2, double d3, double d4, float f) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			BlockPos blockPos = BlockPos.containing(d, d4, d2);
+			PlayerTeam teams = (PlayerTeam) caster.getTeam();
+			boolean bl = false;
+			double d5 = 0.0;
+			do {
+				BlockState blockState;
+				VoxelShape voxelShape;
+				BlockPos blockPos2 = blockPos.below();
+				BlockState blockState2 = caster.level().getBlockState(blockPos2);
+				if (!blockState2.isFaceSturdy(caster.level(), blockPos2, Direction.UP)) continue;
+				if (!caster.level().isEmptyBlock(blockPos) && !(voxelShape = (blockState = caster.level().getBlockState(blockPos)).getCollisionShape(caster.level(), blockPos)).isEmpty()) {
+					d5 = voxelShape.max(Direction.Axis.Y);
+				}
+				bl = true;
+				break;
+			} while ((blockPos = blockPos.below()).getY() >= Mth.floor(d3) - 1);
+			if (bl) {
+				JerotesEvokerFangEntity evokerFangEntity = new JerotesEvokerFangEntity(JerotesEntityType.JEROTES_EVOKER_FANGS.get(), caster.level());
+				evokerFangEntity.setSpellLevelDamage(spellLevelDamage);
+				evokerFangEntity.setYRot(f * (180F / (float)Math.PI));
+				evokerFangEntity.setPos(d, (double)blockPos.getY() + d5, d2);
+				evokerFangEntity.setOwner(caster);
+				if (teams != null) {
+					serverLevel.getScoreboard().addPlayerToTeam(evokerFangEntity.getStringUUID(), teams);
+				}
+				caster.level().addFreshEntity(evokerFangEntity);
+			}
+		}
 	}
 }

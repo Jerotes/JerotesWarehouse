@@ -1,8 +1,10 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
 import com.jerotes.jerotes.entity.Mob.*;
 import com.jerotes.jerotes.entity.Other.OtherSpell.CloudOfDaggersEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.JerotesEvokerFangEntity;
 import com.jerotes.jerotes.entity.Other.ShootTargetSpell.FireballEntity;
 import com.jerotes.jerotes.entity.Other.SpellCloud.RainSpellCloudEntity;
 import com.jerotes.jerotes.entity.Other.SpellCloud.SpellCloudEntity;
@@ -45,6 +47,9 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<JerotesHorseEntity>> JEROTES_HORSE = register("jerotes_horse",
 			EntityType.Builder.of(JerotesHorseEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(1.4F, 1.6F));
+	public static final RegistryObject<EntityType<JerotesVexEntity>> JEROTES_VEX = register("jerotes_vex",
+			EntityType.Builder.of(JerotesVexEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8).fireImmune()
+					.sized(0.4F, 0.8F));
 	public static final RegistryObject<EntityType<TestEntity>> TEST = register("test",
 			EntityType.Builder.of(TestEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8192)
 					.sized(0.6f, 1.8f));
@@ -61,6 +66,9 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<BaseBeamEntity>> TEST_BEAM = register("test_beam",
 			EntityType.Builder.of(BaseBeamEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(0.6f, 0.6f));
+	public static final RegistryObject<EntityType<JerotesEvokerFangEntity>> JEROTES_EVOKER_FANGS = register("jerotes_evoker_fangs",
+			EntityType.Builder.<JerotesEvokerFangEntity>of(JerotesEvokerFangEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
+					.sized(0.8f, 1.0f));
 
 	public static final RegistryObject<EntityType<SpellCloudEntity>> SPELL_CLOUD = register("spell_cloud",
 			EntityType.Builder.<SpellCloudEntity>of(SpellCloudEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
@@ -181,6 +189,8 @@ public class JerotesEntityType {
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.JEROTES_HORSE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
+			SpawnPlacements.register(JerotesEntityType.JEROTES_VEX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
+					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.MIRROR_IMAGE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 		});
@@ -194,6 +204,7 @@ public class JerotesEntityType {
 		event.put(HUMAN.get(), HumanEntity.createAttributes().build());
 		event.put(JEROTES_PLAYER.get(), JerotesPlayerEntity.createAttributes().build());
 		event.put(JEROTES_HORSE.get(), JerotesHorseEntity.createAttributes().build());
+		event.put(JEROTES_VEX.get(), JerotesVexEntity.createAttributes().build());
 		event.put(MIRROR_IMAGE.get(), MirrorImageEntity.createAttributes().build());
 	}
 }

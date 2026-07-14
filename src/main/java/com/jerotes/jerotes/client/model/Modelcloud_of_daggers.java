@@ -81,6 +81,8 @@ public class Modelcloud_of_daggers<T extends CloudOfDaggersEntity> extends Entit
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 	}
 	public void setupAnim(float f) {
+		if (f < 0)
+			return;
 		this.cloud.yRot = -f * 0.25f;
 	}
 	public void scale(T entity, float f, float f2, float f3) {
@@ -88,7 +90,7 @@ public class Modelcloud_of_daggers<T extends CloudOfDaggersEntity> extends Entit
 		this.body.xScale = f3;
 		this.body.zScale = f3;
 		this.cloud.xScale = f3;
-		this.cloud.yScale = f3;
+		this.cloud.yScale = Math.max(0, f3 * f);
 		this.cloud.zScale = f3;
 		if (entity.start < 40)
 			return;

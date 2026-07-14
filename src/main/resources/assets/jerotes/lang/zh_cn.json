@@ -1,5 +1,6 @@
 {
-  "item_group.jerotes.jerotes_stab": "Jerotes实用仓库",
+  "item_group.jerotes.jerotes_tab": "Jerotes实用仓库",
+  "item_group.jerotes.jerotes_tab_flawless_magic_scroll_tab": "无暇魔法卷轴",
   "key.categories.jerotes": "Jerotes实用仓库",
 
   "advancements.jerotes.a_brand_new_world.title": "崭新世界",
@@ -15,6 +16,7 @@
   "item.jerotes.aa_creative_claw": "创造爪",
   "item.jerotes.aa_exploration_eye": "探查眼",
   "item.jerotes.aa_spell_javelin": "法术标枪",
+  "item.jerotes.flawless_magic_scroll": "无暇魔法卷轴",
   "entity.jerotes.test": "测试",
   "item.jerotes.test_spawn_egg": "测试刷怪蛋",
   "entity.jerotes.big_beast": "大野兽",
@@ -26,6 +28,9 @@
   "item.jerotes.jerotes_player_spawn_egg": "玩家刷怪蛋",
   "entity.jerotes.jerotes_horse": "马",
   "item.jerotes.jerotes_horse_spawn_egg": "马刷怪蛋",
+  "entity.jerotes.jerotes_vex": "马",
+  "item.jerotes.jerotes_vex_spawn_egg": "马刷怪蛋",
+  "entity.jerotes.jerotes_exokoer_fangs": "唤魔者尖牙",
   "entity.jerotes.camel_husk": "骆驼尸壳",
   "entity.jerotes.parched": "焦骸",
 
@@ -470,6 +475,19 @@
   "subtitle.jerotes.spear_attack": "矛：戳刺",
   "subtitle.jerotes.armor_equip_copper": "铜盔甲：哐当",
 
+  "spell.jerotes.school.abjuration": "防护系",
+  "spell.jerotes.school.conjuration": "咒法系",
+  "spell.jerotes.school.divination": "预言系",
+  "spell.jerotes.school.enchantment": "附魔系",
+  "spell.jerotes.school.evocation": "塑能系",
+  "spell.jerotes.school.illusion": "幻术系",
+  "spell.jerotes.school.necromancy": "死灵系",
+  "spell.jerotes.school.transmutation": "变化系",
+  "spell.jerotes.school.psionics": "灵能",
+  "spell.jerotes.school.skill": "技巧",
+  "spell.jerotes.type.main": "施法",
+  "spell.jerotes.type.add": "附赠施法",
+
   "item.jerotes.magic_missile": "魔法飞弹",
   "entity.jerotes.magic_missile": "魔法飞弹",
   "item.jerotes.poison_breath": "毒性吐息",
@@ -537,6 +555,16 @@
   "spell.jerotes.cloud_of_daggers.desc": "在目标处召唤一个造成近战伤害的匕首云",
   "spell.jerotes.fireball": "火球术",
   "spell.jerotes.fireball.desc": "向目标处发射一个造成火焰伤害的火球",
+  "spell.jerotes.linear_evoker_fang": "线形唤魔者尖牙",
+  "spell.jerotes.linear_evoker_fang.desc": "向目标方向召唤多个唤魔者尖牙",
+  "spell.jerotes.circular_evoker_fang": "环形唤魔者尖牙",
+  "spell.jerotes.circular_evoker_fang.desc": "环绕自身召唤多个唤魔者尖牙",
+  "spell.jerotes.conjure_vex": "召唤恼鬼",
+  "spell.jerotes.conjure_vex.desc": "于施法者周围召唤多个恼鬼",
+
+  "subtitle.jerotes.magic_linear_evoker_fang": "线形唤魔者尖牙",
+  "subtitle.jerotes.magic_circular_evoker_fang": "环形唤魔者尖牙",
+  "subtitle.jerotes.magic_conjure_vex": "召唤恼鬼",
 
   "subtitle.jerotes.magic_magic_missile": "魔法飞弹",
   "subtitle.jerotes.magic_poison_breath": "毒性吐息",

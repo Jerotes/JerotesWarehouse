@@ -3,6 +3,7 @@ package com.jerotes.jerotes.entity.Shoot.Magic;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.BaseMagicMissileEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.Ray.BaseRayEntity;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.spell.SpellFind;
 import com.jerotes.jerotes.util.AttackFind;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 
@@ -124,14 +126,11 @@ public abstract class MagicAbstractHurtingProjectile extends Projectile implemen
 
     @Override
     protected boolean canHitEntity(Entity entity) {
-        //法术反制
-        if (!isHelp() && entity != this.getOwner() && entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())
-                && livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= this.getSpellLevel() && !(this.getOwner() != null && MainConfig.SameFactionAvoidDamage && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity))) {
-            if (!livingEntity.level().isClientSide()) {
-                livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
-            }
-            livingEntity.swing(InteractionHand.MAIN_HAND);
-            SpellFind.Counterspell(livingEntity);
+        //法术取消
+        //event
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.isCanceled()) {
             return false;
         }
         return super.canHitEntity(entity);

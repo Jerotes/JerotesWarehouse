@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.List;
 import java.util.Objects;
 
 public class SpellList {
@@ -27,8 +29,11 @@ public class SpellList {
 			public boolean canUseTargetNone() {
 				return true;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 36;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
 			}
 		};
 	}
@@ -41,6 +46,9 @@ public class SpellList {
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
 			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
+			}
 		};
 	}
 	//致病射线
@@ -52,8 +60,11 @@ public class SpellList {
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 18;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.NECROMANCY;
 			}
 		};
 	}
@@ -69,8 +80,11 @@ public class SpellList {
 			public int baseSpellLevel() {
 				return 2;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 18;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.NECROMANCY;
 			}
 		};
 	}
@@ -86,8 +100,11 @@ public class SpellList {
 			public int baseSpellLevel() {
 				return 3;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 30;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
 			}
 		};
 	}
@@ -100,8 +117,11 @@ public class SpellList {
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 18;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ENCHANTMENT;
 			}
 		};
 	}
@@ -117,11 +137,14 @@ public class SpellList {
 			public int baseSpellLevel() {
 				return 2;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 18;
 			}
 			public boolean canUseToEntity(Entity entity) {
 				return entity instanceof LivingEntity livingEntity && EntityFactionFind.isHumanoid(livingEntity) && super.canUseToEntity(entity);
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ENCHANTMENT;
 			}
 		};
 	}
@@ -140,8 +163,11 @@ public class SpellList {
 			public boolean isMelee() {
 				return true;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 6;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.NECROMANCY;
 			}
 		};
 	}
@@ -157,7 +183,7 @@ public class SpellList {
 			public int baseSpellLevel() {
 				return 4;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 36;
 			}
 			public boolean canUseToEntity(Entity entity) {
@@ -167,6 +193,9 @@ public class SpellList {
 					return false;
 				}
 				return super.canUseToEntity(entity);
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ILLUSION;
 			}
 		};
 	}
@@ -182,8 +211,11 @@ public class SpellList {
 			public int baseSpellLevel() {
 				return 6;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 18;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.NECROMANCY;
 			}
 		};
 	}
@@ -193,7 +225,7 @@ public class SpellList {
 			public boolean spellFindUse() {
 				return !caster.level().isClientSide() && caster.addEffect(new MobEffectInstance(JerotesMobEffects.FIRE_ABSORPTION.get(), getSpellLevel() * 6 * 20, getSpellLevel() - 1));
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 2;
 			}
 			public boolean isHelp() {
@@ -208,6 +240,9 @@ public class SpellList {
 				}
 				return super.canUse();
 			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ABJURATION;
+			}
 		};
 	}
 	//冰霜吸收
@@ -216,7 +251,7 @@ public class SpellList {
 			public boolean spellFindUse() {
 				return !caster.level().isClientSide() && caster.addEffect(new MobEffectInstance(JerotesMobEffects.FREEZE_ABSORPTION.get(), getSpellLevel() * 6 * 20, getSpellLevel() - 1));
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 2;
 			}
 			public boolean isHelp() {
@@ -231,6 +266,9 @@ public class SpellList {
 				}
 				return super.canUse();
 			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ABJURATION;
+			}
 		};
 	}
 	//闪电吸收
@@ -239,7 +277,7 @@ public class SpellList {
 			public boolean spellFindUse() {
 				return !caster.level().isClientSide() && caster.addEffect(new MobEffectInstance(JerotesMobEffects.LIGHTNING_ABSORPTION.get(), getSpellLevel() * 6 * 20, getSpellLevel() - 1));
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 2;
 			}
 			public boolean isHelp() {
@@ -253,6 +291,9 @@ public class SpellList {
 					return false;
 				}
 				return super.canUse();
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ABJURATION;
 			}
 		};
 	}
@@ -271,7 +312,7 @@ public class SpellList {
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 6;
 			}
 			public float shouldBeSelf() {
@@ -282,10 +323,13 @@ public class SpellList {
 			}
 			public boolean canUseToEntity(Entity entity) {
 				return entity instanceof LivingEntity livingEntity &&
-						livingEntity.getHealth() < livingEntity.getMaxHealth() &&
+						(livingEntity.getHealth() < livingEntity.getMaxHealth() || getCaster() instanceof Player) &&
 						livingEntity.getMobType() != MobType.UNDEAD &&
 						!EntityFactionFind.isMachine(livingEntity) &&
 						!EntityFactionFind.isConstruct(livingEntity) && super.canUseToEntity(entity);
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
 			}
 		};
 	}
@@ -298,7 +342,7 @@ public class SpellList {
 			public boolean isHelp() {
 				return true;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 30;
 			}
 			public String getSpellModId() {
@@ -306,6 +350,9 @@ public class SpellList {
 			}
 			public boolean canUse() {
 				return super.canUse();
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
 			}
 		};
 	}
@@ -318,7 +365,7 @@ public class SpellList {
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 2;
 			}
 			public boolean isHelp() {
@@ -342,6 +389,9 @@ public class SpellList {
 				}
 				return super.canUse();
 			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ILLUSION;
+			}
 		};
 	}
 	//隐形通道
@@ -350,7 +400,7 @@ public class SpellList {
 			public boolean spellFindUse() {
 				return !caster.level().isClientSide() && caster.addEffect(new MobEffectInstance(JerotesMobEffects.INVISIBLE_PASSAGE.get(), getSpellLevel() * 24 * 20, getSpellLevel() - 1, false, false));
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 2;
 			}
 			public String getSpellModId() {
@@ -365,15 +415,18 @@ public class SpellList {
 				}
 				return super.canUse();
 			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ILLUSION;
+			}
 		};
 	}
 	//法术反制
 	public static MagicSpell Counterspell(int n, LivingEntity caster, Entity target) {
-		return new MagicSpell(n, caster, target, MagicType.SELF, MagicType.MAIN, "counterspell", JerotesParticleTypes.COUNTERSPELL_DISPLAY.get(), JerotesSoundEvents.MAGIC_COUNTERSPELL){
+		return new MagicSpell(n, caster, target, MagicType.SELF, MagicType.ADD, "counterspell", JerotesParticleTypes.COUNTERSPELL_DISPLAY.get(), JerotesSoundEvents.MAGIC_COUNTERSPELL){
 			public boolean spellFindUse() {
 				return !caster.level().isClientSide() && caster.addEffect(new MobEffectInstance(JerotesMobEffects.COUNTERSPELL.get(), 12 * 20, getSpellLevel() - 1));
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 2;
 			}
 			public String getSpellModId() {
@@ -395,6 +448,9 @@ public class SpellList {
 				}
 				return super.canUse();
 			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ABJURATION;
+			}
 		};
 	}
 	//魔法吸收
@@ -403,7 +459,7 @@ public class SpellList {
 			public boolean spellFindUse() {
 				return !caster.level().isClientSide() && caster.addEffect(new MobEffectInstance(JerotesMobEffects.MAGIC_ABSORPTION.get(), getSpellLevel() * 3 * 20, getSpellLevel() - 1));
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 2;
 			}
 			public boolean isHelp() {
@@ -417,6 +473,9 @@ public class SpellList {
 					return false;
 				}
 				return super.canUse();
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ABJURATION;
 			}
 		};
 	}
@@ -432,11 +491,14 @@ public class SpellList {
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 18;
 			}
 			public boolean canUseTargetNone() {
 				return true;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
 			}
 		};
 	}
@@ -452,11 +514,86 @@ public class SpellList {
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
 			}
-			public float getSpellDistance() {
+			public float getSpellDistanceBase() {
 				return 45;
 			}
 			public boolean canUseTargetNone() {
 				return true;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
+			}
+		};
+	}
+
+	//线形唤魔者尖牙
+	public static MagicSpell LinearEvokerFang(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "linear_evoker_fang", JerotesParticleTypes.LINEAR_EVOKER_FANG_DISPLAY.get(), JerotesSoundEvents.MAGIC_LINEAR_EVOKER_FANG){
+			public boolean spellFindUse() {
+				return SpellFind.LinearEvokerFang(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel(), getSpellLevel() * 4, 2f);
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public int baseSpellLevel() {
+				return 2;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
+			}
+		};
+	}
+	//环形唤魔者尖牙
+	public static MagicSpell CircularEvokerFang(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "circular_evoker_fang", JerotesParticleTypes.CIRCULAR_EVOKER_FANG_DISPLAY.get(), JerotesSoundEvents.MAGIC_CIRCULAR_EVOKER_FANG){
+			public boolean spellFindUse() {
+				return SpellFind.CircularEvokerFang(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel());
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public float getSpellDistanceBase() {
+				return 6;
+			}
+			public int baseSpellLevel() {
+				return 2;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
+			}
+		};
+	}
+	//召唤恼鬼
+	public static MagicSpell ConjureVex(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SELF, MagicType.MAIN, "conjure_vex", JerotesParticleTypes.CONJURE_VEX_DISPLAY.get(), JerotesSoundEvents.MAGIC_CONJURE_VEX){
+			public boolean spellFindUse() {
+				return SpellFind.ConjureVex(getCaster(), (int) (getSpellLevel() / 2), getSpellLevel(), 16);
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public int baseSpellLevel() {
+				return 3;
+			}
+			public float getSpellDistanceBase() {
+				return 16;
+			}
+			public boolean canUse() {
+				if (getCaster() != null) {
+					List<JerotesVexEntity> list = getCaster().level().getEntitiesOfClass(JerotesVexEntity.class, getCaster().getBoundingBox().inflate(32.0, 32.0, 32.0));
+					list.removeIf(summon -> summon.getOwner() != getCaster());
+					return super.canUse() && list.size() <= getSpellLevel() * 3;
+				}
+				return super.canUse();
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
 			}
 		};
 	}

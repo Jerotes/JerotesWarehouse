@@ -17,11 +17,13 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.HUMAN.get(), HumanRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_PLAYER.get(), JerotesPlayerRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_HORSE.get(), JerotesHorseRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.JEROTES_VEX.get(), JerotesVexRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.TEST.get(), TestRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.BIG_BEAST.get(), BigBeastRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.ADD_HAND.get(), AddHandRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.TEST_BEAM.get(), BaseBeamRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.JEROTES_EVOKER_FANGS.get(), JerotesEvokerFangRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.SPELL_CLOUD.get(), NoopRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.RAIN_SPELL_CLOUD.get(), NoopRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.CLOUD_OF_DAGGERS.get(), CloudOfDaggersRenderer::new);

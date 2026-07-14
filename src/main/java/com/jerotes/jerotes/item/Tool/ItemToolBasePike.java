@@ -428,7 +428,7 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
             entity.setSprinting(false);
             self.setSprinting(false);
             //下马
-            if (bl3 && entity.isPassenger() && entity.getVehicle() != null && !(entity instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(self, livingEntity))) {
+            if (bl3 && entity.isPassenger() && entity.getVehicle() != null && !(entity instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(self, livingEntity, false))) {
                 bl4 = true;
                 entity.getVehicle().setSprinting(false);
                 entity.stopRiding();

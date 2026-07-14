@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jerotes:item/flawless_magic_scroll_psionics"
+  }
+}

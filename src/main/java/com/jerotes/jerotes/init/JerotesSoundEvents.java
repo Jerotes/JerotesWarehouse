@@ -60,6 +60,9 @@ public class JerotesSoundEvents {
     public static final SoundEvent MAGIC_MAGIC_ABSORPTION = createSoundEvent("magic_magic_absorption");
     public static final SoundEvent MAGIC_CLOUD_OF_DAGGERS = createSoundEvent("magic_cloud_of_daggers");
     public static final SoundEvent MAGIC_FIREBALL = createSoundEvent("magic_fireball");
+    public static final SoundEvent MAGIC_LINEAR_EVOKER_FANG = createSoundEvent("magic_linear_evoker_fang");
+    public static final SoundEvent MAGIC_CIRCULAR_EVOKER_FANG = createSoundEvent("magic_circular_evoker_fang");
+    public static final SoundEvent MAGIC_CONJURE_VEX = createSoundEvent("magic_conjure_vex");
 
     private static SoundEvent createSoundEvent(final String soundName) {
         final ResourceLocation soundID = new ResourceLocation(JerotesWarehouse.MODID, soundName);

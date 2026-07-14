@@ -2,11 +2,8 @@ package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
-import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
-import com.jerotes.jerotes.entity.Interface.FactionEntity;
-import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.entity.Mob.TestEntity;
-import com.jerotes.jerotes.entity.Interface.UseBowEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesFactionEvent;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
@@ -223,6 +220,62 @@ public class EntityAboutEvent {
 		}
 	}
 
+
+	//魔法抵抗
+	@SubscribeEvent
+	public static void MagicAbout(LivingHurtEvent event) {
+		float amount = event.getAmount();
+		DamageSource damageSource = event.getSource();
+		LivingEntity entity = event.getEntity();
+		Entity attackBy = event.getSource().getEntity();
+		if (entity == null || !entity.isAlive())
+			return;
+		if (!(entity instanceof SpellUseEntity spellUse) || !EntityAndItemFind.MagicResistance(damageSource))
+			return;
+		if (Float.isNaN(amount) || Float.isInfinite(amount)) {
+			return;
+		}
+		if (damageSource.getEntity() instanceof SpellUseEntity ||
+				damageSource.getDirectEntity() instanceof SpellUseEntity ||
+				damageSource.getEntity() instanceof MagicAbout ||
+				damageSource.getDirectEntity() instanceof MagicAbout) {
+			int selfLevel = spellUse.getSpellLevel();
+			int otherLevl = EntityAndItemFind.getOtherLevl(damageSource);
+			if (selfLevel > otherLevl) {
+				int distance = selfLevel - otherLevl + 1;
+				float afterDamage = event.getAmount() * Math.max(0.05f, ((100f - distance * distance)/100f));
+				if (Float.isNaN(afterDamage) || Float.isInfinite(afterDamage)) {
+					return;
+				}
+				event.setAmount(afterDamage);
+			}
+		}
+		else {
+			int spelllevel = Math.max(0, spellUse.getSpellLevel() - 1);
+			float maxResistance = spelllevel * spelllevel * 10;
+			float distance = maxResistance - amount;
+			float afterDamage = event.getAmount() * Math.max(0.05f, ((100f - spelllevel * spelllevel)/100f));
+			event.setAmount(afterDamage);
+			if (Float.isNaN(afterDamage) || Float.isInfinite(afterDamage)) {
+				return;
+			}
+			if (afterDamage > maxResistance) {
+				float excess = afterDamage - maxResistance;
+				float finalDamage = maxResistance + excess * 1.2f;
+				finalDamage = Math.min(finalDamage, amount);
+				if (Float.isNaN(finalDamage) || Float.isInfinite(finalDamage)) {
+					return;
+				}
+				event.setAmount(finalDamage);
+			} else {
+				if (distance > 0) {
+					float f = amount / maxResistance;
+					afterDamage *= ((1f+f)/2f);
+				}
+				event.setAmount(afterDamage);
+			}
+		}
+	}
 
 	//阵营减伤
 	@SubscribeEvent
