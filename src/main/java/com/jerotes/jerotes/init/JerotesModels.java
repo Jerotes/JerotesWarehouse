@@ -11,6 +11,8 @@ public class JerotesModels {
 	@SubscribeEvent
 	public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
 		event.registerLayerDefinition(Modelnull.LAYER_LOCATION, Modelnull::createBodyLayer);
+		event.registerLayerDefinition(Modelspecial_action.LAYER_LOCATION, Modelspecial_action::createBodyLayer);
+		event.registerLayerDefinition(Modeljerotes_vex.LAYER_LOCATION, Modeljerotes_vex::createBodyLayer);
 		event.registerLayerDefinition(Modelblock.LAYER_LOCATION, Modelblock::createBodyLayer);
 		event.registerLayerDefinition(Modelcloud_of_daggers.LAYER_LOCATION, Modelcloud_of_daggers::createBodyLayer);
 		event.registerLayerDefinition(Modeljavelin.LAYER_LOCATION, Modeljavelin::createBodyLayer);
@@ -23,6 +25,5 @@ public class JerotesModels {
 		event.registerLayerDefinition(Modeljerotes_horse.LAYER_LOCATION, Modeljerotes_horse::createBodyLayer);
 		event.registerLayerDefinition(Modeljerotes_horse_saddle.LAYER_LOCATION, Modeljerotes_horse_saddle::createBodyLayer);
 		event.registerLayerDefinition(Modeljerotes_horse_armor.LAYER_LOCATION, Modeljerotes_horse_armor::createBodyLayer);
-		event.registerLayerDefinition(Modelspecial_action.LAYER_LOCATION, Modelspecial_action::createBodyLayer);
 	}
 }

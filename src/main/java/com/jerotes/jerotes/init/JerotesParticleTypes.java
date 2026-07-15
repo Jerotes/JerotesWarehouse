@@ -23,6 +23,7 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> ANESTHETIZED_VII = REGISTRY.register("anesthetized_7", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> ANESTHETIZED_VIII = REGISTRY.register("anesthetized_8", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> TARGET = REGISTRY.register("target", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> CURE_WOUNDS = REGISTRY.register("cure_wounds", () -> new SimpleParticleType(true));
 	public static final RegistryObject<ParticleType<SummonParticleOptions>> SUMMON_PARTICLE = REGISTRY.register("summon", () -> new ParticleType<SummonParticleOptions>(false, SummonParticleOptions.DESERIALIZER) {
 		@Override
 		public Codec<SummonParticleOptions> codec() {
@@ -66,4 +67,7 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> ACTION_SURGE_DISPLAY = REGISTRY.register("action_surge_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> CLOUD_OF_DAGGERS_DISPLAY = REGISTRY.register("cloud_of_daggers_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> FIREBALL_DISPLAY = REGISTRY.register("fireball_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> LINEAR_EVOKER_FANG_DISPLAY = REGISTRY.register("linear_evoker_fang_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> CIRCULAR_EVOKER_FANG_DISPLAY = REGISTRY.register("circular_evoker_fang_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> CONJURE_VEX_DISPLAY = REGISTRY.register("conjure_vex_display", () -> new SimpleParticleType(true));
 }

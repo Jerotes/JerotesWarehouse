@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -80,19 +79,18 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
         float totalDistance = Mth.sqrt(f * f + f2 * f2 + f3 * f3);
 
         poseStack.pushPose();
-        poseStack.translate(0.5f, 0.65625f, 0.5f);
-        float yaw = (float) Math.atan2(f3, f);
-        float pitch = (float) Math.atan2(f2, horizontalDistance);
-        poseStack.mulPose(Axis.YP.rotation(yaw));
-        poseStack.mulPose(Axis.XP.rotation(pitch));
-
-        float uvBottom = 0.0f;
-        float uvTop = 1.0f;
+        poseStack.translate(0.0f, 0.0f, 0.0f);
+        poseStack.mulPose(Axis.YP.rotation((float)(-Math.atan2(f3, f)) - 1.5707964f));
+        poseStack.mulPose(Axis.XP.rotation((float)(-Math.atan2(horizontalDistance, f2)) - 1.5707964f));
 
         {
             VertexConsumer vertexConsumer = multiBufferSource.getBuffer(BEAM2);
+            float uvBottom = 0.0f - ((float) n + f4) * 0.01f;
+            float uvTop = totalDistance / 32.0f - ((float) n + f4) * 0.01f;
+
             float beamWidth = 0.15f;
             float halfWidth = beamWidth / 2.0f;
+
             PoseStack.Pose pose = poseStack.last();
             Matrix4f matrix4f = pose.pose();
             Matrix3f matrix3f = pose.normal();
@@ -101,14 +99,17 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(255, 255, 255, 20).uv(0.0f, 0.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, 1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, totalDistance)
                     .color(255, 255, 255, 20).uv(1.0f, 0.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, 1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, totalDistance)
                     .color(255, 255, 255, 20).uv(1.0f, 1.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, 1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, halfWidth, totalDistance)
                     .color(255, 255, 255, 20).uv(0.0f, 1.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
@@ -118,14 +119,17 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(255, 255, 255, 20).uv(0.0f, 1.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, -1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, 0.0f)
                     .color(255, 255, 255, 20).uv(1.0f, 1.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, -1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, 0.0f)
                     .color(255, 255, 255, 20).uv(1.0f, 0.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, -1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, -halfWidth, 0.0f)
                     .color(255, 255, 255, 20).uv(0.0f, 0.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
@@ -135,14 +139,17 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(200, 200, 255, 20).uv(0.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, 0.0f)
                     .color(200, 200, 255, 20).uv(1.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, totalDistance)
                     .color(200, 200, 255, 20).uv(1.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, halfWidth, totalDistance)
                     .color(200, 200, 255, 20).uv(0.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
@@ -152,14 +159,17 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(200, 200, 255, 20).uv(0.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, -1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, totalDistance)
                     .color(200, 200, 255, 20).uv(1.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, -1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, 0.0f)
                     .color(200, 200, 255, 20).uv(1.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, -1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, -halfWidth, 0.0f)
                     .color(200, 200, 255, 20).uv(0.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
@@ -169,14 +179,17 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(180, 180, 255, 20).uv(0.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, -1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, -halfWidth, 0.0f)
                     .color(180, 180, 255, 20).uv(0.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, -1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, halfWidth, 0.0f)
                     .color(180, 180, 255, 20).uv(1.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, -1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, halfWidth, totalDistance)
                     .color(180, 180, 255, 20).uv(1.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
@@ -186,24 +199,31 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(180, 180, 255, 20).uv(0.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, totalDistance)
                     .color(180, 180, 255, 20).uv(0.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, totalDistance)
                     .color(180, 180, 255, 20).uv(1.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, 0.0f)
                     .color(180, 180, 255, 20).uv(1.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 1.0f, 0.0f, 0.0f).endVertex();
-        }
 
+        }
         {
             VertexConsumer vertexConsumer = multiBufferSource.getBuffer(JerotesRenderType.glowDoubleSided(getBeamLocation()));
+            float uvBottom = 0.0f - ((float) n + f4) * 0.01f;
+            float uvTop = totalDistance / 32.0f - ((float) n + f4) * 0.01f;
+
             float beamWidth = 0.15f;
             float halfWidth = beamWidth / 2.0f;
+
             PoseStack.Pose pose = poseStack.last();
             Matrix4f matrix4f = pose.pose();
             Matrix3f matrix3f = pose.normal();
@@ -212,14 +232,17 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(255, 255, 255, 255).uv(0.0f, 0.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, 1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, totalDistance)
                     .color(255, 255, 255, 255).uv(1.0f, 0.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, 1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, totalDistance)
                     .color(255, 255, 255, 255).uv(1.0f, 1.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, 1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, halfWidth, totalDistance)
                     .color(255, 255, 255, 255).uv(0.0f, 1.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
@@ -229,14 +252,17 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(255, 255, 255, 255).uv(0.0f, 1.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, -1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, 0.0f)
                     .color(255, 255, 255, 255).uv(1.0f, 1.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, -1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, 0.0f)
                     .color(255, 255, 255, 255).uv(1.0f, 0.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 0.0f, -1.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, -halfWidth, 0.0f)
                     .color(255, 255, 255, 255).uv(0.0f, 0.0f)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
@@ -246,14 +272,17 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(200, 200, 255, 255).uv(0.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, 0.0f)
                     .color(200, 200, 255, 255).uv(1.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, totalDistance)
                     .color(200, 200, 255, 255).uv(1.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, 1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, halfWidth, totalDistance)
                     .color(200, 200, 255, 255).uv(0.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
@@ -263,14 +292,17 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(200, 200, 255, 255).uv(0.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, -1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, totalDistance)
                     .color(200, 200, 255, 255).uv(1.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, -1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, 0.0f)
                     .color(200, 200, 255, 255).uv(1.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 0.0f, -1.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, -halfWidth, 0.0f)
                     .color(200, 200, 255, 255).uv(0.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
@@ -280,38 +312,43 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                     .color(180, 180, 255, 255).uv(0.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, -1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, -halfWidth, 0.0f)
                     .color(180, 180, 255, 255).uv(0.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, -1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, halfWidth, 0.0f)
                     .color(180, 180, 255, 255).uv(1.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, -1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, -halfWidth, halfWidth, totalDistance)
                     .color(180, 180, 255, 255).uv(1.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, -1.0f, 0.0f, 0.0f).endVertex();
 
-            // 右侧面
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, 0.0f)
                     .color(180, 180, 255, 255).uv(0.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, -halfWidth, totalDistance)
                     .color(180, 180, 255, 255).uv(0.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, totalDistance)
                     .color(180, 180, 255, 255).uv(1.0f, uvTop)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 1.0f, 0.0f, 0.0f).endVertex();
+
             vertexConsumer.vertex(matrix4f, halfWidth, halfWidth, 0.0f)
                     .color(180, 180, 255, 255).uv(1.0f, uvBottom)
                     .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(n2)
                     .normal(matrix3f, 1.0f, 0.0f, 0.0f).endVertex();
-        }
 
+        }
         poseStack.popPose();
     }
 }

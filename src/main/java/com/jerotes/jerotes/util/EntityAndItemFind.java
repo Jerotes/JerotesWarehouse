@@ -1,10 +1,10 @@
 package com.jerotes.jerotes.util;
 
-import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
-import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypeTags;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.init.JerotesMobEffects;
@@ -19,6 +19,7 @@ import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
@@ -217,5 +218,95 @@ public class EntityAndItemFind {
 			totalValue += add * weight;
 		}
 		return totalValue;
+	}
+
+	public static boolean canSelfResistMagic(DamageSource damageSource, float amount, LivingEntity entity, int selfLevel) {
+		if (!(entity instanceof SpellUseEntity spellUse))
+			return false;
+		if (!MagicResistance(damageSource))
+			return false;
+		if (damageSource.getEntity() instanceof SpellUseEntity ||
+				damageSource.getDirectEntity() instanceof SpellUseEntity ||
+				damageSource.getEntity() instanceof MagicAbout ||
+				damageSource.getDirectEntity() instanceof MagicAbout) {
+			int otherLevl = getOtherLevl(damageSource);
+			return selfLevel <= otherLevl;
+		}
+		else {
+			int spelllevel = Math.max(0, spellUse.getSpellLevel() - 1);
+			float maxResistance = spelllevel * spelllevel * 10;
+			float afterDamage = amount * Math.max(0.05f, ((100f - spelllevel * spelllevel)/100f));
+			if (Float.isNaN(afterDamage) || Float.isInfinite(afterDamage)) {
+				return false;
+			}
+			return afterDamage <= maxResistance;
+		}
+	}
+	public static boolean canSelfResistMagic(DamageSource damageSource, float amount, LivingEntity entity) {
+		if (!(entity instanceof SpellUseEntity spellUse))
+			return false;
+		return canSelfResistMagic(damageSource, amount, entity, spellUse.getSpellLevel());
+	}
+	public static int getOtherLevl(DamageSource damageSource) {
+		int ownerSpellUseLevel = damageSource.getEntity() instanceof SpellUseEntity spellUse1 ? spellUse1.getSpellLevel() : 1;
+		int magicSpellUseLevel = damageSource.getDirectEntity() instanceof SpellUseEntity spellUse1 ? spellUse1.getSpellLevel() : 1;
+		int ownerMagicAboutLevel = damageSource.getEntity() instanceof MagicAbout magicAbout ? magicAbout.getSpellLevel() : 1;
+		int magicMagicAboutLevel = damageSource.getDirectEntity() instanceof MagicAbout magicAbout ? magicAbout.getSpellLevel() : 1;
+		int otherLevl = Math.max(Math.max(ownerSpellUseLevel, magicSpellUseLevel),Math.max(ownerMagicAboutLevel, magicMagicAboutLevel));
+		return otherLevl;
+	}
+
+	//dnd属性值获得
+	//力量
+	public static int getStrength(LivingEntity livingEntity) {
+		return 10;
+	}
+	//敏捷
+	public static int getDexterity(LivingEntity livingEntity) {
+		return 10;
+	}
+	//体质
+	public static int getConstitution(LivingEntity livingEntity) {
+		return 10;
+	}
+	//智力
+	public static int getIntelligence(LivingEntity livingEntity) {
+		return 10;
+	}
+	//感知
+	public static int getWisdom(LivingEntity livingEntity) {
+		return 10;
+	}
+	//魅力
+	public static int getCharisma(LivingEntity livingEntity) {
+		return 10;
+	}
+	public static int getNormalSaving(LivingEntity livingEntity) {
+		if (livingEntity == null) return 10;
+		int n = 10;
+		n += livingEntity instanceof Player player ? 2 + Math.min(player.experienceLevel/40, 7) : 0;
+		n += livingEntity instanceof SpellUseEntity spellUse && spellUse.getSpellLevel() >= 5 ? (spellUse.getSpellLevel() - 5)/2 : 0;
+		n += livingEntity instanceof UseBowEntity useBowEntity && useBowEntity.getBowLevel() >= 20 ? 1 : 0;
+		n += livingEntity instanceof UseShieldEntity useShieldEntity && useShieldEntity.getShieldLevel() >= 20 ? 1 : 0;
+		n += livingEntity instanceof BossEntity ? 1 : 0;
+		n += isLegendary(livingEntity) ? 3 : 0;
+		n += isExalted(livingEntity) ? 3 : 0;
+		n += livingEntity instanceof Player ? 0 : Math.min(livingEntity.getExperienceReward()/200, 3);
+		n += Math.min((int) Main.luck(livingEntity), 5);
+		return Math.min(n, 30);
+	}
+	public static int getModifier(int n) {
+		return (n - 10) / 2;
+	}
+	public static boolean savingSpellThrow(LivingEntity livingEntity, int add) {
+		int n = (Main.randomReach(livingEntity.getRandom(),1, 20));
+		if (n == 1)
+			return false;
+		if (n == 20)
+			return true;
+		return n >= EntityAndItemFind.getModifier(EntityAndItemFind.getNormalSaving(livingEntity)) + 8f + add;
+	}
+	public static boolean savingSpellThrow(LivingEntity livingEntity) {
+		return savingSpellThrow(livingEntity, 0);
 	}
 }

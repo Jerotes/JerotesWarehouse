@@ -12,6 +12,7 @@ public interface UseShieldEntity {
     boolean shieldCanUse();
 
     boolean isDamageSourceBlocks(DamageSource damageSource);
+    int getShieldLevel();
 
     void disableShield();
     void disableShieldTry();

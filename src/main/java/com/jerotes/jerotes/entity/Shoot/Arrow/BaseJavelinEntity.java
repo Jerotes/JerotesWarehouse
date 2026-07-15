@@ -260,7 +260,7 @@ public class BaseJavelinEntity extends BaseAbstractArrowEntity {
 			this.allayEntities = Lists.newArrayListWithCapacity((int)5);
 		}
 		if (this.getOwner() != null && entity2 instanceof LivingEntity livingEntity) {
-			if (AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity)) {
+			if (AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity, false)) {
 				this.allayEntities.add(livingEntity);
 				return;
 			}

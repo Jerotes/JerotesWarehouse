@@ -2,6 +2,7 @@ package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.network.JerotesPlayerData;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -167,7 +169,9 @@ public class SpellFindUseEvent {
                     if (caster instanceof Player player && Main.getTargetedEntity(player, 36) != null) {
                         entity = Main.getTargetedEntity(player, 36);
                     }
-                    if (!(entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) && livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= spellLevelDamage)) {
+                    JerotesStopSpellEvent stopSpellEvent = new JerotesStopSpellEvent(caster, null, null, entity, 1, spellLevelDamage);
+                    MinecraftForge.EVENT_BUS.post(stopSpellEvent);
+                    if (!stopSpellEvent.isCanceled()) {
                         float spellLevelAccuracy = Main.getJerotesPersistentData(caster).getFloat("jerotes_magic_missile_spellLevelAccuracy");
                         int count = Main.getJerotesPersistentData(caster).getInt("jerotes_magic_missile_count");
                         float distance = Main.getJerotesPersistentData(caster).getFloat("jerotes_magic_missile_distance");

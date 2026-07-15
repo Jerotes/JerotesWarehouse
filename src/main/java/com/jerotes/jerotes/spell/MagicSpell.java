@@ -22,6 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
@@ -140,7 +141,7 @@ public class MagicSpell {
 		if (canBeBreak() && !isHelp()) {
 			if (getTarget() instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) && getCaster() != getTarget() && getCaster().distanceTo(getTarget()) <= 32) {
 				//等级不如对方
-				if (!(MainConfig.SameFactionAvoidDamage && AttackFind.SameFactionAvoidDamage(getCaster(), livingEntity)) && Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1 >= this.getSpellLevel()) {
+				if (!(AttackFind.SameFactionAvoidDamage(getCaster(), livingEntity, false)) && Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1 >= this.getSpellLevel()) {
 					//自身清除计时
 					{
 						SpellRegistry.getSpellTypeById(this.getSpellModId()+ "_" + this.getSpellId()).stop(getCaster(), Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1, false);
@@ -149,7 +150,7 @@ public class MagicSpell {
 					if (!livingEntity.level().isClientSide()) {
 						livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
 					}
-					livingEntity.swing(InteractionHand.MAIN_HAND);
+					livingEntity.swing(InteractionHand.OFF_HAND);
 					SpellFind.Counterspell(livingEntity);
 					return false;
 				}
@@ -166,12 +167,12 @@ public class MagicSpell {
 				for (LivingEntity target : list) {
 					if (isHelp() && target == getTarget()) continue;
 					//等级不如对方
-					if (!(MainConfig.SameFactionAvoidDamage && AttackFind.SameFactionAvoidDamage(getCaster(), target)) && Objects.requireNonNull(target.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1 >= this.getSpellLevel()) {
+					if (!(AttackFind.SameFactionAvoidDamage(getCaster(), target, false)) && Objects.requireNonNull(target.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1 >= this.getSpellLevel()) {
 						//去除对方buff
 						if (!target.level().isClientSide()) {
 							target.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
 						}
-						target.swing(InteractionHand.MAIN_HAND);
+						target.swing(InteractionHand.OFF_HAND);
 						SpellFind.Counterspell(target);
 						return false;
 					}
@@ -231,6 +232,9 @@ public class MagicSpell {
 	public SoundEvent getSound() {
 		return spellSound;
 	}
+	public SpellSchool getSpellSchool() {
+		return SpellSchool.EVOCATION;
+	}
 	public float getSoundLevel() {
 		return 1f;
 	}
@@ -247,6 +251,9 @@ public class MagicSpell {
 		return 0.8f;
 	}
 	public float getSpellDistance() {
+		return isMelee() && getCaster() instanceof Player player ? (float) player.getAttributeValue(ForgeMod.ENTITY_REACH.get()) : getSpellDistanceBase();
+	}
+	public float getSpellDistanceBase() {
 		return 64;
 	}
 	public boolean canUseToEntity(Entity entity) {
@@ -272,6 +279,8 @@ public class MagicSpell {
 	public static void MagicTooltip(List<Component> list, MagicSpell magicSpell, int level) {
 		list.add(magicSpell.getSpellName().copy()
 				.append(Component.translatable("spell.jerotes.spell_base", level).withStyle(ChatFormatting.DARK_PURPLE)));
+		list.add(magicSpell.getSpellSchool().getDisplayName().copy().append(" ")
+				.append(Component.translatable(magicSpell.getMagicType2() != MagicType.ADD ? "spell.jerotes.type.main" : "spell.jerotes.type.add").withStyle(ChatFormatting.DARK_PURPLE)));
 		list.add(magicSpell.getSpellDesc().copy()
 				.withStyle(ChatFormatting.LIGHT_PURPLE));
 		list.add(Component.translatable("spell.jerotes.spell_max_distance", magicSpell.getSpellDistance())

@@ -1,24 +1,25 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
-import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
-import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
-import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.jerotes.jerotes.network.JerotesSpearRushAttackPacket;
 import com.jerotes.jerotes.network.PacketHandler;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
+import com.jerotes.jerotes.util.Main;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -228,4 +229,5 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
         if (this instanceof JerotesChangeStray jerotesChangeStray && jerotesChangeStray.isJerotesParched() && mobEffectInstance.getEffect() == MobEffects.WEAKNESS)
             cir.setReturnValue(false);
     }
+
 }

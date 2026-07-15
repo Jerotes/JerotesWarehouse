@@ -2,6 +2,7 @@ package com.jerotes.jerotes.entity.Shoot.Magic;
 
 import com.google.common.collect.Lists;
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.spell.SpellFind;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -111,14 +113,11 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
         if (entityHitResult.getEntity() == this.getOwner()) {
             return;
         }
-        //法术反制
-        if (!isHelp() && entityHitResult.getEntity() != this.getOwner() && entityHitResult.getEntity() instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())
-                && livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= this.getSpellLevel() && !(this.getOwner() != null && MainConfig.SameFactionAvoidDamage && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity))) {
-            if (!livingEntity.level().isClientSide()) {
-                livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
-            }
-            livingEntity.swing(InteractionHand.MAIN_HAND);
-            SpellFind.Counterspell(livingEntity);
+        //法术取消
+        //event
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entityHitResult.getEntity());
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.isCanceled()) {
             return;
         }
         this.setLastHurt(entityHitResult.getEntity());
@@ -135,14 +134,11 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
         if (entity == this.getOwner()) {
             return;
         }
-        //法术反制
-        if (!isHelp() && entity != this.getOwner() && entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())
-                && livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= this.getSpellLevel() && !(this.getOwner() != null && MainConfig.SameFactionAvoidDamage && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity))) {
-            if (!livingEntity.level().isClientSide()) {
-                livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
-            }
-            livingEntity.swing(InteractionHand.MAIN_HAND);
-            SpellFind.Counterspell(livingEntity);
+        //法术取消
+        //event
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.isCanceled()) {
             return;
         }
         this.setLastHurt(entity);

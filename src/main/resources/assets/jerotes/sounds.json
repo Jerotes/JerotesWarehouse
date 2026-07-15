@@ -551,5 +551,47 @@
         "volume": 1.0
       }
     ]
+  },
+  "magic_linear_evoker_fang": {
+    "subtitle": "subtitle.jerotes.magic_linear_evoker_fang",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/fang_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fang_2",
+        "volume": 1.0,
+        "weight": 1.0
+      }
+    ]
+  },
+  "magic_circular_evoker_fang": {
+    "subtitle": "subtitle.jerotes.magic_circular_evoker_fang",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/fang_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fang_2",
+        "volume": 1.0,
+        "weight": 1.0
+      }
+    ]
+  },
+  "magic_conjure_vex": {
+    "subtitle": "subtitle.jerotes.magic_conjure_vex",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/vex",
+        "volume": 1.0
+      }
+    ]
   }
 }

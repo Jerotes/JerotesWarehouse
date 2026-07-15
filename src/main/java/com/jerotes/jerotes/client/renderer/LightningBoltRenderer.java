@@ -73,18 +73,18 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
         int segments = 10 + random.nextInt(4);
         float strandWidth = 0.012f;
 
-        int colorI = entity.beamLightI();
+        int colorI = entity.beamLightII();
         int colorII = entity.beamLightII();
-        int baseInnerR = (colorI >> 16) & 0xFF;
-        int baseInnerG = (colorI >> 8) & 0xFF;
-        int baseInnerB = colorI & 0xFF;
-        int baseOuterR = (colorII >> 16) & 0xFF;
-        int baseOuterG = (colorII >> 8) & 0xFF;
-        int baseOuterB = colorII & 0xFF;
+        int baseOuterRI = (colorI >> 16) & 0xFF;
+        int baseOuterGI = (colorI >> 8) & 0xFF;
+        int baseOuterBI = colorI & 0xFF;
+        int baseOuterRII = (colorII >> 16) & 0xFF;
+        int baseOuterGII = (colorII >> 8) & 0xFF;
+        int baseOuterBII = colorII & 0xFF;
 
-        int lineAlpha = (int) (200 * fadeFactor);
+        int lineAlpha = (int) (230 * fadeFactor);
         ResourceLocation tex = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png");
-        VertexConsumer consumer = buffer.getBuffer(JerotesRenderType.glowDoubleSidedTranslucent(tex));
+        VertexConsumer consumer = buffer.getBuffer(JerotesRenderType.glowDoubleSidedLightningAdd(tex));
 
         List<Vec3> startAnchors = new ArrayList<>();
         List<Vec3> endAnchors = new ArrayList<>();
@@ -161,16 +161,14 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
 
                 long colorSeed = (long) strand * 137L + (long) segIdx * 331L + (long) timeSeed * 7L;
                 RandomSource colorRandom = RandomSource.create(colorSeed);
-                int shiftR = colorRandom.nextInt(41) - 20;
-                int shiftG = colorRandom.nextInt(41) - 20;
-                int shiftB = colorRandom.nextInt(41) - 20;
+                float shiftFloat = colorRandom.nextFloat();
 
-                int r = Math.max(0, Math.min(255, baseInnerR + shiftR));
-                int g = Math.max(0, Math.min(255, baseInnerG + shiftG));
-                int b = Math.max(0, Math.min(255, baseInnerB + shiftB));
-                int rOut = Math.max(0, Math.min(255, baseOuterR + shiftR / 2));
-                int gOut = Math.max(0, Math.min(255, baseOuterG + shiftG / 2));
-                int bOut = Math.max(0, Math.min(255, baseOuterB + shiftB / 2));
+                int r = (int) Mth.clamp(baseOuterRI * shiftFloat + baseOuterRII * (1-shiftFloat + 0.5f),0,255);
+                int g = (int) Mth.clamp(baseOuterGI * shiftFloat + baseOuterGII * (1-shiftFloat + 0.5f),0,255);
+                int b = (int) Mth.clamp(baseOuterBI * shiftFloat + baseOuterBII * (1-shiftFloat + 0.5f),0,255);
+                int rOut = (int) Mth.clamp(baseOuterRI * shiftFloat + baseOuterRII * (1-shiftFloat),0,255);
+                int gOut = (int) Mth.clamp(baseOuterGI * shiftFloat + baseOuterGII * (1-shiftFloat),0,255);
+                int bOut = (int) Mth.clamp(baseOuterBI * shiftFloat + baseOuterBII * (1-shiftFloat),0,255);
 
                 float brightFactor = 0.7f + 0.3f * (strand % 3) / 2.0f;
                 r = (int)(r * brightFactor);
@@ -185,11 +183,11 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
                 float currentHalfWidth = halfWidth * widthFade;
 
                 renderQuadrilateralPipe(
+                        consumer, matrix, normal, segLen, currentHalfWidth * 6f,
+                        rOut, gOut, bOut, (int)(lineAlpha * 0.2f), packedLight, false);
+                renderQuadrilateralPipe(
                         consumer, matrix, normal, segLen, currentHalfWidth,
                         r, g, b, lineAlpha, packedLight, false);
-                renderQuadrilateralPipe(
-                        consumer, matrix, normal, segLen, currentHalfWidth * 1.8f,
-                        rOut, gOut, bOut, (int)(lineAlpha * 0.25f), packedLight, false);
 
                 poseStack.popPose();
             }

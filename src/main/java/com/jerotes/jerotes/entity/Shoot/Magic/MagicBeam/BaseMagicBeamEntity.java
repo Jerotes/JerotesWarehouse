@@ -3,6 +3,7 @@ package com.jerotes.jerotes.entity.Shoot.Magic.MagicBeam;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Other.Beam.BaseBeamEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.spell.SpellFind;
 import com.jerotes.jerotes.util.AttackFind;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.MinecraftForge;
 
 public class BaseMagicBeamEntity extends BaseBeamEntity implements MagicAbout {
 
@@ -24,17 +26,14 @@ public class BaseMagicBeamEntity extends BaseBeamEntity implements MagicAbout {
     }
 
     protected void customHurt(Entity entity) {
-        if (this.getOwner() != null && entity instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity)) {
+        if (this.getOwner() != null && entity instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity, false)) {
             return;
         }
-        //法术反制
-        if (!isHelp() && entity != this.getOwner() && entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())
-                && livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= this.getSpellLevel() && !(this.getOwner() != null && MainConfig.SameFactionAvoidDamage && AttackFind.SameFactionAvoidDamage(this.getOwner(), livingEntity))) {
-            if (!livingEntity.level().isClientSide()) {
-                livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
-            }
-            livingEntity.swing(InteractionHand.MAIN_HAND);
-            SpellFind.Counterspell(livingEntity);
+        //法术取消
+        //event
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.isCanceled()) {
             return;
         }
         customHurtMagic(entity);

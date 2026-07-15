@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.Target;
 
 import com.jerotes.jerotes.init.*;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
@@ -50,10 +51,13 @@ public class HoldPersonEntity extends BaseTargetEntity {
         if (this.level().isClientSide) {
             return;
         }
-        DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.MAGIC_EFFECT), this, this.getOwner());
-        livingEntity.hurt(damageSource, 0f);
-        if (EntityFactionFind.isHumanoid(livingEntity)) {
-            livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.HOLD_MOB.get(), 20 * spellLevelMainEffectTime - 1, spellLevelMainEffectLevel - 1), this.getEffectSource());
+        //感知判定
+        if (EntityAndItemFind.savingSpellThrow(livingEntity)){
+            DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.MAGIC_EFFECT), this, this.getOwner());
+            livingEntity.hurt(damageSource, 0f);
+            if (EntityFactionFind.isHumanoid(livingEntity)) {
+                livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.HOLD_MOB.get(), 20 * spellLevelMainEffectTime - 1, spellLevelMainEffectLevel - 1), this.getEffectSource());
+            }
         }
         this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
         this.discard();

@@ -24,6 +24,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VII.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VIII.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.TARGET.get(), TargetOtherParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.CURE_WOUNDS.get(), CureWoundsParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.SUMMON_PARTICLE.get(), SummonParticle.Provider::create);
 
 		event.registerSpriteSet(JerotesParticleTypes.MAGIC_MISSILE.get(), MagicMissileParticle::provider);
@@ -62,5 +63,8 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.ACTION_SURGE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.CLOUD_OF_DAGGERS_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.FIREBALL_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.LINEAR_EVOKER_FANG_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.CIRCULAR_EVOKER_FANG_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.CONJURE_VEX_DISPLAY.get(), DisplayParticle::provider);
 	}
 }

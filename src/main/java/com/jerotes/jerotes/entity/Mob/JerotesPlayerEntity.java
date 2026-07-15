@@ -1000,7 +1000,7 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 		if (
 				projectile.getOwner() instanceof LivingEntity owner && owner.isAlliedTo(this) ||
 						AttackFind.SameFactionAvoidDamage(projectile.getOwner(), this) ||
-						AttackFind.SameFactionAvoidDamage(projectile, this) ||
+						AttackFind.SameFactionAvoidDamage(projectile, this, false) ||
 						projectile.getOwner() instanceof LivingEntity owners && AttackFind.FindCanNotAttack(owners, this)
 		) {
 			return false;

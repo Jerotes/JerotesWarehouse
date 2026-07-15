@@ -21,99 +21,32 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class CloudOfDaggersEntity extends Entity implements TraceableEntity, OwnableEntity, MagicAbout {
+public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements TraceableEntity, OwnableEntity, MagicAbout {
 
     public CloudOfDaggersEntity(EntityType<? extends CloudOfDaggersEntity> entityType, Level level) {
         super(entityType, level);
+        this.fixupDimensions();
     }
 
     public CloudOfDaggersEntity(Level p_36926_, LivingEntity p_36932_) {
         this(JerotesEntityType.CLOUD_OF_DAGGERS.get(), p_36926_);
         this.setOwner(p_36932_);
+        this.fixupDimensions();
     }
 
-    public int spellLevelDamage = 2;
-    public void setSpellLevelDamage(int n) {
-        this.spellLevelDamage = n;
+    public int getBaseSpellLevelDamage() {
+        return 2;
     }
-    public int life = 0;
-    public int start = 0;
-    @Nullable
-    private LivingEntity owner;
-    @Nullable
-    private UUID ownerUUID;
-    @Nullable
-    @Override
-    public UUID getOwnerUUID() {
-        return ownerUUID;
+    public int getMaxStart() {
+        return 40;
     }
-    public void setOwner(@Nullable LivingEntity livingEntity) {
-        this.owner = livingEntity;
-        this.ownerUUID = livingEntity == null ? null : livingEntity.getUUID();
-    }
-    @Nullable
-    @Override
-    public LivingEntity getOwner() {
-        Entity entity;
-        if (this.owner == null && this.ownerUUID != null && this.level() instanceof ServerLevel && (entity = ((ServerLevel)this.level()).getEntity(this.ownerUUID)) instanceof LivingEntity) {
-            this.owner = (LivingEntity)entity;
-        }
-        return this.owner;
-    }
-
-    @Override
-    public boolean isAlliedTo(Entity entity) {
-        if (this.getOwner() != null) {
-            LivingEntity livingEntity = this.getOwner();
-            if (entity == livingEntity) {
-                return true;
-            }
-            if (livingEntity != null) {
-                return livingEntity.isAlliedTo(entity);
-            }
-        }
-        return super.isAlliedTo(entity);
-    }
-    @Override
-    //1.20.4↑//
-    //public PlayerTeam getTeam() {
-    //1.20.1//
-    public Team getTeam() {
-        LivingEntity livingEntity;
-        if (this.getOwner() != null && (livingEntity = this.getOwner()) != null) {
-            return livingEntity.getTeam();
-        }
-        return super.getTeam();
-    }
-    @Override
-    protected void addAdditionalSaveData(CompoundTag compoundTag) {
-        compoundTag.putInt("SpellLevelDamage", this.spellLevelDamage);
-        compoundTag.putInt("Life", this.life);
-        compoundTag.putInt("Start", this.start);
-        if (this.ownerUUID != null) {
-            compoundTag.putUUID("Owner", this.ownerUUID);
-        }
-    }
-    @Override
-    protected void readAdditionalSaveData(CompoundTag compoundTag) {
-        this.spellLevelDamage = compoundTag.getInt("SpellLevelDamage");
-        this.life = compoundTag.getInt("Life");
-        this.start = compoundTag.getInt("Start");
-        if (compoundTag.hasUUID("Owner")) {
-            this.ownerUUID = compoundTag.getUUID("Owner");
-        }
-    }
-    @Override
-    protected void defineSynchedData() {
+    public int getMaxLife() {
+        return (spellLevelDamage + 1) * 6 * 20;
     }
 
     @Override
     public void tick() {
         super.tick();
-        ++this.life;
-        if (this.level().isClientSide()) {
-            this.start = Math.min(40, this.start + 1);
-        }
         if (this.life % 5 == 0 && this.life > 20) {
             boolean bl = false;
             List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox());
@@ -125,9 +58,6 @@ public class CloudOfDaggersEntity extends Entity implements TraceableEntity, Own
             if (bl) {
                 this.playSound(SoundEvents.PLAYER_ATTACK_CRIT);
             }
-        }
-        if (this.life > (spellLevelDamage + 1) * 6 * 20) {
-            this.discard();
         }
     }
 

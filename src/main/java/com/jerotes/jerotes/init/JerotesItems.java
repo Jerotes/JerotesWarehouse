@@ -39,6 +39,9 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> HUMAN_SPAWN_EGG = REGISTRY.register("human_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.HUMAN, 0xffffff, 0xffffff, new Item.Properties()));
 	public static final RegistryObject<Item> JEROTES_PLAYER_SPAWN_EGG = REGISTRY.register("jerotes_player_spawn_egg", () -> new JerotesPlayerSpawnEgg());
 	public static final RegistryObject<Item> JEROTES_HORSE_SPAWN_EGG = REGISTRY.register("jerotes_horse_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_HORSE, 0xffffff, 0xffffff, new Item.Properties()));
+	public static final RegistryObject<Item> JEROTES_VEX_SPAWN_EGG = REGISTRY.register("jerotes_vex_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_VEX, 0xffffff, 0xffffff, new Item.Properties()));
+
+	public static final RegistryObject<Item> FLAWLESS_MAGIC_SCROLL = REGISTRY.register("flawless_magic_scroll", () -> new FlawlessMagicScroll());
 
 	public static final RegistryObject<Item> COPPER_NUGGET = REGISTRY.register("copper_nugget", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> COPPER_SWORD = REGISTRY.register("copper_sword", () -> new ItemToolBaseSword(JerotesTiers.COPPER, 3, -2.4F, new Item.Properties()));

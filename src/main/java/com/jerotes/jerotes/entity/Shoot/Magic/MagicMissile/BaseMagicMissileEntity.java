@@ -2,6 +2,7 @@ package com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +17,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -117,6 +120,20 @@ public abstract class BaseMagicMissileEntity extends MagicAboutEntity {
                 this.level().addParticle(particleOptions, d, d2 + this.getBbHeight() / 2, d3, 0.0, 0.0, 0.0);
             }
         }
+    }
+
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        super.onHitEntity(entityHitResult);
+        Entity entity = entityHitResult.getEntity();
+        if (this.getOwner() instanceof LivingEntity && entity != this.getTarget() && this.getTarget() != null) {
+            return;
+        }
+        if (noDamageCooldown()) {
+            entity.invulnerableTime = 0;
+        }
+    }
+    public boolean noDamageCooldown() {
+        return true;
     }
     public boolean showParticle() {
         return false;

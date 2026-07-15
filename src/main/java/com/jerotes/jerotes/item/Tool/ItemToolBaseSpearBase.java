@@ -271,7 +271,7 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
         if (bl2) {
             causeExtraKnockback(self, entity, 0.4f + getKnockback(self, entity, damageSource), vec3);
         }
-        if (bl3 && entity.isPassenger() && !(entity instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(self, livingEntity))) {
+        if (bl3 && entity.isPassenger() && !(entity instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(self, livingEntity, false))) {
             bl4 = true;
             entity.stopRiding();
         }

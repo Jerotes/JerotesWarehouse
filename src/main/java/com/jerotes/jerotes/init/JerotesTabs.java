@@ -1,18 +1,24 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.item.FlawlessMagicScroll;
+import com.jerotes.jerotes.spell.SpellListByString;
+import com.jerotes.jerotes.spell.SpellRegistry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 public class JerotesTabs {
 	public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, JerotesWarehouse.MODID);
-	public static final RegistryObject<CreativeModeTab> JEROTES_STAB = REGISTRY.register("jerotes_stab",
-			() -> CreativeModeTab.builder().title(Component.translatable("item_group.jerotes.jerotes_stab")).icon(() ->
+	public static final RegistryObject<CreativeModeTab> JEROTES_TAB = REGISTRY.register("jerotes_tab",
+			() -> CreativeModeTab.builder().title(Component.translatable("item_group.jerotes.jerotes_tab")).icon(() ->
 					new ItemStack(JerotesItems.NETHERITE_OLD_WAR_BEAST_ARMOR.get())).displayItems((parameters, tabData) -> {
 				tabData.accept(JerotesItems.AA_CREATIVE_CLAW.get());
 				tabData.accept(JerotesItems.AA_EXPLORATION_EYE.get());
@@ -22,6 +28,9 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.HUMAN_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.JEROTES_PLAYER_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.JEROTES_HORSE_SPAWN_EGG.get());
+				tabData.accept(JerotesItems.JEROTES_VEX_SPAWN_EGG.get());
+
+				tabData.accept(JerotesItems.FLAWLESS_MAGIC_SCROLL.get());
 
 				tabData.accept(JerotesItems.COPPER_NUGGET.get());
 				tabData.accept(JerotesItems.COPPER_SWORD.get());
@@ -108,4 +117,23 @@ public class JerotesTabs {
 					new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/container/creative_inventory/tab_item_search.png")
 			).build());
 
+
+
+	public static final RegistryObject<CreativeModeTab> JEROTES_TAB_FLAWLESS_MAGIC_SCROLL_TAB = REGISTRY.register("jerotes_tab_flawless_magic_scroll_tab",
+			() -> CreativeModeTab.builder().title(Component.translatable("item_group.jerotes.jerotes_tab_flawless_magic_scroll_tab")).icon(() ->
+					new ItemStack(JerotesItems.FLAWLESS_MAGIC_SCROLL.get())).displayItems((parameters, tabData) -> {
+				for (String spellId : SpellRegistry.getRegisteredSpellIds()) {
+					FlawlessMagicScroll(tabData, spellId);
+				}
+
+			}).withSearchBar().build());
+
+	public static void FlawlessMagicScroll(CreativeModeTab.Output tabData, String string) {
+		ItemStack stack = new ItemStack(JerotesItems.FLAWLESS_MAGIC_SCROLL.get());
+		CompoundTag compoundTag = new CompoundTag();
+		compoundTag.putString(FlawlessMagicScroll.SPELL, string);
+		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, !SpellRegistry.spellExists(string) ? 1 : SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(string)).baseSpellLevel());
+		stack.setTag(compoundTag);
+		tabData.accept(stack);
+	}
 }
