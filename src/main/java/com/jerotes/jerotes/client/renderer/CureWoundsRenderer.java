@@ -44,19 +44,17 @@ public class CureWoundsRenderer extends EntityRenderer<CureWoundsEntity> {
         alpha = Mth.clamp(alpha, 0.0f, 1.0f);
         if (alpha < 0.01f) return;
 
-        // 颜色（可自定义，这里使用白色偏蓝）
-        int r = 180, g = 220, b = 255; // 或者从实体获取颜色
+        int r = 180, g = 220, b = 255;
         int a = (int)(255 * alpha);
 
-        // 渲染类型（使用实体的纹理）
         ResourceLocation texture = entity.getTextureLocation();
         VertexConsumer consumer = buffer.getBuffer(JerotesRenderType.glowDoubleSidedTranslucent(texture));
 
-        int segments = 24;         // 每条的分段数，越高越平滑
-        int numBands = 6;          // 缠绕条数
-        float radius = (float)width * 0.5f;   // 螺旋半径
-        float maxY = (float)height;           // 最大高度
-        float bandWidth = radius * 0.08f;     // 每条带的宽度（切向厚度）
+        int segments = 24;
+        int numBands = 6;
+        float radius = (float)width * 0.5f;
+        float maxY = (float)height;
+        float bandWidth = radius * 0.08f;
 
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix = pose.pose();
