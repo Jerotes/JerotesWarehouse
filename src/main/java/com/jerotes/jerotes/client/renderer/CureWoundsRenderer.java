@@ -34,9 +34,7 @@ public class CureWoundsRenderer extends EntityRenderer<CureWoundsEntity> {
     private void renderBeam(CureWoundsEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         double width = entity.getSize();
         double height = entity.getTargetHeight();
-        int life = entity.life; // 假设实体有 life 字段
-
-        // 淡入淡出 alpha
+        int life = entity.life;
         float alpha = 1.0f;
         if (life < 5) {
             alpha = life / 5.0f;
