@@ -23,6 +23,8 @@ public final class MainConfig {
     public static boolean TamedMobHurtByOwnerHasReduce;
     public static boolean TamedMobAttackCreeperAndGhast;
     public static boolean AffectsNonThisModEntities;
+    public static boolean HaveSavingThrow;
+    public static boolean HaveSavingThrowOnlyPlayerAndLegendary;
 
     public static int CorrosiveStopDurabilityValue;
     public static boolean ScreenShake;
@@ -78,6 +80,8 @@ public final class MainConfig {
         TamedMobHurtByOwnerHasReduce = COMMON.TamedMobHurtByOwnerHasReduce.get();
         TamedMobAttackCreeperAndGhast = COMMON.TamedMobAttackCreeperAndGhast.get();
         AffectsNonThisModEntities = COMMON.AffectsNonThisModEntities.get();
+                HaveSavingThrow = COMMON.HaveSavingThrow.get();
+        HaveSavingThrowOnlyPlayerAndLegendary = COMMON.HaveSavingThrowOnlyPlayerAndLegendary.get();
 
         CorrosiveStopDurabilityValue = COMMON.CorrosiveStopDurabilityValue.get();
                 ScreenShake = COMMON.ScreenShake.get();
@@ -130,6 +134,8 @@ public final class MainConfig {
         public final ForgeConfigSpec.BooleanValue TamedMobHurtByOwnerHasReduce;
         public final ForgeConfigSpec.BooleanValue TamedMobAttackCreeperAndGhast;
         public final ForgeConfigSpec.BooleanValue AffectsNonThisModEntities;
+        public final ForgeConfigSpec.BooleanValue HaveSavingThrow;
+        public final ForgeConfigSpec.BooleanValue HaveSavingThrowOnlyPlayerAndLegendary;
 
         public final ForgeConfigSpec.IntValue CorrosiveStopDurabilityValue;
         public final ForgeConfigSpec.BooleanValue ScreenShake;
@@ -176,6 +182,10 @@ public final class MainConfig {
                     .define("模组添加的驯服生物攻击苦力怕[Creeper]和恶魂[Ghast]", false);
             AffectsNonThisModEntities = builder.comment("Affects Non This Mod Entities")
                     .define("影响非本模组实体", false);
+            HaveSavingThrow = builder.comment("Have Saving Throw")
+                    .define("拥有豁免判定", true);
+            HaveSavingThrowOnlyPlayerAndLegendary = builder.comment("Have Saving Throw Only Player And Legendary")
+                    .define("只有玩家和传奇存在生物拥有豁免判定（优先级低）", true);
             builder.pop();
 
             builder.push("Other");

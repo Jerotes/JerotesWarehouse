@@ -7,6 +7,7 @@ import com.jerotes.jerotes.entity.Interface.TameMobEntity;
 import com.jerotes.jerotes.goal.*;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -51,8 +52,8 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	private static final EntityDataAccessor<Boolean> IS_WANDER = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Boolean> GOING_HOME = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Integer> DATA_OWNER_ID = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
-	protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID_ID = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+	protected static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BYTE);
 	public static final EntityDataAccessor<Integer> ANIM_STATE = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
 	public static final EntityDataAccessor<Integer> ANIM_TICK = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> START_TICK = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
@@ -168,12 +169,12 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	public boolean isInSittingPose() {
 		return (this.entityData.get(DATA_FLAGS_ID) & 1) != 0;
 	}
-	public boolean isOwnedBy(LivingEntity livingEntity) {
-		return livingEntity == this.getOwner();
-	}
 	@Override
 	public boolean isOrderedToSit() {
 		return this.orderedToSit;
+	}
+	public boolean isOwnedBy(LivingEntity livingEntity) {
+		return livingEntity == this.getOwner();
 	}
 	public void setOwnerUUID(@Nullable UUID uuid) {
 		this.entityData.set(DATA_OWNER_UUID_ID, Optional.ofNullable(uuid));
@@ -197,7 +198,7 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	public LivingEntity getOwner() {
 		if (!this.level().isClientSide){
 			UUID uuid = this.getOwnerUUID();
-			return uuid == null ? null : getLivingEntityByUUID(this.level(), uuid);
+			return uuid == null ? null : Main.getLivingEntityByUUID(this.level(), uuid);
 		} else {
 			int id = this.getOwnerId();
 			return id <= -1 ? null : this.level().getEntity(this.getOwnerId()) instanceof LivingEntity living && living != this ? living : null;
@@ -208,21 +209,6 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	}
 	public void setOwnerId(int id){
 		this.entityData.set(DATA_OWNER_ID, id);
-	}
-	public static LivingEntity getLivingEntityByUUID(Level level, UUID uuid) {
-		return getLivingEntityByUUID(level.getServer(), uuid);
-	}
-
-	public static LivingEntity getLivingEntityByUUID(MinecraftServer server, UUID uuid){
-		if (uuid != null && server != null) {
-			for (ServerLevel world : server.getAllLevels()) {
-				Entity entity = world.getEntity(uuid);
-				if (entity instanceof LivingEntity livingEntity){
-					return livingEntity;
-				}
-			}
-		}
-		return null;
 	}
 	@Override
 	//1.20.4↑//

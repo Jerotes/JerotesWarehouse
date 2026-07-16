@@ -3,16 +3,12 @@ package com.jerotes.jerotes.spell;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
-import com.jerotes.jerotes.entity.Other.OtherSpell.CloudOfDaggersEntity;
-import com.jerotes.jerotes.entity.Other.OtherSpell.CureWoundsEntity;
-import com.jerotes.jerotes.entity.Other.OtherSpell.JerotesEvokerFangEntity;
-import com.jerotes.jerotes.entity.Other.ShootTargetSpell.FireballEntity;
-import com.jerotes.jerotes.entity.Other.SpellCloud.SpellCloudEntity;
-import com.jerotes.jerotes.entity.Shoot.Magic.Breath.PoisonBreathEntity;
-import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
-import com.jerotes.jerotes.entity.Shoot.Magic.Ray.LightningBoltEntity;
-import com.jerotes.jerotes.entity.Shoot.Magic.Ray.RayofEnfeeblementEntity;
-import com.jerotes.jerotes.entity.Shoot.Magic.Ray.RayofSicknessEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.*;
+import com.jerotes.jerotes.entity.Other.ShootTargetSpell.*;
+import com.jerotes.jerotes.entity.Other.SpellCloud.*;
+import com.jerotes.jerotes.entity.Shoot.Magic.Breath.*;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.*;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.Target.*;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesMobEffects;
@@ -114,6 +110,23 @@ public class SpellFind {
 					mob.lookAt(target, 360.0f, 360.0f);
 				}
 				spell = new RayofEnfeeblementEntity(spellLevelMainEffectTime, spellLevelMainEffectLevel, serverLevel, caster, caster.getLookAngle().x, caster.getLookAngle().y, caster.getLookAngle().z);
+				spell.setPos(caster.getX(), caster.getY(0.7) - spell.getBbHeight()/2, caster.getZ());
+				spell.shootFromRotation(caster, caster.getXRot(), (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
+				spell.setOwner(caster);
+				serverLevel.addFreshEntity(spell);
+			}
+		}
+		return true;
+	}
+	//解离术
+	public static boolean Disintegrate(LivingEntity caster, Entity target, int spellLevelDamage, float spellLevelAccuracy, int count, float distance, boolean isPlayer) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			DisintegrateEntity spell;
+			for (int i = 0; i < count; ++i) {
+				if (!isPlayer && caster instanceof Mob mob && target != null) {
+					mob.lookAt(target, 360.0f, 360.0f);
+				}
+				spell = new DisintegrateEntity(spellLevelDamage, serverLevel, caster, caster.getLookAngle().x, caster.getLookAngle().y, caster.getLookAngle().z);
 				spell.setPos(caster.getX(), caster.getY(0.7) - spell.getBbHeight()/2, caster.getZ());
 				spell.shootFromRotation(caster, caster.getXRot(), (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
 				spell.setOwner(caster);
@@ -298,7 +311,7 @@ public class SpellFind {
 				CureWoundsEntity cloud = new CureWoundsEntity(serverLevel, caster);
 				cloud.setSpellLevelDamage(spellLevelHeal);
 				cloud.setPos(target.getX(), target.getY() + 2/16f, target.getZ());
-				cloud.setOwner(caster);
+				cloud.setOwnerUUID(caster.getUUID());
 				cloud.setTarget(target);
 				cloud.setSize(Main.mobWidth(target));
 				cloud.setTargetHeight(Main.mobHeight(target));
@@ -446,7 +459,37 @@ public class SpellFind {
 			CloudOfDaggersEntity cloud = new CloudOfDaggersEntity(serverLevel, caster);
 			cloud.setSpellLevelDamage(spellLevelDamage);
 			cloud.setPos(targetPos.x, targetPos.y + 2/16f, targetPos.z);
-			cloud.setOwner(caster);
+			cloud.setOwnerUUID(caster.getUUID());
+			serverLevel.addFreshEntity(cloud);
+			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
+		}
+		return true;
+	}
+	//疫病虫群$法术
+	public static boolean InsectPlague(LivingEntity caster, LivingEntity target, int spellLevelDamage) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			Vec3 targetPos = caster.getPosition(0);
+			if (target != null) {
+				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+			}
+			if (caster instanceof Player && (target == null || target == caster)) {
+				Vec3 startPos = caster.getEyePosition(1.0f);
+				Vec3 viewVector = caster.getViewVector(1.0f);
+				Vec3 endPos = startPos.add(viewVector.scale(90));
+
+				BlockHitResult hitResult = serverLevel.clip(new ClipContext(
+						startPos, endPos,
+						ClipContext.Block.OUTLINE,
+						ClipContext.Fluid.NONE,
+						caster
+				));
+				targetPos = Main.adjustPositionForSolidHit(hitResult, startPos, viewVector, 90);
+			}
+			//目标位置
+			InsectPlagueEntity cloud = new InsectPlagueEntity(serverLevel, caster);
+			cloud.setSpellLevelDamage(spellLevelDamage);
+			cloud.setPos(targetPos.x, targetPos.y + 2/16f, targetPos.z);
+			cloud.setOwnerUUID(caster.getUUID());
 			serverLevel.addFreshEntity(cloud);
 			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
 		}

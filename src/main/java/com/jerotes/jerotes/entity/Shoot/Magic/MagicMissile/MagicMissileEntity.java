@@ -49,7 +49,9 @@ public class MagicMissileEntity extends BaseMagicMissileEntity {
         }
         if (entity instanceof LivingEntity livingEntity) {
             Entity entity2 = this.getOwner();
-            livingEntity.hurt(this.damageSources().indirectMagic(this, entity2), Main.randomReach(RandomSource.create(), 1, 4) + 1);
+            livingEntity.hurt(this.damageSources().indirectMagic(this, entity2),
+                    Main.rollDice(1, 4, livingEntity.getRandom()) + 1
+            );
             this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
             this.discard();
         }

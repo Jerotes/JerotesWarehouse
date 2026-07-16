@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.entity.Interface;
 
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 
 public interface JerotesChangeLivingEntity {
@@ -10,5 +11,6 @@ public interface JerotesChangeLivingEntity {
     long getlastKineticHitFeedbackTimeJerotes();
     boolean isTrueInvisibleJerotes();
     int getCurrentSwingDurationJerotes();
+    void setLastDamageSourceJerotes(DamageSource damageSource);
 }
 

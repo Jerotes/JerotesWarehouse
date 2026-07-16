@@ -563,7 +563,7 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 	public LivingEntity getOwner() {
 		if (!this.level().isClientSide){
 			UUID uuid = this.getOwnerUUID();
-			return uuid == null ? null : getLivingEntityByUUID(this.level(), uuid);
+			return uuid == null ? null : Main.getLivingEntityByUUID(this.level(), uuid);
 		} else {
 			int id = this.getOwnerId();
 			return id <= -1 ? null : this.level().getEntity(this.getOwnerId()) instanceof LivingEntity living && living != this ? living : null;
@@ -574,20 +574,6 @@ public class JerotesHorseEntity extends Horse implements PlayerRideableJumping, 
 	}
 	public void setOwnerId(int id){
 		this.entityData.set(DATA_OWNER_ID, id);
-	}
-	public static LivingEntity getLivingEntityByUUID(Level level, UUID uuid) {
-		return getLivingEntityByUUID(level.getServer(), uuid);
-	}
-	public static LivingEntity getLivingEntityByUUID(MinecraftServer server, UUID uuid){
-		if (uuid != null && server != null) {
-			for (ServerLevel world : server.getAllLevels()) {
-				Entity entity = world.getEntity(uuid);
-				if (entity instanceof LivingEntity livingEntity){
-					return livingEntity;
-				}
-			}
-		}
-		return null;
 	}
 	public boolean isWander() {
 		return this.getEntityData().get(IS_WANDER);

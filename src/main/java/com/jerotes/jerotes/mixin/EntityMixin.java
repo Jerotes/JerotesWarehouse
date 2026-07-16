@@ -1,14 +1,20 @@
 package com.jerotes.jerotes.mixin;
 
+import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.*;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.DisintegrateEntity;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseUmbrella;
+import com.jerotes.jerotes.util.EntityAndItemFind;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Husk;
@@ -16,9 +22,11 @@ import net.minecraft.world.entity.monster.Stray;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
 import net.minecraftforge.common.extensions.IForgeEntity;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements IForgeEntity, JerotesChangeEntity {
@@ -51,6 +60,19 @@ public abstract class EntityMixin implements IForgeEntity, JerotesChangeEntity {
 
     @Shadow public abstract InteractionResult interact(Player p_19978_, InteractionHand p_19979_);
 
+    @Shadow
+    public abstract boolean isAlive();
+
+    @Shadow
+    @Nullable
+    public abstract ItemEntity spawnAtLocation(ItemStack p_19985_, float p_19986_);
+
+    @Shadow
+    public abstract DamageSources damageSources();
+
+    @Shadow
+    @Final
+    private static AABB INITIAL_AABB;
     @Unique
     private CompoundTag jerotesPersistentData;
     @Override
@@ -142,13 +164,31 @@ public abstract class EntityMixin implements IForgeEntity, JerotesChangeEntity {
 
     @Inject(method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"), cancellable = true)
     private void spawnAtLocation(ItemStack itemStack, float f, CallbackInfoReturnable<ItemEntity> cir) {
+        if ((Entity)(Object)this instanceof LivingEntity livingEntity && !livingEntity.isAlive()) {
+            CompoundTag persistentData = Main.getJerotesPersistentData(livingEntity);
+            if (persistentData != null && persistentData.hasUUID("jerotes_disintegrate_damage_from")) {
+                UUID damageFrom = persistentData.getUUID("jerotes_disintegrate_damage_from");
+                float tick = persistentData.getFloat("jerotes_disintegrate_tick");
+                if (tick > 0 && damageFrom != null && livingEntity.level() instanceof ServerLevel serverLevel) {
+                    Entity entity = serverLevel.getEntity(damageFrom);
+                    if (entity instanceof DisintegrateLikeEntity disintegrateEntity) {
+                        if (disintegrateEntity.shouldDisintegrate(livingEntity, itemStack)) {
+                            cir.setReturnValue(null);
+                            cir.cancel();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
         if (this instanceof BossEntity && this.level() != null) {
             if (itemStack.isEmpty()) {
                 cir.setReturnValue(null);
             } else if (this.level().isClientSide()) {
                 cir.setReturnValue(null);
             } else {
-                ItemEntity itementity = new ItemEntity(this.level(), this.getX(), this.getY() + (double)f, this.getZ(), itemStack);//生命值
+                ItemEntity itementity = new ItemEntity(this.level(), this.getX(), this.getY() + (double)f, this.getZ(), itemStack);
+                //生命值
                 CompoundTag compoundTag0 = new CompoundTag();
                 itementity.addAdditionalSaveData(compoundTag0);
                 compoundTag0.putShort("Health", (short) 10000);

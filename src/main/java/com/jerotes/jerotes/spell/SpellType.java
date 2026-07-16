@@ -9,6 +9,7 @@ public enum SpellType implements SpellTypeInterface {
 	JEROTES_POISON_BREATH("jerotes_poison_breath"),
 	JEROTES_RAY_OF_SICKNESS("jerotes_ray_of_sickness"),
 	JEROTES_RAY_OF_ENFEEBLEMENT("jerotes_ray_of_enfeeblement"),
+	JEROTES_DISINTEGRATE("jerotes_disintegrate"),
 	JEROTES_LIGHTNING_BOLT("jerotes_lightning_bolt"),
 	JEROTES_VICIOUS_MOCKERY("jerotes_vicious_mockery"),
 	JEROTES_HOLD_PERSON("jerotes_hold_person"),
@@ -25,6 +26,7 @@ public enum SpellType implements SpellTypeInterface {
 	JEROTES_COUNTERSPELL("jerotes_counterspell"),
 	JEROTES_MAGIC_ABSORPTION("jerotes_magic_absorption"),
 	JEROTES_CLOUD_OF_DAGGERS("jerotes_cloud_of_daggers"),
+	JEROTES_INSECT_PLAGUE("jerotes_insect_plague"),
 	JEROTES_FIREBALL("jerotes_fireball"),
 	JEROTES_LINEAR_EVOKER_FANG("jerotes_linear_evoker_fang"),
 	JEROTES_CIRCULAR_EVOKER_FANG("jerotes_circular_evoker_fang"),
@@ -44,6 +46,7 @@ public enum SpellType implements SpellTypeInterface {
 			case JEROTES_POISON_BREATH -> SpellList.PoisonBreath(level, caster, target);
 			case JEROTES_RAY_OF_SICKNESS -> SpellList.RayofSickness(level, caster, target);
 			case JEROTES_RAY_OF_ENFEEBLEMENT -> SpellList.RayofEnfeeblement(level, caster, target);
+			case JEROTES_DISINTEGRATE -> SpellList.Disintegrate(level, caster, target);
 			case JEROTES_LIGHTNING_BOLT -> SpellList.LightningBolt(level, caster, target);
 			case JEROTES_VICIOUS_MOCKERY -> SpellList.ViciousMockery(level, caster, target);
 			case JEROTES_HOLD_PERSON -> SpellList.HoldPerson(level, caster, target);
@@ -60,6 +63,7 @@ public enum SpellType implements SpellTypeInterface {
 			case JEROTES_COUNTERSPELL -> SpellList.Counterspell(level, caster, target);
 			case JEROTES_MAGIC_ABSORPTION -> SpellList.MagicAbsorption(level, caster, target);
 			case JEROTES_CLOUD_OF_DAGGERS -> SpellList.CloudOfDaggers(level, caster, target);
+			case JEROTES_INSECT_PLAGUE -> SpellList.InsectPlague(level, caster, target);
 			case JEROTES_FIREBALL -> SpellList.Fireball(level, caster, target);
 			case JEROTES_LINEAR_EVOKER_FANG -> SpellList.LinearEvokerFang(level, caster, target);
 			case JEROTES_CIRCULAR_EVOKER_FANG -> SpellList.CircularEvokerFang(level, caster, target);

@@ -88,6 +88,26 @@ public class SpellList {
 			}
 		};
 	}
+	//虚弱射线
+	public static MagicSpell Disintegrate(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "disintegrate", JerotesParticleTypes.DISINTEGRATE_DISPLAY.get(), JerotesSoundEvents.MAGIC_DISINTEGRATE){
+			public boolean spellFindUse() {
+				return SpellFind.Disintegrate(getCaster(), getTarget(), getSpellLevel(), getSpellAccuracy(), 1, 5, getCaster() instanceof Player);
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public int baseSpellLevel() {
+				return 6;
+			}
+			public float getSpellDistanceBase() {
+				return 18;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.TRANSMUTATION;
+			}
+		};
+	}
 	//闪电束
 	public static MagicSpell LightningBolt(int n, LivingEntity caster, Entity target) {
 		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "lightning_bolt", JerotesParticleTypes.LIGHTNING_BOLT_DISPLAY.get(), JerotesSoundEvents.MAGIC_LIGHTNING_BOLT){
@@ -306,6 +326,9 @@ public class SpellList {
 			public boolean isHelp() {
 				return true;
 			}
+			public boolean isMelee() {
+				return true;
+			}
 			public boolean canUseTargetNone() {
 				return true;
 			}
@@ -493,6 +516,29 @@ public class SpellList {
 			}
 			public float getSpellDistanceBase() {
 				return 18;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
+			}
+		};
+	}
+	//疫病虫群
+	public static MagicSpell InsectPlague(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "insect_plague", JerotesParticleTypes.INSECT_PLAGUE_DISPLAY.get(), JerotesSoundEvents.MAGIC_CLOUD_OF_DAGGERS){
+			public boolean spellFindUse() {
+				return SpellFind.InsectPlague(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel());
+			}
+			public int baseSpellLevel() {
+				return 5;
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public float getSpellDistanceBase() {
+				return 90;
 			}
 			public boolean canUseTargetNone() {
 				return true;

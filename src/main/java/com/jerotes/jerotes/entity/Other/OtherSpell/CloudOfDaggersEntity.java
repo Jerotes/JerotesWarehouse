@@ -12,8 +12,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Team;
 
@@ -30,12 +33,15 @@ public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements Tracea
 
     public CloudOfDaggersEntity(Level p_36926_, LivingEntity p_36932_) {
         this(JerotesEntityType.CLOUD_OF_DAGGERS.get(), p_36926_);
-        this.setOwner(p_36932_);
+        this.setOwnerUUID(p_36932_.getUUID());
         this.fixupDimensions();
     }
 
     public int getBaseSpellLevelDamage() {
         return 2;
+    }
+    public boolean isPickable() {
+        return true;
     }
     public int getMaxStart() {
         return 40;
@@ -61,6 +67,23 @@ public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements Tracea
         }
     }
 
+    @Override
+    public InteractionResult interact(Player player, InteractionHand interactionHand) {
+        if (!this.isAlive()) {
+            return super.interact(player, interactionHand);
+        }
+        if (player == this.getOwner()) {
+            this.life = Math.max(this.life, getMaxLife() - 30);
+            return InteractionResult.SUCCESS;
+        }
+        else {
+            if (!player.isShiftKeyDown()) {
+                dealDamageTo(player);
+            }
+            return InteractionResult.SUCCESS;
+        }
+    }
+
     public boolean dealDamageTo(LivingEntity livingEntity) {
         LivingEntity livingEntity2 = this.getOwner();
         if (!livingEntity.isAlive() || livingEntity.isInvulnerable() || livingEntity == livingEntity2) {
@@ -68,7 +91,9 @@ public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements Tracea
         }
         if (livingEntity2 == null) {
             DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.CLOUD_OF_DAGGERS, this);
-            boolean bl = livingEntity.hurt(damageSource, Main.randomReach(RandomSource.create(), 1, 4) * Math.max(1, (1 + (spellLevelDamage - 2) / 12f)));
+            boolean bl = livingEntity.hurt(damageSource,
+                    Main.rollDice((4 + (getSpellLevel() - 2) * 2), 4, getRandom()) / 12f
+            );
             if (bl) {
                 if (this.level() instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(ParticleTypes.SWEEP_ATTACK, livingEntity.getX(), livingEntity.getY(0.5), livingEntity.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
@@ -80,7 +105,9 @@ public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements Tracea
                 return false;
             }
             DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.CLOUD_OF_DAGGERS, this, livingEntity2);
-            boolean bl = livingEntity.hurt(damageSource, Main.randomReach(RandomSource.create(), 1, 4) * Math.max(1, (1 + (spellLevelDamage - 2) / 12f)));
+            boolean bl = livingEntity.hurt(damageSource,
+                    Main.rollDice((4 + (getSpellLevel() - 2) * 2), 4, getRandom()) / 12f
+            );
             if (bl) {
                 if (this.level() instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(ParticleTypes.SWEEP_ATTACK, livingEntity.getX(), livingEntity.getY(0.5), livingEntity.getZ(), 0, 0.0, 0.0, 0.0, 0.0);

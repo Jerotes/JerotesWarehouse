@@ -2,6 +2,7 @@ package com.jerotes.jerotes.effect;
 
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -41,15 +42,17 @@ public class PhantasmalKillerEffect extends BaseMobEffectAllTick {
 		}
 		int time = livingEntity.getEffect(JerotesMobEffects.PHANTASMAL_KILLER.get()).getDuration();
 		if ((time % 120 == 0) && time != 0 && time != 6) {
-			//几率移除
-			if (livingEntity.getRandom().nextFloat() > 0.8f - Main.luck(livingEntity) * 0.2f) {
+			//感知判定
+			if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
 				if (!livingEntity.level().isClientSide) {
 					livingEntity.removeEffect(JerotesMobEffects.PHANTASMAL_KILLER.get());
 				}
 			}
 			else {
 				DamageSource damageSource = livingEntity.level().damageSources().wither();
-				livingEntity.hurt(damageSource, effectLevel * Main.randomReach(RandomSource.create(), 1, 10));
+				livingEntity.hurt(damageSource,
+						Main.rollDice(effectLevel, 10, livingEntity.getRandom())
+				);
 			}
 		}
 	}

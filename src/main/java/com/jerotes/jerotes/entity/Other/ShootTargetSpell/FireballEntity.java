@@ -302,7 +302,9 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
             //生物造成伤害与击退
             if (hurt instanceof LivingEntity livingHurt) {
                 DamageSource damageSources = AttackFind.findDamageType(this, JerotesDamageTypes.FIRE_MAGIC, this, this.getOwner());
-                boolean bl = hurt.hurt(damageSources, (8 + (getSpellLevel() - 3)) * Main.randomReach(this.random, 1, 6));
+                boolean bl = hurt.hurt(damageSources,
+                        Main.rollDice(8 + (getSpellLevel() - 3), 6, this.random)
+                );
                 if (bl) {
                     hurt.setSecondsOnFire(6 + getSpellLevel() * 3);
                 }

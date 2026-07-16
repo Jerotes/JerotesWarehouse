@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -16,93 +17,226 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Random;
 
 public class CureWoundsRenderer extends EntityRenderer<CureWoundsEntity> {
     public CureWoundsRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
-    public void render(CureWoundsEntity t, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLightIn) {
-        float f7 = (float)t.tickCount + partialTicks;
-
+    @Override
+    public void render(CureWoundsEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLightIn) {
         poseStack.pushPose();
-        renderBeam(t, partialTicks, poseStack, multiBufferSource, LightTexture.FULL_BRIGHT);
+        renderBeam(entity, partialTicks * 2, poseStack, multiBufferSource);
+        renderBeamLine(entity, partialTicks * 2, poseStack, multiBufferSource);
         poseStack.popPose();
-
-        super.render(t, entityYaw, partialTicks, poseStack, multiBufferSource, packedLightIn);
+        super.render(entity, entityYaw, partialTicks, poseStack, multiBufferSource, packedLightIn);
     }
-    private void renderBeam(CureWoundsEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+
+    private void renderBeamLine(CureWoundsEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer) {
         double width = entity.getSize();
         double height = entity.getTargetHeight();
-        int life = entity.life;
-        float alpha = 1.0f;
-        if (life < 5) {
-            alpha = life / 5.0f;
-        } else if (life > 30) {
-            alpha = 1.0f - (life - 30) / 10.0f;
-        }
-        alpha = Mth.clamp(alpha, 0.0f, 1.0f);
-        if (alpha < 0.01f) return;
+        int life = entity.life * 2;
 
-        int r = 180, g = 220, b = 255;
-        int a = (int)(255 * alpha);
-
-        ResourceLocation texture = entity.getTextureLocation();
-        VertexConsumer consumer = buffer.getBuffer(JerotesRenderType.glowDoubleSidedTranslucent(texture));
-
-        int segments = 24;
-        int numBands = 6;
-        float radius = (float)width * 0.5f;
-        float maxY = (float)height;
-        float bandWidth = radius * 0.08f;
-
+        VertexConsumer consumer = buffer.getBuffer(RenderType.LINES);
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix = pose.pose();
         Matrix3f normal = pose.normal();
 
-        for (int band = 0; band < numBands; band++) {
-            float angleOffset = (float)band / numBands * 2.0f * (float)Math.PI;
+        int numSegments = 6;
+        int pointsPerSegment = 20;
+        float maxHeight = (float) height;
 
-            Vec3 prevLeft = null, prevRight = null;
-            for (int i = 0; i <= segments; i++) {
-                float progress = (float)i / segments;
-                float y = progress * maxY;
+        float riseOffset = (life + partialTick) * 0.025f;
+        float baseRotation = (life + partialTick) * 0.20f;
 
-                float angle = angleOffset + progress * 5.0f * (float)Math.PI;
-                float cos = Mth.cos(angle);
-                float sin = Mth.sin(angle);
+        for (int s = 0; s < numSegments; s++) {
+            Random random = new Random(entity.getId() * 31L + 17L + s * 101L);
 
-                float currentRadius = radius;
+            float disappearTime = 30f + (float)(numSegments - 1 - s) * 20f / numSegments;
+            if (life >= disappearTime) continue;
 
-                float cx = currentRadius * cos;
-                float cz = currentRadius * sin;
+            float alphaFactor;
+            if (life < 20) alphaFactor = 1.0f;
+            else alphaFactor = 1.0f - (life - 20) / (disappearTime - 20);
+            alphaFactor = Mth.clamp(alphaFactor, 0.0f, 1.0f);
+            if (alphaFactor < 0.01f) continue;
 
-                float tx = -sin;
-                float tz = cos;
-                float len = Mth.sqrt(tx*tx + tz*tz);
-                if (len > 0.001f) { tx /= len; tz /= len; }
+            float maxRadius = (float) width * 0.5f * (1 + (life + partialTick) * 0.025f);
+            float radiusBase = (0.5f + 2.3f * random.nextFloat()) * maxRadius;
+            float yBase = (-0.5f + 0.2f * random.nextFloat()) * maxHeight;
+            float segHeight = (0.6f + 0.4f * random.nextFloat()) * maxHeight;
+            float angleOffset = random.nextFloat() * 2.0f * (float) Math.PI;
+            float turns = 1.5f + 2.5f * random.nextFloat();
+            float speedFactor = 0.2f + 1.8f * random.nextFloat();
 
-                float halfBand = bandWidth * 0.5f;
-                Vec3 left = new Vec3(cx + tx * halfBand, y, cz + tz * halfBand);
-                Vec3 right = new Vec3(cx - tx * halfBand, y, cz - tz * halfBand);
+            Vec3[] points = new Vec3[pointsPerSegment + 1];
+            for (int i = 0; i <= pointsPerSegment; i++) {
+                float progress = (float) i / pointsPerSegment;
+                float radius = radiusBase * progress;
+                float y = yBase + progress * segHeight + riseOffset;
+                float angle = angleOffset + progress * turns * 2.0f * (float) Math.PI + baseRotation * speedFactor;
+                float x = radius * Mth.cos(angle);
+                float z = radius * Mth.sin(angle);
+                points[i] = new Vec3(x, y, z);
+            }
 
-                if (i > 0) {
-                    float alphaPrev = 0.7f + 0.3f * (progress - 1.0f/segments);
-                    float alphaCur  = 0.7f + 0.3f * progress;
-                    int aPrev = (int)(a * alphaPrev);
-                    int aCur  = (int)(a * alphaCur);
+            for (int i = 0; i < points.length - 1; i++) {
+                Vec3 p0 = points[i];
+                Vec3 p1 = points[i + 1];
+                double y0 = p0.y, y1 = p1.y;
 
-                    addVertex(consumer, matrix, normal, prevLeft, r, g, b, aPrev, 0, 0);
-                    addVertex(consumer, matrix, normal, prevRight, r, g, b, aPrev, 1, 0);
-                    addVertex(consumer, matrix, normal, right, r, g, b, aCur, 1, 1);
-                    addVertex(consumer, matrix, normal, left, r, g, b, aCur, 0, 1);
-                }
-                prevLeft = left;
-                prevRight = right;
+                if (y0 < 0 && y1 < 0) continue;
+                if (y0 > maxHeight && y1 > maxHeight) continue;
+
+                float h0 = (float) Mth.clamp(y0 / maxHeight, 0.0, 1.0);
+                float h1 = (float) Mth.clamp(y1 / maxHeight, 0.0, 1.0);
+
+                float edgeFade0 = 1.0f;
+                if (y0 < 0.1 * maxHeight) edgeFade0 = (float) (y0 / (0.1 * maxHeight));
+                if (y0 > 0.9 * maxHeight) edgeFade0 = (float) ((maxHeight - y0) / (0.1 * maxHeight));
+                float edgeFade1 = 1.0f;
+                if (y1 < 0.1 * maxHeight) edgeFade1 = (float) (y1 / (0.1 * maxHeight));
+                if (y1 > 0.9 * maxHeight) edgeFade1 = (float) ((maxHeight - y1) / (0.1 * maxHeight));
+
+                float alpha0 = alphaFactor * h0 * edgeFade0;
+                float alpha1 = alphaFactor * h1 * edgeFade1;
+                if (alpha0 < 0.005f && alpha1 < 0.005f) continue;
+
+                int a0 = (int) (255 * alpha0);
+                int a1 = (int) (255 * alpha1);
+
+                int r0 = (int) Mth.lerp(h0, 255, 255);
+                int g0 = (int) Mth.lerp(h0, 239, 220);
+                int b0 = (int) Mth.lerp(h0, 201, 133);
+                int r1 = (int) Mth.lerp(h1, 255, 255);
+                int g1 = (int) Mth.lerp(h1, 239, 220);
+                int b1 = (int) Mth.lerp(h1, 201, 133);
+
+                consumer.vertex(matrix, (float) p0.x, (float) p0.y, (float) p0.z)
+                        .color(r0, g0, b0, a0)
+                        .uv(0, 0)
+                        .overlayCoords(OverlayTexture.NO_OVERLAY)
+                        .uv2(15728880)
+                        .normal(normal, 0, 1, 0)
+                        .endVertex();
+                consumer.vertex(matrix, (float) p1.x, (float) p1.y, (float) p1.z)
+                        .color(r1, g1, b1, a1)
+                        .uv(0, 0)
+                        .overlayCoords(OverlayTexture.NO_OVERLAY)
+                        .uv2(15728880)
+                        .normal(normal, 0, 1, 0)
+                        .endVertex();
             }
         }
     }
-    private void addVertex(VertexConsumer consumer, Matrix4f matrix, Matrix3f normal, Vec3 pos, int r, int g, int b, int a, float u, float v) {
+
+    private void renderBeam(CureWoundsEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer) {
+        double width = entity.getSize();
+        double height = entity.getTargetHeight();
+        int life = entity.life * 2;
+
+        VertexConsumer consumer = buffer.getBuffer(JerotesRenderType.glowDoubleSidedTranslucent(getTextureLocation(entity)));
+        PoseStack.Pose pose = poseStack.last();
+        Matrix4f matrix = pose.pose();
+        Matrix3f normal = pose.normal();
+
+        int numSegments = 6;
+        int pointsPerSegment = 20;
+        float maxHeight = (float) height;
+        float baseHalfWidth = 0.04f;
+
+        float riseOffset = (life + partialTick) * 0.025f;
+        float baseRotation = (life + partialTick) * 0.20f;
+
+        for (int s = 0; s < numSegments; s++) {
+            Random random = new Random(entity.getId() * 31L + 19L + s * 103L);
+
+            float disappearTime = 30f + (float)(numSegments - 1 - s) * 20f / numSegments;
+            if (life >= disappearTime) continue;
+
+            float alphaFactor;
+            if (life < 20) alphaFactor = 1.0f;
+            else alphaFactor = 1.0f - (life - 20) / (disappearTime - 20);
+            alphaFactor = Mth.clamp(alphaFactor, 0.0f, 1.0f);
+            if (alphaFactor < 0.01f) continue;
+
+            float maxRadius = (float) width * 0.5f * (1 + (life + partialTick) * 0.025f);
+            float radiusBase = (0.5f + 2.3f * random.nextFloat()) * maxRadius;
+            float yBase = (-0.5f + 0.2f * random.nextFloat()) * maxHeight;
+            float segHeight = (0.6f + 0.4f * random.nextFloat()) * maxHeight;
+            float angleOffset = random.nextFloat() * 2.0f * (float) Math.PI;
+            float turns = 1.5f + 2.5f * random.nextFloat();
+            float speedFactor = 0.2f + 1.8f * random.nextFloat();
+
+            Vec3[] points = new Vec3[pointsPerSegment + 1];
+            for (int i = 0; i <= pointsPerSegment; i++) {
+                float progress = (float) i / pointsPerSegment;
+                float radius = radiusBase * progress;
+                float y = yBase + progress * segHeight + riseOffset;
+                float angle = angleOffset + progress * turns * 2.0f * (float) Math.PI + baseRotation * speedFactor;
+                float x = radius * Mth.cos(angle);
+                float z = radius * Mth.sin(angle);
+                points[i] = new Vec3(x, y, z);
+            }
+
+            for (int i = 0; i < points.length - 1; i++) {
+                Vec3 p0 = points[i];
+                Vec3 p1 = points[i + 1];
+                double y0 = p0.y, y1 = p1.y;
+
+                if (y0 < 0 && y1 < 0) continue;
+                if (y0 > maxHeight && y1 > maxHeight) continue;
+
+                float h0 = (float) Mth.clamp(y0 / maxHeight, 0.0, 1.0);
+                float h1 = (float) Mth.clamp(y1 / maxHeight, 0.0, 1.0);
+
+                float edgeFade0 = 1.0f;
+                if (y0 < 0.1 * maxHeight) edgeFade0 = (float) (y0 / (0.1 * maxHeight));
+                if (y0 > 0.9 * maxHeight) edgeFade0 = (float) ((maxHeight - y0) / (0.1 * maxHeight));
+                float edgeFade1 = 1.0f;
+                if (y1 < 0.1 * maxHeight) edgeFade1 = (float) (y1 / (0.1 * maxHeight));
+                if (y1 > 0.9 * maxHeight) edgeFade1 = (float) ((maxHeight - y1) / (0.1 * maxHeight));
+
+                float alpha0 = alphaFactor * h0 * edgeFade0;
+                float alpha1 = alphaFactor * h1 * edgeFade1;
+                if (alpha0 < 0.005f && alpha1 < 0.005f) continue;
+
+                float w0 = baseHalfWidth * (0.2f + 0.8f * h0);
+                float w1 = baseHalfWidth * (0.2f + 0.8f * h1);
+
+                Vec3 offset0 = new Vec3(0, w0, 0);
+                Vec3 offset1 = new Vec3(0, w1, 0);
+                Vec3 p0l = p0.subtract(offset0);
+                Vec3 p0r = p0.add(offset0);
+                Vec3 p1l = p1.subtract(offset1);
+                Vec3 p1r = p1.add(offset1);
+
+                float u0 = 0, u1 = 1;
+                float v0 = (float) i / pointsPerSegment;
+                float v1 = (float) (i + 1) / pointsPerSegment;
+
+                int a0 = (int) (255 * alpha0);
+                int a1 = (int) (255 * alpha1);
+
+                int r0 = (int) Mth.lerp(h0, 255, 255);
+                int g0 = (int) Mth.lerp(h0, 239, 220);
+                int b0 = (int) Mth.lerp(h0, 201, 133);
+                int r1 = (int) Mth.lerp(h1, 255, 255);
+                int g1 = (int) Mth.lerp(h1, 239, 220);
+                int b1 = (int) Mth.lerp(h1, 201, 133);
+
+                addVertex(consumer, matrix, normal, p0l, r0, g0, b0, a0, u0, v0);
+                addVertex(consumer, matrix, normal, p0r, r0, g0, b0, a0, u1, v0);
+                addVertex(consumer, matrix, normal, p1r, r1, g1, b1, a1, u1, v1);
+                addVertex(consumer, matrix, normal, p1l, r1, g1, b1, a1, u0, v1);
+            }
+        }
+    }
+
+    private void addVertex(VertexConsumer consumer, Matrix4f matrix, Matrix3f normal,
+                           Vec3 pos, int r, int g, int b, int a,
+                           float u, float v) {
         consumer.vertex(matrix, (float) pos.x, (float) pos.y, (float) pos.z)
                 .color(r, g, b, a)
                 .uv(u, v)
@@ -112,7 +246,8 @@ public class CureWoundsRenderer extends EntityRenderer<CureWoundsEntity> {
                 .endVertex();
     }
 
-    public ResourceLocation getTextureLocation(CureWoundsEntity cureWoundsEntity) {
-        return cureWoundsEntity.getTextureLocation();
+    @Override
+    public ResourceLocation getTextureLocation(CureWoundsEntity entity) {
+        return entity.getTextureLocation();
     }
 }

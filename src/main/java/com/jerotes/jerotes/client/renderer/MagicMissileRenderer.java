@@ -147,5 +147,3 @@ public class MagicMissileRenderer<T extends BaseMagicMissileEntity> extends Enti
     }
 }
 
-
-

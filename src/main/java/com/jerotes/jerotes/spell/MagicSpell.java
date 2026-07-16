@@ -280,10 +280,13 @@ public class MagicSpell {
 		list.add(magicSpell.getSpellName().copy()
 				.append(Component.translatable("spell.jerotes.spell_base", level).withStyle(ChatFormatting.DARK_PURPLE)));
 		list.add(magicSpell.getSpellSchool().getDisplayName().copy().append(" ")
-				.append(Component.translatable(magicSpell.getMagicType2() != MagicType.ADD ? "spell.jerotes.type.main" : "spell.jerotes.type.add").withStyle(ChatFormatting.DARK_PURPLE)));
+				.append(Component.translatable(magicSpell.getMagicType2() != MagicType.ADD ? "spell.jerotes.type.main" : "spell.jerotes.type.add").withStyle(ChatFormatting.DARK_PURPLE))
+				.append(magicSpell.isHelp() ? " " : "")
+				.append(!magicSpell.isHelp() ? Component.empty() : Component.translatable("spell.jerotes.spell_heal").withStyle(ChatFormatting.YELLOW))
+		);
 		list.add(magicSpell.getSpellDesc().copy()
 				.withStyle(ChatFormatting.LIGHT_PURPLE));
-		list.add(Component.translatable("spell.jerotes.spell_max_distance", magicSpell.getSpellDistance())
+		list.add(Component.translatable(magicSpell.isMelee() ? "spell.jerotes.spell_max_distance_touch" : "spell.jerotes.spell_max_distance", magicSpell.getSpellDistance())
 				.withStyle(ChatFormatting.LIGHT_PURPLE));
 	}
 }

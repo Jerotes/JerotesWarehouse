@@ -31,6 +31,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -975,5 +976,33 @@ public class Main {
 	}
 	public static boolean hasCurios(LivingEntity livingEntity, Item item) {
 		return !findCurios(livingEntity, item).isEmpty();
+	}
+
+
+	public static LivingEntity getLivingEntityByUUID(Level level, UUID uuid) {
+		return getLivingEntityByUUID(level.getServer(), uuid);
+	}
+	public static LivingEntity getLivingEntityByUUID(MinecraftServer server, UUID uuid){
+		if (uuid != null && server != null) {
+			for (ServerLevel world : server.getAllLevels()) {
+				Entity entity = world.getEntity(uuid);
+				if (entity instanceof LivingEntity livingEntity){
+					return livingEntity;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static float rollDice(int count, int sides, RandomSource random) {
+		if (count <= 0 || sides <= 0) return 0f;
+		int sum = 0;
+		for (int i = 0; i < count; i++) {
+			sum += random.nextInt(sides) + 1;
+		}
+		return sum;
+	}
+	public static float rollDice(int count, int sides) {
+		return rollDice(count, sides, RandomSource.create());
 	}
 }

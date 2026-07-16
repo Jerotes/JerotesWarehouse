@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.client.renderer.*;
+import com.jerotes.jerotes.entity.Other.OtherSpell.InsectPlagueEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -27,7 +28,9 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.SPELL_CLOUD.get(), NoopRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.RAIN_SPELL_CLOUD.get(), NoopRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.CLOUD_OF_DAGGERS.get(), CloudOfDaggersRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.INSECT_PLAGUE.get(), NoopRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.CURE_WOUNDS.get(), CureWoundsRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.HOLD_MOB.get(), HoldMobRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.FIREBALL.get(), FireballRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.JEROTES_FALLING_BLOCK.get(), BaseFallingBlockRenderer::new);
@@ -54,6 +57,7 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.POISON_BREATH.get(), ShootRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.RAY_OF_SICKNESS.get(), RayRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.RAY_OF_ENFEEBLEMENT.get(), RayRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.DISINTEGRATE.get(), RayRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.LIGHTNING_BOLT.get(), LightningBoltRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.VICIOUS_MOCKERY.get(), TargetRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.HOLD_PERSON.get(), TargetRenderer::new);

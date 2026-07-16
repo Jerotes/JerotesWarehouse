@@ -28,7 +28,7 @@ public class CureWoundsParticle extends TextureSheetParticle {
 
 	private final SpriteSet spriteSet;
 	private float initialScale = 0f;
-	private float peakScale = 0.125f;
+	private float peakScale = 0.085f;
 	private int fadeInTime = 5;
 	private int fadeOutTime = 25;
 

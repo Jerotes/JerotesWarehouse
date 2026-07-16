@@ -56,24 +56,10 @@ public class SpellFindUseEvent {
 
     public static LivingEntity getTargetSpellUseTarget(Level level, UUID uuid) {
         if (!level.isClientSide()){
-            return uuid == null ? null : getLivingEntityByUUID(level, uuid);
+            return uuid == null ? null : Main.getLivingEntityByUUID(level, uuid);
         } else {
             return null;
         }
-    }
-    public static LivingEntity getLivingEntityByUUID(Level level, UUID uuid) {
-        return getLivingEntityByUUID(level.getServer(), uuid);
-    }
-    public static LivingEntity getLivingEntityByUUID(MinecraftServer server, UUID uuid){
-        if (uuid != null && server != null) {
-            for (ServerLevel world : server.getAllLevels()) {
-                Entity entity = world.getEntity(uuid);
-                if (entity instanceof LivingEntity livingEntity){
-                    return livingEntity;
-                }
-            }
-        }
-        return null;
     }
     public static void TargetSpellUse(LivingEntity living) {
         if (living.level() instanceof ServerLevel) {

@@ -3,15 +3,14 @@ package com.jerotes.jerotes.init;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
 import com.jerotes.jerotes.entity.Mob.*;
-import com.jerotes.jerotes.entity.Other.OtherSpell.CloudOfDaggersEntity;
-import com.jerotes.jerotes.entity.Other.OtherSpell.CureWoundsEntity;
-import com.jerotes.jerotes.entity.Other.OtherSpell.JerotesEvokerFangEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.*;
 import com.jerotes.jerotes.entity.Other.ShootTargetSpell.FireballEntity;
 import com.jerotes.jerotes.entity.Other.SpellCloud.RainSpellCloudEntity;
 import com.jerotes.jerotes.entity.Other.SpellCloud.SpellCloudEntity;
 import com.jerotes.jerotes.entity.Shoot.Arrow.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.Breath.PoisonBreathEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Ray.DisintegrateEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.Ray.LightningBoltEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.Ray.RayofEnfeeblementEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.Ray.RayofSicknessEntity;
@@ -81,8 +80,14 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<CloudOfDaggersEntity>> CLOUD_OF_DAGGERS = register("cloud_of_daggers",
 			EntityType.Builder.<CloudOfDaggersEntity>of(CloudOfDaggersEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
 					.sized(5.0F, 4.5F));
+	public static final RegistryObject<EntityType<InsectPlagueEntity>> INSECT_PLAGUE = register("insect_plague",
+			EntityType.Builder.<InsectPlagueEntity>of(InsectPlagueEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(12.0F, 12.0F));
 	public static final RegistryObject<EntityType<CureWoundsEntity>> CURE_WOUNDS = register("cure_wounds",
 			EntityType.Builder.<CureWoundsEntity>of(CureWoundsEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(1.0F, 2.0F));
+	public static final RegistryObject<EntityType<HoldMobEntity>> HOLD_MOB = register("hold_mob",
+			EntityType.Builder.<HoldMobEntity>of(HoldMobEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
 					.sized(1.0F, 2.0F));
 	public static final RegistryObject<EntityType<FireballEntity>> FIREBALL = register("fireball",
 			EntityType.Builder.<FireballEntity>of(FireballEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
@@ -154,6 +159,9 @@ public class JerotesEntityType {
 					.sized(0.6f, 0.6f));
 	public static final RegistryObject<EntityType<RayofEnfeeblementEntity>> RAY_OF_ENFEEBLEMENT = register("ray_of_enfeeblement",
 			EntityType.Builder.<RayofEnfeeblementEntity>of(RayofEnfeeblementEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(0.6f, 0.6f));
+	public static final RegistryObject<EntityType<DisintegrateEntity>> DISINTEGRATE = register("disintegrate",
+			EntityType.Builder.<DisintegrateEntity>of(DisintegrateEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(0.6f, 0.6f));
 	public static final RegistryObject<EntityType<LightningBoltEntity>> LIGHTNING_BOLT = register("lightning_bolt",
 			EntityType.Builder.<LightningBoltEntity>of(LightningBoltEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)

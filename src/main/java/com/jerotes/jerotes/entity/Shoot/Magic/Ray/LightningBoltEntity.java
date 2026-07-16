@@ -5,6 +5,7 @@ import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.util.AttackFind;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
@@ -61,11 +62,16 @@ public class LightningBoltEntity extends BaseRayEntity {
             if (livingEntity.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
                 noUse = livingEntity.getAttributeBaseValue(Attributes.MOVEMENT_SPEED);
             }
-            if (this.random.nextFloat() > (noUse / 3 + 35) / 100){
-                livingEntity.hurt(damageSource, (spellLevelDamage + 5) * Main.randomReach(RandomSource.create(), 1, 6));
+            //感知判定
+            if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
+                livingEntity.hurt(damageSource,
+                        Main.rollDice(8 + (spellLevelDamage - 3), 6, livingEntity.getRandom())
+                );
             }
             else{
-                livingEntity.hurt(damageSource, (float) ((spellLevelDamage + 5) * Main.randomReach(RandomSource.create(), 1, 6)) /2);
+                livingEntity.hurt(damageSource,
+                        Main.rollDice(8 + (spellLevelDamage - 3), 6, livingEntity.getRandom()) / 2f
+                );
             }
             this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 10.0f, 1.0f);
         }

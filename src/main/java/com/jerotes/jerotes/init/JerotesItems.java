@@ -226,6 +226,7 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> POISON_BREATH = REGISTRY.register("poison_breath", () -> new Shoot());
 	public static final RegistryObject<Item> RAY_OF_SICKNESS = REGISTRY.register("ray_of_sickness", () -> new Shoot());
 	public static final RegistryObject<Item> RAY_OF_ENFEEBLEMENT = REGISTRY.register("ray_of_enfeeblement", () -> new Shoot());
+	public static final RegistryObject<Item> DISINTEGRATE = REGISTRY.register("disintegrate", () -> new Shoot());
 	public static final RegistryObject<Item> LIGHTNING_BLOT = REGISTRY.register("lightning_bolt", () -> new Shoot());
 	public static final RegistryObject<Item> VICIOUS_MOCKERY = REGISTRY.register("vicious_mockery", () -> new Shoot());
 	public static final RegistryObject<Item> HOLD_PERSON = REGISTRY.register("hold_person", () -> new Shoot());

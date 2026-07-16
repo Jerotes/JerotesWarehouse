@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.util;
 
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
@@ -299,6 +300,12 @@ public class EntityAndItemFind {
 		return (n - 10) / 2;
 	}
 	public static boolean savingSpellThrow(LivingEntity livingEntity, int add) {
+		if (livingEntity == null)
+			return true;
+		if (!MainConfig.HaveSavingThrow)
+			return true;
+		if (MainConfig.HaveSavingThrowOnlyPlayerAndLegendary && !(livingEntity instanceof Player) && !isLegendary(livingEntity))
+			return true;
 		int n = (Main.randomReach(livingEntity.getRandom(),1, 20));
 		if (n == 1)
 			return false;

@@ -2,6 +2,7 @@ package com.jerotes.jerotes.entity.Shoot.Magic.Breath;
 
 import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.util.AttackFind;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -54,11 +55,15 @@ public class PoisonBreathEntity extends BaseBreathEntity {
             Entity entity2 = this.getOwner();
             boolean bl = false;
             DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.POISON, this, entity2);
-            if (this.random.nextFloat() > (livingEntity.getMaxHealth() / 12 + 5) / 100){
-                bl = livingEntity.hurt(damageSource, spellLevelDamage *  Main.randomReach(RandomSource.create(), 1, spellLevelMaxDamage));
+            if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
+                bl = livingEntity.hurt(damageSource,
+                        Main.rollDice(spellLevelDamage, spellLevelMaxDamage, livingEntity.getRandom())
+                );
             }
             else{
-                bl =  livingEntity.hurt(damageSource, (float) (spellLevelDamage * Main.randomReach(RandomSource.create(), 1, spellLevelMaxDamage)) /2);
+                bl =  livingEntity.hurt(damageSource,
+                        Main.rollDice(spellLevelDamage, spellLevelMaxDamage, livingEntity.getRandom())
+                );
             }
             if (bl) {
                 livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 20 * spellLevelMainEffectTime * 6, spellLevelMainEffectLevel - 1), this.getEffectSource());

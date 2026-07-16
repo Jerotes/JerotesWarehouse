@@ -34,15 +34,19 @@ public class CureWoundsEntity extends OtherSpellBaseEntity implements TraceableE
 
     public CureWoundsEntity(Level p_36926_, LivingEntity p_36932_) {
         this(JerotesEntityType.CURE_WOUNDS.get(), p_36926_);
-        this.setOwner(p_36932_);
+        this.setOwnerUUID(p_36932_.getUUID());
         this.fixupDimensions();
     }
 
     public int getBaseSpellLevelDamage() {
         return 2;
     }
+    public boolean scaleAboutBoundingBox() {
+        return true;
+    }
+    @Override
     public int getMaxLife() {
-        return 40;
+        return 2000;
     }
     public boolean moveToTarget() {
         return true;
@@ -61,28 +65,30 @@ public class CureWoundsEntity extends OtherSpellBaseEntity implements TraceableE
     @Override
     public void tick() {
         super.tick();
-        if (this.life == 5 && getTarget() instanceof LivingEntity livingEntity) {
+        if (getTarget() instanceof LivingEntity livingEntity) {
             if (getTarget().level() instanceof ServerLevel serverLevel) {
-                for (int i = 0; i < Mth.clamp(getSize() * 10, 16, 160); ++i) {
-                    serverLevel.sendParticles(JerotesParticleTypes.CURE_WOUNDS.get(),
-                            livingEntity.getRandomX(0.8),
-                            livingEntity.getY(0.5f),
-                            livingEntity.getRandomZ(0.8), 0,
-                            (RandomSource.create().nextFloat() - 0.5f)/3f,
-                            0.2f + RandomSource.create().nextFloat()/5f,
-                            (RandomSource.create().nextFloat() - 0.5f)/3f, 0.5);
+                if (this.life == 5) {
+                    for (int i = 0; i < Mth.clamp(getSize() * 10, 16, 160); ++i) {
+                        serverLevel.sendParticles(JerotesParticleTypes.CURE_WOUNDS.get(),
+                                livingEntity.getRandomX(0.8),
+                                livingEntity.getY(0.5f),
+                                livingEntity.getRandomZ(0.8), 0,
+                                (RandomSource.create().nextFloat() - 0.5f) / 3f,
+                                0.2f + RandomSource.create().nextFloat() / 5f,
+                                (RandomSource.create().nextFloat() - 0.5f) / 3f, 0.25);
+                    }
+                    if (livingEntity.getMobType() != MobType.UNDEAD && !EntityFactionFind.isMachine(livingEntity) && !EntityFactionFind.isConstruct(livingEntity)) {
+                        livingEntity.heal(
+                                Main.rollDice(getSpellLevel(), 8, livingEntity.getRandom())
+                        );
+                    }
                 }
-            }
-        }
-        if (this.life == 20 && getTarget() instanceof LivingEntity livingEntity) {
-            if (livingEntity.getMobType() != MobType.UNDEAD && !EntityFactionFind.isMachine(livingEntity) && !EntityFactionFind.isConstruct(livingEntity)) {
-                livingEntity.heal(getSpellLevel() * Main.randomReach(RandomSource.create(), 1, 8));
             }
         }
     }
 
     public ResourceLocation getTextureLocation() {
-        return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/null.png");
+        return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png");
     }
 
     @Override

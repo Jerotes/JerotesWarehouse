@@ -384,6 +384,16 @@ public class EntityAboutEvent {
 		//弹反
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_shield_parry_cooldown", true);
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_shield_parry_tick", true);
+		//解离术
+		if (Main.getJerotesPersistentData(entity).getFloat("jerotes_disintegrate_tick") > 0) {
+			Main.getJerotesPersistentData(entity).putFloat("jerotes_disintegrate_tick", Main.getJerotesPersistentData(entity).getFloat("jerotes_disintegrate_tick") - 1);
+			if (Main.getJerotesPersistentData(entity).getFloat("jerotes_disintegrate_tick") == 5) {
+				Main.getJerotesPersistentData(entity).remove("jerotes_disintegrate_tick");
+				if (Main.getJerotesPersistentData(entity).get("jerotes_disintegrate_damage_from") != null) {
+					Main.getJerotesPersistentData(entity).remove("jerotes_disintegrate_damage_from");
+				}
+			}
+		}
 	}
 
 	//战斗

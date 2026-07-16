@@ -1,15 +1,20 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.Target;
 
+import com.jerotes.jerotes.entity.Other.OtherSpell.CureWoundsEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.HoldMobEntity;
 import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -53,6 +58,18 @@ public class HoldPersonEntity extends BaseTargetEntity {
         }
         //感知判定
         if (EntityAndItemFind.savingSpellThrow(livingEntity)){
+            if (!livingEntity.hasEffect(JerotesMobEffects.HOLD_MOB.get()) && this.getOwner() instanceof LivingEntity livingOwner) {
+                if (this.level() instanceof ServerLevel serverLevel) {
+                    HoldMobEntity cloud = new HoldMobEntity(serverLevel, livingOwner);
+                    cloud.setSpellLevelDamage(this.spellLevelMainEffectTime);
+                    cloud.setPos(livingEntity.getX(), livingEntity.getY() + 2/16f, livingEntity.getZ());
+                    cloud.setOwnerUUID(livingOwner.getUUID());
+                    cloud.setTarget(livingEntity);
+                    cloud.setSize(Main.mobWidth(livingEntity));
+                    cloud.setTargetHeight(Main.mobHeight(livingEntity));
+                    serverLevel.addFreshEntity(cloud);
+                }
+            }
             DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.MAGIC_EFFECT), this, this.getOwner());
             livingEntity.hurt(damageSource, 0f);
             if (EntityFactionFind.isHumanoid(livingEntity)) {

@@ -382,6 +382,16 @@
       }
     ]
   },
+  "magic_disintegrate": {
+    "subtitle": "subtitle.jerotes.magic_disintegrate",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/ray",
+        "volume": 1.0
+      }
+    ]
+  },
   "magic_lightning_bolt": {
     "subtitle": "subtitle.jerotes.magic_lightning_bolt",
     "category": "neutral",
@@ -534,6 +544,16 @@
   },
   "magic_cloud_of_daggers": {
     "subtitle": "subtitle.jerotes.magic_cloud_of_daggers",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_insect_plague": {
+    "subtitle": "subtitle.jerotes.magic_insect_plague",
     "category": "neutral",
     "sounds": [
       {

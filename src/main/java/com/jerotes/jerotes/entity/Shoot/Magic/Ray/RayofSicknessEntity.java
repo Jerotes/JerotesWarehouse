@@ -53,7 +53,9 @@ public class RayofSicknessEntity extends BaseRayEntity {
         if (entity instanceof LivingEntity livingEntity) {
             Entity entity2 = this.getOwner();
             DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.POISON, this, entity2);
-            boolean bl = livingEntity.hurt(damageSource, (spellLevelDamage + 1) * Main.randomReach(RandomSource.create(), 1, 8));
+            boolean bl = livingEntity.hurt(damageSource,
+                    Main.rollDice(2 + (spellLevelDamage - 1), 8, livingEntity.getRandom())
+            );
             if (bl) {
                 //体质判定
                 if (EntityAndItemFind.savingSpellThrow(livingEntity)){

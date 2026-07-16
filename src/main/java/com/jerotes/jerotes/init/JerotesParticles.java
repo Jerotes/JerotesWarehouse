@@ -15,6 +15,8 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.NULL.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ABACK.get(), SymbolParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.BLOOD.get(), ShootParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.INSECT_FLY.get(), InsectParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.INSECT_LOCUST.get(), InsectParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_I.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_II.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_III.get(), ShootParticle::provider);
@@ -32,6 +34,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.POISON_BREATH_FOG.get(), FogParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_SICKNESS.get(), RayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_ENFEEBLEMENT.get(), RayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.DISINTEGRATE.get(), RayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.LIGHTNING_BOLT.get(), LargeShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.VICIOUS_MOCKERY.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.HOLD_PERSON.get(), ShootParticle::provider);
@@ -62,6 +65,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.BEAST_TOUGH_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ACTION_SURGE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.CLOUD_OF_DAGGERS_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.INSECT_PLAGUE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.FIREBALL_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.LINEAR_EVOKER_FANG_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.CIRCULAR_EVOKER_FANG_DISPLAY.get(), DisplayParticle::provider);

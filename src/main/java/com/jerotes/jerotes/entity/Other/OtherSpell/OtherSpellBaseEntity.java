@@ -1,47 +1,57 @@
 package com.jerotes.jerotes.entity.Other.OtherSpell;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
-import com.jerotes.jerotes.entity.Shoot.Magic.Target.BaseTargetEntity;
 import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
-import com.jerotes.jerotes.init.JerotesDamageTypes;
-import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Team;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class OtherSpellBaseEntity extends Entity implements TraceableEntity, OwnableEntity, MagicAbout {
+    public static final EntityDataAccessor<Integer> DATA_OWNER_ID = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID_ID = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Float> ID_SIZE = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> TARGET_HEIGHT = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Optional<UUID>> DATA_TARGET_UUID = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    public static final EntityDataAccessor<Integer> DATA_TARGET_ID = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.INT);
 
     public OtherSpellBaseEntity(EntityType<? extends OtherSpellBaseEntity> entityType, Level level) {
         super(entityType, level);
         this.fixupDimensions();
     }
 
+    public RandomSource getRandom() {
+        return this.random;
+    }
     public int getBaseSpellLevelDamage() {
         return 1;
     }
     public boolean moveToTarget() {
+        return false;
+    }
+    public boolean shouldPush() {
+        return false;
+    }
+    public boolean scaleAboutBoundingBox() {
         return false;
     }
     public int getMaxStart() {
@@ -49,6 +59,37 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     }
     public int getMaxLife() {
         return 80;
+    }
+    protected void doPush(Entity entity) {
+        if (shouldPush()) {
+            entity.push(this);
+        }
+    }
+    protected void pushEntities() {
+        if (shouldPush()) {
+            if (this.level().isClientSide()) {
+                this.level().getEntities(EntityTypeTest.forClass(Player.class), this.getBoundingBox(), EntitySelector.pushableBy(this)).forEach(this::doPush);
+            } else {
+                List<Entity> list = this.level().getEntities(this, this.getBoundingBox(), EntitySelector.pushableBy(this));
+                if (!list.isEmpty()) {
+                    int i = this.level().getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
+                    if (i > 0 && list.size() > i - 1 && this.random.nextInt(4) == 0) {
+                        int j = 0;
+                        for (Entity entity : list) {
+                            if (!entity.isPassenger()) {
+                                ++j;
+                            }
+                        }
+                        if (j > i - 1) {
+                            this.hurt(this.damageSources().cramming(), 6.0F);
+                        }
+                    }
+                    for (Entity entity : list) {
+                        this.doPush(entity);
+                    }
+                }
+            }
+        }
     }
     @Override
     public void refreshDimensions() {
@@ -60,6 +101,8 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     }
     @Override
     protected AABB makeBoundingBox() {
+        if (!scaleAboutBoundingBox())
+            return super.makeBoundingBox();
         return AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getSize() / 2, this.getZ()), this.getSize(), this.getSize(), this.getSize());
     }
 
@@ -73,37 +116,30 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     }
     public int life = 0;
     public int start = 0;
-    @Nullable
-    private LivingEntity owner;
-    @Nullable
-    private UUID ownerUUID;
+    public boolean isOwnedBy(LivingEntity livingEntity) {
+        return livingEntity == this.getOwner();
+    }
+    public void setOwnerUUID(@Nullable UUID uuid) {
+        this.entityData.set(DATA_OWNER_UUID_ID, Optional.ofNullable(uuid));
+    }
     @Nullable
     @Override
     public UUID getOwnerUUID() {
-        return ownerUUID;
+        return this.entityData.get(DATA_OWNER_UUID_ID).orElse((UUID)null);
     }
-    public void setOwner(@Nullable LivingEntity livingEntity) {
-        this.owner = livingEntity;
-        this.ownerUUID = livingEntity == null ? null : livingEntity.getUUID();
-        this.setBoundingBox(this.makeBoundingBox());
+    public int getOwnerId(){
+        return this.entityData.get(DATA_OWNER_ID);
     }
-    @Nullable
-    @Override
-    public LivingEntity getOwner() {
-        Entity entity;
-        if (this.owner == null && this.ownerUUID != null && this.level() instanceof ServerLevel && (entity = ((ServerLevel)this.level()).getEntity(this.ownerUUID)) instanceof LivingEntity) {
-            this.owner = (LivingEntity)entity;
-        }
-        return this.owner;
+    public void setOwnerId(int id){
+        this.entityData.set(DATA_OWNER_ID, id);
     }
     @Override
-    //1.20.4↑//
-    //public PlayerTeam getTeam() {
-    //1.20.1//
     public Team getTeam() {
-        LivingEntity livingEntity;
-        if (this.getOwner() != null && (livingEntity = this.getOwner()) != null) {
-            return livingEntity.getTeam();
+        if (this.getOwner() != null) {
+            LivingEntity livingentity = this.getOwner();
+            if (livingentity != null) {
+                return livingentity.getTeam();
+            }
         }
         return super.getTeam();
     }
@@ -125,40 +161,70 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     public void setTargetHeight(float f) {
         this.entityData.set(TARGET_HEIGHT, f);
     }
+
     @Nullable
-    private Entity target;
-    @Nullable
-    private UUID targetUUID;
+    @Override
+    public LivingEntity getOwner() {
+        if (!this.level().isClientSide){
+            UUID uuid = this.getOwnerUUID();
+            return uuid == null ? null : Main.getLivingEntityByUUID(this.level(), uuid);
+        } else {
+            int id = this.getOwnerId();
+            return id <= -1 ? null : this.level().getEntity(this.getOwnerId()) instanceof LivingEntity living ? living : null;
+        }
+    }
     @Nullable
     public Entity getTarget() {
-        Entity entity;
-        if (this.target == null && this.targetUUID != null && this.level() instanceof ServerLevel && (entity = ((ServerLevel)this.level()).getEntity(this.targetUUID)) instanceof Entity) {
-            this.target = entity;
+        if (!this.level().isClientSide) {
+            UUID uuid = this.getTargetUUID();
+            return uuid == null ? null : Main.getLivingEntityByUUID(this.level(), uuid);
+        } else {
+            int id = this.getTargetId();
+            return id <= -1 ? null : this.level().getEntity(id);
         }
-        return this.target;
     }
+
     public void setTarget(@Nullable Entity entity) {
-        //法术取消
-        //event
         JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;
         }
-        this.target = entity;
-        this.targetUUID = entity == null ? null : entity.getUUID();
-        this.setBoundingBox(this.makeBoundingBox());
+        if (entity != null) {
+            this.setTargetUUID(entity.getUUID());
+            if (!this.level().isClientSide) {
+                this.setTargetId(entity.getId());
+            }
+        } else {
+            this.setTargetUUID(null);
+            this.setTargetId(-1);
+        }
     }
+
+    @Nullable
+    public UUID getTargetUUID() {
+        return this.entityData.get(DATA_TARGET_UUID).orElse(null);
+    }
+    public void setTargetUUID(@Nullable UUID uuid) {
+        this.entityData.set(DATA_TARGET_UUID, Optional.ofNullable(uuid));
+    }
+    public int getTargetId() {
+        return this.entityData.get(DATA_TARGET_ID);
+    }
+    public void setTargetId(int id) {
+        this.entityData.set(DATA_TARGET_ID, id);
+    }
+
     @Override
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
         compoundTag.putInt("SpellLevelDamage", this.spellLevelDamage);
         compoundTag.putInt("Life", this.life);
         compoundTag.putInt("Start", this.start);
-        if (this.ownerUUID != null) {
-            compoundTag.putUUID("Owner", this.ownerUUID);
+        if (this.getOwnerUUID() != null) {
+            compoundTag.putUUID("Owner", this.getOwnerUUID());
         }
-        if (this.targetUUID != null) {
-            compoundTag.putUUID("Target", this.targetUUID);
+        if (this.getTargetUUID() != null) {
+            compoundTag.putUUID("Target", this.getTargetUUID());
         }
         compoundTag.putFloat("TargetHeight", this.getTargetHeight());
         compoundTag.putFloat("Size", this.getSize());
@@ -168,11 +234,30 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
         this.spellLevelDamage = compoundTag.getInt("SpellLevelDamage");
         this.life = compoundTag.getInt("Life");
         this.start = compoundTag.getInt("Start");
+        UUID uuid;
         if (compoundTag.hasUUID("Owner")) {
-            this.ownerUUID = compoundTag.getUUID("Owner");
+            uuid = compoundTag.getUUID("Owner");
+        } else {
+            String string = compoundTag.getString("Owner");
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), string);
+        }
+        if (uuid != null) {
+            try {
+                this.setOwnerUUID(uuid);
+            } catch (Throwable throwable) {
+            }
         }
         if (compoundTag.hasUUID("Target")) {
-            this.targetUUID = compoundTag.getUUID("Target");
+            uuid = compoundTag.getUUID("Target");
+        } else {
+            String string = compoundTag.getString("Target");
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), string);
+        }
+        if (uuid != null) {
+            try {
+                this.setTargetUUID(uuid);
+            } catch (Throwable throwable) {
+            }
         }
         this.setSize(compoundTag.getFloat("Size"));
         this.setTargetHeight(compoundTag.getFloat("TargetHeight"));
@@ -182,6 +267,10 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     protected void defineSynchedData() {
         this.getEntityData().define(ID_SIZE, 1f);
         this.getEntityData().define(TARGET_HEIGHT, 1f);
+        this.getEntityData().define(DATA_OWNER_ID, -1);
+        this.getEntityData().define(DATA_OWNER_UUID_ID, Optional.empty());
+        this.getEntityData().define(DATA_TARGET_UUID, Optional.empty());
+        this.getEntityData().define(DATA_TARGET_ID, -1);
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> entityDataAccessor) {
@@ -196,9 +285,22 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     public void tick() {
         super.tick();
         ++this.life;
+        if (this.getOwner() != null && this.getOwnerId() == -1) {
+            this.setOwnerId(this.getOwner().getId());
+        }
+        if (getTarget() != null && this.getTargetId() == -1) {
+            this.setTargetId(getTarget().getId());
+        }
+        if (this.shouldPush()) {
+            this.pushEntities();
+        }
+        if (getTarget() != null && !this.getTarget().isAlive()) {
+            this.setTarget(null);
+            this.setTargetId(-1);
+        }
         if (this.moveToTarget()) {
             if (this.getTarget() != null) {
-                this.moveTo(this.getTarget().getX(), this.getTarget().getY(0.5), this.getTarget().getZ());
+                this.moveTo(this.getTarget().getX(), this.getTarget().getY(0), this.getTarget().getZ());
             }
         }
         if (this.level().isClientSide()) {
@@ -223,4 +325,3 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
         return super.isAlliedTo(entity);
     }
 }
-

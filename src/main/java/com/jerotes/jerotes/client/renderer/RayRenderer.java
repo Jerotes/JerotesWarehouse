@@ -51,8 +51,8 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         if (!entity.isHitUseful() || entity.isUseful()) {
             return;
         }
-        float lifeBomb = entity.getLifeRayLast()+partialTick;
-        lifeBomb = Mth.clamp(lifeBomb, 1.0f, 15.0f);
+        float lifeBeam = entity.getLifeRayLast()+partialTick;
+        lifeBeam = Mth.clamp(lifeBeam, 1.0f, 15.0f);
 
         float start = 0.0f;
         float growEnd = 4.0f;
@@ -61,15 +61,15 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
 
         float progress = 0;
         float fade = 0;
-        if (lifeBomb <= start) {
+        if (lifeBeam <= start) {
             progress = 0;
-        } else if (lifeBomb <= growEnd) {
-            progress = (lifeBomb - start) / (growEnd - start);
-        } else if (lifeBomb <= plateauEnd) {
+        } else if (lifeBeam <= growEnd) {
+            progress = (lifeBeam - start) / (growEnd - start);
+        } else if (lifeBeam <= plateauEnd) {
             progress = 1;
         } else {
-            progress = 1 - (lifeBomb - plateauEnd) / (fadeEnd - plateauEnd);
-            fade = (lifeBomb - plateauEnd) / (fadeEnd - plateauEnd);
+            progress = 1 - (lifeBeam - plateauEnd) / (fadeEnd - plateauEnd);
+            fade = (lifeBeam - plateauEnd) / (fadeEnd - plateauEnd);
         }
         progress = Mth.clamp(progress, 0, 1);
         fade = Mth.clamp(fade, 0, 1);
@@ -95,7 +95,7 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
 
         if (fadeAlpha < 0.01f) return;
 
-        float maxRadius = 6.0f;
+        float maxRadius = 3.0f;
         float radius = maxRadius * growProgress;
 
         float coverage = 0.3f;
@@ -103,7 +103,7 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         float centerOffset = radius * (float)Math.cos(maxPhi);
 
         poseStack.pushPose();
-        poseStack.translate(0, 0, beamLength + centerOffset + 2.5f);
+        poseStack.translate(0, 0, beamLength + centerOffset + 0f);
         poseStack.mulPose(Axis.XP.rotation(-(float)Math.PI / 2));
 
         VertexConsumer consumer = buffer.getBuffer(JerotesRenderType.glowDoubleSidedLightningAdd(

@@ -31,6 +31,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -53,6 +54,9 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
         super(entityType, level);
     }
 
+    public void setLastDamageSourceJerotes(DamageSource damageSource) {
+        this.lastDamageSource = damageSource;
+    }
     public boolean isTrueInvisibleJerotes() {
         return this.getEntityData().get(IS_TRUE_INVISIBLE_JEROTES);
     }
@@ -88,6 +92,10 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
 
     @Shadow
     protected abstract int getCurrentSwingDuration();
+
+    @Shadow
+    @Nullable
+    private DamageSource lastDamageSource;
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
@@ -229,5 +237,4 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
         if (this instanceof JerotesChangeStray jerotesChangeStray && jerotesChangeStray.isJerotesParched() && mobEffectInstance.getEffect() == MobEffects.WEAKNESS)
             cir.setReturnValue(false);
     }
-
 }
