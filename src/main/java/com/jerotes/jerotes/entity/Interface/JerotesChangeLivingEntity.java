@@ -12,5 +12,14 @@ public interface JerotesChangeLivingEntity {
     boolean isTrueInvisibleJerotes();
     int getCurrentSwingDurationJerotes();
     void setLastDamageSourceJerotes(DamageSource damageSource);
+
+    float getMaxHealthReduceCountJerotes();
+    void setMaxHealthReduceCountJerotes(float count);
+    float getMaxHealthReduceTickJerotes();
+    void setMaxHealthReduceTickJerotes(float tick);
+    void applyMaxHealthReductionJerotes(float tick);
+
+    int getAnesthetizedTickJerotes();
+    void setAnesthetizedTickJerotes(int tick);
 }
 

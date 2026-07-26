@@ -1,11 +1,9 @@
 package com.jerotes.jerotes.entity.Shoot.Magic;
 
 import com.google.common.collect.Lists;
-import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
-import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
-import com.jerotes.jerotes.spell.SpellFind;
 import com.jerotes.jerotes.util.AttackFind;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -15,9 +13,9 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -339,6 +337,9 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
     protected boolean shouldBurn() {
         return false;
     }
+    public boolean isNormalLittleFireball() {
+        return false;
+    }
 
     @Override
     protected float getInertia() {
@@ -349,5 +350,11 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
     protected float getLiquidInertia() {
         return 1.0f;
     }
+
+    public ResourceLocation getAsSpecialRendererTextureLocation() {
+        return new ResourceLocation(JerotesWarehouse.MODID,
+                "textures/entity/projectiles/wind_charge.png");
+    }
+
 }
 

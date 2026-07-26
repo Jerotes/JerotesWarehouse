@@ -23,7 +23,8 @@ public class SpellRegistry {
 	public static SpellTypeInterface getSpellTypeById(String id) {
 		SpellTypeInterface type = REGISTRY.get(id);
 		if (type == null) {
-			throw new IllegalArgumentException("未知法术类型: " + id);
+			return REGISTRY.get("jerotes_empty");
+			//throw new IllegalArgumentException("未知法术类型: " + id);
 		}
 		return type;
 	}

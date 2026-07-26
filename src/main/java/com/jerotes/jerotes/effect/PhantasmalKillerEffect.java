@@ -1,7 +1,9 @@
 package com.jerotes.jerotes.effect;
 
+import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.server.level.ServerLevel;
@@ -26,33 +28,12 @@ public class PhantasmalKillerEffect extends BaseMobEffectAllTick {
 	@Override
 	public void applyEffectTick(LivingEntity livingEntity, int n) {
 		super.applyEffectTick(livingEntity, n);
-		int effectLevel = n + 1;
-		//震慑
-		if (!livingEntity.level().isClientSide()) {
-			livingEntity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 5, 0, false, false));
-			livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.ABACK.get(), 5, 0, false, false));
-		}
 		if (livingEntity.level() instanceof ServerLevel serverLevel) {
 			for (int i = 0; i < 7; ++i) {
 				double d = livingEntity.getRandom().nextGaussian() * 0.02;
 				double d2 = livingEntity.getRandom().nextGaussian() * 0.02;
 				double d3 = livingEntity.getRandom().nextGaussian() * 0.02;
 				serverLevel.sendParticles(JerotesParticleTypes.PHANTASMAL_KILLER.get(), livingEntity.getRandomX(1.0), livingEntity.getRandomY() + 0.5, livingEntity.getRandomZ(1.0), 0, d, d2, d3, 1);
-			}
-		}
-		int time = livingEntity.getEffect(JerotesMobEffects.PHANTASMAL_KILLER.get()).getDuration();
-		if ((time % 120 == 0) && time != 0 && time != 6) {
-			//感知判定
-			if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
-				if (!livingEntity.level().isClientSide) {
-					livingEntity.removeEffect(JerotesMobEffects.PHANTASMAL_KILLER.get());
-				}
-			}
-			else {
-				DamageSource damageSource = livingEntity.level().damageSources().wither();
-				livingEntity.hurt(damageSource,
-						Main.rollDice(effectLevel, 10, livingEntity.getRandom())
-				);
 			}
 		}
 	}

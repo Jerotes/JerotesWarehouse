@@ -133,6 +133,12 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 	private LazyOptional<?> itemHandler = null;
 	public AnimationState armWideScaleAnimationState = new AnimationState();
 	public AnimationState armSlimScaleAnimationState = new AnimationState();
+	public AnimationState armWideScaleAnimationState() {
+		return armWideScaleAnimationState;
+	}
+	public AnimationState armSlimScaleAnimationState() {
+		return armSlimScaleAnimationState;
+	}
 
 	public HumanEntity(EntityType<? extends PathfinderMob> type, Level world) {
 		super(type, world);

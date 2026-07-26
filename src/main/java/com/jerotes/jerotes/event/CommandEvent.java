@@ -3,6 +3,7 @@ package com.jerotes.jerotes.event;
 import com.jerotes.jerotes.alchemy.Alchemy;
 import com.jerotes.jerotes.argument.SpellArgumentType;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeAbstractHorse;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
 import com.jerotes.jerotes.entity.Mob.JerotesHorseEntity;
 import com.jerotes.jerotes.entity.Mob.JerotesPlayerEntity;
 import com.jerotes.jerotes.init.JerotesEnchantments;
@@ -15,6 +16,7 @@ import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.Commands;
@@ -39,7 +41,6 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.checkerframework.framework.qual.DefaultQualifier;
 
 import java.util.*;
 
@@ -108,10 +109,10 @@ public class CommandEvent {
 																			Player playerTo = EntityArgument.getPlayer(arguments, "player");
 
 																			if (!StringArgumentType.getString(arguments, "string").isEmpty()) {
-																				int n = Math.max(SpellListByString.getSpell((int)DoubleArgumentType.getDouble(arguments, "number"), null, null, SpellRegistry.getSpellTypeById(StringArgumentType.getString(arguments, "string"))).baseSpellLevel(), (int)DoubleArgumentType.getDouble(arguments, "number"));
+																				int n = Math.max(SpellListByString.getSpell((int)DoubleArgumentType.getDouble(arguments, "number"), null, null, SpellRegistry.getSpellTypeById(StringArgumentType.getString(arguments, "string"))).getBaseSpellLevel(), (int)DoubleArgumentType.getDouble(arguments, "number"));
 																				playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).ifPresent(capability -> {
 																					capability.setMainSpellTarget(StringArgumentType.getString(arguments, "string"));
-																					capability.setMainSpellTargetLevel(Math.max(SpellListByString.getSpellEasy(SpellRegistry.getSpellTypeById(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).MainSpellTarget)).baseSpellLevel(), (int)DoubleArgumentType.getDouble(arguments, "number")));
+																					capability.setMainSpellTargetLevel(Math.max(SpellListByString.getSpellEasy(SpellRegistry.getSpellTypeById(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).MainSpellTarget)).getBaseSpellLevel(), (int)DoubleArgumentType.getDouble(arguments, "number")));
 																				});
 																				playerTo.sendSystemMessage(
 																						Component.translatable("message.jerotes.target_magic")
@@ -143,10 +144,10 @@ public class CommandEvent {
 																			Player playerTo = EntityArgument.getPlayer(arguments, "player");
 
 																			if (!StringArgumentType.getString(arguments, "string").isEmpty()) {
-																				int n = Math.max(SpellListByString.getSpell((int)DoubleArgumentType.getDouble(arguments, "number"), null, null, SpellRegistry.getSpellTypeById(StringArgumentType.getString(arguments, "string"))).baseSpellLevel(), (int)DoubleArgumentType.getDouble(arguments, "number"));
+																				int n = Math.max(SpellListByString.getSpell((int)DoubleArgumentType.getDouble(arguments, "number"), null, null, SpellRegistry.getSpellTypeById(StringArgumentType.getString(arguments, "string"))).getBaseSpellLevel(), (int)DoubleArgumentType.getDouble(arguments, "number"));
 																				playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).ifPresent(capability -> {
 																					capability.setAddSpellTarget(StringArgumentType.getString(arguments, "string"));
-																					capability.setAddSpellTargetLevel(Math.max(SpellListByString.getSpellEasy(SpellRegistry.getSpellTypeById(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTarget)).baseSpellLevel(), (int)DoubleArgumentType.getDouble(arguments, "number")));
+																					capability.setAddSpellTargetLevel(Math.max(SpellListByString.getSpellEasy(SpellRegistry.getSpellTypeById(playerTo.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTarget)).getBaseSpellLevel(), (int)DoubleArgumentType.getDouble(arguments, "number")));
 																				});
 																				playerTo.sendSystemMessage(
 																						Component.translatable("message.jerotes.target_magic")
@@ -250,11 +251,12 @@ public class CommandEvent {
 				.then(Commands.literal("entity_change")
 						.then(Commands.argument("entities", EntityArgument.entities())
 								.then(Commands.literal("anesthetized")
-										.then(Commands.argument("number", DoubleArgumentType.doubleArg(0)).executes(arguments -> {
+										.then(Commands.argument("number", IntegerArgumentType.integer(0)).executes(arguments -> {
 															Collection<? extends Entity> entities = EntityArgument.getEntities(arguments, "entities");
-															double d = DoubleArgumentType.getDouble(arguments, "number");
+															int n = IntegerArgumentType.getInteger(arguments, "number");
 															for (Entity entity : entities) {
-																Main.getJerotesPersistentData(entity).putDouble("jerotes_anesthetized", d);
+																if (entity instanceof JerotesChangeLivingEntity jerotesChangeLivingEntity)
+																	jerotesChangeLivingEntity.setAnesthetizedTickJerotes(n);
 															}
 															return 0;
 														}

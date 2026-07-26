@@ -88,17 +88,25 @@ public class FireballRenderer extends EntityRenderer<FireballEntity> {
 
 		float growProgress, fadeAlpha;
 		int color;
+		int beginColor = 0xFFFFFF;
 		if (lifeBomb <= 5.0f) {
 			growProgress = (lifeBomb - 1.0f) / 4.0f;
-			color = 0xFFFFFF;
+			color = beginColor;
 			fadeAlpha = 1.0f;
 		} else {
+			float beginR = ((beginColor >> 16) & 0xFF) / 255.0f;
+			float beginG = ((beginColor >> 8) & 0xFF) / 255.0f;
+			float beginB = (beginColor & 0xFF) / 255.0f;
 			float fade = (lifeBomb - 5.0f) / 5.0f;
 			growProgress = 1.0f - fade * 0.5f;
 			fadeAlpha = 1.0f - fade;
-			float r = 1.0f;
-			float g = 1.0f - fade * 0.35f;
-			float b = 1.0f - fade;
+			int targetColor = 0xFFA600;
+			float targetR = ((targetColor >> 16) & 0xFF) / 255.0f;
+			float targetG = ((targetColor >> 8) & 0xFF) / 255.0f;
+			float targetB = (targetColor & 0xFF) / 255.0f;
+			float r = fade * beginR + targetR * (1.0f - fade);
+			float g = fade * beginG + targetG * (1.0f - fade);
+			float b = fade * beginB + targetB * (1.0f - fade);
 			color = ((int)(r * 255) << 16) | ((int)(g * 255) << 8) | (int)(b * 255);
 		}
 		if (fadeAlpha < 0.01f) return;

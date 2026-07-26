@@ -52,6 +52,10 @@ public interface JerotesEntity {
     }
 
 
+    //命令攻击
+    default boolean SpecialDamageTypeChangeAmount() {
+        return true;
+    }
 
     default boolean isOffHandItem(ItemStack itemStack) {
         return false;

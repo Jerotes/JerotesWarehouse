@@ -122,6 +122,15 @@ public class EntityAndItemFind {
 		MinecraftForge.EVENT_BUS.post(event);
 		return event.isMerorDamage();
 	}
+	//是否无法缴械
+	public static boolean isLoreUndying(EntityType type) {
+		return type.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:lore_undying")));
+	}
+	public static boolean isLoreUndying(Entity entity) {
+		if (entity instanceof LoreUndyingEntity loreUndyingEntity)
+			return loreUndyingEntity.isLoreUndying();
+		return isLoreUndying(entity.getType());
+	}
 	//是否雪球伤害
 	public static boolean isSnowballCanAttack(EntityType type) {
 		return type.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:snowball_can_attack")));
@@ -305,7 +314,7 @@ public class EntityAndItemFind {
 		if (!MainConfig.HaveSavingThrow)
 			return true;
 		if (MainConfig.HaveSavingThrowOnlyPlayerAndLegendary && !(livingEntity instanceof Player) && !isLegendary(livingEntity))
-			return true;
+			return false;
 		int n = (Main.randomReach(livingEntity.getRandom(),1, 20));
 		if (n == 1)
 			return false;

@@ -2,10 +2,9 @@ package com.jerotes.jerotes.alchemy.effect;
 
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffects;
 
-public class InvisiblePassageAlchemyEffect extends AAAAlchemyEffect {
-    public InvisiblePassageAlchemyEffect(int level, int time) {
+public class TrueInvisbilityAlchemyEffect extends AAAAlchemyEffect {
+    public TrueInvisbilityAlchemyEffect(int level, int time) {
         super(level, time);
     }
 
@@ -14,6 +13,6 @@ public class InvisiblePassageAlchemyEffect extends AAAAlchemyEffect {
     }
 
     public String getName() {
-        return "jerotes_invisible_passage";
+        return "jerotes_true_invisbility";
     }
 }

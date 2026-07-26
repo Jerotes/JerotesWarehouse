@@ -26,6 +26,15 @@ public class SpellSchool {
 				PSIONICS, SKILL
 		};
 	}
+	public int getSortIndex() {
+		SpellSchool[] schools = types();
+		for (int i = 0; i < schools.length; i++) {
+			if (schools[i] == this) {
+				return i;
+			}
+		}
+		return Integer.MAX_VALUE;
+	}
 
 	public String getTranslationKey() {
 		return "spell.jerotes.school.evocation";

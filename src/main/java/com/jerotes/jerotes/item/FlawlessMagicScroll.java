@@ -35,6 +35,32 @@ public class FlawlessMagicScroll extends Item implements MagicItem {
 		super(new Properties().rarity(Rarity.UNCOMMON));
 	}
 
+
+	public Rarity getRarity(ItemStack itemStack) {
+		if (!itemStack.isEnchanted()) {
+			return this.getScrollRarity(itemStack);
+		} else {
+			switch (this.getScrollRarity(itemStack)) {
+				case COMMON:
+				case UNCOMMON:
+					return Rarity.RARE;
+				case RARE:
+					return Rarity.EPIC;
+				case EPIC:
+				default:
+					return this.getScrollRarity(itemStack);
+			}
+		}
+	}
+
+	public Rarity getScrollRarity(ItemStack itemStack) {
+		if (this.getSpellLevel(itemStack) > 6)
+			return Rarity.EPIC;
+		if (this.getSpellLevel(itemStack) > 3)
+			return Rarity.RARE;
+		return Rarity.UNCOMMON;
+	}
+
 	@Override
 	public UseAnim getUseAnimation(ItemStack itemStack) {
 		return UseAnim.BOW;
@@ -80,7 +106,7 @@ public class FlawlessMagicScroll extends Item implements MagicItem {
 		if (n2 < getUseTime()) {
 			return;
 		}
-		if (Main.getJerotesPersistentData(livingEntity).getDouble("jerotes_spell_cooldown") > 0) {
+		if (SpellType.getCastCooldownJerotes(livingEntity) > 0) {
 			return;
 		}
 		livingEntity.swing(InteractionHand.MAIN_HAND, true);

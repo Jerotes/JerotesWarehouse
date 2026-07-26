@@ -2,18 +2,29 @@ package com.jerotes.jerotes.entity.Other.OtherSpell;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
+import com.jerotes.jerotes.network.JerotesPlayerData;
+import com.jerotes.jerotes.spell.SpellType;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class HoldMobEntity extends OtherSpellBaseEntity implements TraceableEntity, OwnableEntity, MagicAbout {
     public HoldMobEntity(EntityType<? extends HoldMobEntity> entityType, Level level) {
@@ -35,13 +46,13 @@ public class HoldMobEntity extends OtherSpellBaseEntity implements TraceableEnti
     }
     @Override
     public int getMaxLife() {
-        return 70;
+        return 60 * 20 + 25;
     }
     public int getMaxStart() {
         return 20;
     }
     public boolean moveToTarget() {
-        return true;
+        return this.life >= 20 || !(this.getTarget() instanceof Player);
     }
     @VisibleForTesting
     public void setSize(float f) {
@@ -57,27 +68,53 @@ public class HoldMobEntity extends OtherSpellBaseEntity implements TraceableEnti
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide()) {
-            if (getTarget() instanceof LivingEntity livingEntity) {
-                if (livingEntity.isAlive() && livingEntity.hasEffect(JerotesMobEffects.HOLD_MOB.get())) {
-                    this.life = Math.min(30, this.life);
-                    if (this.tickCount % 10 == 0) {
-                        this.level().broadcastEntityEvent(this, (byte) 101);
-                    }
-                } else {
-                    this.setTarget(null);
+        int time = (getMaxLife() - 20) - 5 - (life - 20);
+
+        if (this.life < 20) {
+            return;
+        }
+        if (this.life == 20) {
+            boolean bl = false;
+            List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.2, 0.0, 0.2));
+            list.removeIf(livingEntity -> livingEntity != this.getTarget());
+            for (LivingEntity livingEntity : list) {
+                if (livingEntity == null) continue;
+                Entity entity = this.getOwner();
+                if (livingEntity.isAlive() && !livingEntity.isInvulnerable() && livingEntity != entity) {
+                    bl = true;
                 }
             }
+            if (!bl) {
+                this.stop();
+            }
+        }
+
+        if (!this.level().isClientSide()) {
+            if (getTarget() instanceof LivingEntity livingEntity && getTarget().isAlive()) {
+                livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.HOLD_MOB.get(), time, 0, false, false));
+                if ((time % 120 == 0) && time != 0) {
+                    if (EntityAndItemFind.savingSpellThrow(livingEntity)){
+                        if (!livingEntity.level().isClientSide) {
+                            livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
+                        }
+                        stop();
+                    }
+                }
+            }
+            else {
+                stop();
+            }
+        }
+        if (this.life >= getMaxLife() - 5) {
+            this.stop();
         }
     }
-    @Override
-    public void handleEntityEvent(byte by) {
-        if (by == 101) {
-            this.life = Math.min(30, this.life);
+    public void stop() {
+        if (getTarget() instanceof LivingEntity livingEntity) {
+            livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
         }
-        else {
-            super.handleEntityEvent(by);
-        }
+        this.setTarget(null);
+        this.discard();
     }
 
     public ResourceLocation getTextureLocation() {
@@ -89,6 +126,7 @@ public class HoldMobEntity extends OtherSpellBaseEntity implements TraceableEnti
     public ResourceLocation getChainTextureLocation() {
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/other/hold_mob_chain.png");
     }
+
 
     @Override
     public int getSpellLevel() {

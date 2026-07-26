@@ -1,10 +1,9 @@
 package com.jerotes.jerotes.event;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.EliteEntity;
 import com.jerotes.jerotes.entity.Interface.FireAbsorptionEntity;
-import com.jerotes.jerotes.entity.Interface.FreezeAbsorptionEntity;
+import com.jerotes.jerotes.entity.Interface.ColdAbsorptionEntity;
 import com.jerotes.jerotes.entity.Interface.LightningAbsorptionEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
@@ -76,15 +75,15 @@ public class EffectEvent {
 		}
 		if (damagesource.is(DamageTypeTags.IS_FREEZING)){
 			if (!entity.level().isClientSide()) {
-				if (entity.hasEffect(JerotesMobEffects.FREEZE_ABSORPTION.get()) || entity instanceof FreezeAbsorptionEntity) {
+				if (entity.hasEffect(JerotesMobEffects.COLD_ABSORPTION.get()) || entity instanceof ColdAbsorptionEntity) {
 					double AbsorptionPercentage = Math.max(
-							(entity instanceof FreezeAbsorptionEntity absorptionEntity) ? absorptionEntity.FreezeAbsorptionPercentage() : 0,
-							(entity.hasEffect(JerotesMobEffects.FREEZE_ABSORPTION.get())) ? (Objects.requireNonNull(entity.getEffect(JerotesMobEffects.FREEZE_ABSORPTION.get())).getAmplifier() + 1) * 20 : 0);
+							(entity instanceof ColdAbsorptionEntity absorptionEntity) ? absorptionEntity.ColdAbsorptionPercentage() : 0,
+							(entity.hasEffect(JerotesMobEffects.COLD_ABSORPTION.get())) ? (Objects.requireNonNull(entity.getEffect(JerotesMobEffects.COLD_ABSORPTION.get())).getAmplifier() + 1) * 20 : 0);
 					damages -= AbsorptionPercentage / 100f;
-					boolean bl = SpellFind.FreezeAbsorption(entity, event.getAmount(), AbsorptionPercentage, 0.25f);
+					boolean bl = SpellFind.ColdAbsorption(entity, event.getAmount(), AbsorptionPercentage, 0.25f);
 					if (bl) {
 						if (!entity.isSilent()) {
-							entity.playSound(JerotesSoundEvents.MAGIC_FREEZE_ABSORPTION, EntityAndItemFind.isBoss(entity.getType()) ? 5f : (entity instanceof EliteEntity ? 2f : 1f) * 1, 1.0F);
+							entity.playSound(JerotesSoundEvents.MAGIC_COLD_ABSORPTION, EntityAndItemFind.isBoss(entity.getType()) ? 5f : (entity instanceof EliteEntity ? 2f : 1f) * 1, 1.0F);
 						}
 					}
 				}
@@ -129,10 +128,10 @@ public class EffectEvent {
 		}
 		if (damagesource.is(DamageTypeTags.IS_FREEZING)){
 			if (!entity.level().isClientSide()) {
-				if (entity.hasEffect(JerotesMobEffects.FREEZE_ABSORPTION.get()) || entity instanceof FreezeAbsorptionEntity) {
+				if (entity.hasEffect(JerotesMobEffects.COLD_ABSORPTION.get()) || entity instanceof ColdAbsorptionEntity) {
 					double AbsorptionPercentage = Math.max(
-							(entity instanceof FreezeAbsorptionEntity absorptionEntity) ? absorptionEntity.FreezeAbsorptionPercentage() : 0,
-							(entity.hasEffect(JerotesMobEffects.FREEZE_ABSORPTION.get())) ? (Objects.requireNonNull(entity.getEffect(JerotesMobEffects.FREEZE_ABSORPTION.get())).getAmplifier() + 1) * 20 : 0);
+							(entity instanceof ColdAbsorptionEntity absorptionEntity) ? absorptionEntity.ColdAbsorptionPercentage() : 0,
+							(entity.hasEffect(JerotesMobEffects.COLD_ABSORPTION.get())) ? (Objects.requireNonNull(entity.getEffect(JerotesMobEffects.COLD_ABSORPTION.get())).getAmplifier() + 1) * 20 : 0);
 					damages -= AbsorptionPercentage / 100f;
 				}
 			}

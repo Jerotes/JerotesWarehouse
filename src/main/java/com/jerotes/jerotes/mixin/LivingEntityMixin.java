@@ -1,26 +1,19 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
-import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
-import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.jerotes.jerotes.network.JerotesSpearRushAttackPacket;
 import com.jerotes.jerotes.network.PacketHandler;
-import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
-import com.jerotes.jerotes.util.Main;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -31,8 +24,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,10 +38,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements JerotesChangeLivingEntity {
+    @Unique
+    private static final UUID MAX_HEALTH_REDUCE_UUID = UUID.fromString("e0dce003-920a-4d77-a4d0-47bbb9114a82");
+    @Unique
+    private static final EntityDataAccessor<Float> MAX_HEALTH_REDUCE_COUNT_JEROTES = SynchedEntityData.defineId(LivingEntityMixin.class, EntityDataSerializers.FLOAT);
+    @Unique
+    private static final EntityDataAccessor<Float> MAX_HEALTH_REDUCE_TICK_JEROTES = SynchedEntityData.defineId(LivingEntityMixin.class, EntityDataSerializers.FLOAT);
+    @Unique
     private static final EntityDataAccessor<Boolean> IS_TRUE_INVISIBLE_JEROTES = SynchedEntityData.defineId(LivingEntityMixin.class, EntityDataSerializers.BOOLEAN);
+    @Unique
+    private static final EntityDataAccessor<Integer> ANESTHETIZED_TICK_JEROTES = SynchedEntityData.defineId(LivingEntityMixin.class, EntityDataSerializers.INT);
 
     protected LivingEntityMixin(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
@@ -66,6 +69,27 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     public int getCurrentSwingDurationJerotes() {
         return getCurrentSwingDuration();
     }
+    public float getMaxHealthReduceCountJerotes() {
+        return this.getEntityData().get(MAX_HEALTH_REDUCE_COUNT_JEROTES);
+    }
+    public void setMaxHealthReduceCountJerotes(float count) {
+        this.getEntityData().set(MAX_HEALTH_REDUCE_COUNT_JEROTES, count);
+        this.getEntityData().set(MAX_HEALTH_REDUCE_TICK_JEROTES, 120f);
+        applyMaxHealthReductionJerotes(count);
+    }
+    public float getMaxHealthReduceTickJerotes() {
+        return this.getEntityData().get(MAX_HEALTH_REDUCE_TICK_JEROTES);
+    }
+    public void setMaxHealthReduceTickJerotes(float tick) {
+        this.getEntityData().set(MAX_HEALTH_REDUCE_TICK_JEROTES, tick);
+    }
+    public int getAnesthetizedTickJerotes() {
+        return this.getEntityData().get(ANESTHETIZED_TICK_JEROTES);
+    }
+    public void setAnesthetizedTickJerotes(int tick) {
+        this.getEntityData().set(ANESTHETIZED_TICK_JEROTES, tick);
+    }
+
 
     @Shadow public abstract boolean hasEffect(MobEffect p_21024_);
 
@@ -96,20 +120,27 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     @Shadow
     @Nullable
     private DamageSource lastDamageSource;
-
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
         compoundTag.putBoolean("IsTrueInvisibleJerotes", this.isTrueInvisibleJerotes());
+        compoundTag.putFloat("MaxHealthReduceCountJerotes", this.getMaxHealthReduceCountJerotes());
+        compoundTag.putFloat("MaxHealthReduceTickJerotes", this.getMaxHealthReduceTickJerotes());
+        compoundTag.putInt("AnesthetizedTickJerotes", this.getAnesthetizedTickJerotes());
     }
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
     private void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
         this.setTrueInvisibleJerotes(compoundTag.getBoolean("IsTrueInvisibleJerotes"));
+        this.setMaxHealthReduceCountJerotes(compoundTag.getFloat("MaxHealthReduceCountJerotes"));
+        this.setMaxHealthReduceTickJerotes(compoundTag.getFloat("MaxHealthReduceTickJerotes"));
+        this.setAnesthetizedTickJerotes(compoundTag.getInt("AnesthetizedTickJerotes"));
     }
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
     protected void defineSynchedData(CallbackInfo ci) {
         this.getEntityData().define(IS_TRUE_INVISIBLE_JEROTES, false);
+        this.getEntityData().define(MAX_HEALTH_REDUCE_COUNT_JEROTES, 0f);
+        this.getEntityData().define(MAX_HEALTH_REDUCE_TICK_JEROTES, 120f);
+        this.getEntityData().define(ANESTHETIZED_TICK_JEROTES, 0);
     }
-
     @Inject(method = "tick", at = @At("HEAD"))
     protected void tick(CallbackInfo ci) {
         if (this.isInvisible()) {
@@ -118,6 +149,26 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
                 if (!this.level().isClientSide())
                     this.entityData.set(IS_TRUE_INVISIBLE_JEROTES, trueInvisible);
             }
+        }
+
+        if (this.getMaxHealthReduceCountJerotes() > 0) {
+            if (!this.level().isClientSide()) {
+                this.setMaxHealthReduceTickJerotes(Math.max(this.getMaxHealthReduceTickJerotes() - 1, 0));
+            }
+            if (this.getMaxHealthReduceTickJerotes() <= 0) {
+                if (!this.level().isClientSide()) {
+                    this.setMaxHealthReduceCountJerotes(Math.max(this.getMaxHealthReduceCountJerotes() - 1, 0));
+                    this.setMaxHealthReduceTickJerotes(120);
+                }
+            }
+        }
+    }
+    public void applyMaxHealthReductionJerotes(float count) {
+        LivingEntity livingEntity = (LivingEntity)(Object)this;
+        Objects.requireNonNull(livingEntity.getAttribute(Attributes.MAX_HEALTH)).removeModifier(MAX_HEALTH_REDUCE_UUID);
+        if (count > 0) {
+            Objects.requireNonNull(livingEntity.getAttribute(Attributes.MAX_HEALTH))
+                    .addTransientModifier(new AttributeModifier(MAX_HEALTH_REDUCE_UUID, "Max Health Reduction", -count, AttributeModifier.Operation.ADDITION));
         }
     }
 

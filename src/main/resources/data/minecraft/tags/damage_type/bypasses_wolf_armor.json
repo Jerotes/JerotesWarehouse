@@ -5,7 +5,10 @@
     "jerotes:syringe",
     "jerotes:magic_effect",
     "jerotes:bleeding",
-    "jerotes:corrosive",
+    "jerotes:corrosion",
+    "jerotes:necrotic",
+    "jerotes:radiant",
+    "jerotes:psychic",
     "jerotes:poison",
 
     "jerotes:fire_melee",

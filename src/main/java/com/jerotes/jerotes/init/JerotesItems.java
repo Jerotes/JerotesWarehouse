@@ -39,7 +39,6 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> HUMAN_SPAWN_EGG = REGISTRY.register("human_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.HUMAN, 0xffffff, 0xffffff, new Item.Properties()));
 	public static final RegistryObject<Item> JEROTES_PLAYER_SPAWN_EGG = REGISTRY.register("jerotes_player_spawn_egg", () -> new JerotesPlayerSpawnEgg());
 	public static final RegistryObject<Item> JEROTES_HORSE_SPAWN_EGG = REGISTRY.register("jerotes_horse_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_HORSE, 0xffffff, 0xffffff, new Item.Properties()));
-	public static final RegistryObject<Item> JEROTES_VEX_SPAWN_EGG = REGISTRY.register("jerotes_vex_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_VEX, 0xffffff, 0xffffff, new Item.Properties()));
 
 	public static final RegistryObject<Item> FLAWLESS_MAGIC_SCROLL = REGISTRY.register("flawless_magic_scroll", () -> new FlawlessMagicScroll());
 
@@ -221,12 +220,17 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> NETHERITE_GIANT_BEAST_ARMOR = REGISTRY.register("netherite_giant_beast_armor", () -> new ItemGiantBeastArmor(17, 9, 3, 0x3c3232, JerotesWarehouse.MODID, "netherite", new Item.Properties().stacksTo(1).rarity(Rarity.COMMON).fireResistant()));
 	public static final RegistryObject<Item> NETHERITE_OLD_GIANT_BEAST_ARMOR = REGISTRY.register("netherite_old_giant_beast_armor", () -> new ItemGiantBeastArmor(17, 9, 3, 0x3c3232, JerotesWarehouse.MODID, "netherite_old", new Item.Properties().stacksTo(1).rarity(Rarity.COMMON).fireResistant()));
 
+	//仆从
+	public static final RegistryObject<Item> JEROTES_VEX_SPAWN_EGG = REGISTRY.register("jerotes_vex_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_VEX, 0xffffff, 0xffffff, new Item.Properties()));
+	public static final RegistryObject<Item> JEROTES_ZOMBIE_SPAWN_EGG = REGISTRY.register("jerotes_zombie_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_ZOMBIE, 0xffffff, 0xffffff, new Item.Properties()));
+	public static final RegistryObject<Item> FINGER_OF_DEATH_ZOMBIE_SPAWN_EGG = REGISTRY.register("finger_of_death_zombie_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.FINGER_OF_DEATH_ZOMBIE, 0xffffff, 0xffffff, new Item.Properties()));
 	//发射物
 	public static final RegistryObject<Item> MAGIC_MISSILE = REGISTRY.register("magic_missile", () -> new Shoot());
 	public static final RegistryObject<Item> POISON_BREATH = REGISTRY.register("poison_breath", () -> new Shoot());
 	public static final RegistryObject<Item> RAY_OF_SICKNESS = REGISTRY.register("ray_of_sickness", () -> new Shoot());
 	public static final RegistryObject<Item> RAY_OF_ENFEEBLEMENT = REGISTRY.register("ray_of_enfeeblement", () -> new Shoot());
 	public static final RegistryObject<Item> DISINTEGRATE = REGISTRY.register("disintegrate", () -> new Shoot());
+	public static final RegistryObject<Item> FINGER_OF_DEATH = REGISTRY.register("finger_of_death", () -> new Shoot());
 	public static final RegistryObject<Item> LIGHTNING_BLOT = REGISTRY.register("lightning_bolt", () -> new Shoot());
 	public static final RegistryObject<Item> VICIOUS_MOCKERY = REGISTRY.register("vicious_mockery", () -> new Shoot());
 	public static final RegistryObject<Item> HOLD_PERSON = REGISTRY.register("hold_person", () -> new Shoot());

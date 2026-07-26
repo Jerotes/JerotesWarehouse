@@ -1,15 +1,14 @@
 package com.jerotes.jerotes.spell;
 
-import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
 import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
 import com.jerotes.jerotes.entity.Other.OtherSpell.*;
 import com.jerotes.jerotes.entity.Other.ShootTargetSpell.*;
-import com.jerotes.jerotes.entity.Other.SpellCloud.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.Breath.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.Ray.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.Target.*;
+import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
@@ -17,12 +16,12 @@ import com.jerotes.jerotes.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,15 +53,6 @@ public class SpellFind {
 					spell.setTarget(target);
 				}
 				serverLevel.addFreshEntity(spell);
-		}
-			if (!caster.level().isClientSide()) {
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_magic_missile", Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") - 3);
-				Main.getJerotesPersistentData(caster).putUUID("jerotes_magic_missile_target", target != null ? target.getUUID() : null);
-				Main.getJerotesPersistentData(caster).putInt("jerotes_magic_missile_spellLevelDamage", spellLevelDamage);
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_magic_missile", tickCount * 3 + Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile"));
-				Main.getJerotesPersistentData(caster).putFloat("jerotes_magic_missile_spellLevelAccuracy", spellLevelAccuracy);
-				Main.getJerotesPersistentData(caster).putInt("jerotes_magic_missile_count", count);
-				Main.getJerotesPersistentData(caster).putFloat("jerotes_magic_missile_distance", distance);
 			}
 		}
 		return true;
@@ -80,6 +70,57 @@ public class SpellFind {
 				breath.shootFromRotation(caster, caster.getXRot(), (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
 				breath.setOwner(caster);
 				serverLevel.addFreshEntity(breath);
+			}
+		}
+		return true;
+	}
+	//火焰射线
+	public static boolean RayofFire(LivingEntity caster, Entity target, int spellLevelDamage, int spellLevelFireTime, float spellLevelAccuracy, int count, float distance, boolean isPlayer) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			RayofFireEntity spell;
+			for (int i = 0; i < count; ++i) {
+				if (!isPlayer && caster instanceof Mob mob && target != null) {
+					mob.lookAt(target, 360.0f, 360.0f);
+				}
+				spell = new RayofFireEntity(spellLevelDamage, spellLevelFireTime, serverLevel, caster, caster.getLookAngle().x, caster.getLookAngle().y, caster.getLookAngle().z);
+				spell.setPos(caster.getX(), caster.getY(0.7) - spell.getBbHeight()/2, caster.getZ());
+				spell.shootFromRotation(caster, caster.getXRot(), (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
+				spell.setOwner(caster);
+				serverLevel.addFreshEntity(spell);
+			}
+		}
+		return true;
+	}
+	//冷冻射线
+	public static boolean RayofFrost(LivingEntity caster, Entity target, int spellLevelDamage, int spellLevelFreezeTime, float spellLevelAccuracy, int count, float distance, boolean isPlayer) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			RayofFrostEntity spell;
+			for (int i = 0; i < count; ++i) {
+				if (!isPlayer && caster instanceof Mob mob && target != null) {
+					mob.lookAt(target, 360.0f, 360.0f);
+				}
+				spell = new RayofFrostEntity(spellLevelDamage, spellLevelFreezeTime, serverLevel, caster, caster.getLookAngle().x, caster.getLookAngle().y, caster.getLookAngle().z);
+				spell.setPos(caster.getX(), caster.getY(0.7) - spell.getBbHeight()/2, caster.getZ());
+				spell.shootFromRotation(caster, caster.getXRot(), (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
+				spell.setOwner(caster);
+				serverLevel.addFreshEntity(spell);
+			}
+		}
+		return true;
+	}
+	//闪电射线
+	public static boolean RayofLightning(LivingEntity caster, Entity target, int spellLevelDamage, float spellLevelAccuracy, int count, float distance, boolean isPlayer) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			RayofLightningEntity spell;
+			for (int i = 0; i < count; ++i) {
+				if (!isPlayer && caster instanceof Mob mob && target != null) {
+					mob.lookAt(target, 360.0f, 360.0f);
+				}
+				spell = new RayofLightningEntity(spellLevelDamage, serverLevel, caster, caster.getLookAngle().x, caster.getLookAngle().y, caster.getLookAngle().z);
+				spell.setPos(caster.getX(), caster.getY(0.7) - spell.getBbHeight()/2, caster.getZ());
+				spell.shootFromRotation(caster, caster.getXRot(), (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
+				spell.setOwner(caster);
+				serverLevel.addFreshEntity(spell);
 			}
 		}
 		return true;
@@ -135,6 +176,23 @@ public class SpellFind {
 		}
 		return true;
 	}
+	//死亡一指
+	public static boolean FingerOfDeath(LivingEntity caster, Entity target, int spellLevelDamage, float spellLevelAccuracy, int count, float distance, boolean isPlayer) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			FingerOfDeathEntity spell;
+			for (int i = 0; i < count; ++i) {
+				if (!isPlayer && caster instanceof Mob mob && target != null) {
+					mob.lookAt(target, 360.0f, 360.0f);
+				}
+				spell = new FingerOfDeathEntity(spellLevelDamage, serverLevel, caster, caster.getLookAngle().x, caster.getLookAngle().y, caster.getLookAngle().z);
+				spell.setPos(caster.getX(), caster.getY(0.7) - spell.getBbHeight()/2, caster.getZ());
+				spell.shootFromRotation(caster, caster.getXRot(), (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
+				spell.setOwner(caster);
+				serverLevel.addFreshEntity(spell);
+			}
+		}
+		return true;
+	}
 	//闪电束
 	public static boolean LightningBolt(LivingEntity caster, Entity target, int spellLevelDamage, float spellLevelAccuracy, int count, float distance, boolean isPlayer) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
@@ -167,41 +225,99 @@ public class SpellFind {
 		}
 		return true;
 	}
-	//人类定身术
-	public static boolean HoldPerson(LivingEntity caster, Entity target, int spellLevelMainEffectTime, int spellLevelMainEffectLevel, int count) {
+	//隐形通道
+	public static boolean InvisiblePassage(LivingEntity caster, Entity target, int spellLevelDamage) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
-			HoldPersonEntity spell;
-			spell = new HoldPersonEntity(spellLevelMainEffectTime, spellLevelMainEffectLevel, serverLevel, caster, 0, 0, 0);
-			if (target != null) {
-				spell.setPos(target.getX(), target.getEyeY(), target.getZ());
-				spell.setOwner(caster);
-				spell.setTarget(target);
-				spell.setSize(Main.mobWidth(target));
-			}
+			InvisiblePassageEntity spell = new InvisiblePassageEntity(serverLevel, caster);
+			spell.setSpellLevelDamage(spellLevelDamage);
+			spell.setPos(target.getX(), target.getY() + 2 / 16f, target.getZ());
+			spell.setOwnerUUID(caster.getUUID());
+			spell.setTarget(target);
+			spell.setSize(Main.mobWidth(target));
+			spell.setTargetHeight(Main.mobHeight(target));
 			serverLevel.addFreshEntity(spell);
+			SpellType.startConcentration(caster, spell);
+		}
+		return true;
+	}
+	//人类定身术
+	public static boolean HoldPerson(LivingEntity caster, Entity target, int spellLevelDamage, int spellLevelMainEffectTime, int spellLevelMainEffectLevel, int tickCount, boolean first) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			HoldMobEntity spell = null;
+			if (target instanceof LivingEntity livingEntity) {
+				//感知判定
+				if (!EntityAndItemFind.savingSpellThrow(livingEntity)) {
+					spell = new HoldMobEntity(serverLevel, caster);
+					spell.setSpellLevelDamage(spellLevelDamage);
+					spell.setPos(livingEntity.getX(), livingEntity.getY() + 2 / 16f, livingEntity.getZ());
+					spell.setOwnerUUID(caster.getUUID());
+					spell.setTarget(livingEntity);
+					spell.setSize(Main.mobWidth(livingEntity));
+					spell.setTargetHeight(Main.mobHeight(livingEntity));
+					serverLevel.addFreshEntity(spell);
+					DamageSource damageSource = new DamageSource(caster.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.MAGIC_EFFECT), spell, caster);
+					livingEntity.hurt(damageSource, 0f);
+				}
+			}
+			
+			HoldPersonMainEntity cloud = new HoldPersonMainEntity(serverLevel, caster);
 			if (target != null) {
-				int maxAttack = 1;
-				//选择其他目标
-				List<LivingEntity> list = caster.level().getEntitiesOfClass(LivingEntity.class, target.getBoundingBox().inflate(12.0, 12.0, 12.0));
-				list.removeIf(entity -> entity == caster || entity == target || AttackFind.FindCanNotAttack(caster, entity));
-				for (LivingEntity findEntity : list) {
-					if (findEntity == null) continue;
-					if (!EntityFactionFind.isHumanoid(findEntity)) continue;
-					if (findEntity.hasEffect(JerotesMobEffects.HOLD_MOB.get())
-							&& findEntity.getEffect(JerotesMobEffects.HOLD_MOB.get()).getAmplifier() >= spellLevelMainEffectLevel - 1) continue;
-					if (maxAttack > count) break;
-					if ((findEntity instanceof Mob mob && mob.getTarget() == caster || caster instanceof Mob mob1 && mob1.getTarget() == findEntity)
-							|| (findEntity instanceof Player && caster instanceof Enemy)
-							|| (caster instanceof Player player && Main.getTargetedEntity(player, 32) == findEntity)
-							|| (findEntity.getTeam() != null && caster.getTeam() != null && !findEntity.isAlliedTo(caster))
-							|| (findEntity.isAlliedTo(target) && !findEntity.isAlliedTo(caster))) {
-						spell = new HoldPersonEntity(spellLevelMainEffectTime, spellLevelMainEffectLevel, serverLevel, caster, 0, 0, 0);
-						spell.setPos(findEntity.getX(), findEntity.getEyeY(), findEntity.getZ());
-						spell.setOwner(caster);
-						spell.setTarget(findEntity);
-						spell.setSize(Main.mobWidth(findEntity));
-						serverLevel.addFreshEntity(spell);
-						maxAttack += 1;
+				cloud.setPos(target.getX(), target.getEyeY(), target.getZ());
+				cloud.setOwner(caster);
+				cloud.setSize(Main.mobWidth(target));
+				if (spell != null) {
+					cloud.add(spell.getUUID());
+				}
+			}
+			serverLevel.addFreshEntity(cloud);
+			SpellType.startConcentration(caster, cloud);
+			if (caster instanceof Player) {
+				if (first) {
+					if (tickCount > 1) {
+						if (!caster.level().isClientSide()) {
+							Main.getJerotesPersistentData(caster).putDouble("jerotes_hold_person", Main.getJerotesPersistentData(caster).getDouble("jerotes_hold_person") - 3);
+							Main.getJerotesPersistentData(caster).putInt("jerotes_hold_person_spellLevelDamage", spellLevelDamage);
+							Main.getJerotesPersistentData(caster).putInt("jerotes_hold_person_spellLevelMainEffectTime", spellLevelMainEffectTime);
+							Main.getJerotesPersistentData(caster).putInt("jerotes_hold_person_spellLevelMainEffectLevel", spellLevelMainEffectLevel);
+							Main.getJerotesPersistentData(caster).putDouble("jerotes_hold_person", tickCount - 1 + Main.getJerotesPersistentData(caster).getDouble("jerotes_hold_person"));
+						}
+					}
+				}
+			}
+			else {
+				if (target instanceof LivingEntity livingEntity) {
+					int maxAttack = 1;
+					//选择其他目标
+					List<LivingEntity> list = caster.level().getEntitiesOfClass(LivingEntity.class, target.getBoundingBox().inflate(12.0, 12.0, 12.0));
+					list.removeIf(entity -> entity == caster || entity == target || AttackFind.FindCanNotAttack(caster, entity));
+					for (LivingEntity findEntity : list) {
+						if (findEntity == null) continue;
+						if (!EntityFactionFind.isHumanoid(findEntity)) continue;
+						if (AttackFind.SameFactionAvoidDamage(findEntity, caster, false)) continue;
+						if (findEntity.hasEffect(JerotesMobEffects.HOLD_MOB.get())
+								&& findEntity.getEffect(JerotesMobEffects.HOLD_MOB.get()).getAmplifier() >= spellLevelMainEffectLevel - 1) continue;
+						if (maxAttack > tickCount) break;
+						if ((findEntity instanceof Mob mob && mob.getTarget() == caster || caster instanceof Mob mob1 && mob1.getTarget() == findEntity)
+								|| (AttackFind.SameFactionAvoidDamage(findEntity, livingEntity, false) && !AttackFind.SameFactionAvoidDamage(findEntity, caster, false))
+								|| (findEntity.isAlliedTo(target) && !findEntity.isAlliedTo(caster))) {
+							spell = new HoldMobEntity(serverLevel, caster);
+							spell.setSpellLevelDamage(spellLevelDamage);
+							spell.setPos(findEntity.getX(), findEntity.getY() + 2 / 16f, findEntity.getZ());
+							spell.setOwnerUUID(caster.getUUID());
+							spell.setTarget(findEntity);
+							spell.setSize(Main.mobWidth(findEntity));
+							spell.setTargetHeight(Main.mobHeight(findEntity));
+							serverLevel.addFreshEntity(spell);
+							DamageSource damageSource = new DamageSource(caster.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.MAGIC_EFFECT), spell, caster);
+							findEntity.hurt(damageSource, 0f);
+							if (EntityFactionFind.isHumanoid(findEntity)) {
+								findEntity.addEffect(new MobEffectInstance(JerotesMobEffects.HOLD_MOB.get(), 20 * spellLevelMainEffectTime - 1, spellLevelMainEffectLevel - 1), caster);
+							}
+							
+							
+							maxAttack += 1;
+							cloud.add(spell.getUUID());
+						}
 					}
 				}
 			}
@@ -224,17 +340,17 @@ public class SpellFind {
 		return true;
 	}
 	//魅影杀手
-	public static boolean PhantasmalKiller(LivingEntity caster, Entity target, int spellLevelDamage, int spellLevelMainEffectTime, int spellLevelMainEffectLevel) {
+	public static boolean PhantasmalKiller(LivingEntity caster, Entity target, int spellLevelDamage) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
-			PhantasmalKillerEntity spell;
-			spell = new PhantasmalKillerEntity(spellLevelDamage, spellLevelMainEffectTime, spellLevelMainEffectLevel, serverLevel, caster, 0, 0, 0);
-			if (target != null) {
-				spell.setPos(target.getX(), target.getEyeY(), target.getZ());
-				spell.setOwner(caster);
-				spell.setTarget(target);
-				spell.setSize(Main.mobWidth(target));
-			}
+			PhantasmalKillerEntity spell = new PhantasmalKillerEntity(serverLevel, caster);
+			spell.setSpellLevelDamage(spellLevelDamage);
+			spell.setPos(target.getX(), target.getY() + 2 / 16f, target.getZ());
+			spell.setOwnerUUID(caster.getUUID());
+			spell.setTarget(target);
+			spell.setSize(Main.mobWidth(target));
+			spell.setTargetHeight(Main.mobHeight(target));
 			serverLevel.addFreshEntity(spell);
+			SpellType.startConcentration(caster, spell);
 		}
 		return true;
 	}
@@ -271,17 +387,17 @@ public class SpellFind {
 		return true;
 	}
 	//冰霜吸收
-	public static boolean FreezeAbsorption(LivingEntity caster, float amount, double spellLevelPercentage, float spellLevelInterval) {
+	public static boolean ColdAbsorption(LivingEntity caster, float amount, double spellLevelPercentage, float spellLevelInterval) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
-			if (Main.getJerotesPersistentData(caster).getDouble("jerotes_freeze_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_freeze_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_freeze_absorption") == null) {
+			if (Main.getJerotesPersistentData(caster).getDouble("jerotes_cold_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_cold_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_cold_absorption") == null) {
 				caster.heal((float) (amount * (spellLevelPercentage / 100)));
 				for (int i = 0; i < 2; ++i) {
 					serverLevel.sendParticles(ParticleTypes.SNOWFLAKE, caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
 				}
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_freeze_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_freeze_absorption") + spellLevelInterval * 20);
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_freeze_absorption_last_damage", amount);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_cold_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_cold_absorption") + spellLevelInterval * 20);
+				Main.getJerotesPersistentData(caster).putDouble("jerotes_cold_absorption_last_damage", amount);
 				if (!caster.isInvisible()) {
-					serverLevel.sendParticles(JerotesParticleTypes.FREEZE_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
+					serverLevel.sendParticles(JerotesParticleTypes.COLD_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
 				}
 			}
 		}
@@ -301,6 +417,20 @@ public class SpellFind {
 					serverLevel.sendParticles(JerotesParticleTypes.LIGHTNING_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
 				}
 			}
+		}
+		return true;
+	}
+	//生命修补
+	public static boolean LifeMend(LivingEntity caster, LivingEntity target, int spellLevelHeal) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			LifeMendEntity cloud = new LifeMendEntity(serverLevel, caster);
+			cloud.setSpellLevelDamage(spellLevelHeal);
+			cloud.setPos(target.getX(), target.getY() + 2/16f, target.getZ());
+			cloud.setOwnerUUID(caster.getUUID());
+			cloud.setTarget(target);
+			cloud.setSize(Main.mobWidth(target));
+			cloud.setTargetHeight(Main.mobHeight(target));
+			serverLevel.addFreshEntity(cloud);
 		}
 		return true;
 	}
@@ -461,6 +591,7 @@ public class SpellFind {
 			cloud.setPos(targetPos.x, targetPos.y + 2/16f, targetPos.z);
 			cloud.setOwnerUUID(caster.getUUID());
 			serverLevel.addFreshEntity(cloud);
+			SpellType.startConcentration(caster, cloud);
 			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
 		}
 		return true;
@@ -491,6 +622,7 @@ public class SpellFind {
 			cloud.setPos(targetPos.x, targetPos.y + 2/16f, targetPos.z);
 			cloud.setOwnerUUID(caster.getUUID());
 			serverLevel.addFreshEntity(cloud);
+			SpellType.startConcentration(caster, cloud);
 			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
 		}
 		return true;
@@ -527,7 +659,7 @@ public class SpellFind {
 		return true;
 	}
 	//召唤恼鬼$法术
-	public static boolean ConjureVex(LivingEntity caster, int countMin, int countMax, int summonDistance) {
+	public static boolean ConjureVexs(LivingEntity caster, int countMin, int countMax, int summonDistance) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			PlayerTeam teams = (PlayerTeam) caster.getTeam();
 			int count = countMin;

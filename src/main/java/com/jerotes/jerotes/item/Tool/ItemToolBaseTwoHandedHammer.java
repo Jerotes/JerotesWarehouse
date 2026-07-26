@@ -2,6 +2,7 @@ package com.jerotes.jerotes.item.Tool;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.jerotes.jerotes.enchantment.Interface.MeleeEnchantment;
 import com.jerotes.jerotes.item.Interface.ItemAnesthetized;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
@@ -26,10 +27,18 @@ import net.minecraft.world.item.enchantment.SweepingEdgeEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.ToolAction;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static net.minecraftforge.common.ToolActions.*;
+import static net.minecraftforge.common.ToolActions.AXE_WAX_OFF;
+import static net.minecraftforge.common.ToolActions.SWORD_SWEEP;
 
 public class ItemToolBaseTwoHandedHammer extends TieredItem implements ItemTwoHanded, ItemAnesthetized, ItemSpecialEffect, MeleeItem, Vanishable {
     protected static final UUID BASE_ENTITY_REACH_UUID = UUID.fromString("c0b279fb-83be-442f-b062-c577d26065d3");
@@ -114,6 +123,15 @@ public class ItemToolBaseTwoHandedHammer extends TieredItem implements ItemTwoHa
     @Override
     public boolean canDisableShield(ItemStack stack, ItemStack shield, LivingEntity entity, LivingEntity attacker) {
         return true;
+    }
+
+    public static final Set<ToolAction> TWO_HANDED_HAMMER_ACTIONS = of(SWORD_SWEEP);
+    private static Set<ToolAction> of(ToolAction... actions) {
+        return Stream.of(actions).collect(Collectors.toCollection(Sets::newIdentityHashSet));
+    }
+    @Override
+    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+        return TWO_HANDED_HAMMER_ACTIONS.contains(toolAction);
     }
 
     @Override

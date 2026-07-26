@@ -442,7 +442,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         return true;
     }
     public float beamScale() {
-        return 1.5f;
+        return 1.0f;
     }
     public int beamLightI() {
         return 0x64a63a;

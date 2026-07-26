@@ -115,7 +115,6 @@ public class CameraEvent {
 		RenderSystem.disableBlend();
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 	}
-	//匕首
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void ParryShield(RenderGuiEvent.Pre event) {
 		int w = event.getWindow().getGuiScaledWidth();
@@ -136,82 +135,6 @@ public class CameraEvent {
 		}
 		else if (player.isUsingItem() && item instanceof ItemToolBaseParryShield && Main.getJerotesPersistentData(player).getDouble("jerotes_shield_parry_tick") > 0) {
 			event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/parry_shield_use.png"), w / 2 - 6, h / 2 - 17, 0, 0, 12, 12, 12, 12);
-		}
-		RenderSystem.depthMask(true);
-		RenderSystem.defaultBlendFunc();
-		RenderSystem.enableDepthTest();
-		RenderSystem.disableBlend();
-		RenderSystem.setShaderColor(1, 1, 1, 1);
-	}
-
-	//法术
-	@SubscribeEvent(priority = EventPriority.HIGH)
-		public static void Spell(RenderGuiEvent.Pre event) {
-		int w = event.getWindow().getGuiScaledWidth();
-		int h = event.getWindow().getGuiScaledHeight();
-		Player player = Minecraft.getInstance().player;
-		if (player == null) {
-			return;
-		}
-		RenderSystem.disableDepthTest();
-		RenderSystem.depthMask(false);
-		RenderSystem.enableBlend();
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		RenderSystem.setShaderColor(1, 1, 1, 1);
-		{
-			int widthAdd = 16;
-			int heightAdd = 0;
-			//主要
-			if (SpellRegistry.spellExists(player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).MainSpellTarget)) {
-				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/main_spell.png"), widthAdd, h - 22 + heightAdd, 0, 0, 22, 22, 22, 22);
-
-				//图标
-				SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).MainSpellTarget);
-				MagicSpell magicSpell = SpellListByString.getSpellEasy(spellTypeInterface);
-				ResourceLocation resourceLocation = magicSpell.getDisplayResourceLocation();
-				event.getGuiGraphics().blit(resourceLocation, widthAdd + 2, h - 22 + heightAdd + 2, 0, 0, 18, 18, 18, 18);
-				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/main_spell_overlay.png"), widthAdd, h - 22 + heightAdd, 0, 0, 22, 22, 22, 22);
-				//背景
-				int now = SpellFindUseEvent.GetMainSpellUseCoolDownTick(player);
-				int max = SpellFindUseEvent.GetMainSpellUseCoolDownTickMax(player);
-				if (max > 0) {
-					float progress = (float) now / max;
-					int n = (int)(18 * progress);
-					//间隔
-					event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/main_spell_cooldown.png"), widthAdd + 3, h - 22 + 3 + heightAdd, 0, 0,
-							16, n, 16, 16);
-				}
-				//法术等级
-				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/spell_level_back.png"), widthAdd + 22, h - 22  + heightAdd, 0, 0, 7, 22, 7, 22);
-				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/spell_level.png"), widthAdd + 22, h - 22 + heightAdd, 0, 0,
-						7, 1 + ((10 - SpellFindUseEvent.GetMainMainSpellTargetLevel(player)) * 2), 7, 22);
-			}
-			//次要
-			if (SpellRegistry.spellExists(player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTarget)) {
-				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/add_spell.png"), widthAdd + 22 + 7, h - 22 + heightAdd, 0, 0, 22, 22, 22, 22);
-
-				//图标
-				SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTarget);
-				MagicSpell magicSpell = SpellListByString.getSpellEasy(spellTypeInterface);
-				ResourceLocation resourceLocation = magicSpell.getDisplayResourceLocation();
-				event.getGuiGraphics().blit(resourceLocation, widthAdd + 22 + 7 + 2, h - 22 + heightAdd + 2, 0, 0, 18, 18, 18, 18);
-				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/add_spell_overlay.png"), widthAdd + 22 + 7, h - 22 + heightAdd, 0, 0, 22, 22, 22, 22);
-				//背景
-				int now = SpellFindUseEvent.GetAddSpellUseCoolDownTick(player);
-				int max = SpellFindUseEvent.GetAddSpellUseCoolDownTickMax(player);
-				if (max > 0) {
-					float progress = (float) now / max;
-					int n = (int)(18 * progress);
-					//间隔
-					event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/add_spell_cooldown.png"), widthAdd + 22 + 7 + 3, h - 22 + 3 + heightAdd, 0, 0,
-							16, n, 16, 16);
-				}
-				//法术等级
-				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/spell_level_back.png"), widthAdd + 22 + 7 + 22, h - 22 + heightAdd, 0, 0, 7, 22, 7, 22);
-				event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/spell_level.png"), widthAdd + 22 + 7 + 22, h - 22 + heightAdd, 0, 0,
-						7, 1 + ((10 - SpellFindUseEvent.GetAddSpellTargetLevel(player)) * 2), 7, 22);
-			}
 		}
 		RenderSystem.depthMask(true);
 		RenderSystem.defaultBlendFunc();

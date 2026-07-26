@@ -9,6 +9,6 @@ public class SpellListByString {
 		return spellTypes.magicSpellGet(level, caster, target);
 	}
 	public static MagicSpell getSpellEasy(SpellTypeInterface spellTypes) {
-		return getSpell(getSpell(1, null, null, spellTypes).baseSpellLevel(), null, null, spellTypes);
+		return getSpell(getSpell(1, null, null, spellTypes).getBaseSpellLevel(), null, null, spellTypes);
 	}
 }

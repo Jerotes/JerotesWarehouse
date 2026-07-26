@@ -3,7 +3,6 @@ package com.jerotes.jerotes.event;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.*;
-import com.jerotes.jerotes.entity.Mob.TestEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesFactionEvent;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
@@ -36,15 +35,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @Mod.EventBusSubscriber(modid = JerotesWarehouse.MODID)
 public class EntityAboutEvent {
@@ -71,8 +67,9 @@ public class EntityAboutEvent {
 
 
 		boolean faction = false;
-		if (livingEntity instanceof FactionEntity factions && livingEntity2 instanceof FactionEntity factions2) {
-			faction = factions.isFriendFaction(livingEntity2) || factions2.isFriendFaction(livingEntity);
+		if (livingEntity instanceof FactionEntity factions && factions.isFriendFaction(livingEntity2) ||
+				livingEntity2 instanceof FactionEntity factions2 && factions2.isFriendFaction(livingEntity)) {
+			faction = true;
 		}
 		boolean owner1 = livingEntity instanceof OwnableEntity ownable && ownable.getOwner() != null;
 		boolean owner2 = livingEntity2 instanceof OwnableEntity ownable && ownable.getOwner() != null;
@@ -154,6 +151,7 @@ public class EntityAboutEvent {
 		Entity attacker = event.getSource().getEntity();
 		Entity attackerUse = event.getSource().getDirectEntity();
 		if (attacker instanceof LivingEntity livingEntity) {
+			//buff消失
 			attacker.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTagOrEmpty(JerotesMobEffectTags.REMOVE_AFTER_ATTACK).forEach(effect -> {
 				if (livingEntity.hasEffect(effect.get())) {
 					if (!livingEntity.level().isClientSide()) {
@@ -169,7 +167,6 @@ public class EntityAboutEvent {
 		}
 	}
 
-	//附魔
 	@SubscribeEvent
 	public static void EnchantHurt(LivingHurtEvent event) {
 		if (event != null && event.getEntity() != null) {
@@ -177,19 +174,17 @@ public class EntityAboutEvent {
 			DamageSource damagesource = event.getSource();
 			if (damagesource == null || livingEntity == null)
 				return;
-			if (!livingEntity.level().isClientSide()) {
-				if (damagesource.is(JerotesDamageTypes.CORROSIVE)) {
-					float damages = 1;
-					ItemStack head = livingEntity.getItemBySlot(EquipmentSlot.HEAD);
-					ItemStack chest = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
-					ItemStack legs = livingEntity.getItemBySlot(EquipmentSlot.LEGS);
-					ItemStack feet = livingEntity.getItemBySlot(EquipmentSlot.FEET);
-					damages -= head.getEnchantmentLevel(JerotesEnchantments.CORROSION_RESISTANCE.get()) * 0.08f;
-					damages -= chest.getEnchantmentLevel(JerotesEnchantments.CORROSION_RESISTANCE.get()) * 0.08f;
-					damages -= legs.getEnchantmentLevel(JerotesEnchantments.CORROSION_RESISTANCE.get()) * 0.08f;
-					damages -= feet.getEnchantmentLevel(JerotesEnchantments.CORROSION_RESISTANCE.get()) * 0.08f;
-					event.setAmount(event.getAmount() * damages);
-				}
+			if (damagesource.is(JerotesDamageTypes.CORROSION)) {
+				float damages = 1;
+				ItemStack head = livingEntity.getItemBySlot(EquipmentSlot.HEAD);
+				ItemStack chest = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
+				ItemStack legs = livingEntity.getItemBySlot(EquipmentSlot.LEGS);
+				ItemStack feet = livingEntity.getItemBySlot(EquipmentSlot.FEET);
+				damages -= head.getEnchantmentLevel(JerotesEnchantments.CORROSION_RESISTANCE.get()) * 0.08f;
+				damages -= chest.getEnchantmentLevel(JerotesEnchantments.CORROSION_RESISTANCE.get()) * 0.08f;
+				damages -= legs.getEnchantmentLevel(JerotesEnchantments.CORROSION_RESISTANCE.get()) * 0.08f;
+				damages -= feet.getEnchantmentLevel(JerotesEnchantments.CORROSION_RESISTANCE.get()) * 0.08f;
+				event.setAmount(event.getAmount() * damages);
 			}
 		}
 	}

@@ -22,8 +22,11 @@ public class JerotesDamageTypes {
 	public static final ResourceKey<DamageType> SPEAR = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "spear"));
 	public static final ResourceKey<DamageType> MAGIC_EFFECT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "magic_effect"));
 	public static final ResourceKey<DamageType> BLEEDING = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bleeding"));
-	public static final ResourceKey<DamageType> CORROSIVE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "corrosive"));
+	public static final ResourceKey<DamageType> CORROSION = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "corrosion"));
 	public static final ResourceKey<DamageType> POISON = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "poison"));
+	public static final ResourceKey<DamageType> RADIANT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "radiant"));
+	public static final ResourceKey<DamageType> NECROTIC = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "necrotic"));
+	public static final ResourceKey<DamageType> PSYCHIC = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "psychic"));
 
 	public static final ResourceKey<DamageType> BYPASSES_ARMOR_SHOOT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_armor_shoot"));
 	public static final ResourceKey<DamageType> BYPASSES_ARMOR_MELEE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_armor_melee"));
@@ -131,14 +134,14 @@ public class JerotesDamageTypes {
 	public DamageSource bleeding(Entity entity, @Nullable Entity entity2) {
 		return this.source(JerotesDamageTypes.BLEEDING, entity, entity2);
 	}
-	public DamageSource corrosive() {
-		return this.source(JerotesDamageTypes.CORROSIVE);
+	public DamageSource corrosion() {
+		return this.source(JerotesDamageTypes.CORROSION);
 	}
-	public DamageSource corrosive(Entity entity) {
-		return this.source(JerotesDamageTypes.CORROSIVE, entity);
+	public DamageSource corrosion(Entity entity) {
+		return this.source(JerotesDamageTypes.CORROSION, entity);
 	}
-	public DamageSource corrosive(Entity entity, @Nullable Entity entity2) {
-		return this.source(JerotesDamageTypes.CORROSIVE, entity, entity2);
+	public DamageSource corrosion(Entity entity, @Nullable Entity entity2) {
+		return this.source(JerotesDamageTypes.CORROSION, entity, entity2);
 	}
 	public DamageSource poison() {
 		return this.source(JerotesDamageTypes.POISON);

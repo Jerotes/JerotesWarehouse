@@ -71,10 +71,14 @@ import java.util.function.Supplier;
 				AddSpellUse(player);
 			}
 		}
+		else if (type == 1) {
+			//取消施法专注
+			SpellType.endConcentration(player);
+		}
 	}
 
 	public static void MainSpellUse(Player player) {
-		if (Main.getJerotesPersistentData(player).getDouble("jerotes_spell_cooldown") > 0) {
+		if (SpellType.getCastCooldownJerotes(player) > 0) {
 			return;
 		}
 		String magic = player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).MainSpellTarget;
@@ -111,7 +115,7 @@ import java.util.function.Supplier;
 		}
 	}
 	public static void AddSpellUse(Player player) {
-		if (Main.getJerotesPersistentData(player).getDouble("jerotes_spell_cooldown") > 0) {
+		if (SpellType.getCastCooldownJerotes(player) > 0) {
 			return;
 		}
 		String magic = player.getCapability(JerotesPlayerData.CAPABILITY, null).orElse(new JerotesPlayerData.PlayerVariables()).AddSpellTarget;

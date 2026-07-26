@@ -2,18 +2,18 @@ package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.item.FlawlessMagicScroll;
-import com.jerotes.jerotes.spell.SpellListByString;
-import com.jerotes.jerotes.spell.SpellRegistry;
+import com.jerotes.jerotes.spell.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class JerotesTabs {
 	public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, JerotesWarehouse.MODID);
@@ -28,7 +28,6 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.HUMAN_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.JEROTES_PLAYER_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.JEROTES_HORSE_SPAWN_EGG.get());
-				tabData.accept(JerotesItems.JEROTES_VEX_SPAWN_EGG.get());
 
 				tabData.accept(JerotesItems.FLAWLESS_MAGIC_SCROLL.get());
 
@@ -117,22 +116,109 @@ public class JerotesTabs {
 					new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/container/creative_inventory/tab_item_search.png")
 			).build());
 
-
-
+	private static final Item[] LEVEL_WOOL = {
+			Items.WHITE_WOOL,
+			Items.RED_WOOL,
+			Items.ORANGE_WOOL,
+			Items.YELLOW_WOOL,
+			Items.LIME_WOOL,
+			Items.LIGHT_BLUE_WOOL,
+			Items.BLUE_WOOL,
+			Items.CYAN_WOOL,
+			Items.PURPLE_WOOL,
+			Items.BLACK_WOOL,
+	};
 	public static final RegistryObject<CreativeModeTab> JEROTES_TAB_FLAWLESS_MAGIC_SCROLL_TAB = REGISTRY.register("jerotes_tab_flawless_magic_scroll_tab",
 			() -> CreativeModeTab.builder().title(Component.translatable("item_group.jerotes.jerotes_tab_flawless_magic_scroll_tab")).icon(() ->
 					new ItemStack(JerotesItems.FLAWLESS_MAGIC_SCROLL.get())).displayItems((parameters, tabData) -> {
-				for (String spellId : SpellRegistry.getRegisteredSpellIds()) {
+				List<String> spells = SpellRegistry.getRegisteredSpellIds().stream()
+						.filter(id -> !id.equals("jerotes_empty"))
+						.sorted(
+								Comparator
+										.comparingInt((String id) -> {
+											MagicSpell spell = SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(id));
+											return spell.isCantrip() ? 0 : spell.getBaseSpellLevel();
+										})
+										.thenComparingInt(id -> {
+											MagicSpell spell = SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(id));
+											return spell.getSpellSchool().getSortIndex();
+										})
+						)
+						.toList();
+
+				int currentLevel = -1;
+				int column = 0;
+				int separatorId = 0;
+
+				for (String spellId : spells) {
+					MagicSpell spell = SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(spellId));
+					int level = spell.isCantrip() ? 0 : spell.getBaseSpellLevel();
+
+					//等级变化且上一行没满
+					if (currentLevel != -1 && currentLevel != level && column != 0) {
+						while (column < 8) {
+							tabData.accept(levelWool(
+									LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
+									separatorId++
+							));
+							column++;
+						}
+
+						tabData.accept(levelWool(
+								LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
+								separatorId++
+						));
+
+						column = 0;
+					}
+
+					currentLevel = level;
+
 					FlawlessMagicScroll(tabData, spellId);
+					column++;
+
+					if (column == 8) {
+						tabData.accept(levelWool(
+								LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
+								separatorId++
+						));
+						column = 0;
+					}
 				}
 
+				if (column != 0) {
+					while (column < 8) {
+						tabData.accept(levelWool(
+								LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
+								separatorId++
+						));
+						column++;
+					}
+
+					tabData.accept(levelWool(
+							LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
+							separatorId++
+					));
+				}
+
+				parameters.holders().lookup(Registries.ITEM).ifPresent(lookup -> {
+					TagKey<Item> customTag = TagKey.create(Registries.ITEM, new ResourceLocation(JerotesWarehouse.MODID, "magic_summoned_spawn_egg"));
+					lookup.get(customTag).ifPresent(holders -> {holders.forEach(holder -> holder.unwrapKey().ifPresent(key -> tabData.accept(holder.value())));});
+				});
 			}).withSearchBar().build());
+
+	private static ItemStack levelWool(Item item, int index) {
+		ItemStack stack = new ItemStack(item);
+		stack.getOrCreateTag().putInt("CreativeSeparator", index);
+		return stack;
+	}
 
 	public static void FlawlessMagicScroll(CreativeModeTab.Output tabData, String string) {
 		ItemStack stack = new ItemStack(JerotesItems.FLAWLESS_MAGIC_SCROLL.get());
 		CompoundTag compoundTag = new CompoundTag();
 		compoundTag.putString(FlawlessMagicScroll.SPELL, string);
-		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, !SpellRegistry.spellExists(string) ? 1 : SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(string)).baseSpellLevel());
+		MagicSpell spell = SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(string));
+		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, spell == null ? 1 : spell.getBaseSpellLevel());
 		stack.setTag(compoundTag);
 		tabData.accept(stack);
 	}

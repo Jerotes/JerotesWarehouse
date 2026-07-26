@@ -39,14 +39,14 @@ public class CureWoundsEntity extends OtherSpellBaseEntity implements TraceableE
     }
 
     public int getBaseSpellLevelDamage() {
-        return 2;
+        return 1;
     }
     public boolean scaleAboutBoundingBox() {
         return true;
     }
     @Override
     public int getMaxLife() {
-        return 2000;
+        return 120;
     }
     public boolean moveToTarget() {
         return true;
@@ -79,7 +79,7 @@ public class CureWoundsEntity extends OtherSpellBaseEntity implements TraceableE
                     }
                     if (livingEntity.getMobType() != MobType.UNDEAD && !EntityFactionFind.isMachine(livingEntity) && !EntityFactionFind.isConstruct(livingEntity)) {
                         livingEntity.heal(
-                                Main.rollDice(getSpellLevel(), 8, livingEntity.getRandom())
+                                Main.rollDice(getSpellLevel(), 8, livingEntity.getRandom()) + getBaseSpellLevelDamage()
                         );
                     }
                 }

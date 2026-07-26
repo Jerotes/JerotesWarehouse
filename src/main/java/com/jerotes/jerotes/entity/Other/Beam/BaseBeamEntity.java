@@ -1,11 +1,13 @@
 package com.jerotes.jerotes.entity.Other.Beam;
 
+import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.util.AttackFind;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
@@ -40,6 +42,9 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 
 	public boolean isInWall() {
 		return false;
+	}
+	public double getMaxDistance() {
+		return MAX_DISTANCE;
 	}
 
 	public void setLightLockX(float f){
@@ -237,7 +242,7 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 	private Vec3 calculateTargetPosition(LivingEntity caster) {
 		Vec3 eyePos = caster.getEyePosition();
 		Vec3 lookAngle = caster.getLookAngle();
-		for (int i = 0; i < MAX_DISTANCE; i++) {
+		for (int i = 0; i < getMaxDistance(); i++) {
 			Vec3 checkPos = eyePos.add(lookAngle.scale(i));
 			ClipContext clipContext = new ClipContext(
 					eyePos,
@@ -251,7 +256,7 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 				return hitResult.getLocation();
 			}
 		}
-		return eyePos.add(lookAngle.scale(MAX_DISTANCE));
+		return eyePos.add(lookAngle.scale(getMaxDistance()));
 	}
 
 	public void lookAt(Entity target, float maxYawChange, float maxPitchChange) {
@@ -329,5 +334,9 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 	@Override
 	public boolean shouldRenderAtSqrDistance(double distance) {
 		return distance < 4096.0;
+	}
+
+	public ResourceLocation getBeamLocation() {
+		return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/base_beam.png");
 	}
 }

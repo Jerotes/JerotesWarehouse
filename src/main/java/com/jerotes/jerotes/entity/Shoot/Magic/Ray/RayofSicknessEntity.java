@@ -58,7 +58,7 @@ public class RayofSicknessEntity extends BaseRayEntity {
             );
             if (bl) {
                 //体质判定
-                if (EntityAndItemFind.savingSpellThrow(livingEntity)){
+                if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
                     livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel - 1), this.getEffectSource());
                 }
            }

@@ -247,7 +247,6 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
                         double z = this.getRandomZ((this.random.nextDouble() - 0.5f) * 3) + radius * Math.sin(angle);
                         serverLevel.sendParticles(ParticleTypes.FLASH, x, this.getY() + 0.5, z, 0, 0, 0, 0, 0);
                     }
-                    Main.spawnUnevenBlockByPos(serverLevel, BlockPos.containing(this.position()), 4);
                 }
             }
         }
@@ -275,7 +274,6 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
                         double z = this.getRandomZ((this.random.nextDouble() - 0.5f) * 3) + radius * Math.sin(angle);
                         serverLevel.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, this.getY() + 0.5, z, 0, 0, i * 0.2f * random.nextFloat(), 0, 0.3f);
                     }
-                    Main.spawnUnevenBlockByPos(serverLevel, BlockPos.containing(this.position()), 3);
                 }
             }
         }

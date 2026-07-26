@@ -23,6 +23,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
@@ -39,6 +40,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.scores.Team;
 
 import javax.annotation.Nullable;
@@ -92,13 +94,16 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	public boolean removeWhenFarAway(double d) {
 		return false;
 	}
+	public boolean hasInventory() {
+		return false;
+	}
 	@Override
 	protected boolean shouldDespawnInPeaceful() {
 		return false;
 	}
 	protected void reassessTameGoals() {
 	}
-	public void tame(Player player) {
+	public void tame(LivingEntity player) {
 		this.setTame(true);
 		this.setOwnerUUID(player.getUUID());
 	}
@@ -333,6 +338,12 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 		}
 		else {
 			if (this.isTame()) {
+				if (!player.isShiftKeyDown() && this.hasInventory()) {
+					if (player instanceof ServerPlayer serverPlayer) {
+						Main.openMobInventoryGui(serverPlayer, this, false, true, true, true, true, true, true, true);
+					}
+					return InteractionResult.sidedSuccess(this.level().isClientSide());
+				}
 				InteractionResult interactionResult;
 				if (!this.isVehicle() && player == this.getOwner()) {
 					int pose = this.getChangeType() + 1;

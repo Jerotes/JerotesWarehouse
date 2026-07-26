@@ -5,6 +5,7 @@ import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.forge.JerotesAvoidDamageEvent;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.mixin.LivingEntityMixin;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
@@ -41,6 +42,19 @@ public class AttackFind {
     }
     public static DamageSource findDamageType(Entity entity, ResourceKey<DamageType> damageTypeResourceKey, Entity entity1) {
         return new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageTypeResourceKey), entity1);
+    }
+
+    //削减
+    public static void MaxHealthReduceSet(LivingEntity livingEntity, float count) {
+        if (livingEntity instanceof JerotesChangeLivingEntity jerotesChangeLivingEntity) {
+            jerotesChangeLivingEntity.setMaxHealthReduceCountJerotes(count);
+        }
+    }
+    //继续削减
+    public static void MaxHealthReduceAdd(LivingEntity livingEntity, float count) {
+        if (livingEntity instanceof JerotesChangeLivingEntity jerotesChangeLivingEntity) {
+            jerotesChangeLivingEntity.setMaxHealthReduceCountJerotes(jerotesChangeLivingEntity.getMaxHealthReduceCountJerotes() + count);
+        }
     }
 
     //判断主仆
@@ -436,14 +450,19 @@ public class AttackFind {
     public static boolean SameFactionAvoidDamage(Entity attacker, LivingEntity hurt, boolean shouldJerotesEntity) {
         if (!MainConfig.SameFactionAvoidDamage && shouldJerotesEntity)
             return false;
-        if (!(attacker instanceof Mob mobAttacker) || !(hurt instanceof Mob mobHurt))
-            return false;
-        if (mobAttacker.getTarget() != mobHurt && mobHurt.getTarget() != mobAttacker && (mobAttacker.getTeam() == null && mobHurt.getTeam() == null || mobAttacker.isAlliedTo(mobHurt))) {
-            if (EntityFactionFind.isFaction(mobHurt, mobAttacker) && (mobHurt instanceof JerotesEntity && mobAttacker instanceof JerotesEntity || !shouldJerotesEntity || MainConfig.AffectsNonThisModEntities)) {
+        if (!(attacker instanceof Mob) || !(hurt instanceof Mob)) {
+            if (shouldJerotesEntity) {
+                return false;
+            }
+        }
+        if (!(attacker instanceof Mob mobAttacker && mobAttacker.getTarget() == hurt) &&
+                !(hurt instanceof Mob mobHurt && mobHurt.getTarget() == attacker) &&
+                (attacker.getTeam() == null && hurt.getTeam() == null || attacker.isAlliedTo(hurt) || hurt.isAlliedTo(attacker))) {
+            if (attacker instanceof LivingEntity livingEntity && EntityFactionFind.isFaction(livingEntity, hurt) && (hurt instanceof JerotesEntity && attacker instanceof JerotesEntity || !shouldJerotesEntity || MainConfig.AffectsNonThisModEntities)) {
                 return true;
             }
             //event
-            JerotesAvoidDamageEvent event = new JerotesAvoidDamageEvent(hurt, hurt.damageSources().mobAttack(hurt), attacker);
+            JerotesAvoidDamageEvent event = new JerotesAvoidDamageEvent(hurt, hurt.damageSources().sonicBoom(attacker), attacker);
             MinecraftForge.EVENT_BUS.post(event);
             if (event.isCanceled()) {
                 return true;
@@ -457,63 +476,55 @@ public class AttackFind {
                         return true;
                     else  if (hurt instanceof OwnableEntity ownable && attacker instanceof OwnableEntity ownable2 && ownable.getOwner() == ownable2.getOwner())
                         return true;
-                    else  if (hasMasterServantRelation(mobAttacker, hurt))
+                    else if (attacker instanceof LivingEntity livingEntity && hasMasterServantRelation(livingEntity, hurt))
                         return true;
                 }
             }
             //铜刻类型生物
-            if (EntityFactionFind.isCarved(mobHurt.getType())) {
-                if (EntityFactionFind.isCarved(mobAttacker.getType()) || mobAttacker instanceof AbstractVillager || mobAttacker instanceof IronGolem)
+            if (EntityFactionFind.isCarved(hurt.getType())) {
+                if (EntityFactionFind.isCarved(attacker.getType()) || attacker instanceof AbstractVillager || attacker instanceof IronGolem)
                     return true;
             }
 
 
-            if (mobAttacker instanceof JerotesEntity || mobHurt instanceof JerotesEntity || !shouldJerotesEntity || MainConfig.AffectsNonThisModEntities) {
+            if (attacker instanceof JerotesEntity || hurt instanceof JerotesEntity || !shouldJerotesEntity || MainConfig.AffectsNonThisModEntities) {
                 //信任生物不误伤信任者的宠物
-                if (mobHurt instanceof OwnableEntity ownable && ownable.getOwner() != null
-                        && Main.isTrusted(mobAttacker, ownable.getOwner(), true)) {
+                if (attacker instanceof LivingEntity livingEntity && hurt instanceof OwnableEntity ownable && ownable.getOwner() != null
+                        && Main.isTrusted(livingEntity, ownable.getOwner(), true)) {
                     return true;
                 }
                 //信任生物不误伤信任者
-                if (Main.isTrusted(mobAttacker, mobHurt, true)) {
+                if (attacker instanceof LivingEntity livingEntity && Main.isTrusted(livingEntity, hurt, true)) {
                     return true;
                 }
                 //信任者不误伤信任生物
-                if (Main.isTrusted(mobHurt, mobAttacker, true)) {
+                if (attacker instanceof LivingEntity livingEntity && Main.isTrusted(hurt, livingEntity, true)) {
                     return true;
                 }
                 //信任者的宠物不误伤信任生物
-                if (mobAttacker instanceof OwnableEntity ownable && ownable.getOwner() != null && Main.isTrusted(mobHurt, ownable.getOwner(), true)) {
-                    return true;
-                }
-                //灾厄村民
-                if (EntityFactionFind.isRaider(mobHurt) && EntityFactionFind.isRaider(mobAttacker)) {
-                    return true;
-                }
-                //灾厄村民
-                if (EntityFactionFind.isIllager(mobHurt) && EntityFactionFind.isIllager(mobAttacker)) {
-                    return true;
-                }
-                //灾厄村民
-                if (EntityFactionFind.isPiglin(mobHurt) && EntityFactionFind.isPiglin(mobAttacker)) {
+                if (attacker instanceof OwnableEntity ownable && ownable.getOwner() != null && Main.isTrusted(hurt, ownable.getOwner(), true)) {
                     return true;
                 }
             }
 
 
             //村民类生物
-            if (mobHurt instanceof AbstractVillager) {
-                if (EntityFactionFind.isCarved(mobAttacker.getType()))
+            if (hurt instanceof AbstractVillager) {
+                if (EntityFactionFind.isCarved(attacker.getType()))
                     return true;
             }
             //铁傀儡类生物
-            if (mobHurt instanceof IronGolem) {
-                if (EntityFactionFind.isCarved(mobAttacker.getType()))
+            if (hurt instanceof IronGolem) {
+                if (EntityFactionFind.isCarved(attacker.getType()))
                     return true;
             }
         }
         return false;
     }
+
+
+
+
     public static boolean canRideAbout(Mob mount, @Nullable LivingEntity owner, @Nullable LivingEntity rider, LivingEntity newRider) {
         if (mount instanceof JerotesChangeLivingEntity jerotesChangeLivingEntity && !jerotesChangeLivingEntity.canAddPassengerJerotes(newRider)) {
             return false;

@@ -61,7 +61,7 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
         }
         if (entity instanceof LivingEntity livingEntity) {
             //敏捷判定
-            if (EntityAndItemFind.savingSpellThrow(livingEntity)){
+            if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
                 Entity entity2 = this.getOwner();
                 DamageSource damageSource = AttackFind.findDamageType(livingEntity, DamageTypes.INDIRECT_MAGIC, this, entity2);
                 Main.getJerotesPersistentData(livingEntity).putUUID("jerotes_disintegrate_damage_from", this.getUUID());
@@ -71,14 +71,16 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
                                 + 40
                 );
                 if (bl && !livingEntity.isAlive()) {
-                    if (this.level() instanceof ServerLevel serverLevel) {
-                        for (int i = 0; i < 60; ++i) {
-                            serverLevel.sendParticles(JerotesParticleTypes.DISINTEGRATE.get(), livingEntity.getRandomX(0.5), livingEntity.getRandomY(), livingEntity.getRandomZ(0.5), 0, 0.0, -0.2f, 0.0, 0.2f);
-                            serverLevel.sendParticles(ParticleTypes.ASH, livingEntity.getRandomX(0.5), livingEntity.getRandomY(), livingEntity.getRandomZ(0.5), 0, 0.0, 0.2f, -0.0, 0.2f);
-                            serverLevel.sendParticles(ParticleTypes.SMOKE, livingEntity.getRandomX(0.5), livingEntity.getRandomY(), livingEntity.getRandomZ(0.5), 0, 0.0, 0.2f, -0.0, 0.2f);
+                    if (!EntityAndItemFind.isLoreUndying(livingEntity)) {
+                        if (this.level() instanceof ServerLevel serverLevel) {
+                            for (int i = 0; i < 60; ++i) {
+                                serverLevel.sendParticles(JerotesParticleTypes.DISINTEGRATE.get(), livingEntity.getRandomX(0.5), livingEntity.getRandomY(), livingEntity.getRandomZ(0.5), 0, 0.0, -0.2f, 0.0, 0.2f);
+                                serverLevel.sendParticles(ParticleTypes.ASH, livingEntity.getRandomX(0.5), livingEntity.getRandomY(), livingEntity.getRandomZ(0.5), 0, 0.0, 0.2f, -0.0, 0.2f);
+                                serverLevel.sendParticles(ParticleTypes.SMOKE, livingEntity.getRandomX(0.5), livingEntity.getRandomY(), livingEntity.getRandomZ(0.5), 0, 0.0, 0.2f, -0.0, 0.2f);
+                            }
                         }
+                        livingEntity.remove(RemovalReason.KILLED);
                     }
-                    livingEntity.remove(RemovalReason.KILLED);
                 }
             }
             this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
@@ -172,6 +174,9 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
         return 1.0f;
     }
 
+    public float beamScale() {
+        return 0.75f;
+    }
     public int beamLightI() {
         return 0x18a127;
     }

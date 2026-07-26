@@ -1,12 +1,15 @@
 package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Interface.EliteEntity;
+import com.jerotes.jerotes.entity.Interface.MagicSpellLivingEntity;
 import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
 import com.jerotes.jerotes.forge.JerotesUseSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.init.JerotesMobEffects;
+import com.jerotes.jerotes.init.JerotesParticleTypes;
+import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
@@ -28,7 +31,6 @@ import net.minecraftforge.common.MinecraftForge;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Level;
 
 public class MagicSpell {
 	public int spellLevel;
@@ -57,6 +59,11 @@ public class MagicSpell {
 		if (!canUse()) {
 			return false;
 		}
+		if (getCaster() != null && SpellType.getCastingTickJerotes(getCaster()) >= 0 && !SpellType.getLastSpellTypeJerotes(getCaster()).isEmpty()) {
+			SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(SpellType.getLastSpellTypeJerotes(getCaster()));
+			MagicSpell magicSpell = SpellListByString.getSpellEasy(spellTypeInterface);
+			magicSpell.spellCastingStop(SpellType.getCastingTickJerotes(getCaster()));
+		}
 		//结束正在蓄力的技能
 		Main.getJerotesPersistentData(getCaster()).putString("jerotes_using_magic", "");
 		Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_spell_tick", 0);
@@ -65,6 +72,7 @@ public class MagicSpell {
 		//图标
 		if (getCaster().level() instanceof ServerLevel serverLevel) {
 			serverLevel.sendParticles(getSpellDisplayParticle(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
+			serverLevel.sendParticles(getSpellLevelParticle(), caster.getX(), caster.getBoundingBox().maxY + 1.0, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
 		}
 		//音效
 		if (this.getSound() != null && getCaster() != null && canUse()) {
@@ -79,26 +87,54 @@ public class MagicSpell {
 				}
 			}
 		});
+		//专注停止
+		if (getCaster().level() instanceof ServerLevel serverLevel) {
+			if (!SpellType.getConcentrationSpellTypeJerotes(getCaster()).isEmpty()) {
+				if (serverLevel.getEntity(SpellType.getConcentrationSpellTargetJerotes(getCaster())) instanceof ConcentrationSpellEntity concentrationSpellEntity && concentrationSpellEntity.spellEndConcentration()) {
+					concentrationSpellEntity.endConcentration();
+				}
+			}
+		}
 		//等级高了
-		if (baseSpellLevel() > spellLevel) {
-			spellLevel = baseSpellLevel();
+		if (getBaseSpellLevel() > spellLevel) {
+			spellLevel = getBaseSpellLevel();
 		}
 		//记录自身上次使用的法术
-		Main.getJerotesPersistentData(getCaster()).putString("jerotes_last_magic", getSpellModId() + "_" + getSpellId());
-		Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_last_magic_level", spellLevel);
-		Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_spell_cooldown", Math.max(2, Main.getJerotesPersistentData(caster).getDouble("jerotes_spell_cooldown")));
+		SpellType.setLastSpellTypeJerotes(getCaster(), getSpellModId() + "_" + getSpellId());
+		SpellType.setLastSpellLevelJerotes(getCaster(), spellLevel);
+		SpellType.setLastSpellTargetJerotes(getCaster(), getTarget().getUUID());
+		//
+		SpellType.setCastCooldownJerotes(getCaster(), Math.max(2, SpellType.getCastCooldownJerotes(caster)));
 		//正在使用法术 探查
 		if (!canEffect()) {
 			return false;
 		}
-		if (this.getUsingTicks() > 0) {
-			Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_spell_tick", this.getUsingTicks() + 5);
-			Main.getJerotesPersistentData(getCaster()).putString("jerotes_using_magic", getSpellModId() + "_" + getSpellId());
-			Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_using_magic_level", spellLevel);
-			Main.getJerotesPersistentData(getCaster()).putUUID("jerotes_using_magic_target", getTarget().getUUID());
-			spellAfterUse();
-			return true;
+//		if (this.getCastingTicks() > 0) {
+//			Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_spell_tick", this.getCastingTicks() + 5);
+//			Main.getJerotesPersistentData(getCaster()).putString("jerotes_using_magic", getSpellModId() + "_" + getSpellId());
+//			Main.getJerotesPersistentData(getCaster()).putDouble("jerotes_using_magic_level", spellLevel);
+//			Main.getJerotesPersistentData(getCaster()).putUUID("jerotes_using_magic_target", getTarget().getUUID());
+//			spellAfterUse();
+//			return true;
+//		}
+		//如果施法专注应该停止之前的施法专注
+		if (isConcentration()) {
+			//避免刚准备切换就清除
+			if (getCaster() instanceof MagicSpellLivingEntity magicSpellLivingEntity) {
+				magicSpellLivingEntity.setConcentrationSpellCleanTickJerotes(20);
+			}
+			//之前的专注实体的影响，新专注增加需后续处理
+			SpellType.endConcentration(getCaster());
+			//开始专注新法术
+			SpellType.setConcentrationSpellTypeJerotes(getCaster(), getSpellModId() + "_" + getSpellId());
+			if (getCaster() instanceof Player player) {
+				player.getCapability(JerotesPlayerData.CAPABILITY, null).ifPresent(capability -> {
+					capability.setConcentrationSpellTarget(getSpellModId() + "_" + getSpellId());
+				});
+			}
+			SpellType.startConcentrationMessage(caster, getSpellName());
 		}
+		//
 		//施法
 		boolean bl = spellFindUse();
 		if (bl) {
@@ -110,6 +146,12 @@ public class MagicSpell {
 		return false;
 	}
 	public void spellAfterUse() {
+		if (this.getCaster() instanceof MagicSpellLivingEntity magicSpellLivingEntity) {
+			magicSpellLivingEntity.setCastingMaxTickJerotes(getCastingTicks());
+			magicSpellLivingEntity.setCastingTickJerotes(getCastingTicks() <= 0 ? -1 : getCastingTicks());
+		}
+	}
+	public void spellCastingStop(int n) {
 	}
 //	//未使用·间隔特殊行为
 //	public void spellCooldown() {
@@ -122,10 +164,18 @@ public class MagicSpell {
 //		return true;
 //	}
 	public boolean canUse() {
-		if (getCaster() != null && Main.getJerotesPersistentData(getCaster()).getDouble("jerotes_spell_cooldown") > 0) {
+		if (getCaster() != null && SpellType.getCastCooldownJerotes(getCaster()) > 0) {
 			return false;
 		}
+		if (getCaster() != null && SpellType.getCastingTickJerotes(getCaster()) >= 0 && !SpellType.getLastSpellTypeJerotes(getCaster()).isEmpty()) {
+			SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(SpellType.getLastSpellTypeJerotes(getCaster()));
+			MagicSpell magicSpell = SpellListByString.getSpellEasy(spellTypeInterface);
+				return !magicSpell.isCastingCanNotStop();
+		}
 		return true;
+	}
+	public boolean isCastingCanNotStop() {
+		return false;
 	}
 	public boolean canEffect() {
 		JerotesUseSpellEvent event = new JerotesUseSpellEvent(this.getCaster(), this.getTarget(), this.getSpellLevel());
@@ -138,7 +188,7 @@ public class MagicSpell {
 		this.spellLevel = event.getLevel();
 
 		//法术反制·被动影响
-		if (canBeBreak() && !isHelp()) {
+		if (canBeBreak() && !isHelp() && !(getTarget() instanceof LivingEntity livingEntityTarget && SpellType.getCastingTickJerotes(livingEntityTarget) > -1)) {
 			if (getTarget() instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) && getCaster() != getTarget() && getCaster().distanceTo(getTarget()) <= 32) {
 				//等级不如对方
 				if (!(AttackFind.SameFactionAvoidDamage(getCaster(), livingEntity, false)) && Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1 >= this.getSpellLevel()) {
@@ -160,6 +210,7 @@ public class MagicSpell {
 		if (canBeBreak()) {
 			List<LivingEntity> list = getCaster().level().getEntitiesOfClass(LivingEntity.class, getCaster().getBoundingBox().inflate(32.0, 32, 32));
 			list.removeIf(livingEntity -> !(livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())) || livingEntity == this.getCaster());
+			list.removeIf(livingEntity -> getTarget() instanceof LivingEntity livingEntityTarget && SpellType.getCastingTickJerotes(livingEntityTarget) > -1);
 			list.removeIf(livingEntity -> AttackFind.FindCanNotAttack(livingEntity, getCaster()));
 			list.removeIf(livingEntity -> livingEntity instanceof Mob mob && mob.getTarget() != getCaster());
 			list.removeIf(livingEntity -> livingEntity instanceof Player player && !(player.swinging && Main.getTargetedEntity(player,32) == getCaster() ));
@@ -181,17 +232,26 @@ public class MagicSpell {
 		}
 		return true;
 	}
+
+	public int getCastingTicks() {
+		return 0;
+	}
+	public boolean CastingAbout(int n) {
+		return CastingAboutBase(n);
+	}
+	public boolean CastingAboutBase(int n) {
+		return true;
+	}
+
+
 	public boolean canBeBreak() {
 		return true;
 	}
-	public int baseSpellLevel() {
+	public int getBaseSpellLevel() {
 		return 1;
 	}
-	public int getUsingTicks() {
-		return 0;
-	}
 	public int getSpellLevel() {
-		return Math.max(baseSpellLevel(), spellLevel);
+		return Math.max(getBaseSpellLevel(), spellLevel);
 	}
 	public int getSpellAccuracy() {
 		if (getCaster() != null && getCaster() instanceof Player) {
@@ -223,6 +283,27 @@ public class MagicSpell {
 	public ParticleOptions getSpellDisplayParticle() {
 		return spellDisplayParticle;
 	}
+	public ParticleOptions getSpellLevelParticle() {
+		if (getSpellLevel() <= 1)
+			return JerotesParticleTypes.SPELL_LEVEL_I.get();
+		if (getSpellLevel() == 2)
+			return JerotesParticleTypes.SPELL_LEVEL_II.get();
+		if (getSpellLevel() == 3)
+			return JerotesParticleTypes.SPELL_LEVEL_III.get();
+		if (getSpellLevel() == 4)
+			return JerotesParticleTypes.SPELL_LEVEL_IV.get();
+		if (getSpellLevel() == 5)
+			return JerotesParticleTypes.SPELL_LEVEL_V.get();
+		if (getSpellLevel() == 6)
+			return JerotesParticleTypes.SPELL_LEVEL_VI.get();
+		if (getSpellLevel() == 7)
+			return JerotesParticleTypes.SPELL_LEVEL_VII.get();
+		if (getSpellLevel() == 8)
+			return JerotesParticleTypes.SPELL_LEVEL_VIII.get();
+		if (getSpellLevel() >= 9)
+			return JerotesParticleTypes.SPELL_LEVEL_IX.get();
+		return JerotesParticleTypes.SPELL_LEVEL_I.get();
+	}
 	public MagicType getMagicType() {
 		return magicType;
 	}
@@ -239,9 +320,15 @@ public class MagicSpell {
 		return 1f;
 	}
 	public boolean isMelee() {
-		return false;
+		return this.getMagicType() == MagicType.SELF;
 	}
 	public boolean isHelp() {
+		return false;
+	}
+	public boolean isCantrip() {
+		return false;
+	}
+	public boolean isConcentration() {
 		return false;
 	}
 	public boolean canUseTargetNone() {
@@ -283,6 +370,10 @@ public class MagicSpell {
 				.append(Component.translatable(magicSpell.getMagicType2() != MagicType.ADD ? "spell.jerotes.type.main" : "spell.jerotes.type.add").withStyle(ChatFormatting.DARK_PURPLE))
 				.append(magicSpell.isHelp() ? " " : "")
 				.append(!magicSpell.isHelp() ? Component.empty() : Component.translatable("spell.jerotes.spell_heal").withStyle(ChatFormatting.YELLOW))
+				.append(magicSpell.isCantrip() ? " " : "")
+				.append(!magicSpell.isCantrip() ? Component.empty() : Component.translatable("spell.jerotes.spell_cantrip").withStyle(ChatFormatting.LIGHT_PURPLE))
+				.append(magicSpell.isConcentration() ? " " : "")
+				.append(!magicSpell.isConcentration() ? Component.empty() : Component.translatable("spell.jerotes.spell_concentration").withStyle(ChatFormatting.AQUA))
 		);
 		list.add(magicSpell.getSpellDesc().copy()
 				.withStyle(ChatFormatting.LIGHT_PURPLE));

@@ -35,7 +35,7 @@ public class HoldMobRenderer extends EntityRenderer<HoldMobEntity> {
                 //自身计时
                 f7,
                 //消失
-                Mth.clamp((-(t.life + partialTicks - 70) / 20f), 0, 1));
+                1);
         VertexConsumer vb = multiBufferSource.getBuffer(JerotesRenderType.entityTranslucent(getOtherTextureLocation(t)));
         model.renderToBuffer(poseStack, vb, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0f);
 

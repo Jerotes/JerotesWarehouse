@@ -1,10 +1,13 @@
 package com.jerotes.jerotes.entity.Other.OtherSpell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
+import com.jerotes.jerotes.network.JerotesPlayerData;
+import com.jerotes.jerotes.spell.SpellType;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
@@ -16,16 +19,19 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.OwnableEntity;
-import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
+import java.util.UUID;
 
-public class InsectPlagueEntity extends OtherSpellBaseEntity implements TraceableEntity, OwnableEntity, MagicAbout {
+public class InsectPlagueEntity extends OtherSpellBaseEntity implements TraceableEntity, OwnableEntity, MagicAbout, ConcentrationSpellEntity {
     public InsectPlagueEntity(EntityType<? extends InsectPlagueEntity> entityType, Level level) {
         super(entityType, level);
         this.fixupDimensions();
@@ -37,12 +43,16 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
         this.fixupDimensions();
     }
 
+
     public int getBaseSpellLevelDamage() {
         return 2;
     }
-    public boolean isPickable() {
-        return true;
-    }
+//    public boolean isPickable() {
+//        return true;
+//    }
+//    public boolean canBeHitByProjectile() {
+//        return false;
+//    }
     public int getMaxStart() {
         return 40;
     }
@@ -50,8 +60,14 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
         return true;
     }
     public int getMaxLife() {
-        return (spellLevelDamage + 1) * 6 * 20 * 2;
+        return 10 * 60 * 20;
     }
+    protected void doPush(Entity entity) {
+        if (shouldPush()) {
+            entity.makeStuckInBlock(Blocks.AIR.defaultBlockState(), new Vec3(0.5D, 0.5D, 0.5D));
+        }
+    }
+
 
     @Override
     public void tick() {
@@ -88,23 +104,26 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
         }
     }
 
-    @Override
-    public InteractionResult interact(Player player, InteractionHand interactionHand) {
-        if (!this.isAlive()) {
-            return super.interact(player, interactionHand);
-        }
-        if (player == this.getOwner()) {
-            this.life = Math.max(this.life, getMaxLife() - 30);
-            return InteractionResult.SUCCESS;
-        }
-        else {
-            if (!player.isShiftKeyDown()) {
-                dealDamageTo(player);
-            }
-            return InteractionResult.SUCCESS;
-        }
-    }
-
+//    @Override
+//    public InteractionResult interact(Player player, InteractionHand interactionHand) {
+//        if (!this.isAlive()) {
+//            return super.interact(player, interactionHand);
+//        }
+//        if (player == this.getOwner()) {
+//            if (player.isShiftKeyDown()) {
+//                this.life = Math.max(this.life, getMaxLife() - 30);
+//                return InteractionResult.SUCCESS;
+//            }
+//            return super.interact(player, interactionHand);
+//        }
+//        else {
+//            if (!player.isShiftKeyDown()) {
+//                dealDamageTo(player);
+//                return InteractionResult.SUCCESS;
+//            }
+//            return super.interact(player, interactionHand);
+//        }
+//    }
     public boolean dealDamageTo(LivingEntity livingEntity) {
         LivingEntity livingEntity2 = this.getOwner();
         if (!livingEntity.isAlive() || livingEntity.isInvulnerable() || livingEntity == livingEntity2) {
@@ -131,6 +150,23 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
     @Override
     public int getSpellLevel() {
         return this.spellLevelDamage;
+    }
+
+    @Override
+    public boolean endConcentration() {
+        if (getOwner() != null) {
+            SpellType.setConcentrationSpellTypeJerotes(getOwner(), "");
+            if (getOwner() instanceof Player player) {
+                player.getCapability(JerotesPlayerData.CAPABILITY, null).ifPresent(capability -> {
+                    capability.setConcentrationSpellTarget("");
+                    capability.syncPlayerVariables(player);
+                });
+            }
+            SpellType.setConcentrationSpellTargetJerotes(getOwner(), UUID.fromString("00000000-0000-0000-0000-000000000000"));
+            SpellType.endConcentrationMessage(getOwner(), SpellType.JEROTES_INSECT_PLAGUE.magicSpellGet(1,null,null).getSpellName());
+        }
+        this.discard();
+        return true;
     }
 }
 

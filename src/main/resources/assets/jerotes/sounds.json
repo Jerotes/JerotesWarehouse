@@ -362,6 +362,36 @@
       }
     ]
   },
+  "magic_ray_of_fire": {
+    "subtitle": "subtitle.jerotes.magic_ray_of_fire",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/ray",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_ray_of_frost": {
+    "subtitle": "subtitle.jerotes.magic_ray_of_frost",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/ray",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_ray_of_lightning": {
+    "subtitle": "subtitle.jerotes.magic_ray_of_lightning",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/ray",
+        "volume": 1.0
+      }
+    ]
+  },
   "magic_ray_of_sickness": {
     "subtitle": "subtitle.jerotes.magic_ray_of_sickness",
     "category": "neutral",
@@ -392,12 +422,32 @@
       }
     ]
   },
+  "magic_finger_of_death": {
+    "subtitle": "subtitle.jerotes.magic_finger_of_death",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/ray",
+        "volume": 1.0
+      }
+    ]
+  },
   "magic_lightning_bolt": {
     "subtitle": "subtitle.jerotes.magic_lightning_bolt",
     "category": "neutral",
     "sounds": [
       {
         "name": "jerotes:others/magic/lightning",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_infestation": {
+    "subtitle": "subtitle.jerotes.magic_infestation",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
         "volume": 1.0
       }
     ]
@@ -462,8 +512,8 @@
       }
     ]
   },
-  "magic_freeze_absorption": {
-    "subtitle": "subtitle.jerotes.magic_freeze_absorption",
+  "magic_cold_absorption": {
+    "subtitle": "subtitle.jerotes.magic_cold_absorption",
     "category": "neutral",
     "sounds": [
       {
@@ -478,6 +528,16 @@
     "sounds": [
       {
         "name": "jerotes:others/magic/lightning",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_life_mend": {
+    "subtitle": "subtitle.jerotes.magic_life_mend",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/heal",
         "volume": 1.0
       }
     ]
@@ -604,8 +664,8 @@
       }
     ]
   },
-  "magic_conjure_vex": {
-    "subtitle": "subtitle.jerotes.magic_conjure_vex",
+  "magic_conjure_vexs": {
+    "subtitle": "subtitle.jerotes.magic_conjure_vexs",
     "category": "neutral",
     "sounds": [
       {

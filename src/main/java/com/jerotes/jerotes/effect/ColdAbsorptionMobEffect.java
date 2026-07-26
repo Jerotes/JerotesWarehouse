@@ -4,14 +4,14 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
 
-public class FreezeAbsorptionMobEffect extends BaseMobEffect {
-	public FreezeAbsorptionMobEffect() {
+public class ColdAbsorptionMobEffect extends BaseMobEffect {
+	public ColdAbsorptionMobEffect() {
 		super(MobEffectCategory.BENEFICIAL, 0x6e98ff);
 	}
 
 	@Override
 	public String getDescriptionId() {
-		return "effect.jerotes.freeze_absorption";
+		return "effect.jerotes.cold_absorption";
 	}
 
 	@Override

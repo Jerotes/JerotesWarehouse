@@ -91,6 +91,11 @@ public class Main {
 		return new CompoundTag();
 	}
 
+
+
+
+
+
 	//幸运值
 	public static double luck(LivingEntity livingEntity) {
 		return livingEntity.getAttribute(Attributes.LUCK) != null ? livingEntity.getAttributeValue(Attributes.LUCK) : 0;
@@ -1004,5 +1009,59 @@ public class Main {
 	}
 	public static float rollDice(int count, int sides) {
 		return rollDice(count, sides, RandomSource.create());
+	}
+
+	//计算使用的施法等级
+	public static int getUsedSpellLevel(int maxLevel, RandomSource random) {
+		if (maxLevel < 1) {
+			maxLevel = 1;
+		}
+
+		int normalLevel;
+		int minLevel;
+
+		switch (maxLevel) {
+			case 1 -> { normalLevel = 1; minLevel = 1; }
+			case 2, 3 -> { normalLevel = 2; minLevel = 1; }
+			case 4, 5 -> { normalLevel = 3; minLevel = 2; }
+			case 6, 7 -> { normalLevel = 4; minLevel = 3; }
+			case 8 -> { normalLevel = 5; minLevel = 4; }
+			default -> { normalLevel = 6; minLevel = 5; }
+		}
+
+		if (minLevel > maxLevel) {
+			minLevel = maxLevel;
+		}
+		if (normalLevel > maxLevel) {
+			normalLevel = maxLevel;
+		}
+
+		int range = maxLevel - minLevel + 1;
+		if (range < 1) {
+			return normalLevel;
+		}
+
+		int[] weights = new int[range];
+		int totalWeight = 0;
+		for (int level = minLevel; level <= maxLevel; level++) {
+			int distance = Math.abs(level - normalLevel);
+			int weight = 1 + (maxLevel - minLevel) - distance;
+			if (weight < 1) weight = 1;
+			weights[level - minLevel] = weight;
+			totalWeight += weight;
+		}
+
+		if (totalWeight <= 0) {
+			return normalLevel;
+		}
+		int rand = random.nextInt(totalWeight);
+		int cumulative = 0;
+		for (int i = 0; i < weights.length; i++) {
+			cumulative += weights[i];
+			if (rand < cumulative) {
+				return minLevel + i;
+			}
+		}
+		return normalLevel;
 	}
 }

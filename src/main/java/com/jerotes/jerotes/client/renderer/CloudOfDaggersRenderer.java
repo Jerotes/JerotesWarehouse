@@ -28,7 +28,7 @@ public class CloudOfDaggersRenderer extends EntityRenderer<CloudOfDaggersEntity>
         poseStack.scale(-1.0F, -1.0F, 1.0F);
         poseStack.translate(0.0F, -1.5F, 0.0F);
         this.model.setupAnim(f7 - 20);
-        this.model.scale(t, Math.min(1, (t.start - 20 + partialTicks) / 20), f7, Mth.clamp((-(t.life + partialTicks - ((t.spellLevelDamage + 1) * 6 * 20)) / 20f), 0, 1));
+        this.model.scale(t, Math.min(1, (t.start - 20 + partialTicks) / 20), f7, Mth.clamp((-(t.life + partialTicks - (60 * 20)) / 20f), 0, 1));
         VertexConsumer vb = multiBufferSource.getBuffer(JerotesRenderType.entityTranslucent(getDaggersTextureLocation(t)));
         model.renderToBuffer(poseStack, vb, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0f);
 

@@ -15,6 +15,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.*;
@@ -85,9 +86,9 @@ public class Modelhumanoid<T extends LivingEntity> extends Modelspecial_action<T
 			this.animate(skinEntity.armWideScaleAnimationState, HumanoidAnimation.MALE, ageInTicks);
 			this.animate(skinEntity.armSlimScaleAnimationState, HumanoidAnimation.FEMALE, ageInTicks);
 		}
-		if (t instanceof HumanEntity humanEntity) {
-			this.animate(humanEntity.armWideScaleAnimationState, HumanoidAnimation.MALE, ageInTicks);
-			this.animate(humanEntity.armSlimScaleAnimationState, HumanoidAnimation.FEMALE, ageInTicks);
+		if (t instanceof SkinEntity humanEntity) {
+			this.animate(humanEntity.armWideScaleAnimationState(), HumanoidAnimation.MALE, ageInTicks);
+			this.animate(humanEntity.armSlimScaleAnimationState(), HumanoidAnimation.FEMALE, ageInTicks);
 		}
 
 		//姿势

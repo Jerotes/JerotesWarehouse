@@ -83,7 +83,7 @@ public class CorrosiveMobEffect extends BaseMobEffectTick {
 
 		//伤害
 		if (livingEntity.getHealth() > 0f) {
-			DamageSource damageSource = new DamageSource(livingEntity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.CORROSIVE));
+			DamageSource damageSource = new DamageSource(livingEntity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.CORROSION));
 			livingEntity.hurt(damageSource, effectLevel * damageLevel * damageEnchantLevel);
 		}
 		//耐久

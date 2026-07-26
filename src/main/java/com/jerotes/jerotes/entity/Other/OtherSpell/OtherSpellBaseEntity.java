@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.entity.Other.OtherSpell;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.util.Main;
@@ -72,18 +73,6 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
             } else {
                 List<Entity> list = this.level().getEntities(this, this.getBoundingBox(), EntitySelector.pushableBy(this));
                 if (!list.isEmpty()) {
-                    int i = this.level().getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
-                    if (i > 0 && list.size() > i - 1 && this.random.nextInt(4) == 0) {
-                        int j = 0;
-                        for (Entity entity : list) {
-                            if (!entity.isPassenger()) {
-                                ++j;
-                            }
-                        }
-                        if (j > i - 1) {
-                            this.hurt(this.damageSources().cramming(), 6.0F);
-                        }
-                    }
                     for (Entity entity : list) {
                         this.doPush(entity);
                     }
@@ -121,6 +110,9 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     }
     public void setOwnerUUID(@Nullable UUID uuid) {
         this.entityData.set(DATA_OWNER_UUID_ID, Optional.ofNullable(uuid));
+    }
+    public void setOwner(LivingEntity livingEntity) {
+        setOwnerUUID(livingEntity.getUUID());
     }
     @Nullable
     @Override
@@ -300,14 +292,26 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
         }
         if (this.moveToTarget()) {
             if (this.getTarget() != null) {
-                this.moveTo(this.getTarget().getX(), this.getTarget().getY(0), this.getTarget().getZ());
+                this.setPos(this.getTarget().getX(), this.getTarget().getY(0), this.getTarget().getZ());
             }
         }
         if (this.level().isClientSide()) {
             this.start = Math.min(getMaxStart(), this.start + 1);
         }
         if (this.life >= getMaxLife()) {
-            this.discard();
+            if (this instanceof ConcentrationSpellEntity concentrationSpellEntity) {
+                concentrationSpellEntity.endConcentration();
+            } else {
+                this.discard();
+            }
+        }
+
+        if (this.getOwner() != null) {
+            if (this instanceof ConcentrationSpellEntity concentrationSpellEntity) {
+                if (this.getOwner().level() != this.level()) {
+                    concentrationSpellEntity.endConcentration();
+                }
+            }
         }
     }
 

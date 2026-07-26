@@ -13,14 +13,11 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PotionItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import javax.naming.ldap.SortControl;
 
 @Mod.EventBusSubscriber(modid = JerotesWarehouse.MODID)
 public class MaterialEvent {
@@ -124,7 +121,7 @@ public class MaterialEvent {
 		if (itemStack.is(ItemTags.WOOL)) {
 			event.setEffectCount(3);
 			event.setEffect1(new SlowFallingAlchemyEffect(1, 1));
-			event.setEffect2(new FreezeAbsorptionAlchemyEffect(1, 1));
+			event.setEffect2(new ColdAbsorptionAlchemyEffect(1, 1));
 			event.setEffect3(new SaturationAlchemyEffect(1, 1));
 		}
 		//鱼类
@@ -298,7 +295,7 @@ public class MaterialEvent {
 		//皮革 兔子皮
 		if (itemStack.is(Items.LEATHER) || itemStack.is(Items.RABBIT_HIDE)) {
 			event.setEffectCount(3);
-			event.setEffect1(new FreezeAbsorptionAlchemyEffect(1, 2));
+			event.setEffect1(new ColdAbsorptionAlchemyEffect(1, 2));
 			event.setEffect2(new WeaknessAlchemyEffect(2, 2));
 			event.setEffect3(new NauseaAlchemyEffect(1, 1));
 		}
@@ -334,7 +331,7 @@ public class MaterialEvent {
 		if (itemStack.is(Items.SNOWBALL)) {
 			event.setEffectCount(3);
 			event.setEffect1(new SlownessAlchemyEffect(2, 1));
-			event.setEffect2(new FreezeAbsorptionAlchemyEffect(1, 1));
+			event.setEffect2(new ColdAbsorptionAlchemyEffect(1, 1));
 			event.setEffect3(new MiningFatigueAlchemyEffect(1, 2));
 		}
 		//甜浆果
@@ -377,7 +374,7 @@ public class MaterialEvent {
 			event.setEffectCount(3);
 			event.setEffect1(new DolphinsGraceAlchemyEffect(2, 1));
 			event.setEffect2(new NightVisionAlchemyEffect(1, 2));
-			event.setEffect3(new InvisiblePassageAlchemyEffect(1, 2));
+			event.setEffect3(new TrueInvisbilityAlchemyEffect(1, 2));
 		}
 		//萤石粉
 		if (itemStack.is(Items.GLOWSTONE_DUST)) {
@@ -480,7 +477,7 @@ public class MaterialEvent {
 		//原色玻璃类
 		if (itemStack.is(Items.GLASS) || itemStack.is(Items.GLASS_PANE) || itemStack.is(ItemTags.create(new ResourceLocation("forge:glass")))|| itemStack.is(ItemTags.create(new ResourceLocation("forge:glass_panes"))) || itemStack.is(Items.TINTED_GLASS)) {
 			event.setEffectCount(3);
-			event.setEffect1(new InvisiblePassageAlchemyEffect(1, 1));
+			event.setEffect1(new TrueInvisbilityAlchemyEffect(1, 1));
 			event.setEffect2(new InvisbilityAlchemyEffect(1, 2));
 			event.setEffect3(new GlowingAlchemyEffect(1, 1));
 		}
@@ -488,7 +485,7 @@ public class MaterialEvent {
 		if (itemStack.is(Items.GHAST_TEAR)) {
 			event.setEffectCount(3);
 			event.setEffect1(new NauseaAlchemyEffect(1, 2));
-			event.setEffect2(new InvisiblePassageAlchemyEffect(1, 2));
+			event.setEffect2(new TrueInvisbilityAlchemyEffect(1, 2));
 			event.setEffect3(new SlowFallingAlchemyEffect(1, 2));
 		}
 		//下界石英
@@ -676,7 +673,7 @@ public class MaterialEvent {
 		if (itemStack.is(Items.BROWN_MUSHROOM)) {
 			event.setEffectCount(3);
 			event.setEffect1(new SaturationAlchemyEffect(1, 1));
-			event.setEffect2(new InvisiblePassageAlchemyEffect(1, 2));
+			event.setEffect2(new TrueInvisbilityAlchemyEffect(1, 2));
 			event.setEffect3(new InstantHealthAlchemyEffect(2, 1));
 		}
 		//诡异菌
@@ -711,7 +708,7 @@ public class MaterialEvent {
 		if (itemStack.is(Items.ICE) || itemStack.is(Items.PACKED_ICE) || itemStack.is(Items.BLUE_ICE)) {
 			event.setEffectCount(3);
 			event.setEffect1(new SlownessAlchemyEffect(2, 1));
-			event.setEffect2(new FreezeAbsorptionAlchemyEffect(2, 1));
+			event.setEffect2(new ColdAbsorptionAlchemyEffect(2, 1));
 			event.setEffect3(new MiningFatigueAlchemyEffect(2, 1));
 		}
 	}

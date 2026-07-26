@@ -1,13 +1,12 @@
 package com.jerotes.jerotes.goal;
 
+import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Interface.WizardEntity;
 import com.jerotes.jerotes.item.Interface.MagicItem;
-import com.jerotes.jerotes.spell.MagicSpell;
-import com.jerotes.jerotes.spell.MagicType;
-import com.jerotes.jerotes.spell.SpellListByString;
-import com.jerotes.jerotes.spell.SpellTypeInterface;
+import com.jerotes.jerotes.spell.*;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -87,11 +86,32 @@ public class JerotesAddSpellAttackGoal extends Goal {
         if (Main.getJerotesPersistentData(this.mob).getDouble("jerotes_add_spell_cooldown") > 0) {
             return;
         }
-        if (Main.getJerotesPersistentData(this.mob).getDouble("jerotes_spell_cooldown") > 0) {
+        if (SpellType.getCastCooldownJerotes(this.mob) > 0) {
             return;
         }
         Entity finalTarget = this.target;
         int TrueSpellLevel = this.spellLevel;
+
+        //专注中
+        if (!SpellType.getConcentrationSpellTypeJerotes(this.mob).isEmpty() && SpellListByString.getSpell(TrueSpellLevel, this.mob, finalTarget, SpellTypeInterface).isConcentration()) {
+            //如果是选择类的专注施法 目标判定
+            //如果是地区类的专注施法 距离判定
+            boolean bl = false;
+            if (this.mob.level() instanceof ServerLevel serverLevel) {
+                if (serverLevel.getEntity(SpellType.getConcentrationSpellTargetJerotes(this.mob)) instanceof ConcentrationSpellEntity concentrationSpellEntity) {
+                    Entity entity = (Entity) concentrationSpellEntity;
+                    bl = entity.distanceTo(this.mob) > 64;
+                }
+            }
+            //其他情况下：尽量不继续用专注类
+            if (!bl && this.mob.getRandom().nextFloat() > 0.35f) {
+                //重置法术选择
+                SpellTypeInterface = selectSpell();
+                return;
+            }
+        }
+
+        TrueSpellLevel = Main.getUsedSpellLevel(TrueSpellLevel, this.mob.getRandom());
         //法术等级校对
         if (this.mob.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.getAddSpellType(this.mob.getMainHandItem()).contains(SpellTypeInterface)) {
             TrueSpellLevel = Math.max(magicItem.getSpellLevel(this.mob.getMainHandItem()), TrueSpellLevel);

@@ -23,14 +23,6 @@ public class HoldMobEffect extends BaseMobEffectAllTick {
 	@Override
 	public void applyEffectTick(LivingEntity livingEntity, int n) {
 		super.applyEffectTick(livingEntity, n);
-		int time = livingEntity.getEffect(JerotesMobEffects.HOLD_MOB.get()).getDuration();
-		if ((time % 120 == 0) && time != 0 && time != 6) {
-			if (EntityAndItemFind.savingSpellThrow(livingEntity)){
-				if (!livingEntity.level().isClientSide) {
-					livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
-				}
-			}
-		}
 		if(livingEntity.getDeltaMovement().y > 0){
 			livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().multiply(0.2, 0, 0.2));
 		}

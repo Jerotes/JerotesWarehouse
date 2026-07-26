@@ -15,6 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T> {
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(JerotesWarehouse.MODID, "textures/item/magic_missile.png");
@@ -57,7 +59,7 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
         float f13 = (float) (f7 - Mth.lerp((double) f2, t.xo, f10));
         float f14 = (float) (f8 - Mth.lerp((double) f2, t.yo, f11));
         float f15 = (float) (f9 - Mth.lerp((double) f2, t.zo, f12));
-        renderLightLock(f13, f14, f15, f2, t.tickCount, poseStack, multiBufferSource, n);
+        renderLightLock(t, f13, f14, f15, f2, t.tickCount, poseStack, multiBufferSource, n);
         poseStack.popPose();
         super.render(t, f, f2, poseStack, multiBufferSource, n);
     }
@@ -67,24 +69,26 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
         return TEXTURE_LOCATION;
     }
 
-    public ResourceLocation getBeamLocation() {
-        return LOCATION;
+    public ResourceLocation getBeamLocation(BaseBeamEntity baseBeamEntity) {
+        return baseBeamEntity.getBeamLocation();
     }
 
-    public static final ResourceLocation LOCATION = new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/base_beam.png");
-    private static final RenderType BEAM2 = JerotesRenderType.translucent();
-
-    public void renderLightLock(float f, float f2, float f3, float f4, int n, PoseStack poseStack, MultiBufferSource multiBufferSource, int n2) {
-        float horizontalDistance = Mth.sqrt(f * f + f3 * f3);
+    public void renderLightLock(BaseBeamEntity baseBeamEntity, float f, float f2, float f3, float f4, int n, PoseStack poseStack, MultiBufferSource multiBufferSource, int n2) {
         float totalDistance = Mth.sqrt(f * f + f2 * f2 + f3 * f3);
 
         poseStack.pushPose();
         poseStack.translate(0.0f, 0.0f, 0.0f);
-        poseStack.mulPose(Axis.YP.rotation((float)(-Math.atan2(f3, f)) - 1.5707964f));
-        poseStack.mulPose(Axis.XP.rotation((float)(-Math.atan2(horizontalDistance, f2)) - 1.5707964f));
+
+        Vector3f dir = new Vector3f(f, f2, f3);
+        if (dir.lengthSquared() > 1.0E-6f) {
+            dir.normalize();
+            Vector3f zAxis = new Vector3f(0.0f, 0.0f, 1.0f);
+            Quaternionf rot = new Quaternionf().rotationTo(zAxis, dir);
+            poseStack.mulPose(rot);
+        }
 
         {
-            VertexConsumer vertexConsumer = multiBufferSource.getBuffer(BEAM2);
+            VertexConsumer vertexConsumer = multiBufferSource.getBuffer(JerotesRenderType.glowDoubleSidedLightning(getBeamLocation(baseBeamEntity)));
             float uvBottom = 0.0f - ((float) n + f4) * 0.01f;
             float uvTop = totalDistance / 32.0f - ((float) n + f4) * 0.01f;
 
@@ -217,7 +221,7 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
 
         }
         {
-            VertexConsumer vertexConsumer = multiBufferSource.getBuffer(JerotesRenderType.glowDoubleSided(getBeamLocation()));
+            VertexConsumer vertexConsumer = multiBufferSource.getBuffer(JerotesRenderType.glowDoubleSided(getBeamLocation(baseBeamEntity)));
             float uvBottom = 0.0f - ((float) n + f4) * 0.01f;
             float uvTop = totalDistance / 32.0f - ((float) n + f4) * 0.01f;
 

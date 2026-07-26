@@ -15,6 +15,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -48,6 +49,20 @@ public class JerotesKeyMappings {
 				PacketHandler.sendToServer(new SpellUseMessage(0, 0, true));
 				if (Minecraft.getInstance().player != null) {
 					SpellUseMessage.pressAction(Minecraft.getInstance().player, 0, 0, true);
+				}
+			}
+			isDownOld = isDown;
+		}
+	};
+	public static final KeyMapping END_CONCENTRATION = new KeyMapping("key.jerotes.end_concentration", GLFW.GLFW_KEY_I, "key.categories.jerotes") {
+		private boolean isDownOld = false;
+		@Override
+		public void setDown(boolean isDown) {
+			super.setDown(isDown);
+			if (isDownOld != isDown && isDown) {
+				PacketHandler.sendToServer(new SpellUseMessage(1, 0, false));
+				if (Minecraft.getInstance().player != null) {
+					SpellUseMessage.pressAction(Minecraft.getInstance().player, 1, 0, false);
 				}
 			}
 			isDownOld = isDown;
@@ -146,6 +161,7 @@ public class JerotesKeyMappings {
 	public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
 		event.register(MAIN_SPELL_USE);
 		event.register(ADD_SPELL_USE);
+		event.register(END_CONCENTRATION);
 		event.register(CHANGE_CONTROL_COMBAT_TYPE);
 		event.register(CHANGE_CONTROL_STEERING_TYPE);
 		event.register(VEHICLE_CONTROL_MOUSE_MAIN);
@@ -162,6 +178,7 @@ public class JerotesKeyMappings {
 			if (Minecraft.getInstance().screen == null) {
 				MAIN_SPELL_USE.consumeClick();
 				ADD_SPELL_USE.consumeClick();
+				END_CONCENTRATION.consumeClick();
 				CHANGE_CONTROL_COMBAT_TYPE.consumeClick();
 				CHANGE_CONTROL_STEERING_TYPE.consumeClick();
 				VEHICLE_CONTROL_MOUSE_MAIN.consumeClick();

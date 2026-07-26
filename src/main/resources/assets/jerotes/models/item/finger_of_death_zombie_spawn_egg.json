@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jerotes:item/finger_of_death_zombie_spawn_egg"
+  }
+}

@@ -1,23 +1,19 @@
 package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
-import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
-import com.jerotes.jerotes.init.JerotesMobEffects;
-import com.jerotes.jerotes.init.JerotesSoundEvents;
+import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.util.Main;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -81,7 +77,6 @@ public class SpellFindUseEvent {
         //整体计时
         Main.persistentDataDoubleReduceToZero(caster, "jerotes_main_spell_cooldown", true);
         Main.persistentDataDoubleReduceToZero(caster, "jerotes_add_spell_cooldown", true);
-        Main.persistentDataDoubleReduceToZero(caster, "jerotes_spell_cooldown", true);
         Main.persistentDataDoubleReduceToZero(caster, "jerotes_spell_tick", true);
         if (Main.getJerotesPersistentData(caster).getDouble("jerotes_spell_tick") == 5) {
             TargetSpellUse(caster);
@@ -139,62 +134,43 @@ public class SpellFindUseEvent {
         //火焰吸收
         Main.persistentDataDoubleReduceToZero(caster, "jerotes_fire_absorption", true);
         //冰霜吸收
-        Main.persistentDataDoubleReduceToZero(caster, "jerotes_freeze_absorption", true);
+        Main.persistentDataDoubleReduceToZero(caster, "jerotes_cold_absorption", true);
         //闪电吸收
         Main.persistentDataDoubleReduceToZero(caster, "jerotes_lightning_absorption", true);
-        //魔法飞弹
-        if (Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") > 0) {
-            Main.getJerotesPersistentData(caster).putDouble("jerotes_magic_missile", Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") - 1);
-            Main.getJerotesPersistentData(caster).putDouble("jerotes_spell_cooldown", Math.max(2, Main.getJerotesPersistentData(caster).getDouble("jerotes_spell_cooldown")));
-            if (Main.getJerotesPersistentData(caster).getDouble("jerotes_magic_missile") % 3 == 0) {
-                caster.swing(InteractionHand.MAIN_HAND, true);
-                if (caster.level() instanceof ServerLevel serverLevel) {
-                    int spellLevelDamage = Main.getJerotesPersistentData(caster).getInt("jerotes_magic_missile_spellLevelDamage");
-                    UUID targetUUID = Main.getJerotesPersistentData(caster).getUUID("jerotes_magic_missile_target");
-                    Entity entity = serverLevel.getEntity(targetUUID);
-                    if (caster instanceof Player player && Main.getTargetedEntity(player, 36) != null) {
-                        entity = Main.getTargetedEntity(player, 36);
-                    }
-                    JerotesStopSpellEvent stopSpellEvent = new JerotesStopSpellEvent(caster, null, null, entity, 1, spellLevelDamage);
-                    MinecraftForge.EVENT_BUS.post(stopSpellEvent);
-                    if (!stopSpellEvent.isCanceled()) {
-                        float spellLevelAccuracy = Main.getJerotesPersistentData(caster).getFloat("jerotes_magic_missile_spellLevelAccuracy");
-                        int count = Main.getJerotesPersistentData(caster).getInt("jerotes_magic_missile_count");
-                        float distance = Main.getJerotesPersistentData(caster).getFloat("jerotes_magic_missile_distance");
-                        MagicMissileEntity spell;
-                        for (int i = 0; i < count; ++i) {
-                            if (caster instanceof Mob mob && mob.getTarget() != null) {
-                                mob.lookAt(mob.getTarget(), 360.0f, 360.0f);
-                            }
-                            double d2 = caster.getLookAngle().x;
-                            double d3 = caster.getLookAngle().y;
-                            double d4 = caster.getLookAngle().z;
-                            spell = new MagicMissileEntity(spellLevelDamage, serverLevel, caster, d2, d3, d4);
-                            spell.setPos(caster.getX(), caster.getY(0.7), caster.getZ());
-                            spell.shootFromRotation(caster, caster.getXRot(), (float) (caster.getYRot() - ((count - 1) * distance) / 2 + i * distance), 0f, 1f, spellLevelAccuracy);
-                            spell.setOwner(caster);
-                            if (entity != null && entity != caster) {
-                                spell.setTarget(entity);
-                            }
-                            serverLevel.addFreshEntity(spell);
-                        }
-                        if (!caster.isSilent()) {
-                            caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), JerotesSoundEvents.MAGIC_MAGIC_MISSILE,
-                                    caster.getSoundSource(), 1.0f, 1.0F);
-                        }
+    }
+
+
+    @SubscribeEvent
+    public static void CasterAttack(LivingAttackEvent event) {
+        //攻击后停止
+        Entity entity = event.getSource().getEntity();
+        if (entity instanceof LivingEntity caster) {
+            if (caster.level() instanceof ServerLevel serverLevel) {
+                if (!SpellType.getConcentrationSpellTypeJerotes(caster).isEmpty()) {
+                    if (serverLevel.getEntity(SpellType.getConcentrationSpellTargetJerotes(caster)) instanceof ConcentrationSpellEntity concentrationSpellEntity && concentrationSpellEntity.attackEndConcentration()) {
+                        concentrationSpellEntity.endConcentration();
                     }
                 }
             }
         }
-        else if (Main.getJerotesPersistentData(caster).get("jerotes_magic_missile") != null) {
-            Main.persistentDataRemove(caster, "jerotes_magic_missile");
-            Main.persistentDataRemove(caster, "jerotes_magic_missile_spellLevelDamage");
-            Main.persistentDataRemove(caster, "jerotes_magic_missile_target");
-            Main.persistentDataRemove(caster, "jerotes_magic_missile_spellLevelAccuracy");
-            Main.persistentDataRemove(caster, "jerotes_magic_missile_count");
-            Main.persistentDataRemove(caster, "jerotes_magic_missile_distance");
+    }
+
+
+    @SubscribeEvent
+    public static void CasterHurt(LivingHurtEvent event) {
+        if (event != null && event.getEntity() != null) {
+            LivingEntity caster = event.getEntity();
+            DamageSource damagesource = event.getSource();
+            if (damagesource == null || caster == null)
+                return;
+            if (event.getAmount() > caster.getMaxHealth()/5) {
+                if (!SpellType.getConcentrationSpellTypeJerotes(caster).isEmpty()) {
+                    SpellType.endConcentration(caster);
+                }
+            }
         }
     }
+
     @SubscribeEvent
     public static void CasterDeath(LivingDeathEvent event) {
         LivingEntity caster = event.getEntity();
@@ -208,9 +184,14 @@ public class SpellFindUseEvent {
         //火焰吸收
         Main.persistentDataRemove(caster, "jerotes_fire_absorption");
         //冰霜吸收
-        Main.persistentDataRemove(caster, "jerotes_freeze_absorption");
+        Main.persistentDataRemove(caster, "jerotes_cold_absorption");
         //闪电吸收
         Main.persistentDataRemove(caster, "jerotes_lightning_absorption");
-        SpellType.stops(caster, 10, true);
+
+        SpellType.stopCasting(caster, 999, true);
+
+        if (!SpellType.getConcentrationSpellTypeJerotes(caster).isEmpty()) {
+            SpellType.endConcentration(caster);
+        }
     }
 }

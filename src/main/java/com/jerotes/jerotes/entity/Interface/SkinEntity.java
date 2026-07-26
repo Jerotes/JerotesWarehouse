@@ -1,5 +1,7 @@
 package com.jerotes.jerotes.entity.Interface;
 
+import net.minecraft.world.entity.AnimationState;
+
 public interface SkinEntity {
     default boolean isSkinA() {
         return false;
@@ -9,6 +11,12 @@ public interface SkinEntity {
     }
     default boolean isSkinC() {
         return false;
+    }
+    default AnimationState armWideScaleAnimationState() {
+        return new AnimationState();
+    }
+    default AnimationState armSlimScaleAnimationState() {
+        return new AnimationState();
     }
 
     default boolean isTrueUse() {

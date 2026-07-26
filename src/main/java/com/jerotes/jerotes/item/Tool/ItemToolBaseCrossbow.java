@@ -3,6 +3,7 @@ package com.jerotes.jerotes.item.Tool;
 import com.jerotes.jerotes.item.Interface.ItemSpecialEffect;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -94,11 +95,21 @@ public class ItemToolBaseCrossbow extends CrossbowItem implements ItemSpecialEff
     public int maxBullet() {
         return 0;
     }
+    private ItemStack createFireworkLoadedCrossbow() {
+        ItemStack crossbow = new ItemStack(Items.CROSSBOW);
+        CompoundTag tag = crossbow.getOrCreateTag();
+        ListTag listTag = new ListTag();
+        ItemStack firework = new ItemStack(Items.FIREWORK_ROCKET);
+        listTag.add(firework.save(new CompoundTag()));
+        tag.put("ChargedProjectiles", listTag);
+        tag.putBoolean("Charged", true);
+        return crossbow;
+    }
     public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
         if ((itemStack.getItem() instanceof ItemToolBaseCrossbow crossbowItem && crossbowItem.maxBullet() != 0)) {
             list.add(Component.translatable("item.jerotes.crossbow_repeater",
                     getShootingPower(Items.ARROW.getDefaultInstance()),
-                    getShootingPower(Items.FIREWORK_ROCKET.getDefaultInstance()),
+                    getShootingPower(createFireworkLoadedCrossbow()),
                     getDefaultProjectileRange(),
                     getChargeDurations(itemStack)/20f,
                     getArrowInaccuracy(),
@@ -108,7 +119,7 @@ public class ItemToolBaseCrossbow extends CrossbowItem implements ItemSpecialEff
         else {
             list.add(Component.translatable("item.jerotes.crossbow",
                     getShootingPower(Items.ARROW.getDefaultInstance()),
-                    getShootingPower(Items.FIREWORK_ROCKET.getDefaultInstance()),
+                    getShootingPower(createFireworkLoadedCrossbow()),
                     getDefaultProjectileRange(),
                     getChargeDurations(itemStack)/20f,
                     getArrowInaccuracy()
