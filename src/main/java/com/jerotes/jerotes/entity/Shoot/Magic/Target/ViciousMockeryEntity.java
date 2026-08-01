@@ -44,12 +44,11 @@ public class ViciousMockeryEntity extends BaseTargetEntity {
             livingEntity.hurt(damageSource,
                     //单数多出0.5
                     (spellLevelDamage > 1 && spellLevelDamage % 2 == 1) ?
-                            Main.rollDice(1 + (spellLevelDamage - 2) / 2, 4, livingEntity.getRandom()) + Main.rollDice(1, 4, livingEntity.getRandom()) / 0.5f :
+                            Main.rollDice(1 + (spellLevelDamage - 2) / 2, 4, livingEntity.getRandom()) + Main.rollDice(1, 4, livingEntity.getRandom()) * 0.5f :
                             Main.rollDice(1 + (spellLevelDamage - 1) / 2, 4, livingEntity.getRandom())
             );
         }
         this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
-        this.discard();
     }
 
     @Override

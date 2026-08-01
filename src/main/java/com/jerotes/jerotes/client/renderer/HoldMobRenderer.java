@@ -31,11 +31,11 @@ public class HoldMobRenderer extends EntityRenderer<HoldMobEntity> {
         this.model.setupAnim(f7);
         this.model.scale(t,
                 //开始
-                Mth.clamp((t.start + partialTicks) / 20,0 , 1),
+                Mth.clamp((t.getLifeTick() + partialTicks) / 20,0 , 1),
                 //自身计时
                 f7,
                 //消失
-                1);
+                Mth.clamp((t.getMaxLife() - (t.life + partialTicks)) / 10f,0 , 1));
         VertexConsumer vb = multiBufferSource.getBuffer(JerotesRenderType.entityTranslucent(getOtherTextureLocation(t)));
         model.renderToBuffer(poseStack, vb, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0f);
 
@@ -45,7 +45,7 @@ public class HoldMobRenderer extends EntityRenderer<HoldMobEntity> {
         vb = multiBufferSource.getBuffer(JerotesRenderType.flowGlowOneSide(this.getTextureLocation(t), this.xOffset(f7) % 1.0f, 0.0f));
         model.renderToBuffer(poseStack, vb, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0f);
 
-        vb = multiBufferSource.getBuffer(JerotesRenderType.flowGlow(this.getChainTextureLocation(t), this.xOffsetChain(f7) % 1.0f, 0.0f));
+        vb = multiBufferSource.getBuffer(JerotesRenderType.flowGlow(this.getRollTextureLocation(t), this.xOffsetChain(f7) % 1.0f, 0.0f));
         model.renderToBuffer(poseStack, vb, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0f);
         poseStack.popPose();
 
@@ -64,7 +64,7 @@ public class HoldMobRenderer extends EntityRenderer<HoldMobEntity> {
     public ResourceLocation getOtherTextureLocation(HoldMobEntity holdMobEntity) {
         return holdMobEntity.getOtherTextureLocation();
     }
-    public ResourceLocation getChainTextureLocation(HoldMobEntity holdMobEntity) {
-        return holdMobEntity.getChainTextureLocation();
+    public ResourceLocation getRollTextureLocation(HoldMobEntity holdMobEntity) {
+        return holdMobEntity.getRollTextureLocation();
     }
 }

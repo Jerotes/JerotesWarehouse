@@ -21,12 +21,15 @@ public class JerotesDamageTypes {
 	public static final ResourceKey<DamageType> SYRINGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "syringe"));
 	public static final ResourceKey<DamageType> SPEAR = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "spear"));
 	public static final ResourceKey<DamageType> MAGIC_EFFECT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "magic_effect"));
-	public static final ResourceKey<DamageType> BLEEDING = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bleeding"));
+	public static final ResourceKey<DamageType> BLEED = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bleed"));
 	public static final ResourceKey<DamageType> CORROSION = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "corrosion"));
 	public static final ResourceKey<DamageType> POISON = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "poison"));
 	public static final ResourceKey<DamageType> RADIANT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "radiant"));
 	public static final ResourceKey<DamageType> NECROTIC = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "necrotic"));
 	public static final ResourceKey<DamageType> PSYCHIC = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "psychic"));
+	public static final ResourceKey<DamageType> THUNDER = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "thunder"));
+	public static final ResourceKey<DamageType> FORCE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "force"));
+	public static final ResourceKey<DamageType> ACID = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "acid"));
 
 	public static final ResourceKey<DamageType> BYPASSES_ARMOR_SHOOT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_armor_shoot"));
 	public static final ResourceKey<DamageType> BYPASSES_ARMOR_MELEE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_armor_melee"));
@@ -125,14 +128,14 @@ public class JerotesDamageTypes {
 		return this.source(JerotesDamageTypes.MAGIC_EFFECT, entity, entity2);
 	}
 
-	public DamageSource bleeding() {
-		return this.source(JerotesDamageTypes.BLEEDING);
+	public DamageSource bleed() {
+		return this.source(JerotesDamageTypes.BLEED);
 	}
-	public DamageSource bleeding(Entity entity) {
-		return this.source(JerotesDamageTypes.BLEEDING, entity);
+	public DamageSource bleed(Entity entity) {
+		return this.source(JerotesDamageTypes.BLEED, entity);
 	}
-	public DamageSource bleeding(Entity entity, @Nullable Entity entity2) {
-		return this.source(JerotesDamageTypes.BLEEDING, entity, entity2);
+	public DamageSource bleed(Entity entity, @Nullable Entity entity2) {
+		return this.source(JerotesDamageTypes.BLEED, entity, entity2);
 	}
 	public DamageSource corrosion() {
 		return this.source(JerotesDamageTypes.CORROSION);

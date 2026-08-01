@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.Interface.CameraLockEntity;
 import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import com.jerotes.jerotes.item.Interface.ItemSpecialAttack;
 import com.jerotes.jerotes.item.Interface.SpearBaseItem;
@@ -11,8 +12,10 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.thread.ReentrantBlockableEventLoop;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
@@ -41,12 +44,22 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
 
     @Shadow private static Minecraft instance;
 
+    @Shadow
+    @Nullable
+    public abstract Entity getCameraEntity();
+
     public MinecraftMixin(String p_18765_) {
         super(p_18765_);
     }
 
     @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
     private void startAttack(CallbackInfoReturnable<Boolean> cir) {
+        if (player != null && getCameraEntity() != player && getCameraEntity() instanceof CameraLockEntity cameraLockEntity && this.hitResult != null && this.hitResult instanceof EntityHitResult entityHitResult) {
+            if (cameraLockEntity.canNotAttackPlayerWhenCameraLock() && entityHitResult.getEntity() == player || cameraLockEntity.canNotAttackWhenCameraLock()) {
+                cir.setReturnValue(false);
+                return;
+            }
+        }
         //控制战斗
         if (player != null && player.getControlledVehicle() instanceof ControlVehicleEntity controlVehicleEntity && controlVehicleEntity.canNotUseItemWhenControlVehicleJerotes() &&
                 controlVehicleEntity.isManuallyControlCombatJerotes()) {

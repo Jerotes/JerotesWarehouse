@@ -55,7 +55,7 @@ public class RayofFrostEntity extends BaseRayEntity {
             boolean bl = livingEntity.hurt(damageSource,
                     //单数多出0.5
                     (spellLevelDamage > 1 && spellLevelDamage % 2 == 1) ?
-                            Main.rollDice(1 + (spellLevelDamage - 2) / 2, 8, livingEntity.getRandom()) + Main.rollDice(1, 8, livingEntity.getRandom()) / 0.5f :
+                            Main.rollDice(1 + (spellLevelDamage - 2) / 2, 8, livingEntity.getRandom()) + Main.rollDice(1, 8, livingEntity.getRandom()) * 0.5f :
                             Main.rollDice(1 + (spellLevelDamage - 1) / 2, 8, livingEntity.getRandom())
             );
             if (bl) {

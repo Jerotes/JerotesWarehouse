@@ -29,7 +29,7 @@ public class PhantasmalKillerEffect extends BaseMobEffectAllTick {
 	public void applyEffectTick(LivingEntity livingEntity, int n) {
 		super.applyEffectTick(livingEntity, n);
 		if (livingEntity.level() instanceof ServerLevel serverLevel) {
-			for (int i = 0; i < 7; ++i) {
+			for (int i = 0; i < 1; ++i) {
 				double d = livingEntity.getRandom().nextGaussian() * 0.02;
 				double d2 = livingEntity.getRandom().nextGaussian() * 0.02;
 				double d3 = livingEntity.getRandom().nextGaussian() * 0.02;

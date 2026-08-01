@@ -3,6 +3,7 @@
   "replace": false,
   "values": [
     "minecraft:iron_golem",
+    "jerotes:jerotes_iron_golem",
     {
       "id": "minecraft:copper_golem",
       "required": false

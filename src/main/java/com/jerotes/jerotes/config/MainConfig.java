@@ -25,6 +25,7 @@ public final class MainConfig {
     public static boolean AffectsNonThisModEntities;
     public static boolean HaveSavingThrow;
     public static boolean HaveSavingThrowOnlyPlayerAndLegendary;
+    public static boolean NoRollDice;
 
     public static int CorrosiveStopDurabilityValue;
     public static boolean ScreenShake;
@@ -82,6 +83,7 @@ public final class MainConfig {
         AffectsNonThisModEntities = COMMON.AffectsNonThisModEntities.get();
                 HaveSavingThrow = COMMON.HaveSavingThrow.get();
         HaveSavingThrowOnlyPlayerAndLegendary = COMMON.HaveSavingThrowOnlyPlayerAndLegendary.get();
+        NoRollDice = COMMON.NoRollDice.get();
 
         CorrosiveStopDurabilityValue = COMMON.CorrosiveStopDurabilityValue.get();
                 ScreenShake = COMMON.ScreenShake.get();
@@ -136,6 +138,7 @@ public final class MainConfig {
         public final ForgeConfigSpec.BooleanValue AffectsNonThisModEntities;
         public final ForgeConfigSpec.BooleanValue HaveSavingThrow;
         public final ForgeConfigSpec.BooleanValue HaveSavingThrowOnlyPlayerAndLegendary;
+        public final ForgeConfigSpec.BooleanValue NoRollDice;
 
         public final ForgeConfigSpec.IntValue CorrosiveStopDurabilityValue;
         public final ForgeConfigSpec.BooleanValue ScreenShake;
@@ -186,6 +189,8 @@ public final class MainConfig {
                     .define("拥有豁免判定", true);
             HaveSavingThrowOnlyPlayerAndLegendary = builder.comment("Have Saving Throw Only Player And Legendary")
                     .define("只有玩家和传奇存在生物拥有豁免判定（优先级低）", true);
+            NoRollDice = builder.comment("No Roll Dice")
+                    .define("无随机骰子", false);
             builder.pop();
 
             builder.push("Other");

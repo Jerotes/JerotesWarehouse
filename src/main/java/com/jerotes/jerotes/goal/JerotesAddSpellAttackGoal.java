@@ -8,7 +8,6 @@ import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -130,7 +129,7 @@ public class JerotesAddSpellAttackGoal extends Goal {
             }
             else if (magicSpell.isHelp()) {
                 boolean bl = false;
-                if (this.mob.getRandom().nextFloat() > magicSpell.shouldBeSelf()) {
+                if (this.mob.getRandom().nextFloat() > magicSpell.shouldBeSelfChance()) {
                     float distance = magicSpell.getSpellDistance();
                     List<LivingEntity> list = this.mob.level().getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(distance, distance, distance));
                     for (LivingEntity livingEntity : list) {
@@ -193,11 +192,11 @@ public class JerotesAddSpellAttackGoal extends Goal {
             //施法前摇
             wizardEntity.SpellUseAfterAttack(SpellTypeInterface.getId(), magicSpell.getMagicType(), magicSpell.getMagicType2());
             //施法
-            SpellListByString.getSpell(TrueSpellLevel, this.mob, finalTarget, SpellTypeInterface).spellUse();
+            boolean spellUse = SpellListByString.getSpell(TrueSpellLevel, this.mob, finalTarget, SpellTypeInterface).spellUse(SpellListByString.getSpell(TrueSpellLevel, this.mob, finalTarget, SpellTypeInterface).usedByNonPlayerFindSubcategory(this.mob));
             Main.getJerotesPersistentData(this.mob).putDouble("jerotes_add_spell_cooldown", Math.max(attackCooldown, Main.getJerotesPersistentData(this.mob).getDouble("jerotes_add_spell_cooldown")));
             this.mob.stopUsingItem();
             //如何损坏
-            {
+            if (spellUse) {
                 boolean shouldBreak = false;
                 boolean breakHandIsAdd = true;
                 //如果没有这个法术还使用了

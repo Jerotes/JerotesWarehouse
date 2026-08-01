@@ -92,7 +92,7 @@ public class Modelcloud_of_daggers<T extends CloudOfDaggersEntity> extends Entit
 		this.cloud.xScale = f3;
 		this.cloud.yScale = Math.max(0, f3 * f);
 		this.cloud.zScale = f3;
-		if (entity.start < 40)
+		if (entity.getStartTick() < 40)
 			return;
 		float fs = f2 % 10 - 5;
 		if (fs < 0)

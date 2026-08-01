@@ -13,6 +13,7 @@
     "jerotes:fire_magic",
     "jerotes:freeze_magic",
     "jerotes:lightning_magic",
-    "jerotes:drown_magic"
+    "jerotes:drown_magic",
+    "jerotes:force"
   ]
 }

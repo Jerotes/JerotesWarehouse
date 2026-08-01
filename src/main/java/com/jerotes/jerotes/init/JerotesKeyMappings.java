@@ -68,6 +68,20 @@ public class JerotesKeyMappings {
 			isDownOld = isDown;
 		}
 	};
+	public static final KeyMapping CHANGE_SPELL_SUBCATEGORY = new KeyMapping("key.jerotes.change_spell_subcategory", GLFW.GLFW_KEY_H, "key.categories.jerotes") {
+		private boolean isDownOld = false;
+		@Override
+		public void setDown(boolean isDown) {
+			super.setDown(isDown);
+			if (isDownOld != isDown && isDown) {
+				PacketHandler.sendToServer(new SpellUseMessage(2, 0, false));
+				if (Minecraft.getInstance().player != null) {
+					SpellUseMessage.pressAction(Minecraft.getInstance().player, 2, 0, false);
+				}
+			}
+			isDownOld = isDown;
+		}
+	};
 	public static final KeyMapping CHANGE_CONTROL_COMBAT_TYPE = new KeyMapping("key.jerotes.change_control_combat_type", GLFW.GLFW_KEY_K, "key.categories.jerotes") {
 		private boolean isDownOld = false;
 		@Override
@@ -162,6 +176,7 @@ public class JerotesKeyMappings {
 		event.register(MAIN_SPELL_USE);
 		event.register(ADD_SPELL_USE);
 		event.register(END_CONCENTRATION);
+		event.register(CHANGE_SPELL_SUBCATEGORY);
 		event.register(CHANGE_CONTROL_COMBAT_TYPE);
 		event.register(CHANGE_CONTROL_STEERING_TYPE);
 		event.register(VEHICLE_CONTROL_MOUSE_MAIN);
@@ -179,6 +194,7 @@ public class JerotesKeyMappings {
 				MAIN_SPELL_USE.consumeClick();
 				ADD_SPELL_USE.consumeClick();
 				END_CONCENTRATION.consumeClick();
+				CHANGE_SPELL_SUBCATEGORY.consumeClick();
 				CHANGE_CONTROL_COMBAT_TYPE.consumeClick();
 				CHANGE_CONTROL_STEERING_TYPE.consumeClick();
 				VEHICLE_CONTROL_MOUSE_MAIN.consumeClick();

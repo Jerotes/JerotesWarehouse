@@ -3,6 +3,7 @@
   "replace": false,
   "values": [
     "minecraft:blaze",
+    "jerotes:jerotes_blaze",
     {
       "id": "minecraft:breeze",
       "required": false

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#jerotes:zsiein"
+    "#jerotes:zsiein",
+    "jerotes:jerotes_snow_golem"
   ]
 }

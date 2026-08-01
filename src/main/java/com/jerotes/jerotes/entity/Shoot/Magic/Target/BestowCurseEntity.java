@@ -28,8 +28,9 @@ public class BestowCurseEntity extends BaseTargetEntity {
         }
     }
 
-    public BestowCurseEntity(int spellLevelMainEffectTime, int spellLevelMainEffectLevel, Level level, LivingEntity livingEntity, double d, double d2, double d3) {
+    public BestowCurseEntity(int spellLevelDamage, int spellLevelMainEffectTime, int spellLevelMainEffectLevel, Level level, LivingEntity livingEntity, double d, double d2, double d3) {
         super(JerotesEntityType.BESTOW_CURSE.get(), livingEntity, d, d2, d3, level);
+        this.spellLevelDamage = spellLevelDamage;
         this.spellLevelMainEffectTime = spellLevelMainEffectTime;
         this.spellLevelMainEffectLevel = spellLevelMainEffectLevel;
     }

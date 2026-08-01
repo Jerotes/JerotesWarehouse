@@ -2,8 +2,9 @@ package com.jerotes.jerotes.entity.MagicSummoned.Vex;
 
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.MagicSummoned.MagicSummonedEntity;
+import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesGameRules;
-import com.jerotes.jerotes.util.EntityAndItemFind;
+import com.jerotes.jerotes.util.AttackFind;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -152,10 +153,6 @@ public class JerotesVexEntity extends MagicSummonedEntity implements JerotesEnti
 	public void setIsCharging(boolean p_34043_) {
 		this.setVexFlag(1, p_34043_);
 	}
-	public void setLimitedLife(int p_33988_) {
-		this.hasLimitedLife = true;
-		this.limitedLifeTicks = p_33988_;
-	}
 	private boolean getVexFlag(int p_34011_) {
 		int i = this.entityData.get(DATA_FLAGS_ID);
 		return (i & p_34011_) != 0;
@@ -219,8 +216,6 @@ public class JerotesVexEntity extends MagicSummonedEntity implements JerotesEnti
 	public float lastTickRenderTime = 6;
 	@Nullable
 	private BlockPos boundOrigin;
-	private boolean hasLimitedLife;
-	private int limitedLifeTicks;
 	@Override
 	public void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
@@ -229,18 +224,12 @@ public class JerotesVexEntity extends MagicSummonedEntity implements JerotesEnti
 			compoundTag.putInt("BoundY", this.boundOrigin.getY());
 			compoundTag.putInt("BoundZ", this.boundOrigin.getZ());
 		}
-		if (this.hasLimitedLife) {
-			compoundTag.putInt("LifeTicks", this.limitedLifeTicks);
-		}
 	}
 	@Override
 	public void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
 		if (compoundTag.contains("BoundX")) {
 			this.boundOrigin = new BlockPos(compoundTag.getInt("BoundX"), compoundTag.getInt("BoundY"), compoundTag.getInt("BoundZ"));
-		}
-		if (compoundTag.contains("LifeTicks")) {
-			this.setLimitedLife(compoundTag.getInt("LifeTicks"));
 		}
 	}
 	@Override
@@ -267,10 +256,6 @@ public class JerotesVexEntity extends MagicSummonedEntity implements JerotesEnti
 		super.tick();
 		this.noPhysics = false;
 		this.setNoGravity(true);
-		if (this.hasLimitedLife && --this.limitedLifeTicks <= 0) {
-			this.limitedLifeTicks = 20;
-			this.hurt(this.damageSources().starve(), 4.0F);
-		}
 		if (level().isClientSide()) {
 			lastTickRenderTime = thisTickRenderTime;
 			thisTickRenderTime = 0;
@@ -313,7 +298,7 @@ public class JerotesVexEntity extends MagicSummonedEntity implements JerotesEnti
 	@Override
 	public boolean isInvulnerableTo(DamageSource damageSource) {
 		if (damageSource.is(DamageTypeTags.IS_FALL)
-				|| damageSource.is(DamageTypeTags.IS_FIRE)
+				|| AttackFind.isFireDamage(damageSource)
 		)
 			return true;
 		return super.isInvulnerableTo(damageSource);
@@ -342,8 +327,13 @@ public class JerotesVexEntity extends MagicSummonedEntity implements JerotesEnti
 		}
 		++this.deathTime;
 		if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
-			this.level().broadcastEntityEvent(this, (byte)60);
-			this.remove(RemovalReason.KILLED);
+			if (this.getLastDamageSource() != null && !this.getLastDamageSource().is(JerotesDamageTypes.MAGIC_EFFECT)) {
+				this.level().broadcastEntityEvent(this, (byte) 60);
+				this.remove(RemovalReason.KILLED);
+			}
+			else {
+				this.remove(RemovalReason.DISCARDED);
+			}
 		}
 	}
 

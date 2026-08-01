@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.entity.Other.OtherSpell;
 
+import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
@@ -10,6 +11,7 @@ import com.jerotes.jerotes.spell.SpellType;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -31,12 +33,6 @@ public class PhantasmalKillerEntity extends OtherSpellBaseEntity implements Trac
         this.setOwnerUUID(p_36932_.getUUID());
         this.fixupDimensions();
     }
-    public boolean attackEndConcentration() {
-        return true;
-    }
-    public boolean spellEndConcentration() {
-        return true;
-    }
     public int getBaseSpellLevelDamage() {
         return 4;
     }
@@ -47,7 +43,7 @@ public class PhantasmalKillerEntity extends OtherSpellBaseEntity implements Trac
         return 60 * 20;
     }
     public boolean moveToTarget() {
-        return this.life >= 20 || !(this.getTarget() instanceof Player);
+        return this.getLifeTick() >= 20 || !(this.getTarget() instanceof Player);
     }
     public boolean isInvisible() {
         return true;
@@ -56,11 +52,11 @@ public class PhantasmalKillerEntity extends OtherSpellBaseEntity implements Trac
     @Override
     public void tick() {
         super.tick();
-        int time = (getMaxLife() - 20) - (life - 20);
-        if (this.life < 20) {
+        int time = (getMaxLife() - 20) - (this.getLifeTick() - 20);
+        if (this.getLifeTick() < 20) {
             return;
         }
-        if (this.life == 20) {
+        if (this.getLifeTick() == 20) {
             boolean bl = false;
             List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.2, 0.0, 0.2));
             list.removeIf(livingEntity -> livingEntity != this.getTarget());
@@ -79,14 +75,14 @@ public class PhantasmalKillerEntity extends OtherSpellBaseEntity implements Trac
         if (!this.level().isClientSide()) {
             if (getTarget() instanceof LivingEntity livingEntity && getTarget().isAlive()) {
                 livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.PHANTASMAL_KILLER.get(), time, 0, false, false));
-                livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.ABACK.get(), time, 0, false, false));
+                livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.ABACK.get(), time, (int)Math.ceil(getSpellLevel() / 3.0), false, false));
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, time, 0, false, false));
                 if ((time % 120 == 0) && time != 0) {
                     if (EntityAndItemFind.savingSpellThrow(livingEntity)){
                         if (!livingEntity.level().isClientSide) {
                             livingEntity.removeEffect(JerotesMobEffects.PHANTASMAL_KILLER.get());
                         }
-                        endConcentration();
+                        stop();
                     }
                     else {
                         DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.PSYCHIC, livingEntity);
@@ -97,9 +93,24 @@ public class PhantasmalKillerEntity extends OtherSpellBaseEntity implements Trac
                 }
             }
             else {
-                endConcentration();
+                stop();
             }
         }
+        //额外清除
+        if (this.getLifeTick() >= getMaxLife()) {
+            if (getTarget() instanceof LivingEntity livingEntity) {
+                livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
+            }
+            this.setOwnerUUID(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+            this.setTarget(null);
+            this.discard();
+        }
+    }
+    public void stop() {
+        if (getTarget() instanceof LivingEntity livingEntity) {
+            livingEntity.removeEffect(JerotesMobEffects.PHANTASMAL_KILLER.get());
+        }
+        endConcentration();
     }
 
     @Override
@@ -120,8 +131,25 @@ public class PhantasmalKillerEntity extends OtherSpellBaseEntity implements Trac
             SpellType.setConcentrationSpellTargetJerotes(getOwner(), UUID.fromString("00000000-0000-0000-0000-000000000000"));
             SpellType.endConcentrationMessage(getOwner(), SpellType.JEROTES_PHANTASMAL_KILLER.magicSpellGet(1,null,null).getSpellName());
         }
-        this.discard();
+        if (getTarget() instanceof LivingEntity livingEntity) {
+            livingEntity.removeEffect(JerotesMobEffects.PHANTASMAL_KILLER.get());
+        }
+        this.setOwnerUUID(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        this.setTarget(null);
+        if (!this.level().isClientSide()) {
+            this.setLifeTick(Math.max(this.getLifeTick(), this.getMaxLife() - 10));
+        }
         return true;
+    }
+
+    public ResourceLocation getTextureLocation() {
+            return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/other/phantasmal_killer.png");
+    }
+    public ResourceLocation getOtherTextureLocation() {
+        return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/other/phantasmal_killer_other.png");
+    }
+    public ResourceLocation getRollTextureLocation() {
+        return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/other/phantasmal_killer_roll.png");
     }
 }
 

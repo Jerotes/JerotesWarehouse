@@ -3,7 +3,10 @@ package com.jerotes.jerotes.effect;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -23,6 +26,13 @@ public class HoldMobEffect extends BaseMobEffectAllTick {
 	@Override
 	public void applyEffectTick(LivingEntity livingEntity, int n) {
 		super.applyEffectTick(livingEntity, n);
+		if(livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())){
+			if (!livingEntity.level().isClientSide) {
+				if (!livingEntity.level().isClientSide()) {
+					livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.SPELL_REACTION_LOCK.get(), 5, 0, false, false));
+				}
+			}
+		}
 		if(livingEntity.getDeltaMovement().y > 0){
 			livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().multiply(0.2, 0, 0.2));
 		}

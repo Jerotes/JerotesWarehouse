@@ -1261,16 +1261,16 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 		}
 	}
 
-	public boolean isInvulnerableTo(DamageSource p_36249_) {
-		if (super.isInvulnerableTo(p_36249_)) {
+	public boolean isInvulnerableTo(DamageSource damageSource) {
+		if (super.isInvulnerableTo(damageSource)) {
 			return true;
-		} else if (p_36249_.is(DamageTypeTags.IS_DROWNING)) {
+		} else if (damageSource.is(DamageTypeTags.IS_DROWNING)) {
 			return !this.level().getGameRules().getBoolean(GameRules.RULE_DROWNING_DAMAGE);
-		} else if (p_36249_.is(DamageTypeTags.IS_FALL)) {
+		} else if (damageSource.is(DamageTypeTags.IS_FALL)) {
 			return !this.level().getGameRules().getBoolean(GameRules.RULE_FALL_DAMAGE);
-		} else if (p_36249_.is(DamageTypeTags.IS_FIRE)) {
+		} else if (damageSource.is(DamageTypeTags.IS_FIRE)) {
 			return !this.level().getGameRules().getBoolean(GameRules.RULE_FIRE_DAMAGE);
-		} else if (p_36249_.is(DamageTypeTags.IS_FREEZING)) {
+		} else if (damageSource.is(DamageTypeTags.IS_FREEZING)) {
 			return !this.level().getGameRules().getBoolean(GameRules.RULE_FREEZE_DAMAGE);
 		} else {
 			return false;

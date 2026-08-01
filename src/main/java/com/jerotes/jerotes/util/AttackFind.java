@@ -2,12 +2,18 @@ package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.*;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesAvoidDamageEvent;
+import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
+import com.jerotes.jerotes.init.JerotesDamageTypeTags;
+import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
-import com.jerotes.jerotes.mixin.LivingEntityMixin;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -18,8 +24,10 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShieldItem;
@@ -42,6 +50,145 @@ public class AttackFind {
     }
     public static DamageSource findDamageType(Entity entity, ResourceKey<DamageType> damageTypeResourceKey, Entity entity1) {
         return new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageTypeResourceKey), entity1);
+    }
+    //是否无击退
+    public static boolean noKnockback(DamageSource damagesource) {
+        return damagesource.is(TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("minecraft:no_knockback")));
+    }
+    //抵挡魔法
+    public static boolean canSelfResistMagic(DamageSource damageSource, float amount, LivingEntity entity, int selfLevel) {
+        if (!(entity instanceof SpellUseEntity spellUse))
+            return false;
+        if (!MagicResistance(damageSource))
+            return false;
+        if (damageSource.getEntity() instanceof SpellUseEntity ||
+                damageSource.getDirectEntity() instanceof SpellUseEntity ||
+                damageSource.getEntity() instanceof MagicAbout ||
+                damageSource.getDirectEntity() instanceof MagicAbout) {
+            int otherLevl = getOtherLevl(damageSource);
+            return selfLevel <= otherLevl;
+        }
+        else {
+            int spelllevel = Math.max(0, spellUse.getSpellLevel() - 1);
+            float maxResistance = spelllevel * spelllevel * 10;
+            float afterDamage = amount * Math.max(0.05f, ((100f - spelllevel * spelllevel)/100f));
+            if (Float.isNaN(afterDamage) || Float.isInfinite(afterDamage)) {
+                return false;
+            }
+            return afterDamage <= maxResistance;
+        }
+    }
+    public static boolean canSelfResistMagic(DamageSource damageSource, float amount, LivingEntity entity) {
+        if (!(entity instanceof SpellUseEntity spellUse))
+            return false;
+        return canSelfResistMagic(damageSource, amount, entity, spellUse.getSpellLevel());
+    }
+    public static int getOtherLevl(DamageSource damageSource) {
+        int ownerSpellUseLevel = damageSource.getEntity() instanceof SpellUseEntity spellUse1 ? spellUse1.getSpellLevel() : 1;
+        int magicSpellUseLevel = damageSource.getDirectEntity() instanceof SpellUseEntity spellUse1 ? spellUse1.getSpellLevel() : 1;
+        int ownerMagicAboutLevel = damageSource.getEntity() instanceof MagicAbout magicAbout ? magicAbout.getSpellLevel() : 1;
+        int magicMagicAboutLevel = damageSource.getDirectEntity() instanceof MagicAbout magicAbout ? magicAbout.getSpellLevel() : 1;
+        int otherLevl = Math.max(Math.max(ownerSpellUseLevel, magicSpellUseLevel),Math.max(ownerMagicAboutLevel, magicMagicAboutLevel));
+        return otherLevl;
+    }
+
+    //是否近战攻击
+    public static boolean isMeleeDamage(DamageSource damageSource) {
+        return (damageSource.getEntity() == damageSource.getDirectEntity() ||
+                damageSource.getEntity() != null && damageSource.getDirectEntity() == null)
+                && damageSource.is(JerotesDamageTypeTags.IS_MELEE);
+    }
+    public static boolean MeleeDamageFromMainHandNotOffHand(LivingEntity livingEntity) {
+        //event
+        JerotesMeleeDamageFromMainHandIsOffHandEvent event = new JerotesMeleeDamageFromMainHandIsOffHandEvent(livingEntity);
+        MinecraftForge.EVENT_BUS.post(event);
+        return !event.isOffHand();
+    }
+    //是否魔法抵抗
+    public static boolean MagicResistance(DamageSource damagesource) {
+        return  damagesource.is(JerotesDamageTypeTags.IS_MAGIC)
+                || (damagesource.getDirectEntity() != null && damagesource.getDirectEntity().getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:magic_shoots"))))
+                || (damagesource.getEntity() != null && damagesource.getEntity().getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:magic_shoots"))))
+                || damagesource.getDirectEntity() instanceof MagicAbout || damagesource.getEntity() instanceof MagicAbout
+                || damagesource.getDirectEntity() instanceof ThrownPotion || damagesource.getDirectEntity() instanceof AreaEffectCloud
+                || damagesource.getEntity() instanceof Warden && damagesource.is(DamageTypes.SONIC_BOOM);
+    }
+    //是否纯粹魔法
+    public static boolean isMagic(DamageSource damagesource) {
+        return damagesource.is(DamageTypes.MAGIC) || damagesource.is(DamageTypes.INDIRECT_MAGIC);
+    }
+    //是否力场
+    public static boolean isForceDamage(DamageSource damagesource) {
+        return damagesource.is(JerotesDamageTypes.FORCE);
+    }
+    //是否火焰
+    public static boolean isFireDamage(DamageSource damagesource) {
+        return damagesource.is(DamageTypeTags.IS_FIRE);
+    }
+    //是否冰冻/冻伤
+    public static boolean isFreezeDamage(DamageSource damagesource) {
+        return isColdDamage(damagesource);
+    }
+    public static boolean isColdDamage(DamageSource damagesource) {
+        return damagesource.is(DamageTypeTags.IS_FREEZING);
+    }
+    //是否闪电
+    public static boolean isLightningDamage(DamageSource damagesource) {
+        return damagesource.is(DamageTypeTags.IS_LIGHTNING);
+    }
+    //是否腐蚀/强酸
+    public static boolean isAcidDamage(DamageSource damagesource) {
+        return isCorrosionDamage(damagesource);
+    }
+    public static boolean isCorrosionDamage(DamageSource damagesource) {
+        return damagesource.is(JerotesDamageTypes.CORROSION) || damagesource.is(JerotesDamageTypes.ACID);
+    }
+    //是否雷鸣/音波
+    public static boolean isThunderDamage(DamageSource damagesource) {
+        return isSonicDamage(damagesource);
+    }
+    public static boolean isSonicDamage(DamageSource damagesource) {
+        return damagesource.is(JerotesDamageTypes.THUNDER) || damagesource.is(DamageTypes.SONIC_BOOM);
+    }
+    //是否中毒
+    public static boolean isPoisonDamage(DamageSource damagesource) {
+        return damagesource.is(JerotesDamageTypes.POISON);
+    }
+    //是否心灵/精神
+    public static boolean isMentalDamage(DamageSource damagesource) {
+        return isPsychicDamage(damagesource);
+    }
+    public static boolean isPsychicDamage(DamageSource damagesource) {
+        return damagesource.is(JerotesDamageTypes.PSYCHIC);
+    }
+    //是否光耀/正能量
+    public static boolean isPositiveDamage(DamageSource damagesource) {
+        return isRadiantDamage(damagesource);
+    }
+    public static boolean isRadiantDamage(DamageSource damagesource) {
+        return damagesource.is(JerotesDamageTypes.RADIANT);
+    }
+    //是否黯蚀/负能量
+    public static boolean isNegativeDamage(DamageSource damagesource) {
+        return isNecroticDamage(damagesource);
+    }
+    public static boolean isNecroticDamage(DamageSource damagesource) {
+        return damagesource.is(JerotesDamageTypes.NECROTIC);
+    }
+    //是否溺水/水
+    public static boolean isWaterDamage(DamageSource damagesource) {
+        return isDrownDamage(damagesource);
+    }
+    public static boolean isDrownDamage(DamageSource damagesource) {
+        return damagesource.is(DamageTypeTags.IS_DROWNING);
+    }
+    //是否流血
+    public static boolean isBleedDamage(DamageSource damagesource) {
+        return damagesource.is(JerotesDamageTypes.BLEED);
+    }
+    //是否凋零
+    public static boolean isWitherDamage(DamageSource damagesource) {
+        return damagesource.is(DamageTypes.WITHER) || damagesource.is(DamageTypes.WITHER_SKULL);
     }
 
     //削减
@@ -409,6 +556,8 @@ public class AttackFind {
         attackOther(attacker, hurt);
         return bl;
     }
+
+
     //额外行为
     public static void attackOther(LivingEntity attacker, Entity hurt) {
         if (!(attacker.getUseItem().getItem() instanceof ItemToolBasePike)) {

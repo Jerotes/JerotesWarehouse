@@ -106,7 +106,7 @@ public class CameraEvent {
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 		Item item = player.getMainHandItem().getItem();
-		if (player.isShiftKeyDown() && item instanceof ItemToolBaseDagger && Main.getTargetedEntity(player, 6, true) != null && Main.getTargetedEntity(player, 6) instanceof LivingEntity livingEntity && !Main.canSee(player, livingEntity)) {
+		if (player.isShiftKeyDown() && item instanceof ItemToolBaseDagger && Main.getTargetedEntity(player, 6, true, true) != null && Main.getTargetedEntity(player, 6) instanceof LivingEntity livingEntity && !Main.canSee(player, livingEntity)) {
 			event.getGuiGraphics().blit(new ResourceLocation(JerotesWarehouse.MODID, "textures/gui/dagger.png"), w / 2 - 6, h / 2 - 17, 0, 0, 12, 12, 12, 12);
 		}
 		RenderSystem.depthMask(true);

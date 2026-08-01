@@ -223,6 +223,9 @@ public class JerotesItems implements JerotesItemsAdd {
 	//仆从
 	public static final RegistryObject<Item> JEROTES_VEX_SPAWN_EGG = REGISTRY.register("jerotes_vex_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_VEX, 0xffffff, 0xffffff, new Item.Properties()));
 	public static final RegistryObject<Item> JEROTES_ZOMBIE_SPAWN_EGG = REGISTRY.register("jerotes_zombie_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_ZOMBIE, 0xffffff, 0xffffff, new Item.Properties()));
+	public static final RegistryObject<Item> JEROTES_IRON_GOLEM_SPAWN_EGG = REGISTRY.register("jerotes_iron_golem_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_IRON_GOLEM, 0xffffff, 0xffffff, new Item.Properties()));
+	public static final RegistryObject<Item> JEROTES_SNOW_GOLEM_SPAWN_EGG = REGISTRY.register("jerotes_snow_golem_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_SNOW_GOLEM, 0xffffff, 0xffffff, new Item.Properties()));
+	public static final RegistryObject<Item> JEROTES_BLAZE_SPAWN_EGG = REGISTRY.register("jerotes_blaze_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_BLAZE, 0xffffff, 0xffffff, new Item.Properties()));
 	public static final RegistryObject<Item> FINGER_OF_DEATH_ZOMBIE_SPAWN_EGG = REGISTRY.register("finger_of_death_zombie_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.FINGER_OF_DEATH_ZOMBIE, 0xffffff, 0xffffff, new Item.Properties()));
 	//发射物
 	public static final RegistryObject<Item> MAGIC_MISSILE = REGISTRY.register("magic_missile", () -> new Shoot());
@@ -233,10 +236,15 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> FINGER_OF_DEATH = REGISTRY.register("finger_of_death", () -> new Shoot());
 	public static final RegistryObject<Item> LIGHTNING_BLOT = REGISTRY.register("lightning_bolt", () -> new Shoot());
 	public static final RegistryObject<Item> VICIOUS_MOCKERY = REGISTRY.register("vicious_mockery", () -> new Shoot());
+	public static final RegistryObject<Item> SHOCKING_GRASP = REGISTRY.register("shocking_grasp", () -> new Shoot());
 	public static final RegistryObject<Item> HOLD_PERSON = REGISTRY.register("hold_person", () -> new Shoot());
 	public static final RegistryObject<Item> BESTOW_CURSE = REGISTRY.register("bestow_curse", () -> new Shoot());
+	public static final RegistryObject<Item> BLINDNESS_CURSE = REGISTRY.register("blindness_curse", () -> new Shoot());
+	public static final RegistryObject<Item> DARKNESS_CURSE = REGISTRY.register("darkness_curse", () -> new Shoot());
+	public static final RegistryObject<Item> FATIGUE_CURSE = REGISTRY.register("fatigue_curse", () -> new Shoot());
 	public static final RegistryObject<Item> PHANTASMAL_KILLER = REGISTRY.register("phantasmal_killer", () -> new Shoot());
 	public static final RegistryObject<Item> EYEBITE = REGISTRY.register("eyebite", () -> new Shoot());
+	public static final RegistryObject<Item> HARM = REGISTRY.register("harm", () -> new Shoot());
 
 	public static void setup() {
 

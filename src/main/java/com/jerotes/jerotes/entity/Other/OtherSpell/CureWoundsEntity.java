@@ -67,7 +67,7 @@ public class CureWoundsEntity extends OtherSpellBaseEntity implements TraceableE
         super.tick();
         if (getTarget() instanceof LivingEntity livingEntity) {
             if (getTarget().level() instanceof ServerLevel serverLevel) {
-                if (this.life == 5) {
+                if (this.getLifeTick() == 5) {
                     for (int i = 0; i < Mth.clamp(getSize() * 10, 16, 160); ++i) {
                         serverLevel.sendParticles(JerotesParticleTypes.CURE_WOUNDS.get(),
                                 livingEntity.getRandomX(0.8),

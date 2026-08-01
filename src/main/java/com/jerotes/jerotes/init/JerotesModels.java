@@ -15,8 +15,11 @@ public class JerotesModels {
 		event.registerLayerDefinition(Modellittle_fireball.LAYER_LOCATION, Modellittle_fireball::createBodyLayer);
 		event.registerLayerDefinition(Modelspecial_action.LAYER_LOCATION, Modelspecial_action::createBodyLayer);
 		event.registerLayerDefinition(Modeljerotes_vex.LAYER_LOCATION, Modeljerotes_vex::createBodyLayer);
+		event.registerLayerDefinition(Modeljerotes_iron_golem.LAYER_LOCATION, Modeljerotes_iron_golem::createBodyLayer);
+		event.registerLayerDefinition(Modeljerotes_snow_golem.LAYER_LOCATION, Modeljerotes_snow_golem::createBodyLayer);
 		event.registerLayerDefinition(Modelblock.LAYER_LOCATION, Modelblock::createBodyLayer);
 		event.registerLayerDefinition(Modelcloud_of_daggers.LAYER_LOCATION, Modelcloud_of_daggers::createBodyLayer);
+		event.registerLayerDefinition(Modelinsect_plague.LAYER_LOCATION, Modelinsect_plague::createBodyLayer);
 		event.registerLayerDefinition(Modelhold_mob.LAYER_LOCATION, Modelhold_mob::createBodyLayer);
 		event.registerLayerDefinition(Modeljavelin.LAYER_LOCATION, Modeljavelin::createBodyLayer);
 		event.registerLayerDefinition(Modelbone_throwing_spear.LAYER_LOCATION, Modelbone_throwing_spear::createBodyLayer);

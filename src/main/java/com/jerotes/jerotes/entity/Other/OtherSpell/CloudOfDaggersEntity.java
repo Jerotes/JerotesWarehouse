@@ -5,6 +5,7 @@ import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.network.PacketHandler;
 import com.jerotes.jerotes.network.SpellUseMessage;
@@ -58,7 +59,7 @@ public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements Tracea
     @Override
     public void tick() {
         super.tick();
-        if (this.life % 5 == 0 && this.life > 20) {
+        if (this.getLifeTick() % 10 == 0 && this.getLifeTick() > 20) {
             boolean bl = false;
             List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox());
             for (LivingEntity livingEntity : list) {
@@ -69,6 +70,15 @@ public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements Tracea
             if (bl) {
                 this.playSound(SoundEvents.PLAYER_ATTACK_CRIT);
             }
+        }
+        //额外清除
+        if (this.getLifeTick() >= getMaxLife()) {
+            if (getTarget() instanceof LivingEntity livingEntity) {
+                livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
+            }
+            this.setOwnerUUID(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+            this.setTarget(null);
+            this.discard();
         }
     }
 
@@ -151,7 +161,11 @@ public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements Tracea
             SpellType.setConcentrationSpellTargetJerotes(getOwner(), UUID.fromString("00000000-0000-0000-0000-000000000000"));
             SpellType.endConcentrationMessage(getOwner(), SpellType.JEROTES_CLOUD_OF_DAGGERS.magicSpellGet(1,null,null).getSpellName());
         }
-        this.discard();
+        this.setOwnerUUID(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        this.setTarget(null);
+        if (!this.level().isClientSide()) {
+            this.setLifeTick(Math.max(this.getLifeTick(), this.getMaxLife() - 10));
+        }
         return true;
     }
 }

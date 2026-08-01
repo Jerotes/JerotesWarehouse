@@ -73,7 +73,7 @@ public class LightningBoltEntity extends BaseRayEntity {
                         Main.rollDice(8 + (spellLevelDamage - 3), 6, livingEntity.getRandom()) / 2f
                 );
             }
-            this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 10.0f, 1.0f);
+            this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 3.0f, 1.0f);
         }
     }
 

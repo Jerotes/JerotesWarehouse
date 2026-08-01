@@ -17,6 +17,10 @@ public enum SpellType implements SpellTypeInterface {
 	JEROTES_EMPTY("jerotes_empty"),
 	JEROTES_MAGIC_MISSILE("jerotes_magic_missile"),
 	JEROTES_POISON_BREATH("jerotes_poison_breath"),
+	JEROTES_FIRE_BOLT("jerotes_fire_bolt"),
+	JEROTES_FROST_BOLT("jerotes_frost_bolt"),
+	JEROTES_SHOCK_BOLT("jerotes_shock_bolt"),
+	JEROTES_WITCH_BOLT("jerotes_witch_bolt"),
 	JEROTES_RAY_OF_FIRE("jerotes_ray_of_fire"),
 	JEROTES_RAY_OF_FROST("jerotes_ray_of_frost"),
 	JEROTES_RAY_OF_LIGHTNING("jerotes_ray_of_lightning"),
@@ -25,27 +29,43 @@ public enum SpellType implements SpellTypeInterface {
 	JEROTES_DISINTEGRATE("jerotes_disintegrate"),
 	JEROTES_FINGER_OF_DEATH("jerotes_finger_of_death"),
 	JEROTES_LIGHTNING_BOLT("jerotes_lightning_bolt"),
+	JEROTES_INFESTATION("jerotes_infestation"),
+	JEROTES_SHOCKING_GRASP("jerotes_shocking_grasp"),
 	JEROTES_VICIOUS_MOCKERY("jerotes_vicious_mockery"),
 	JEROTES_HOLD_PERSON("jerotes_hold_person"),
 	JEROTES_BESTOW_CURSE("jerotes_bestow_curse"),
+	JEROTES_BLINDNESS_CURSE("jerotes_blindness_curse"),
+	JEROTES_FATIGUE_CURSE("jerotes_fatigue_curse"),
+	JEROTES_DARKNESS_CURSE("jerotes_darkness_curse"),
 	JEROTES_PHANTASMAL_KILLER("jerotes_phantasmal_killer"),
 	JEROTES_EYEBITE("jerotes_eyebite"),
+	JEROTES_HARM("jerotes_harm"),
 	JEROTES_FIRE_ABSORPTION("jerotes_fire_absorption"),
 	JEROTES_COLD_ABSORPTION("jerotes_cold_absorption"),
 	JEROTES_LIGHTNING_ABSORPTION("jerotes_lightning_absorption"),
 	JEROTES_LIFE_MEND("jerotes_life_mend"),
 	JEROTES_CURE_WOUNDS("jerotes_cure_wounds"),
+	JEROTES_MENDING("jerotes_mending"),
 	JEROTES_MISTY_STEP("jerotes_misty_step"),
 	JEROTES_MIRROR_IMAGE("jerotes_mirror_image"),
+	JEROTES_INVISIBILITY("jerotes_invisibility"),
 	JEROTES_INVISIBLE_PASSAGE("jerotes_invisible_passage"),
 	JEROTES_COUNTERSPELL("jerotes_counterspell"),
 	JEROTES_MAGIC_ABSORPTION("jerotes_magic_absorption"),
 	JEROTES_CLOUD_OF_DAGGERS("jerotes_cloud_of_daggers"),
 	JEROTES_INSECT_PLAGUE("jerotes_insect_plague"),
+	JEROTES_PLANT_GROWTH("jerotes_plant_growth"),
+	JEROTES_DIMINISH_PLANTS("jerotes_diminish_plants"),
 	JEROTES_FIREBALL("jerotes_fireball"),
+	JEROTES_THUNDERWAVE("jerotes_thunderwave"),
 	JEROTES_LINEAR_EVOKER_FANG("jerotes_linear_evoker_fang"),
 	JEROTES_CIRCULAR_EVOKER_FANG("jerotes_circular_evoker_fang"),
-	JEROTES_CONJURE_VEXES("jerotes_conjure_vexes");
+	JEROTES_CONJURE_VEXES("jerotes_conjure_vexes"),
+	JEROTES_POWER_WORD_KILL("jerotes_power_word_kill"),
+	JEROTES_PROBING_EYE("jerotes_probing_eye"),
+	JEROTES_ELEMENTAL_CONTRACT("jerotes_elemental_contract"),
+	JEROTES_FEY_CONTRACT("jerotes_fey_contract"),
+	JEROTES_CONSTRUCT_CONTRACT("jerotes_construct_contract");
 
 	private final String id;
 	SpellType(String id) {
@@ -60,6 +80,10 @@ public enum SpellType implements SpellTypeInterface {
 			case JEROTES_EMPTY -> SpellList.Empty(level, caster, target);
 			case JEROTES_MAGIC_MISSILE -> SpellList.MagicMissile(level, caster, target);
 			case JEROTES_POISON_BREATH -> SpellList.PoisonBreath(level, caster, target);
+			case JEROTES_FIRE_BOLT -> SpellList.FireBolt(level, caster, target);
+			case JEROTES_FROST_BOLT -> SpellList.FrostBolt(level, caster, target);
+			case JEROTES_SHOCK_BOLT -> SpellList.ShockBolt(level, caster, target);
+			case JEROTES_WITCH_BOLT -> SpellList.WitchBolt(level, caster, target);
 			case JEROTES_RAY_OF_FIRE -> SpellList.RayofFire(level, caster, target);
 			case JEROTES_RAY_OF_FROST -> SpellList.RayofFrost(level, caster, target);
 			case JEROTES_RAY_OF_LIGHTNING -> SpellList.RayofLightning(level, caster, target);
@@ -68,27 +92,43 @@ public enum SpellType implements SpellTypeInterface {
 			case JEROTES_DISINTEGRATE -> SpellList.Disintegrate(level, caster, target);
 			case JEROTES_FINGER_OF_DEATH -> SpellList.FingerOfDeath(level, caster, target);
 			case JEROTES_LIGHTNING_BOLT -> SpellList.LightningBolt(level, caster, target);
+			case JEROTES_INFESTATION -> SpellList.Infestation(level, caster, target);
+			case JEROTES_SHOCKING_GRASP -> SpellList.ShockingGrasp(level, caster, target);
 			case JEROTES_VICIOUS_MOCKERY -> SpellList.ViciousMockery(level, caster, target);
 			case JEROTES_HOLD_PERSON -> SpellList.HoldPerson(level, caster, target);
 			case JEROTES_BESTOW_CURSE -> SpellList.BestowCurse(level, caster, target);
+			case JEROTES_BLINDNESS_CURSE -> SpellList.BlindnessCurse(level, caster, target);
+			case JEROTES_DARKNESS_CURSE -> SpellList.DarknessCurse(level, caster, target);
+			case JEROTES_FATIGUE_CURSE -> SpellList.FatigueCurse(level, caster, target);
 			case JEROTES_PHANTASMAL_KILLER -> SpellList.PhantasmalKiller(level, caster, target);
 			case JEROTES_EYEBITE -> SpellList.Eyebite(level, caster, target);
+			case JEROTES_HARM -> SpellList.Harm(level, caster, target);
 			case JEROTES_FIRE_ABSORPTION -> SpellList.FireAbsorption(level, caster, target);
 			case JEROTES_COLD_ABSORPTION -> SpellList.ColdAbsorption(level, caster, target);
 			case JEROTES_LIGHTNING_ABSORPTION -> SpellList.LightningAbsorption(level, caster, target);
 			case JEROTES_LIFE_MEND -> SpellList.LifeMend(level, caster, target);
 			case JEROTES_CURE_WOUNDS -> SpellList.CureWounds(level, caster, target);
+			case JEROTES_MENDING -> SpellList.Mending(level, caster, target);
 			case JEROTES_MISTY_STEP -> SpellList.MistyStep(level, caster, target);
 			case JEROTES_MIRROR_IMAGE -> SpellList.MirrorImage(level, caster, target);
+			case JEROTES_INVISIBILITY -> SpellList.Invisibility(level, caster, target);
 			case JEROTES_INVISIBLE_PASSAGE -> SpellList.InvisiblePassage(level, caster, target);
 			case JEROTES_COUNTERSPELL -> SpellList.Counterspell(level, caster, target);
 			case JEROTES_MAGIC_ABSORPTION -> SpellList.MagicAbsorption(level, caster, target);
 			case JEROTES_CLOUD_OF_DAGGERS -> SpellList.CloudOfDaggers(level, caster, target);
 			case JEROTES_INSECT_PLAGUE -> SpellList.InsectPlague(level, caster, target);
+			case JEROTES_PLANT_GROWTH -> SpellList.PlantGrowth(level, caster, target);
+			case JEROTES_DIMINISH_PLANTS -> SpellList.DiminishPlants(level, caster, target);
 			case JEROTES_FIREBALL -> SpellList.Fireball(level, caster, target);
+			case JEROTES_THUNDERWAVE -> SpellList.Thunderwave(level, caster, target);
 			case JEROTES_LINEAR_EVOKER_FANG -> SpellList.LinearEvokerFang(level, caster, target);
 			case JEROTES_CIRCULAR_EVOKER_FANG -> SpellList.CircularEvokerFang(level, caster, target);
 			case JEROTES_CONJURE_VEXES -> SpellList.ConjureVexes(level, caster, target);
+			case JEROTES_POWER_WORD_KILL -> SpellList.PowerWordKill(level, caster, target);
+			case JEROTES_PROBING_EYE -> SpellList.ProbingEye(level, caster, target);
+			case JEROTES_ELEMENTAL_CONTRACT -> SpellList.ElementalContract(level, caster, target);
+			case JEROTES_FEY_CONTRACT -> SpellList.FeyContract(level, caster, target);
+			case JEROTES_CONSTRUCT_CONTRACT -> SpellList.ConstructContract(level, caster, target);
 		};
 	}
 

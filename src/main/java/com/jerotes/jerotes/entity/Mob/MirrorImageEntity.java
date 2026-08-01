@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeServerPlayer;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
+import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -237,15 +238,15 @@ public class MirrorImageEntity extends PathfinderMob implements JerotesEntity, O
 				for (int i2 = 0; i2 < Math.min(6 * Main.mobHeight(getOwner()), 120); ++i2) {
 					//散发粒子
 					for (int i = 0; i < 3; ++i) {
-						serverLevel.sendParticles(ParticleTypes.ENCHANTED_HIT,
+						serverLevel.sendParticles(JerotesParticleTypes.MIRROR_IMAGE.get(),
 								getOwner().getRandomX(0.5) + addX, getOwner().getRandomY() + addY, getOwner().getRandomZ(0.5) + addZ,
 								0, 0, 0, 0, 0);
-						serverLevel.sendParticles(ParticleTypes.ENCHANTED_HIT,
+						serverLevel.sendParticles(JerotesParticleTypes.MIRROR_IMAGE.get(),
 								getOwner().getRandomX(0.25) + addX, getOwner().getRandomY() + addY, getOwner().getRandomZ(0.25) + addZ,
 								0, 0, 0, 0, 0);
 					}
-					serverLevel.sendParticles(ParticleTypes.ENCHANTED_HIT, getOwner().getRandomX(0.5), getOwner().getRandomY(), getOwner().getRandomZ(0.5), 0, 0, 0, 0, 0);
-					serverLevel.sendParticles(ParticleTypes.ENCHANTED_HIT, getOwner().getRandomX(0.25), getOwner().getRandomY(), getOwner().getRandomZ(0.25), 0, 0, 0, 0, 0);
+					serverLevel.sendParticles(JerotesParticleTypes.MIRROR_IMAGE.get(), getOwner().getRandomX(0.5), getOwner().getRandomY(), getOwner().getRandomZ(0.5), 0, 0, 0, 0, 0);
+					serverLevel.sendParticles(JerotesParticleTypes.MIRROR_IMAGE.get(), getOwner().getRandomX(0.25), getOwner().getRandomY(), getOwner().getRandomZ(0.25), 0, 0, 0, 0, 0);
 				}
 			}
 			//大小

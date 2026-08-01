@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.entity.Interface;
 
 import com.jerotes.jerotes.config.MainConfig;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.DamageTypeTags;
@@ -76,7 +77,7 @@ public interface JerotesEntity {
         return MainConfig.HasPercentageDamage.contains(livingEntity.getEncodeId());
     }
     default float PercentageDamage(DamageSource damageSource) {
-        if (EntityAndItemFind.MagicResistance(damageSource)) {
+        if (AttackFind.MagicResistance(damageSource)) {
             return(float) MainConfig.BaseMagicAttackPercentage;
         }
         return (float) MainConfig.BaseAttackPercentage;

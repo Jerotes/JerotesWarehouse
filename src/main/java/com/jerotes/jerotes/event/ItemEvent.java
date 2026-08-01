@@ -60,12 +60,12 @@ public class ItemEvent {
 			if (attackBy instanceof LivingEntity living) {
 				handItem = living.getMainHandItem();
 				otherHandItem = living.getOffhandItem();
-				if (!EntityAndItemFind.MeleeDamageFromMainHandNotOffHand(living)) {
+				if (!AttackFind.MeleeDamageFromMainHandNotOffHand(living)) {
 					handItem = living.getOffhandItem();
 					otherHandItem = living.getMainHandItem();
 				}
 			}
-			if (!EntityAndItemFind.MeleeDamageFromMainHandNotOffHand(entity)) {
+			if (!AttackFind.MeleeDamageFromMainHandNotOffHand(entity)) {
 				handItem = entity.getOffhandItem();
 				otherHandItem = entity.getMainHandItem();
 			}
@@ -78,7 +78,7 @@ public class ItemEvent {
 					}
 					event.setAmount(amount + Float.MAX_VALUE);
 				}
-				if (((attackBy instanceof Mob || attackBy instanceof Player)) && event.getSource().getDirectEntity() == living && EntityAndItemFind.isMeleeDamage(event.getSource())) {
+				if (((attackBy instanceof Mob || attackBy instanceof Player)) && event.getSource().getDirectEntity() == living && AttackFind.isMeleeDamage(event.getSource())) {
 					if (living.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
 						float baseDamage = (float) living.getAttributeValue(Attributes.ATTACK_DAMAGE);
 						if (baseDamage <= 0)
@@ -190,7 +190,7 @@ public class ItemEvent {
 			if (attackBy instanceof LivingEntity living) {
 				handItem = living.getMainHandItem();
 				otherHandItem = living.getOffhandItem();
-				if (!EntityAndItemFind.MeleeDamageFromMainHandNotOffHand(living)) {
+				if (!AttackFind.MeleeDamageFromMainHandNotOffHand(living)) {
 					handItem = living.getOffhandItem();
 					otherHandItem = living.getMainHandItem();
 				}
@@ -202,7 +202,7 @@ public class ItemEvent {
 			//特殊效果
 			if (handItem != null && handItem.getItem() instanceof ItemSpecialEffect specialEffect) {
 				if (attackBy instanceof LivingEntity living &&
-						EntityAndItemFind.isMeleeDamage(event.getSource())) {
+						AttackFind.isMeleeDamage(event.getSource())) {
 					if (living.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
 						float baseDamage = (float) living.getAttributeValue(Attributes.ATTACK_DAMAGE);
 						if (baseDamage <= 0)
@@ -229,7 +229,7 @@ public class ItemEvent {
 			if (attackBy instanceof LivingEntity living) {
 				handItem = living.getMainHandItem();
 				otherHandItem = living.getOffhandItem();
-				if (!EntityAndItemFind.MeleeDamageFromMainHandNotOffHand(living)) {
+				if (!AttackFind.MeleeDamageFromMainHandNotOffHand(living)) {
 					handItem = living.getOffhandItem();
 					otherHandItem = living.getMainHandItem();
 				}
@@ -241,7 +241,7 @@ public class ItemEvent {
 			//特殊效果
 			if (handItem != null && handItem.getItem() instanceof ItemSpecialEffect specialEffect) {
 				if (attackBy instanceof LivingEntity living &&
-						EntityAndItemFind.isMeleeDamage(event.getSource())) {
+						AttackFind.isMeleeDamage(event.getSource())) {
 					if (living.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
 						float baseDamage = (float) living.getAttributeValue(Attributes.ATTACK_DAMAGE);
 						if (baseDamage <= 0)
@@ -360,7 +360,7 @@ public class ItemEvent {
 			if (!entity.isSilent()) {
 				itemToolBaseParryShield.makeParryUseSound(entity);
 			}
-			if (EntityAndItemFind.isMeleeDamage(damageSource)){
+			if (AttackFind.isMeleeDamage(damageSource)){
 				if (entity.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
 					float baseDamage = (float) entity.getAttributeValue(Attributes.ATTACK_DAMAGE);
 					if (attackBy != null) {

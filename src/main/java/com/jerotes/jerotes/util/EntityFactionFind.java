@@ -100,6 +100,11 @@ public class EntityFactionFind {
 		return    livingEntity instanceof AbstractGolem
 				|| isConstruct(livingEntity.getType());
 	}
+	//选择亡灵
+	public static boolean isUndead(LivingEntity livingEntity) {
+		return    livingEntity.getMobType() == MobType.UNDEAD
+				|| isUndead(livingEntity.getType());
+	}
 
 	//是否类人
 	public static boolean isHumanoid(EntityType hummanoid) {
@@ -148,6 +153,10 @@ public class EntityFactionFind {
 	//是否傀儡
 	public static boolean isConstruct(EntityType construct) {
 		return construct.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "construct")));
+	}
+	//是否亡灵
+	public static boolean isUndead(EntityType construct) {
+		return construct.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("undead")));
 	}
 
 	//紫沙姐妹会认同
@@ -436,7 +445,7 @@ public class EntityFactionFind {
 			return "wither";
 		}
 		//亡灵
-		else if (livingEntity.getMobType() == MobType.UNDEAD) {
+		else if (isUndead(livingEntity)) {
 			return "undead";
 		}
 		//灾厄村民
@@ -556,7 +565,7 @@ public class EntityFactionFind {
 			stringList.add("wither");
 		}
 		//亡灵
-		if (bl || livingEntity.getMobType() == MobType.UNDEAD || EntityFactionFind.isThisEntity(livingEntity.getType(), "minecraft:undead")
+		if (bl || isUndead(livingEntity) || livingEntity.getMobType() == MobType.UNDEAD || EntityFactionFind.isThisEntity(livingEntity.getType(), "minecraft:undead")
 				|| EntityFactionFind.isThisEntity(livingEntity.getType(), "jerotes:used_faction/stress_undead")) {
 			stringList.add("undead");
 		}

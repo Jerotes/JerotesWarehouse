@@ -3,7 +3,6 @@ package com.jerotes.jerotes.item;
 import com.jerotes.jerotes.item.Interface.MagicItem;
 import com.jerotes.jerotes.spell.*;
 import com.jerotes.jerotes.util.Main;
-import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
@@ -22,6 +21,7 @@ import java.util.List;
 public class AASpellJavelin extends Item implements MagicItem {
 	public static final String SPELL = "Spell";
 	public static final String SPELL_LEVEL = "SpellLevel";
+	public static final String SPELL_SUBCATEGORY = "SpellSubcategory";
 
 	public AASpellJavelin() {
 		super(new Properties().stacksTo(1).rarity(Rarity.EPIC));
@@ -51,9 +51,14 @@ public class AASpellJavelin extends Item implements MagicItem {
 			int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), player, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
 
 			MagicSpell magicSpellStart = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack)));
-			if (Main.getTargetedEntity(player, 256) != null && Main.getTargetedEntity(player, 256) instanceof LivingEntity livingEntity2) {
+
+			if (Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) != null &&
+					(Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) instanceof LivingEntity || magicSpellStart.canTargetNonLivingEntity())) {
 				if (magicSpellStart.getMagicType() != MagicType.SELF)
-					target = livingEntity2;
+					target = Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable());
+			}
+			if (target == null) {
+				target = player;
 			}
 
 			MagicSpell magicSpell = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack)));
@@ -64,7 +69,7 @@ public class AASpellJavelin extends Item implements MagicItem {
 			if (CanUse && NoCanNotSelf && CanUseTo && DistanceIsTrue) {
 				if (!(magicSpell.getMagicType() == MagicType.TARGET && !magicSpell.canUseToEntity(target))) {
 					//法术列表
-					SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).spellUse();
+					SpellListByString.getSpell(trueLevel, livingEntity, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).spellUse(getSubcategory(itemStack));
 				}
 			}
 
@@ -76,7 +81,7 @@ public class AASpellJavelin extends Item implements MagicItem {
 		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))) {
 			int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
 			MagicSpell magicSpellStart = SpellListByString.getSpell(trueLevel, null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack)));
-			MagicSpell.MagicTooltip(list, magicSpellStart, trueLevel(itemStack));
+			MagicSpell.MagicTooltip(list, magicSpellStart, trueLevel(itemStack), null, itemStack);
 		}
 	}
 
@@ -108,6 +113,10 @@ public class AASpellJavelin extends Item implements MagicItem {
 
 	}
 
+	public boolean canChangeSubcategory(ItemStack itemStack) {
+		return true;
+	}
+
 	public int trueLevel(ItemStack itemStack) {
 		return SpellListByString.getSpell(getSpellLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
 	}
@@ -123,6 +132,9 @@ public class AASpellJavelin extends Item implements MagicItem {
 				: super.getDescriptionId(itemStack);
 	}
 
+	public boolean hasSpell() {
+		return true;
+	}
 	public String getSpellId(ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.getString(SPELL).isEmpty()) {
@@ -136,6 +148,22 @@ public class AASpellJavelin extends Item implements MagicItem {
 	public int getSpellLevel(ItemStack itemStack) {
 		CompoundTag tag = itemStack.getOrCreateTag();
 		return tag.getInt(SPELL_LEVEL);
+	}
+	@Override
+	public int getSubcategory(ItemStack itemStack) {
+		CompoundTag tag = itemStack.getOrCreateTag();
+		return tag.getInt(SPELL_SUBCATEGORY);
+	}
+	@Override
+	public ItemStack setSubcategory(ItemStack itemStack, int n) {
+		ItemStack stack = itemStack;
+		CompoundTag compoundTag = new CompoundTag();
+		compoundTag.putString(FlawlessMagicScroll.SPELL, getSpellId(itemStack));
+		MagicSpell spell = SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(getSpellId(itemStack)));
+		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, spell == null ? 1 : spell.getBaseSpellLevel());
+		compoundTag.putInt(FlawlessMagicScroll.SPELL_SUBCATEGORY, n);
+		stack.setTag(compoundTag);
+		return stack;
 	}
 	@Override
 	public boolean isMelee(ItemStack itemStack) {

@@ -3,6 +3,7 @@ package com.jerotes.jerotes.event;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,7 +27,7 @@ public class DamageTypeEvent {
 		float f = 1.0f;
 		if (attackBy != null) {
 			//毒素
-			if (attackBy.is(JerotesDamageTypes.POISON)) {
+			if (AttackFind.isPoisonDamage(attackBy)) {
 				if (EntityFactionFind.isConstruct(entity) || EntityFactionFind.isMachine(entity)) {
 					f /= 4;
 				}
@@ -38,8 +39,8 @@ public class DamageTypeEvent {
 				}
 			}
 			//腐蚀
-			if (attackBy.is(JerotesDamageTypes.CORROSION)) {
-				if (EntityFactionFind.isConstruct(entity) || EntityFactionFind.isMachine(entity)) {
+			if (AttackFind.isCorrosionDamage(attackBy)) {
+				if (EntityFactionFind.isMachine(entity)) {
 					f *= 2;
 				}
 				if (EntityFactionFind.isOoze(entity)) {
@@ -47,19 +48,19 @@ public class DamageTypeEvent {
 				}
 			}
 			//暗蚀
-			if (attackBy.is(JerotesDamageTypes.NECROTIC)) {
+			if (AttackFind.isNecroticDamage(attackBy)) {
 				if (entity.getMobType() == MobType.UNDEAD) {
 					f /= 2;
 				}
 			}
 			//光耀
-			if (attackBy.is(JerotesDamageTypes.RADIANT)) {
+			if (AttackFind.isRadiantDamage(attackBy)) {
 				if (entity.getMobType() == MobType.UNDEAD) {
 					f *= 2;
 				}
 			}
 			//心灵
-			if (attackBy.is(JerotesDamageTypes.PSYCHIC)) {
+			if (AttackFind.isPsychicDamage(attackBy)) {
 				if (EntityFactionFind.isConstruct(entity) || EntityFactionFind.isMachine(entity)) {
 					f /= 4;
 				}

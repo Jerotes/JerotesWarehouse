@@ -8,6 +8,7 @@ import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
 import com.jerotes.jerotes.util.ParticlesUse;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -16,15 +17,19 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -60,6 +65,10 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
     public int spellLevelDamage = 3;
     public void setSpellLevelDamage(int n) {
         this.spellLevelDamage = n;
+    }
+    public int subcategory = 0;
+    public void setSubcategory(int n) {
+        this.subcategory = n;
     }
     public int life = 0;
     public int start = 0;
@@ -140,6 +149,7 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
     @Override
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
         compoundTag.putInt("SpellLevelDamage", this.spellLevelDamage);
+        compoundTag.putInt("Subcategory", this.subcategory);
         compoundTag.putInt("Life", this.life);
         compoundTag.putInt("LifeBomb", this.getLifeBomb());
         compoundTag.putInt("Start", this.start);
@@ -159,6 +169,7 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
     @Override
     protected void readAdditionalSaveData(CompoundTag compoundTag) {
         this.spellLevelDamage = compoundTag.getInt("SpellLevelDamage");
+        this.subcategory = compoundTag.getInt("Subcategory");
         this.life = compoundTag.getInt("Life");
         this.setLifeBomb(compoundTag.getInt("LifeBomb"));
         this.start = compoundTag.getInt("Start");
@@ -228,7 +239,7 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
                 this.setLifeBomb(this.getLifeBomb() + 1);
             }
         }
-        if (life % 5 == 0 && !this.isSilent()) {
+        if (life == 5 && !this.isSilent()) {
             this.level().playSound(null, this.getX(), this.getY(), this.getZ(),
                     SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.NEUTRAL, 0.3f, 2.0f);
         }
@@ -290,7 +301,7 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
         List<Entity> lists = this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(distance + 2, distance + 2, distance + 2));
         for (Entity hurt : lists) {
             if (hurt.distanceTo(this) > distance) continue;
-            float strength = (24 - this.distanceTo(hurt)) / 3f;
+            float strength = (24 - this.distanceTo(hurt)) / 8f;
             if (this.getOwner() != null && AttackFind.FindCanNotAttack(this.getOwner(), hurt)) continue;
 
             float visibility = getSeenPercent(hurt, this);
@@ -333,7 +344,15 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
             }
         }
         this.setDeltaMovement(0,0,0);
-        this.level().explode(this, null, null, this.getX(), this.getY(), this.getZ(), Math.min(spellLevelDamage/2, 3), true, Level.ExplosionInteraction.NONE);
+        this.level().explode(this, null, null, this.getX(), this.getY(), this.getZ(), Math.min(spellLevelDamage/1.5f, 3), true, subcategory == 1 ? (getOwner() instanceof Player player ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB) : Level.ExplosionInteraction.NONE);
+        AABB aABB = new AABB(this.position().x + 6, this.position().y + 6, this.position().z + 6, this.position().x - 6, this.position().y - 6, this.position().z - 6).move(0, -2, 0);
+        for (BlockPos blockPos : BlockPos.betweenClosed(Mth.floor(aABB.minX), Mth.floor(aABB.minY), Mth.floor(aABB.minZ), Mth.floor(aABB.maxX), Mth.floor(aABB.maxY), Mth.floor(aABB.maxZ))) {
+            if (blockPos.getCenter().distanceTo(this.position()) <= 6) {
+                if (this.level().isEmptyBlock(blockPos) && BaseFireBlock.canBePlacedAt(this.level(), blockPos, Direction.UP)) {
+                    this.level().setBlockAndUpdate(blockPos, BaseFireBlock.getState(this.level(), blockPos));
+                }
+            }
+        }
     }
     private float getSeenPercent(Entity target, Entity source) {
         Vec3 start = target.getEyePosition(1.0f);

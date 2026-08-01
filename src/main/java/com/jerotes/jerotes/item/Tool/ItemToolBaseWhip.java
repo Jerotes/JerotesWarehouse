@@ -82,7 +82,7 @@ public class ItemToolBaseWhip extends ItemToolBaseSword {
         }
         if (level instanceof ServerLevel serverLevel) {
             if (!user.isSilent()) {
-                user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, user.getSoundSource(), 10.0f, 1.0f);
+                user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, user.getSoundSource(), 1.0f, 1.0f);
             }
             float reachs = AttackFind.reachAttackReach(user, itemStack, playerReach, reach, 3f, 0.5f);
             List<LivingEntity> list = serverLevel.getEntitiesOfClass(LivingEntity.class, user.getBoundingBox().inflate(reachs, reachs, reachs));

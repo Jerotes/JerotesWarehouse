@@ -280,21 +280,21 @@ public class FireballRenderer extends EntityRenderer<FireballEntity> {
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(FireballEntity FireballEntity) {
+	public ResourceLocation getTextureLocation(FireballEntity fireballEntity) {
 		return GLOW_LOCATION;
 	}
 
 	@Override
-	public boolean shouldRender(FireballEntity FireballEntity, Frustum frustum, double d, double d2, double d3) {
-		if (!FireballEntity.shouldRender(d, d2, d3)) {
+	public boolean shouldRender(FireballEntity fireballEntity, Frustum frustum, double d, double d2, double d3) {
+		if (!fireballEntity.shouldRender(d, d2, d3)) {
 			return false;
-		} else if (FireballEntity.noCulling) {
+		} else if (fireballEntity.noCulling) {
 			return true;
 		} else {
-			AABB aabb = FireballEntity.getBoundingBoxForCulling().inflate(128.0D);
+			AABB aabb = fireballEntity.getBoundingBoxForCulling().inflate(128.0D);
 			if (aabb.hasNaN() || aabb.getSize() == 0.0D) {
-				aabb = new AABB(FireballEntity.getX() - 128.0D, FireballEntity.getY() - 128.0D, FireballEntity.getZ() - 128.0D,
-						FireballEntity.getX() + 128.0D, FireballEntity.getY() + 128.0D, FireballEntity.getZ() + 128.0D);
+				aabb = new AABB(fireballEntity.getX() - 128.0D, fireballEntity.getY() - 128.0D, fireballEntity.getZ() - 128.0D,
+						fireballEntity.getX() + 128.0D, fireballEntity.getY() + 128.0D, fireballEntity.getZ() + 128.0D);
 			}
 			return frustum.isVisible(aabb);
 		}

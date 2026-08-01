@@ -204,6 +204,8 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
     public int spellLevelHeight = 1;
     //移动距离
     public int spellLevelMoveDistance = 1;
+    //子类别
+    public int spellSubcategory = 0;
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
@@ -238,6 +240,7 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
         compoundTag.putFloat("SpellLevelYPushBase", this.spellLevelYPushBase);
         compoundTag.putInt("SpellLevelHeight", this.spellLevelHeight);
         compoundTag.putInt("SpellLevelMoveDistance", this.spellLevelMoveDistance);
+        compoundTag.putInt("SpellSubcategory", this.spellSubcategory);
     }
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
@@ -268,6 +271,7 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
         this.spellLevelYPushBase = compoundTag.getFloat("SpellLevelYPushBase");
         this.spellLevelHeight = compoundTag.getInt("SpellLevelHeight");
         this.spellLevelMoveDistance = compoundTag.getInt("SpellLevelMoveDistance");
+        this.spellSubcategory = compoundTag.getInt("SpellSubcategory");
     }
     @Override
     protected void defineSynchedData() {

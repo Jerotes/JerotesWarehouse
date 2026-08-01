@@ -3,6 +3,8 @@
   "replace": false,
   "values": [
     "minecraft:iron_golem",
+    "jerotes:jerotes_iron_golem",
+    "jerotes:jerotes_snow_golem",
     "minecraft:snow_golem",
     "minecraft:shulker",
     {

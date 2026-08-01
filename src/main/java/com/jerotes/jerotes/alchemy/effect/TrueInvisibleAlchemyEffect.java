@@ -3,8 +3,8 @@ package com.jerotes.jerotes.alchemy.effect;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import net.minecraft.world.effect.MobEffect;
 
-public class TrueInvisbilityAlchemyEffect extends AAAAlchemyEffect {
-    public TrueInvisbilityAlchemyEffect(int level, int time) {
+public class TrueInvisibleAlchemyEffect extends AAAAlchemyEffect {
+    public TrueInvisibleAlchemyEffect(int level, int time) {
         super(level, time);
     }
 
@@ -13,6 +13,6 @@ public class TrueInvisbilityAlchemyEffect extends AAAAlchemyEffect {
     }
 
     public String getName() {
-        return "jerotes_true_invisbility";
+        return "jerotes_true_invisible";
     }
 }

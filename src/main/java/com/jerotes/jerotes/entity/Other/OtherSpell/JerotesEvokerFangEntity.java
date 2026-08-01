@@ -5,6 +5,7 @@ import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.util.AttackFind;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -156,14 +157,14 @@ public class JerotesEvokerFangEntity extends Entity implements TraceableEntity, 
             return;
         }
         if (livingEntity2 == null) {
-            boolean bl = livingEntity.hurt(this.damageSources().magic(), 4f + this.spellLevelDamage * 2f);
+            boolean bl = livingEntity.hurt(this.damageSources().magic(), Main.rollDice(getSpellLevel()-2, 8, livingEntity.getRandom()) + 6);
         }
         else {
             if (AttackFind.FindCanNotAttack(livingEntity2, livingEntity)) {
                 return;
             }
             DamageSource damageSource = AttackFind.findDamageType(this, DamageTypes.INDIRECT_MAGIC, this, livingEntity2);
-            boolean bl = livingEntity.hurt(damageSource, 4f + this.spellLevelDamage * 2f);
+            boolean bl = livingEntity.hurt(damageSource, Main.rollDice(getSpellLevel()-2, 8, livingEntity.getRandom()) + 6);
         }
     }
 

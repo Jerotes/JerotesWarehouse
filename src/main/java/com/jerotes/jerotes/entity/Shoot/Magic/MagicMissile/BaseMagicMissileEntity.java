@@ -138,11 +138,20 @@ public abstract class BaseMagicMissileEntity extends MagicAboutEntity {
     public boolean showParticle() {
         return false;
     }
+    protected boolean shouldTail() {
+        return false;
+    }
     public boolean showBeam() {
         return true;
     }
     public int beamLightI() {
         return 0xbe1d8f;
+    }
+    public int beamLightII() {
+        return 0xff7cff;
+    }
+    public int beamLightIII() {
+        return 0x7a1374;
     }
     public static class TrailPoint {
         public final Vec3 prevPosition;

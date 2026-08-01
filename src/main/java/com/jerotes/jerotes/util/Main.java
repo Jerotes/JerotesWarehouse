@@ -4,19 +4,19 @@ import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.FactionEntity;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeEntity;
+import com.jerotes.jerotes.entity.Interface.SpecialItemInHandEntity;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesEarthrendBlock;
+import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesUnevenBlock;
 import com.jerotes.jerotes.entity.Part.BasePartEntity;
-import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
-import com.jerotes.jerotes.entity.Interface.SpecialItemInHandEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.inventory.MobInventoryGUIMenu;
+import com.jerotes.jerotes.inventory.SuchInventoryMenu;
 import com.jerotes.jerotes.item.AAExplorationEye;
 import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
-import com.jerotes.jerotes.inventory.MobInventoryGUIMenu;
-import com.jerotes.jerotes.inventory.SuchInventoryMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
@@ -61,10 +61,8 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -351,14 +349,14 @@ public class Main {
 		return level.clip(new ClipContext(self, vec3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
 	}
 	//玩家视线
-	public static Entity getTargetedEntityBase(Player player, double maxDistance, boolean bl) {
+	public static Entity getTargetedEntityBase(Player player, double maxDistance, boolean bl, boolean mustPickable) {
 		Level world = player.level();
 		Vec3 startVec = player.getEyePosition(1.0F);
 		Vec3 lookVec = player.getViewVector(1.0F).scale(maxDistance);
 		Vec3 endVec = startVec.add(lookVec);
 
 		AABB searchBox = new AABB(startVec, endVec).inflate(1.0D);
-		List<Entity> entities = world.getEntities(player, searchBox, entity -> entity.isPickable() && entity != player);
+		List<Entity> entities = world.getEntities(player, searchBox, entity -> !mustPickable || entity.isPickable() && entity != player);
 		Entity closestEntity = null;
 		double closestDistance = maxDistance;
 
@@ -378,10 +376,10 @@ public class Main {
 		return closestEntity;
 	}
 	public static Entity getTargetedEntity(Player player, double maxDistance) {
-		return getTargetedEntity(player, maxDistance, false);
+		return getTargetedEntity(player, maxDistance, false, true);
 	}
-	public static Entity getTargetedEntity(Player player, double maxDistance, boolean bl) {
-		Entity entity = getTargetedEntityBase(player, maxDistance, bl);
+	public static Entity getTargetedEntity(Player player, double maxDistance, boolean bl, boolean mustPickable) {
+		Entity entity = getTargetedEntityBase(player, maxDistance, bl, mustPickable);
 		if (bl && entity != null && entity.isInvisible()) {
 			return null;
 		}
@@ -984,6 +982,18 @@ public class Main {
 	}
 
 
+	public static Entity getEntityByUUID(Level level, UUID uuid) {
+		return getEntityByUUID(level.getServer(), uuid);
+	}
+	public static Entity getEntityByUUID(MinecraftServer server, UUID uuid){
+		if (uuid != null && server != null) {
+			for (ServerLevel world : server.getAllLevels()) {
+				Entity entity = world.getEntity(uuid);
+				return entity;
+			}
+		}
+		return null;
+	}
 	public static LivingEntity getLivingEntityByUUID(Level level, UUID uuid) {
 		return getLivingEntityByUUID(level.getServer(), uuid);
 	}
@@ -1000,6 +1010,7 @@ public class Main {
 	}
 
 	public static float rollDice(int count, int sides, RandomSource random) {
+		if (MainConfig.NoRollDice) return count * (sides + 1) / 2f;
 		if (count <= 0 || sides <= 0) return 0f;
 		int sum = 0;
 		for (int i = 0; i < count; i++) {
@@ -1063,5 +1074,13 @@ public class Main {
 			}
 		}
 		return normalLevel;
+	}
+
+	//召唤物处理
+	public static void conjureAbout(LivingEntity owner, LivingEntity summoned, boolean isSpell) {
+
+	}
+	public static void conjureAbout(LivingEntity owner, LivingEntity summoned) {
+		Main.conjureAbout(owner, summoned, true);
 	}
 }

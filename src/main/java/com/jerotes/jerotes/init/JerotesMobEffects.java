@@ -50,9 +50,11 @@ public class JerotesMobEffects {
 	public static final RegistryObject<MobEffect> COLD_ABSORPTION = REGISTRY.register("cold_absorption", () -> new ColdAbsorptionMobEffect());
 	public static final RegistryObject<MobEffect> LIGHTNING_ABSORPTION = REGISTRY.register("lightning_absorption", () -> new LightningAbsorptionMobEffect());
 	public static final RegistryObject<MobEffect> INVISIBLE_PASSAGE = REGISTRY.register("invisible_passage", () -> new InvisiblePassageMobEffect());
-	public static final RegistryObject<MobEffect> TRUE_INVISBILITY = REGISTRY.register("true_invisbility", () -> new TrueInvisibilityMobEffect());
+	public static final RegistryObject<MobEffect> TRUE_INVISIBLE = REGISTRY.register("true_invisible", () -> new TrueInvisibilityMobEffect());
+	public static final RegistryObject<MobEffect> MAGIC_INVISIBILITY = REGISTRY.register("magic_invisibility", () -> new MagicInvisibilityMobEffect());
 	public static final RegistryObject<MobEffect> MIRROR_IMAGE = REGISTRY.register("mirror_image", () -> new MirrorImageMobEffect());
 	public static final RegistryObject<MobEffect> COUNTERSPELL = REGISTRY.register("counterspell", () -> new CounterspellMobEffect());
+	public static final RegistryObject<MobEffect> SPELL_REACTION_LOCK = REGISTRY.register("spell_reaction_lock", () -> new SpellReactionLockMobEffect());
 	public static final RegistryObject<MobEffect> FOG = REGISTRY.register("fog", () -> new FogMobEffect());
 	public static final RegistryObject<MobEffect> ANALYTICAL_EYE = REGISTRY.register("analytical_eye", () -> new AnalyticalEyeMobEffect());
 	public static final RegistryObject<MobEffect> EXPLOSION = REGISTRY.register("explosion", () -> new ExplosionMobEffect());

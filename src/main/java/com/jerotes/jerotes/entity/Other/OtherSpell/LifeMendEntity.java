@@ -56,7 +56,7 @@ public class LifeMendEntity extends OtherSpellBaseEntity implements TraceableEnt
         super.tick();
         if (getTarget() instanceof LivingEntity livingEntity) {
             if (getTarget().level() instanceof ServerLevel serverLevel) {
-                if (this.life == 5) {
+                if (this.getLifeTick() == 5) {
                     for (int i = 0; i < Mth.clamp(getSize() * 10, 16, 160); ++i) {
                         serverLevel.sendParticles(JerotesParticleTypes.LIFE_MEND.get(),
                                 livingEntity.getRandomX(0.8),

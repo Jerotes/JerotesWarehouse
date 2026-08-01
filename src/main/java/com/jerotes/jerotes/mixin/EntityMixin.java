@@ -4,6 +4,7 @@ import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.Ray.DisintegrateEntity;
 import com.jerotes.jerotes.init.JerotesItems;
+import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseUmbrella;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
@@ -66,6 +67,13 @@ public abstract class EntityMixin implements IForgeEntity, JerotesChangeEntity {
     @Shadow
     @Nullable
     public abstract ItemEntity spawnAtLocation(ItemStack p_19985_, float p_19986_);
+
+
+    @Inject(method = "spawnSprintParticle", at = @At("HEAD"), cancellable = true)
+    private void spawnSprintParticle(CallbackInfo ci) {
+        if ((Entity)((Object)this) instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get()))
+            ci.cancel();
+    }
 
     @Shadow
     public abstract DamageSources damageSources();

@@ -5,12 +5,14 @@ import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.spell.SpellType;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
+import com.jerotes.jerotes.util.ParticlesUse;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -57,7 +59,7 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
         return 40;
     }
     public boolean shouldPush() {
-        return true;
+        return this.getLifeTick() > 20;
     }
     public int getMaxLife() {
         return 10 * 60 * 20;
@@ -72,24 +74,32 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
     @Override
     public void tick() {
         super.tick();
-        if (this.life % 5 == 0) {
-            if (this.life <= 20) {
+        if (this.getLifeTick() == 8) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                for (int j = 0; j < 6; j++) {
+                    ParticlesUse.sendBallParticles(this, JerotesParticleTypes.INSECT_LOCUST.get(), true, 6.0f, 0.28f);
+                }
+            }
+        }
+            if (this.getLifeTick() <= 40 && this.getLifeTick() > 30) {
                 if (this.level() instanceof ServerLevel serverLevel) {
-                    for (int j = 0; j < 32; j++) {
+                    for (int j = 0; j < 6; j++) {
+                        serverLevel.sendParticles(JerotesParticleTypes.INSECT_LOCUST.get(), this.getRandomX(0.5f), this.getRandomY(), this.getRandomZ(0.5f), 0,
+                                this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f,
+                                0.2f);
+                    }
+                }
+            } else if (this.getLifeTick() > 40) {
+                if (this.level() instanceof ServerLevel serverLevel) {
+                    for (int j = 0; j < 20; j++) {
                         serverLevel.sendParticles(JerotesParticleTypes.INSECT_LOCUST.get(), this.getRandomX(0.5f), this.getRandomY(), this.getRandomZ(0.5f), 0,
                                 this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f,
                                 0.2f);
                     }
                 }
             }
-            else {
-                if (this.level() instanceof ServerLevel serverLevel) {
-                    for (int j = 0; j < 128; j++) {
-                        serverLevel.sendParticles(JerotesParticleTypes.INSECT_LOCUST.get(), this.getRandomX(0.5f), this.getRandomY(), this.getRandomZ(0.5f), 0,
-                                this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f,
-                                0.2f);
-                    }
-                }
+        if (this.getLifeTick() % 5 == 0) {
+            if (this.getLifeTick() > 20) {
                 boolean bl = false;
                 List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox());
                 for (LivingEntity livingEntity : list) {
@@ -101,6 +111,15 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
                     this.playSound(SoundEvents.PLAYER_ATTACK_CRIT);
                 }
             }
+        }
+        //额外清除
+        if (this.getLifeTick() >= getMaxLife()) {
+            if (getTarget() instanceof LivingEntity livingEntity) {
+                livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
+            }
+            this.setOwnerUUID(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+            this.setTarget(null);
+            this.discard();
         }
     }
 
@@ -165,8 +184,16 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
             SpellType.setConcentrationSpellTargetJerotes(getOwner(), UUID.fromString("00000000-0000-0000-0000-000000000000"));
             SpellType.endConcentrationMessage(getOwner(), SpellType.JEROTES_INSECT_PLAGUE.magicSpellGet(1,null,null).getSpellName());
         }
-        this.discard();
+        this.setOwnerUUID(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        this.setTarget(null);
+        if (!this.level().isClientSide()) {
+            this.setLifeTick(Math.max(this.getLifeTick(), this.getMaxLife() - 10));
+        }
         return true;
+    }
+
+    public ResourceLocation getTextureLocation() {
+        return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/other/insect_plague.png");
     }
 }
 

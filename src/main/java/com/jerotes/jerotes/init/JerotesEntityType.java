@@ -1,6 +1,9 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesBlazeEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesIronGoelmEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesSnowGoelmEntity;
 import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
 import com.jerotes.jerotes.entity.MagicSummoned.Zombie.FingerOfDeathZombieEntity;
 import com.jerotes.jerotes.entity.MagicSummoned.Zombie.JerotesZombieEntity;
@@ -13,6 +16,10 @@ import com.jerotes.jerotes.entity.Other.SpellCloud.SpellCloudEntity;
 import com.jerotes.jerotes.entity.Shoot.Arrow.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.Breath.PoisonBreathEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile.MagicMissileEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicShoot.FireBoltEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicShoot.FrostBoltEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicShoot.ShockBoltEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicThrow.WitchBoltEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.Ray.*;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesEarthrendBlock;
 import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesFallingBlock;
@@ -24,6 +31,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -86,11 +94,20 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<CureWoundsEntity>> CURE_WOUNDS = register("cure_wounds",
 			EntityType.Builder.<CureWoundsEntity>of(CureWoundsEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
 					.sized(1.0F, 2.0F));
+	public static final RegistryObject<EntityType<MendingEntity>> MENDING = register("mending",
+			EntityType.Builder.<MendingEntity>of(MendingEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(1.0F, 2.0F));
+	public static final RegistryObject<EntityType<ColorMagicWindEntity>> COLOR_MAGIC_WIND = register("color_magic_wind",
+			EntityType.Builder.<ColorMagicWindEntity>of(ColorMagicWindEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(1.0F, 2.0F));
 	public static final RegistryObject<EntityType<HoldMobEntity>> HOLD_MOB = register("hold_mob",
 			EntityType.Builder.<HoldMobEntity>of(HoldMobEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
 					.sized(1.0F, 2.0F));
 	public static final RegistryObject<EntityType<HoldPersonMainEntity>> HOLD_PERSON_MAIN = register("hold_person_main",
 			EntityType.Builder.<HoldPersonMainEntity>of(HoldPersonMainEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(0.5f, 0.5f));
+	public static final RegistryObject<EntityType<InvisibilityEntity>> INVISIBILITY = register("invisibility",
+			EntityType.Builder.<InvisibilityEntity>of(InvisibilityEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
 					.sized(0.5f, 0.5f));
 	public static final RegistryObject<EntityType<InvisiblePassageEntity>> INVISIBLE_PASSAGE = register("invisible_passage",
 			EntityType.Builder.<InvisiblePassageEntity>of(InvisiblePassageEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
@@ -101,6 +118,12 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<FireballEntity>> FIREBALL = register("fireball",
 			EntityType.Builder.<FireballEntity>of(FireballEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
 					.sized(1.0f, 1.0f));
+	public static final RegistryObject<EntityType<ThunderwaveEntity>> THUNDERWAVE = register("thunderwave",
+			EntityType.Builder.<ThunderwaveEntity>of(ThunderwaveEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(4.5f, 4.5f));
+	public static final RegistryObject<EntityType<PowerWordKillEntity>> POWER_WORD_KILL = register("power_word_kill",
+			EntityType.Builder.<PowerWordKillEntity>of(PowerWordKillEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(1.0F, 2.0F));
 
 
 	public static final RegistryObject<EntityType<JerotesFallingBlock>> JEROTES_FALLING_BLOCK = register("jerotes_falling_block",
@@ -160,6 +183,15 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<JerotesVexEntity>> JEROTES_VEX = register("jerotes_vex",
 			EntityType.Builder.of(JerotesVexEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8).fireImmune()
 					.sized(0.4F, 0.8F));
+	public static final RegistryObject<EntityType<JerotesIronGoelmEntity>> JEROTES_IRON_GOLEM = register("jerotes_iron_golem",
+			EntityType.Builder.of(JerotesIronGoelmEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(10)
+					.sized(1.4F, 2.7F));
+	public static final RegistryObject<EntityType<JerotesSnowGoelmEntity>> JEROTES_SNOW_GOLEM = register("jerotes_snow_golem",
+			EntityType.Builder.of(JerotesSnowGoelmEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8).immuneTo(Blocks.POWDER_SNOW)
+					.sized(0.7F, 1.9F));
+	public static final RegistryObject<EntityType<JerotesBlazeEntity>> JEROTES_BLAZE = register("jerotes_blaze",
+			EntityType.Builder.of(JerotesBlazeEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8).fireImmune()
+					.sized(0.6F, 1.8F));
 	public static final RegistryObject<EntityType<JerotesZombieEntity>> JEROTES_ZOMBIE = register("jerotes_zombie",
 			EntityType.Builder.<JerotesZombieEntity>of(JerotesZombieEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(8)
 					.sized(0.6F, 1.95F));
@@ -173,6 +205,18 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<PoisonBreathEntity>> POISON_BREATH = register("poison_breath",
 			EntityType.Builder.<PoisonBreathEntity>of(PoisonBreathEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(1.6f, 1.6f));
+	public static final RegistryObject<EntityType<FireBoltEntity>> FIRE_BOLT = register("fire_bolt",
+			EntityType.Builder.<FireBoltEntity>of(FireBoltEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(0.6f, 0.6f));
+	public static final RegistryObject<EntityType<FrostBoltEntity>> FROST_BOLT = register("frost_bolt",
+			EntityType.Builder.<FrostBoltEntity>of(FrostBoltEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(0.6f, 0.6f));
+	public static final RegistryObject<EntityType<ShockBoltEntity>> SHOCK_BOLT = register("shock_bolt",
+			EntityType.Builder.<ShockBoltEntity>of(ShockBoltEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(0.6f, 0.6f));
+	public static final RegistryObject<EntityType<WitchBoltEntity>> WITCH_BOLT = register("witch_bolt",
+			EntityType.Builder.<WitchBoltEntity>of(WitchBoltEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(0.6f, 0.6f));
 	public static final RegistryObject<EntityType<RayofFireEntity>> RAY_OF_FIRE = register("ray_of_fire",
 			EntityType.Builder.<RayofFireEntity>of(RayofFireEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(0.6f, 0.6f));
@@ -197,14 +241,32 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<LightningBoltEntity>> LIGHTNING_BOLT = register("lightning_bolt",
 			EntityType.Builder.<LightningBoltEntity>of(LightningBoltEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(32)
 					.sized(1.5f, 1.5f));
+	public static final RegistryObject<EntityType<InfestationEntity>> INFESTATION = register("infestation",
+			EntityType.Builder.<InfestationEntity>of(InfestationEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(0.8f, 0.8f));
+	public static final RegistryObject<EntityType<ShockingGraspEntity>> SHOCKING_GRASP = register("shocking_grasp",
+			EntityType.Builder.<ShockingGraspEntity>of(ShockingGraspEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(0.8f, 0.8f));
 	public static final RegistryObject<EntityType<ViciousMockeryEntity>> VICIOUS_MOCKERY = register("vicious_mockery",
 			EntityType.Builder.<ViciousMockeryEntity>of(ViciousMockeryEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(0.8f, 0.8f));
 	public static final RegistryObject<EntityType<BestowCurseEntity>> BESTOW_CURSE = register("bestow_curse",
 			EntityType.Builder.<BestowCurseEntity>of(BestowCurseEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(1.5f, 1.5f));
+	public static final RegistryObject<EntityType<BlindnessCurseEntity>> BLINDNESS_CURSE = register("blindness_curse",
+			EntityType.Builder.<BlindnessCurseEntity>of(BlindnessCurseEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(1.5f, 1.5f));
+	public static final RegistryObject<EntityType<DarknessCurseEntity>> DARKNESS_CURSE = register("darkness_curse",
+			EntityType.Builder.<DarknessCurseEntity>of(DarknessCurseEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(1.5f, 1.5f));
+	public static final RegistryObject<EntityType<FatigueCurseEntity>> FATIGUE_CURSE = register("fatigue_curse",
+			EntityType.Builder.<FatigueCurseEntity>of(FatigueCurseEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(1.5f, 1.5f));
 	public static final RegistryObject<EntityType<EyebiteEntity>> EYEBITE = register("eyebite",
 			EntityType.Builder.<EyebiteEntity>of(EyebiteEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
+					.sized(1.5f, 1.5f));
+	public static final RegistryObject<EntityType<HarmEntity>> HARM = register("harm",
+			EntityType.Builder.<HarmEntity>of(HarmEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(4)
 					.sized(1.5f, 1.5f));
 
 	private static <T extends Entity> RegistryObject<EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {
@@ -228,6 +290,12 @@ public class JerotesEntityType {
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.JEROTES_VEX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
+			SpawnPlacements.register(JerotesEntityType.JEROTES_IRON_GOLEM.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
+					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
+			SpawnPlacements.register(JerotesEntityType.JEROTES_SNOW_GOLEM.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
+					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
+			SpawnPlacements.register(JerotesEntityType.JEROTES_BLAZE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
+					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.JEROTES_ZOMBIE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
 					SpawnRules.NeutralSpawn(8, 64, arg_0, arg_1, arg_2, arg_3, arg_4));
 			SpawnPlacements.register(JerotesEntityType.FINGER_OF_DEATH_ZOMBIE.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (arg_0, arg_1, arg_2, arg_3, arg_4) ->
@@ -246,6 +314,9 @@ public class JerotesEntityType {
 		event.put(JEROTES_PLAYER.get(), JerotesPlayerEntity.createAttributes().build());
 		event.put(JEROTES_HORSE.get(), JerotesHorseEntity.createAttributes().build());
 		event.put(JEROTES_VEX.get(), JerotesVexEntity.createAttributes().build());
+		event.put(JEROTES_IRON_GOLEM.get(), JerotesIronGoelmEntity.createAttributes().build());
+		event.put(JEROTES_SNOW_GOLEM.get(), JerotesSnowGoelmEntity.createAttributes().build());
+		event.put(JEROTES_BLAZE.get(), JerotesBlazeEntity.createAttributes().build());
 		event.put(JEROTES_ZOMBIE.get(), JerotesZombieEntity.createAttributes().build());
 		event.put(FINGER_OF_DEATH_ZOMBIE.get(), FingerOfDeathZombieEntity.createAttributes().build());
 		event.put(MIRROR_IMAGE.get(), MirrorImageEntity.createAttributes().build());

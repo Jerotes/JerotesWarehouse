@@ -1,19 +1,19 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.init.JerotesEntityType;
-import com.jerotes.jerotes.init.JerotesItems;
-import com.jerotes.jerotes.init.JerotesParticleTypes;
-import com.jerotes.jerotes.init.JerotesSoundEvents;
+import com.jerotes.jerotes.init.*;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
 public class MagicMissileEntity extends BaseMagicMissileEntity {
@@ -48,13 +48,19 @@ public class MagicMissileEntity extends BaseMagicMissileEntity {
             return;
         }
         if (entity instanceof LivingEntity livingEntity) {
-            Entity entity2 = this.getOwner();
-            livingEntity.hurt(this.damageSources().indirectMagic(this, entity2),
+            DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.FORCE, this, this.getOwner());
+            livingEntity.hurt(damageSource,
                     Main.rollDice(1, 4, livingEntity.getRandom()) + 1
             );
             this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
             this.discard();
         }
+    }
+    @Override
+    protected void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
+        if (this.getTarget() == null)
+            this.discard();
     }
 
     @Override
@@ -76,6 +82,12 @@ public class MagicMissileEntity extends BaseMagicMissileEntity {
     }
     public int beamLightI() {
         return 0xbe1d8f;
+    }
+    public int beamLightII() {
+        return 0xff7cff;
+    }
+    public int beamLightIII() {
+        return 0x7a1374;
     }
     public ResourceLocation TextureLocation() {
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/projectiles/magic_missile.png");

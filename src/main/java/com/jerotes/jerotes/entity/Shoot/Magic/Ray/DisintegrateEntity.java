@@ -44,9 +44,10 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
         }
     }
 
-    public DisintegrateEntity(int spellLevelDamage, Level level, LivingEntity livingEntity, double d, double d2, double d3) {
+    public DisintegrateEntity(int spellLevelDamage, int spellSubcategory, Level level, LivingEntity livingEntity, double d, double d2, double d3) {
         super(JerotesEntityType.DISINTEGRATE.get(), livingEntity, d, d2, d3, level);
         this.spellLevelDamage = spellLevelDamage;
+        this.spellSubcategory = spellSubcategory;
         this.summonTod = d;
         this.summonTod2 = d2;
         this.summonTod3 = d3;
@@ -62,8 +63,7 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
         if (entity instanceof LivingEntity livingEntity) {
             //敏捷判定
             if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
-                Entity entity2 = this.getOwner();
-                DamageSource damageSource = AttackFind.findDamageType(livingEntity, DamageTypes.INDIRECT_MAGIC, this, entity2);
+                DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.FORCE, this, this.getOwner());
                 Main.getJerotesPersistentData(livingEntity).putUUID("jerotes_disintegrate_damage_from", this.getUUID());
                 Main.getJerotesPersistentData(livingEntity).putFloat("jerotes_disintegrate_tick", 10);
                 boolean bl = livingEntity.hurt(damageSource,
@@ -105,31 +105,33 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
         BlockPos centerPos = BlockPos.containing(this.position());
         LivingEntity owner = this.getOwner() instanceof LivingEntity ? (LivingEntity) this.getOwner() : null;
 
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dz = -1; dz <= 1; dz++) {
-                    BlockPos pos = centerPos.offset(dx, dy, dz);
-                    BlockState state = this.level().getBlockState(pos);
-                    if (state.isAir()) continue;
+        if (this.spellSubcategory == 0) {
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    for (int dz = -1; dz <= 1; dz++) {
+                        BlockPos pos = centerPos.offset(dx, dy, dz);
+                        BlockState state = this.level().getBlockState(pos);
+                        if (state.isAir()) continue;
 
-                    float hardness = state.getDestroySpeed(this.level(), pos);
-                    if (hardness < 0) continue;
+                        float hardness = state.getDestroySpeed(this.level(), pos);
+                        if (hardness < 0) continue;
 
-                    int threshold = 40 + Math.max(0, (spellLevelDamage - 6)) * 10;
-                    if (hardness >= threshold) continue;
+                        int threshold = 40 + Math.max(0, (spellLevelDamage - 6)) * 10;
+                        if (hardness >= threshold) continue;
 
-                    boolean canDestroy = true;
-                    if (owner != null && !(owner instanceof Player)) {
-                        if (!net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(owner, pos, state)) {
-                            canDestroy = false;
+                        boolean canDestroy = true;
+                        if (owner != null && !(owner instanceof Player)) {
+                            if (!net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(owner, pos, state)) {
+                                canDestroy = false;
+                            }
+                            if (!net.minecraftforge.common.ForgeHooks.canEntityDestroy(owner.level(), pos, owner)) {
+                                canDestroy = false;
+                            }
                         }
-                        if (!net.minecraftforge.common.ForgeHooks.canEntityDestroy(owner.level(), pos, owner)) {
-                            canDestroy = false;
-                        }
-                    }
 
-                    if (canDestroy) {
-                        this.level().destroyBlock(pos, false, owner);
+                        if (canDestroy) {
+                            this.level().destroyBlock(pos, false, owner);
+                        }
                     }
                 }
             }
@@ -142,7 +144,7 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
     }
 
     public BaseRayEntity getRay() {
-        return new DisintegrateEntity(this.spellLevelDamage, this.level(), (LivingEntity) this.getOwner(), summonTod, summonTod2, summonTod3);
+        return new DisintegrateEntity(this.spellLevelDamage, spellSubcategory, this.level(), (LivingEntity) this.getOwner(), summonTod, summonTod2, summonTod3);
     }
 
     @Override

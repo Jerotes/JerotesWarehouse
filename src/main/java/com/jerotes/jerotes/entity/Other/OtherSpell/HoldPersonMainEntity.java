@@ -50,7 +50,7 @@ public class HoldPersonMainEntity extends OtherSpellBaseEntity implements Tracea
     @Override
     public void tick() {
         super.tick();
-        if (this.life >= 20 && this.life % 10 == 0) {
+        if (this.getLifeTick() >= 20 && this.getLifeTick() % 10 == 0) {
             boolean bl = false;
             for (UUID uuid : getList()) {
                 if (this.level() instanceof ServerLevel serverLevel) {

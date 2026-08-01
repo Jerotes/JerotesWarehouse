@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.Ray;
 
 import com.jerotes.jerotes.entity.MagicSummoned.Zombie.FingerOfDeathZombieEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.Zombie.JerotesZombieEntity;
 import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.util.*;
 import net.minecraft.core.particles.ParticleOptions;
@@ -35,9 +36,10 @@ public class FingerOfDeathEntity extends BaseRayEntity {
         }
     }
 
-    public FingerOfDeathEntity(int spellLevelDamage, Level level, LivingEntity livingEntity, double d, double d2, double d3) {
+    public FingerOfDeathEntity(int spellLevelDamage, int spellSubcategory, Level level, LivingEntity livingEntity, double d, double d2, double d3) {
         super(JerotesEntityType.FINGER_OF_DEATH.get(), livingEntity, d, d2, d3, level);
         this.spellLevelDamage = spellLevelDamage;
+        this.spellSubcategory = spellSubcategory;
         this.summonTod = d;
         this.summonTod2 = d2;
         this.summonTod3 = d3;
@@ -59,77 +61,155 @@ public class FingerOfDeathEntity extends BaseRayEntity {
                                 + 30) * (!EntityAndItemFind.savingSpellThrow(livingEntity) ? 1f : 0.5f)
                 );
                 if (bl && !livingEntity.isAlive()) {
-                    if (!EntityAndItemFind.isLoreUndying(livingEntity) && entity2 instanceof LivingEntity living) {
-                        if (this.level() instanceof ServerLevel serverLevel) {
-                            if (livingEntity instanceof Mob mob && EntityFactionFind.isHumanoid(livingEntity)) {
-                            //特效
-                            for (int n = 0; n < 20; ++n) {
-                                serverLevel.sendParticles(JerotesParticleTypes.FINGER_OF_DEATH.get(),
-                                        livingEntity.getRandomX(0.5), livingEntity.getRandomY(), livingEntity.getRandomZ(0.5), 0, 0, 0, 0, 0.125f);
+                    if (this.spellSubcategory == 0) {
+                        if (!EntityAndItemFind.isLoreUndying(livingEntity) && entity2 instanceof LivingEntity living) {
+                            if (this.level() instanceof ServerLevel serverLevel) {
+                                if (livingEntity instanceof Mob mob && EntityFactionFind.isHumanoid(livingEntity)) {
+                                    //特效
+                                    for (int n = 0; n < 20; ++n) {
+                                        serverLevel.sendParticles(JerotesParticleTypes.FINGER_OF_DEATH.get(),
+                                                livingEntity.getRandomX(0.5), livingEntity.getRandomY(), livingEntity.getRandomZ(0.5), 0, 0, 0, 0, 0.125f);
+                                    }
+                                    ParticlesUse.summonParticle(serverLevel, livingEntity, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
+                                            0x30153c, 0x6a3279);
+                                    PlayerTeam teams = (PlayerTeam) living.getTeam();
+                                    FingerOfDeathZombieEntity fingerOfDeathZombieEntity = mob.convertTo(JerotesEntityType.FINGER_OF_DEATH_ZOMBIE.get(), true);
+                                    if (fingerOfDeathZombieEntity != null) {
+                                        if (teams != null) {
+                                            serverLevel.getScoreboard().addPlayerToTeam(fingerOfDeathZombieEntity.getStringUUID(), teams);
+                                        }
+                                        if (!this.isSilent()) {
+                                            serverLevel.levelEvent(null, 1026, this.blockPosition(), 0);
+                                        }
+                                        ForgeEventFactory.onLivingConvert(livingEntity, fingerOfDeathZombieEntity);
+                                        fingerOfDeathZombieEntity.setBaby(livingEntity.isBaby());
+                                        fingerOfDeathZombieEntity.setScale(livingEntity.getDimensions(Pose.STANDING).height/livingEntity.getScale());
+                                        fingerOfDeathZombieEntity.tame(living);
+                                        fingerOfDeathZombieEntity.setOrderedToSit(false);
+                                        fingerOfDeathZombieEntity.setWander(false);
+                                        if (living instanceof Mob mobs && mobs.getTarget() != null) {
+                                            fingerOfDeathZombieEntity.setTarget(mobs.getTarget());
+                                        }
+                                        //属性
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.MAX_HEALTH) != null &&
+                                                mob.getAttribute(Attributes.MAX_HEALTH) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.MAX_HEALTH)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.MAX_HEALTH));
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_DAMAGE) != null &&
+                                                mob.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_DAMAGE)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_KNOCKBACK) != null &&
+                                                mob.getAttribute(Attributes.ATTACK_KNOCKBACK) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_KNOCKBACK)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.ATTACK_KNOCKBACK));
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR_TOUGHNESS) != null &&
+                                                mob.getAttribute(Attributes.ARMOR_TOUGHNESS) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR_TOUGHNESS)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.ARMOR_TOUGHNESS));
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR) != null &&
+                                                mob.getAttribute(Attributes.ARMOR) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.ARMOR));
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.MOVEMENT_SPEED) != null &&
+                                                mob.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
+                                            if (livingEntity.getType() == EntityType.VILLAGER || livingEntity.getType() == EntityType.WANDERING_TRADER) {
+                                                Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.MOVEMENT_SPEED)).
+                                                        setBaseValue(mob.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 0.5f);
+                                            }
+                                            else {
+                                                Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.MOVEMENT_SPEED)).
+                                                        setBaseValue(mob.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 0.75f);
+                                            }
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null &&
+                                                mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.KNOCKBACK_RESISTANCE)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.KNOCKBACK_RESISTANCE));
+                                        }
+                                        fingerOfDeathZombieEntity.setHealth(fingerOfDeathZombieEntity.getMaxHealth());
+                                    }
+                                }
                             }
-                            ParticlesUse.summonParticle(serverLevel, livingEntity, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
-                                    0x30153c, 0x6a3279);
-                                PlayerTeam teams = (PlayerTeam) living.getTeam();
-                                FingerOfDeathZombieEntity fingerOfDeathZombieEntity = mob.convertTo(JerotesEntityType.FINGER_OF_DEATH_ZOMBIE.get(), true);
-                                if (fingerOfDeathZombieEntity != null) {
-                                    if (teams != null) {
-                                        serverLevel.getScoreboard().addPlayerToTeam(fingerOfDeathZombieEntity.getStringUUID(), teams);
+                        }
+                    }
+                    else if (this.spellSubcategory == 1) {
+                        if (!EntityAndItemFind.isLoreUndying(livingEntity) && entity2 instanceof LivingEntity living) {
+                            if (this.level() instanceof ServerLevel serverLevel) {
+                                if (livingEntity instanceof Mob mob && EntityFactionFind.isHumanoid(livingEntity)) {
+                                    //特效
+                                    for (int n = 0; n < 20; ++n) {
+                                        serverLevel.sendParticles(JerotesParticleTypes.FINGER_OF_DEATH.get(),
+                                                livingEntity.getRandomX(0.5), livingEntity.getRandomY(), livingEntity.getRandomZ(0.5), 0, 0, 0, 0, 0.125f);
                                     }
-                                    if (!this.isSilent()) {
-                                        serverLevel.levelEvent(null, 1026, this.blockPosition(), 0);
-                                    }
-                                    ForgeEventFactory.onLivingConvert(livingEntity, fingerOfDeathZombieEntity);
-                                    fingerOfDeathZombieEntity.setBaby(livingEntity.isBaby());
-                                    fingerOfDeathZombieEntity.setScale(livingEntity.getDimensions(Pose.STANDING).height/livingEntity.getScale());
-                                    fingerOfDeathZombieEntity.tame(living);
-                                    fingerOfDeathZombieEntity.setOrderedToSit(false);
-                                    fingerOfDeathZombieEntity.setWander(false);
-                                    if (living instanceof Mob mobs && mobs.getTarget() != null) {
-                                        fingerOfDeathZombieEntity.setTarget(mobs.getTarget());
-                                    }
-                                    //属性
-                                    if (fingerOfDeathZombieEntity.getAttribute(Attributes.MAX_HEALTH) != null &&
-                                            mob.getAttribute(Attributes.MAX_HEALTH) != null) {
-                                        Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.MAX_HEALTH)).
-                                                setBaseValue(mob.getAttributeBaseValue(Attributes.MAX_HEALTH));
-                                    }
-                                    if (fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_DAMAGE) != null &&
-                                            mob.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
-                                        Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_DAMAGE)).
-                                                setBaseValue(mob.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
-                                    }
-                                    if (fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_KNOCKBACK) != null &&
-                                            mob.getAttribute(Attributes.ATTACK_KNOCKBACK) != null) {
-                                        Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_KNOCKBACK)).
-                                                setBaseValue(mob.getAttributeBaseValue(Attributes.ATTACK_KNOCKBACK));
-                                    }
-                                    if (fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR_TOUGHNESS) != null &&
-                                            mob.getAttribute(Attributes.ARMOR_TOUGHNESS) != null) {
-                                        Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR_TOUGHNESS)).
-                                                setBaseValue(mob.getAttributeBaseValue(Attributes.ARMOR_TOUGHNESS));
-                                    }
-                                    if (fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR) != null &&
-                                            mob.getAttribute(Attributes.ARMOR) != null) {
-                                        Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR)).
-                                                setBaseValue(mob.getAttributeBaseValue(Attributes.ARMOR));
-                                    }
-                                    if (fingerOfDeathZombieEntity.getAttribute(Attributes.MOVEMENT_SPEED) != null &&
-                                            mob.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
-                                        if (livingEntity.getType() == EntityType.VILLAGER || livingEntity.getType() == EntityType.WANDERING_TRADER) {
-                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.MOVEMENT_SPEED)).
-                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 0.5f);
+                                    ParticlesUse.summonParticle(serverLevel, livingEntity, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
+                                            0x30153c, 0x6a3279);
+                                    PlayerTeam teams = (PlayerTeam) living.getTeam();
+                                    JerotesZombieEntity fingerOfDeathZombieEntity = mob.convertTo(JerotesEntityType.JEROTES_ZOMBIE.get(), true);
+                                    if (fingerOfDeathZombieEntity != null) {
+                                        if (teams != null) {
+                                            serverLevel.getScoreboard().addPlayerToTeam(fingerOfDeathZombieEntity.getStringUUID(), teams);
                                         }
-                                        else {
-                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.MOVEMENT_SPEED)).
-                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 0.75f);
+                                        if (!this.isSilent()) {
+                                            serverLevel.levelEvent(null, 1026, this.blockPosition(), 0);
                                         }
+                                        ForgeEventFactory.onLivingConvert(livingEntity, fingerOfDeathZombieEntity);
+                                        fingerOfDeathZombieEntity.setBaby(livingEntity.isBaby());
+                                        fingerOfDeathZombieEntity.tame(living);
+                                        fingerOfDeathZombieEntity.setOrderedToSit(false);
+                                        fingerOfDeathZombieEntity.setWander(false);
+                                        if (living instanceof Mob mobs && mobs.getTarget() != null) {
+                                            fingerOfDeathZombieEntity.setTarget(mobs.getTarget());
+                                        }
+                                        //属性
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.MAX_HEALTH) != null &&
+                                                mob.getAttribute(Attributes.MAX_HEALTH) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.MAX_HEALTH)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.MAX_HEALTH));
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_DAMAGE) != null &&
+                                                mob.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_DAMAGE)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_KNOCKBACK) != null &&
+                                                mob.getAttribute(Attributes.ATTACK_KNOCKBACK) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ATTACK_KNOCKBACK)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.ATTACK_KNOCKBACK));
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR_TOUGHNESS) != null &&
+                                                mob.getAttribute(Attributes.ARMOR_TOUGHNESS) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR_TOUGHNESS)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.ARMOR_TOUGHNESS));
+                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR) != null &&
+                                                mob.getAttribute(Attributes.ARMOR) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.ARMOR)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.ARMOR));
+                                        }
+//                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.MOVEMENT_SPEED) != null &&
+//                                                mob.getAttribute(Attributes.MOVEMENT_SPEED) != null) {
+//                                            if (livingEntity.getType() == EntityType.VILLAGER || livingEntity.getType() == EntityType.WANDERING_TRADER) {
+//                                                Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.MOVEMENT_SPEED)).
+//                                                        setBaseValue(mob.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 0.5f);
+//                                            }
+//                                            else {
+//                                                Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.MOVEMENT_SPEED)).
+//                                                        setBaseValue(mob.getAttributeBaseValue(Attributes.MOVEMENT_SPEED) * 0.75f);
+//                                            }
+//                                        }
+                                        if (fingerOfDeathZombieEntity.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null &&
+                                                mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null) {
+                                            Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.KNOCKBACK_RESISTANCE)).
+                                                    setBaseValue(mob.getAttributeBaseValue(Attributes.KNOCKBACK_RESISTANCE));
+                                        }
+                                        fingerOfDeathZombieEntity.setHealth(fingerOfDeathZombieEntity.getMaxHealth());
                                     }
-                                    if (fingerOfDeathZombieEntity.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null &&
-                                            mob.getAttribute(Attributes.KNOCKBACK_RESISTANCE) != null) {
-                                        Objects.requireNonNull(fingerOfDeathZombieEntity.getAttribute(Attributes.KNOCKBACK_RESISTANCE)).
-                                                setBaseValue(mob.getAttributeBaseValue(Attributes.KNOCKBACK_RESISTANCE));
-                                    }
-                                    fingerOfDeathZombieEntity.setHealth(fingerOfDeathZombieEntity.getMaxHealth());
                                 }
                             }
                         }
@@ -160,7 +240,7 @@ public class FingerOfDeathEntity extends BaseRayEntity {
     }
 
     public BaseRayEntity getRay() {
-        return new FingerOfDeathEntity(this.spellLevelDamage, this.level(), (LivingEntity) this.getOwner(), summonTod, summonTod2, summonTod3);
+        return new FingerOfDeathEntity(this.spellLevelDamage, spellSubcategory,this.level(), (LivingEntity) this.getOwner(), summonTod, summonTod2, summonTod3);
     }
 
     @Override

@@ -24,7 +24,6 @@ public class FingerOfDeathZombieRenderer extends HumanoidMobRenderer<FingerOfDea
 		this.addLayer(new HumanoidArmorLayer(this, new HumanoidArmorModel(context.bakeLayer(ModelLayers.ZOMBIE_INNER_ARMOR)), new HumanoidArmorModel(context.bakeLayer(ModelLayers.ZOMBIE_OUTER_ARMOR)), context.getModelManager()));
 	}
 
-
 	@Override
 	protected void scale(FingerOfDeathZombieEntity entity, PoseStack poseStack, float f) {
 		poseStack.scale((entity.getScaleHeight() / 1.95f), (entity.getScaleHeight() / 1.95f), (entity.getScaleHeight() / 1.95f));

@@ -374,7 +374,7 @@ public class MaterialEvent {
 			event.setEffectCount(3);
 			event.setEffect1(new DolphinsGraceAlchemyEffect(2, 1));
 			event.setEffect2(new NightVisionAlchemyEffect(1, 2));
-			event.setEffect3(new TrueInvisbilityAlchemyEffect(1, 2));
+			event.setEffect3(new TrueInvisibleAlchemyEffect(1, 2));
 		}
 		//萤石粉
 		if (itemStack.is(Items.GLOWSTONE_DUST)) {
@@ -477,7 +477,7 @@ public class MaterialEvent {
 		//原色玻璃类
 		if (itemStack.is(Items.GLASS) || itemStack.is(Items.GLASS_PANE) || itemStack.is(ItemTags.create(new ResourceLocation("forge:glass")))|| itemStack.is(ItemTags.create(new ResourceLocation("forge:glass_panes"))) || itemStack.is(Items.TINTED_GLASS)) {
 			event.setEffectCount(3);
-			event.setEffect1(new TrueInvisbilityAlchemyEffect(1, 1));
+			event.setEffect1(new TrueInvisibleAlchemyEffect(1, 1));
 			event.setEffect2(new InvisbilityAlchemyEffect(1, 2));
 			event.setEffect3(new GlowingAlchemyEffect(1, 1));
 		}
@@ -485,7 +485,7 @@ public class MaterialEvent {
 		if (itemStack.is(Items.GHAST_TEAR)) {
 			event.setEffectCount(3);
 			event.setEffect1(new NauseaAlchemyEffect(1, 2));
-			event.setEffect2(new TrueInvisbilityAlchemyEffect(1, 2));
+			event.setEffect2(new TrueInvisibleAlchemyEffect(1, 2));
 			event.setEffect3(new SlowFallingAlchemyEffect(1, 2));
 		}
 		//下界石英
@@ -673,7 +673,7 @@ public class MaterialEvent {
 		if (itemStack.is(Items.BROWN_MUSHROOM)) {
 			event.setEffectCount(3);
 			event.setEffect1(new SaturationAlchemyEffect(1, 1));
-			event.setEffect2(new TrueInvisbilityAlchemyEffect(1, 2));
+			event.setEffect2(new TrueInvisibleAlchemyEffect(1, 2));
 			event.setEffect3(new InstantHealthAlchemyEffect(2, 1));
 		}
 		//诡异菌

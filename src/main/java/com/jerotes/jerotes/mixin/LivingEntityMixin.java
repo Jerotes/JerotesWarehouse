@@ -1,13 +1,18 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.*;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
+import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
+import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.jerotes.jerotes.network.JerotesSpearRushAttackPacket;
 import com.jerotes.jerotes.network.PacketHandler;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
+import com.jerotes.jerotes.util.Main;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
@@ -116,6 +121,13 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
 
     @Shadow
     protected abstract int getCurrentSwingDuration();
+
+
+    @Inject(method = "spawnSoulSpeedParticle", at = @At("HEAD"), cancellable = true)
+    private void spawnSoulSpeedParticle(CallbackInfo ci) {
+        if (this.hasEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get()))
+            ci.cancel();
+    }
 
     @Shadow
     @Nullable
@@ -287,5 +299,28 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     public void canBeAffected(MobEffectInstance mobEffectInstance, CallbackInfoReturnable<Boolean> cir) {
         if (this instanceof JerotesChangeStray jerotesChangeStray && jerotesChangeStray.isJerotesParched() && mobEffectInstance.getEffect() == MobEffects.WEAKNESS)
             cir.setReturnValue(false);
+    }
+
+
+//    @Redirect(
+//            method = "hurt",
+//            at = @At(
+//                    value = "INVOKE",
+//                    target = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z",
+//                    ordinal = 7
+//            )
+//    )
+//    private boolean redirectExplosionCheck(DamageSource source, TagKey<DamageType> tag) {
+//        if (tag == DamageTypeTags.IS_EXPLOSION)
+//            return source.is(tag) || EntityAndItemFind.noKnockback(source);
+//        return source.is(tag);
+//    }
+
+    @Inject(method = "knockback", at = @At("HEAD"), cancellable = true)
+    private void knockback(double strength, double x, double z, CallbackInfo ci) {
+        if (Main.getJerotesPersistentData(this).getDouble("jerotes_no_knockback_tag") > 0) {
+            Main.getJerotesPersistentData(this).putDouble("jerotes_no_knockback_tag", 0);
+            ci.cancel();
+        }
     }
 }

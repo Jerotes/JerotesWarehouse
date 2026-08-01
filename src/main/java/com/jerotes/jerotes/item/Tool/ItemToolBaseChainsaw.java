@@ -94,7 +94,7 @@ public class ItemToolBaseChainsaw extends ItemToolBaseAxe {
         }
         if (livingEntity.level() instanceof ServerLevel serverLevel) {
             if (!livingEntity.isSilent()) {
-                livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.ITEM_BREAK, livingEntity.getSoundSource(), 10.0f, 1.0f);
+                livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.ITEM_BREAK, livingEntity.getSoundSource(), 2.0f, 1.0f);
             }
             //攻击
             float reachs = AttackFind.reachAttackReach(livingEntity, itemStack, playerReach, reach, 3f, 0.5f);

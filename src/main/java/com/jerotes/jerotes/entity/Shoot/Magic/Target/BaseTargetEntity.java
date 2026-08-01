@@ -137,7 +137,7 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
         super.tick();
         //跟随
         //初始粒子
-        if (this.life <= this.getUseLife()) {
+        if (this.life <= this.getMaxLife()) {
             if (this.level() instanceof ServerLevel _level && this.getTrailParticle() != null) {
                 if (this.tickCount % 20 == 0) {
                     _level.sendParticles(this.getTrailParticle(), this.getX() + ((this.random.nextDouble() - 0.5d)), this.getY() + ((this.random.nextDouble() - 0.5d) * getSize() * 1), this.getZ() + ((this.random.nextDouble() - 0.5d) * getSize() * 1), 0, 0, 0, 0, 0);

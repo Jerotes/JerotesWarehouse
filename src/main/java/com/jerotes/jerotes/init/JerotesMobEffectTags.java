@@ -13,6 +13,7 @@ public interface JerotesMobEffectTags {
 	TagKey<MobEffect> BLINDNESS = create("jerotes:blindness");
 	TagKey<MobEffect> GLOWING = create("jerotes:glowing");
 	TagKey<MobEffect> TRUE_INVISIBLE = create("jerotes:true_invisible");
+	TagKey<MobEffect> TRUE_INVISIBLE_MUST_CROUCHING = create("jerotes:true_invisible_must_crouching");
 	TagKey<MobEffect> SERPON_FACTION = create("jerotes:serpon_faction");
 	TagKey<MobEffect> REMOVE_AFTER_SPELL = create("jerotes:remove_after_spell");
 	TagKey<MobEffect> REMOVE_AFTER_ATTACK = create("jerotes:remove_after_attack");

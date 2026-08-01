@@ -1,0 +1,94 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:iron_helmet",
+    "minecraft:iron_chestplate",
+    "minecraft:iron_leggings",
+    "minecraft:iron_boots",
+    "minecraft:iron_horse_armor",
+    {
+      "id": "minecraft:iron_nautilus_armor",
+      "required": false
+    },
+
+    "minecraft:golden_helmet",
+    "minecraft:golden_chestplate",
+    "minecraft:golden_leggings",
+    "minecraft:golden_boots",
+    "minecraft:golden_horse_armor",
+    {
+      "id": "minecraft:golden_nautilus_armor",
+      "required": false
+    },
+
+    "minecraft:chainmail_helmet",
+    "minecraft:chainmail_chestplate",
+    "minecraft:chainmail_leggings",
+    "minecraft:chainmail_boots",
+    {
+      "id": "minecraft:chainmail_horse_armor",
+      "required": false
+    },
+    {
+      "id": "minecraft:chainmail_nautilus_armor",
+      "required": false
+    },
+
+    "jerotes:copper_helmet",
+    "jerotes:copper_chestplate",
+    "jerotes:copper_leggings",
+    "jerotes:copper_boots",
+    {
+      "id": "minecraft:copper_horse_armor",
+      "required": false
+    },
+    {
+      "id": "minecraft:copper_helmet",
+      "required": false
+    },
+    {
+      "id": "minecraft:copper_chestplate",
+      "required": false
+    },
+    {
+      "id": "minecraft:copper_leggings",
+      "required": false
+    },
+    {
+      "id": "minecraft:copper_boots",
+      "required": false
+    },
+    {
+      "id": "minecraft:copper_nautilus_armor",
+      "required": false
+    },
+
+    "minecraft:netherite_helmet",
+    "minecraft:netherite_chestplate",
+    "minecraft:netherite_leggings",
+    "minecraft:netherite_boots",
+    {
+      "id": "minecraft:netherite_horse_armor",
+      "required": false
+    },
+    {
+      "id": "minecraft:netherite_nautilus_armor",
+      "required": false
+    },
+
+
+    "jerotes:chainmail_war_beast_armor",
+    "jerotes:copper_war_beast_armor",
+    "jerotes:iron_war_beast_armor",
+    "jerotes:golden_war_beast_armor",
+    "jerotes:netherite_war_beast_armor",
+    "jerotes:netherite_old_war_beast_armor",
+
+    "jerotes:chainmail_giant_beast_armor",
+    "jerotes:copper_giant_beast_armor",
+    "jerotes:iron_giant_beast_armor",
+    "jerotes:golden_giant_beast_armor",
+    "jerotes:netherite_giant_beast_armor",
+    "jerotes:netherite_old_giant_beast_armor"
+  ]
+}

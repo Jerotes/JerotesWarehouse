@@ -9,6 +9,7 @@ import com.jerotes.jerotes.forge.JerotesUseSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
+import com.jerotes.jerotes.item.Interface.MagicItem;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -41,6 +43,7 @@ public class MagicSpell {
 	public String spellId;
 	public ParticleOptions spellDisplayParticle;
 	public SoundEvent spellSound;
+	public int subcategory = 0;
 	public MagicSpell(int spellLevel, LivingEntity caster, Entity target, MagicType magicType, MagicType magicType2, String spellId, ParticleOptions spellDisplayParticle) {
 		this.spellLevel = spellLevel;
 		this.caster = caster;
@@ -55,6 +58,12 @@ public class MagicSpell {
 		this.spellSound = spellSound;
 	}
 
+	public boolean spellUse(int subcategory) {
+		if (subcategory > this.getSubcategoryReach())
+			subcategory = 0;
+		this.subcategory = subcategory;
+		return spellUse();
+	}
 	public boolean spellUse() {
 		if (!canUse()) {
 			return false;
@@ -189,7 +198,7 @@ public class MagicSpell {
 
 		//法术反制·被动影响
 		if (canBeBreak() && !isHelp() && !(getTarget() instanceof LivingEntity livingEntityTarget && SpellType.getCastingTickJerotes(livingEntityTarget) > -1)) {
-			if (getTarget() instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) && getCaster() != getTarget() && getCaster().distanceTo(getTarget()) <= 32) {
+			if (getTarget() instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) && !livingEntity.hasEffect(JerotesMobEffects.SPELL_REACTION_LOCK.get()) && getCaster() != getTarget() && getCaster().distanceTo(getTarget()) <= 32) {
 				//等级不如对方
 				if (!(AttackFind.SameFactionAvoidDamage(getCaster(), livingEntity, false)) && Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1 >= this.getSpellLevel()) {
 					//自身清除计时
@@ -209,7 +218,7 @@ public class MagicSpell {
 		//法术反制·主动影响
 		if (canBeBreak()) {
 			List<LivingEntity> list = getCaster().level().getEntitiesOfClass(LivingEntity.class, getCaster().getBoundingBox().inflate(32.0, 32, 32));
-			list.removeIf(livingEntity -> !(livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())) || livingEntity == this.getCaster());
+			list.removeIf(livingEntity -> !(livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())) || livingEntity == this.getCaster() || (livingEntity.hasEffect(JerotesMobEffects.SPELL_REACTION_LOCK.get())));
 			list.removeIf(livingEntity -> getTarget() instanceof LivingEntity livingEntityTarget && SpellType.getCastingTickJerotes(livingEntityTarget) > -1);
 			list.removeIf(livingEntity -> AttackFind.FindCanNotAttack(livingEntity, getCaster()));
 			list.removeIf(livingEntity -> livingEntity instanceof Mob mob && mob.getTarget() != getCaster());
@@ -304,6 +313,12 @@ public class MagicSpell {
 			return JerotesParticleTypes.SPELL_LEVEL_IX.get();
 		return JerotesParticleTypes.SPELL_LEVEL_I.get();
 	}
+	public boolean canTargetNonLivingEntity() {
+		return false;
+	}
+	public boolean mustTargetPickable() {
+		return true;
+	}
 	public MagicType getMagicType() {
 		return magicType;
 	}
@@ -334,7 +349,7 @@ public class MagicSpell {
 	public boolean canUseTargetNone() {
 		return false;
 	}
-	public float shouldBeSelf() {
+	public float shouldBeSelfChance() {
 		return 0.8f;
 	}
 	public float getSpellDistance() {
@@ -353,6 +368,36 @@ public class MagicSpell {
 		return new ResourceLocation(this.getSpellModId(), "textures/particle/" + this.getSpellId() + "_display.png");
 	}
 
+	public boolean hasCustomSubcategoryReach() {
+		return getCustomSubcategoryReachAdd() > 0;
+	}
+	public Component getSpellSubcategoryReachDesc(int n) {
+		return Component.translatable("spell." + getSpellModId() + "." + getSpellId() + ".subcategory_" + n);
+	}
+	//子类别范围
+	public int getSubcategoryReach() {
+		return getBaseSubcategoryReachAdd() + getCustomSubcategoryReachAdd();
+	}
+	//默认增加子类别范围
+	public int getBaseSubcategoryReachAdd() {
+		return 0;
+	}
+	//法术自定义增加子类别范围
+	public int getCustomSubcategoryReachAdd() {
+		return 0;
+	}
+	//当前子类别
+	public int getSubcategory() {
+		return subcategory;
+	}
+	//当前法术自身的子类别
+	public int getCustomSubcategory() {
+		return getSubcategory() - getBaseSubcategoryReachAdd();
+	}
+	public int usedByNonPlayerFindSubcategory(LivingEntity livingEntity) {
+		return 0;
+	}
+
 	public int playerUseCooldownTick(Player player) {
 		if (getMagicType2() == MagicType.MAIN) {
 			return 120;
@@ -363,7 +408,11 @@ public class MagicSpell {
 		return 120;
 	}
 
+
 	public static void MagicTooltip(List<Component> list, MagicSpell magicSpell, int level) {
+		MagicTooltip(list, magicSpell, level, null, null);
+	}
+	public static void MagicTooltip(List<Component> list, MagicSpell magicSpell, int level, Player player, ItemStack itemStack) {
 		list.add(magicSpell.getSpellName().copy()
 				.append(Component.translatable("spell.jerotes.spell_base", level).withStyle(ChatFormatting.DARK_PURPLE)));
 		list.add(magicSpell.getSpellSchool().getDisplayName().copy().append(" ")
@@ -377,6 +426,23 @@ public class MagicSpell {
 		);
 		list.add(magicSpell.getSpellDesc().copy()
 				.withStyle(ChatFormatting.LIGHT_PURPLE));
+		if (magicSpell.hasCustomSubcategoryReach()) {
+			for (int i = 0; i <= magicSpell.getCustomSubcategoryReachAdd(); i++) {
+				boolean bl = false;
+				if (itemStack != null && itemStack.getItem() instanceof MagicItem magicItem && magicItem.getSubcategory(itemStack) == i) {
+					bl = true;
+				}
+				if (itemStack == null && player != null &&
+						player.getCapability(JerotesPlayerData.CAPABILITY, null)
+						.orElse(new JerotesPlayerData.PlayerVariables()).SpellSubcategoryFind == i) {
+					bl = true;
+				}
+				list.add(Component.translatable("spell.jerotes.subcategory", i).
+						append(magicSpell.getSpellSubcategoryReachDesc(i).copy()
+						.withStyle(bl ? ChatFormatting.AQUA : ChatFormatting.LIGHT_PURPLE).withStyle(bl ? ChatFormatting.UNDERLINE : ChatFormatting.LIGHT_PURPLE)
+				));
+			}
+		}
 		list.add(Component.translatable(magicSpell.isMelee() ? "spell.jerotes.spell_max_distance_touch" : "spell.jerotes.spell_max_distance", magicSpell.getSpellDistance())
 				.withStyle(ChatFormatting.LIGHT_PURPLE));
 	}

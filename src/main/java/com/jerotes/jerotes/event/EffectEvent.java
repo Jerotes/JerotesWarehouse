@@ -38,7 +38,7 @@ public class EffectEvent {
 		LivingEntity entity = event.getEntity();
 		if (damagesource == null || entity == null)
 			return;
-		if (EntityAndItemFind.MagicResistance(damagesource)){
+		if (AttackFind.MagicResistance(damagesource)){
 			float damages = 1;
 			if (!entity.level().isClientSide()) {
 				if (entity.hasEffect(JerotesMobEffects.MAGIC_ABSORPTION.get())) {
@@ -57,7 +57,7 @@ public class EffectEvent {
 		if (damagesource == null || entity == null)
 			return;
 		double damages = 1;
-		if (damagesource.is(DamageTypeTags.IS_FIRE)){
+		if (AttackFind.isFireDamage(damagesource)){
 			if (!entity.level().isClientSide()) {
 				if (entity.hasEffect(JerotesMobEffects.FIRE_ABSORPTION.get()) || entity instanceof FireAbsorptionEntity) {
 					double AbsorptionPercentage = Math.max(
@@ -73,7 +73,7 @@ public class EffectEvent {
 				}
 			}
 		}
-		if (damagesource.is(DamageTypeTags.IS_FREEZING)){
+		if (AttackFind.isColdDamage(damagesource)){
 			if (!entity.level().isClientSide()) {
 				if (entity.hasEffect(JerotesMobEffects.COLD_ABSORPTION.get()) || entity instanceof ColdAbsorptionEntity) {
 					double AbsorptionPercentage = Math.max(
@@ -89,7 +89,7 @@ public class EffectEvent {
 				}
 			}
 		}
-		if (damagesource.is(DamageTypeTags.IS_LIGHTNING)){
+		if (AttackFind.isLightningDamage(damagesource)){
 			if (!entity.level().isClientSide()) {
 				if (entity.hasEffect(JerotesMobEffects.LIGHTNING_ABSORPTION.get()) || entity instanceof LightningAbsorptionEntity) {
 					double AbsorptionPercentage = Math.max(
@@ -116,7 +116,7 @@ public class EffectEvent {
 		if (damagesource == null || entity == null)
 			return;
 		double damages = 1;
-		if (damagesource.is(DamageTypeTags.IS_FIRE)){
+		if (AttackFind.isFireDamage(damagesource)){
 			if (!entity.level().isClientSide()) {
 				if (entity.hasEffect(JerotesMobEffects.FIRE_ABSORPTION.get()) || entity instanceof FireAbsorptionEntity) {
 					double AbsorptionPercentage = Math.max(
@@ -126,7 +126,7 @@ public class EffectEvent {
 				}
 			}
 		}
-		if (damagesource.is(DamageTypeTags.IS_FREEZING)){
+		if (AttackFind.isColdDamage(damagesource)){
 			if (!entity.level().isClientSide()) {
 				if (entity.hasEffect(JerotesMobEffects.COLD_ABSORPTION.get()) || entity instanceof ColdAbsorptionEntity) {
 					double AbsorptionPercentage = Math.max(
@@ -136,7 +136,7 @@ public class EffectEvent {
 				}
 			}
 		}
-		if (damagesource.is(DamageTypeTags.IS_LIGHTNING)){
+		if (AttackFind.isLightningDamage(damagesource)){
 			if (!entity.level().isClientSide()) {
 				if (entity.hasEffect(JerotesMobEffects.LIGHTNING_ABSORPTION.get()) || entity instanceof LightningAbsorptionEntity) {
 					double AbsorptionPercentage = Math.max(
@@ -219,8 +219,8 @@ public class EffectEvent {
 		if (spellEntity instanceof MagicAboutEntity magicAbout && entity != null) {
 			//法术反制
 			if (!magicAbout.isHelp() && entity != caster && entity instanceof LivingEntity livingEntity &&
-					livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())
-					&&
+					livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) &&
+					!livingEntity.hasEffect(JerotesMobEffects.SPELL_REACTION_LOCK.get()) &&
 					livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= event.getLevel() &&
 					!(caster != null &&
 							AttackFind.SameFactionAvoidDamage(caster, livingEntity, false))) {
@@ -235,8 +235,8 @@ public class EffectEvent {
 		if (event.getType() == 1) {
 			//法术反制
 			if (entity != caster && entity instanceof LivingEntity livingEntity &&
-					livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())
-					&&
+					livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) &&
+					!livingEntity.hasEffect(JerotesMobEffects.SPELL_REACTION_LOCK.get()) &&
 					livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= event.getLevel() &&
 					!(caster != null &&
 							AttackFind.SameFactionAvoidDamage(caster, livingEntity, false))) {

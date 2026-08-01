@@ -3,7 +3,10 @@
   "values": [
     "jerotes:magic_missile",
     "jerotes:poison_breath",
-    "jerotes:lightning_bolt",
+    "jerotes:fire_bolt",
+    "jerotes:frost_bolt",
+    "jerotes:poison_breath",
+    "jerotes:shock_bolt",
     "jerotes:ray_of_fire",
     "jerotes:ray_of_frost",
     "jerotes:ray_of_lightning",
@@ -13,6 +16,9 @@
     "jerotes:ray_of_enfeeblement",
     "jerotes:vicious_mockery",
     "jerotes:bestow_curse",
-    "jerotes:eyebite"
+    "jerotes:blindness_curse",
+    "jerotes:darkness_curse",
+    "jerotes:eyebite",
+    "jerotes:harm"
   ]
 }

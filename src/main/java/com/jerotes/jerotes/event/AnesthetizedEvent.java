@@ -8,6 +8,7 @@ import com.jerotes.jerotes.entity.Interface.JerotesPlayerBaseEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.item.Interface.ItemAnesthetized;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
@@ -185,9 +186,9 @@ public class AnesthetizedEvent {
 			entity = livingEntity;
 		}
 		if (attackBy != null) {
-			if (attackBy instanceof LivingEntity living && EntityAndItemFind.isMeleeDamage(event.getSource())) {
+			if (attackBy instanceof LivingEntity living && AttackFind.isMeleeDamage(event.getSource())) {
 				ItemStack handItem = living.getMainHandItem();
-				if (!EntityAndItemFind.MeleeDamageFromMainHandNotOffHand(living))
+				if (!AttackFind.MeleeDamageFromMainHandNotOffHand(living))
 					handItem = living.getOffhandItem();
 				if (handItem.getItem() instanceof ItemAnesthetized itemAnesthetized) {
 					if (itemAnesthetized.onlyPlayer() && !(living instanceof Player || living instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.beAnesthetizedAsPlayer())) {

@@ -5,22 +5,25 @@ import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.forge.JerotesMerorDamageEvent;
 import com.jerotes.jerotes.forge.JerotesMeleeDamageFromMainHandIsOffHandEvent;
-import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesDamageTypeTags;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.network.JerotesPlayerData;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
@@ -33,6 +36,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityAndItemFind {
 	//近战攻击
@@ -107,6 +111,10 @@ public class EntityAndItemFind {
 				|| damagesource.getDirectEntity() instanceof ThrownPotion || damagesource.getDirectEntity() instanceof AreaEffectCloud
 				|| damagesource.getEntity() instanceof Warden && damagesource.is(DamageTypes.SONIC_BOOM);
 	}
+	//是否金属盔甲
+	public static boolean isMetalArmors(ItemStack stack) {
+		return stack.is(ItemTags.create(new ResourceLocation("jerotes:metal_armors")));
+	}
 	//是否莫厄武器
 	public static boolean isMerorWeapon(ItemStack stack) {
 		return stack.is(ItemTags.create(new ResourceLocation("jerotes:meror")));
@@ -167,32 +175,54 @@ public class EntityAndItemFind {
 	}
 	public static boolean isTrueInvisibleBuff(Entity entity) {
 		if (entity instanceof LivingEntity livingEntity) {
-			if (livingEntity.hasEffect(JerotesMobEffects.CLOAKING.get()) && (livingEntity.isCrouching() || livingEntity.isShiftKeyDown())) {
-				return true;
+			boolean can = false;
+			var registry = livingEntity.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT);
+			var trueInvisibleOpt = registry.getTag(JerotesMobEffectTags.TRUE_INVISIBLE);
+			var mustCrouchOpt = registry.getTag(JerotesMobEffectTags.TRUE_INVISIBLE_MUST_CROUCHING);var trueInvisibleTag = trueInvisibleOpt.orElse(null);
+			if (trueInvisibleTag == null) {
+				return false;
 			}
-			if (livingEntity.hasEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get())) {
-				return true;
+			var mustCrouchTag = mustCrouchOpt.orElse(null);
+			int level = 0;
+			for (Holder<MobEffect> holder : trueInvisibleTag) {
+				MobEffectInstance effectInstance = livingEntity.getEffect(holder.get());
+				if (effectInstance == null) {
+					continue;
+				}
+				if (mustCrouchTag != null && mustCrouchTag.contains(holder) && !livingEntity.isCrouching()) {
+					continue;
+				}
+				can = true;
 			}
-			if (livingEntity.hasEffect(JerotesMobEffects.MIRROR_IMAGE.get())) {
-				return true;
-			}
+			return can;
 		}
 		return false;
 	}
 	public static int getTrueInvisibleLevel(Entity entity) {
+		if (!(entity instanceof LivingEntity livingEntity)) {
+			return 0;
+		}
+		var registry = livingEntity.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT);
+		var trueInvisibleOpt = registry.getTag(JerotesMobEffectTags.TRUE_INVISIBLE);
+		var mustCrouchOpt = registry.getTag(JerotesMobEffectTags.TRUE_INVISIBLE_MUST_CROUCHING);
+		var trueInvisibleTag = trueInvisibleOpt.orElse(null);
+		if (trueInvisibleTag == null) {
+			return 0;
+		}
+		var mustCrouchTag = mustCrouchOpt.orElse(null);
 		int level = 0;
-		if (entity instanceof LivingEntity livingEntity) {
-			if (livingEntity.hasEffect(JerotesMobEffects.CLOAKING.get()) && (livingEntity.isCrouching() || livingEntity.isShiftKeyDown())) {
-				if (level < Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.CLOAKING.get())).getAmplifier() + 1)
-					level = Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.CLOAKING.get())).getAmplifier() + 1;
+		for (Holder<MobEffect> holder : trueInvisibleTag) {
+			MobEffectInstance effectInstance = livingEntity.getEffect(holder.get());
+			if (effectInstance == null) {
+				continue;
 			}
-			if (livingEntity.hasEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get())) {
-				if (level < Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get())).getAmplifier() + 1)
-					level = Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.INVISIBLE_PASSAGE.get())).getAmplifier() + 1;
+			if (mustCrouchTag != null && mustCrouchTag.contains(holder) && !livingEntity.isCrouching()) {
+				continue;
 			}
-			if (livingEntity.hasEffect(JerotesMobEffects.MIRROR_IMAGE.get())) {
-				if (level < Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.MIRROR_IMAGE.get())).getAmplifier() + 1)
-					level = Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.MIRROR_IMAGE.get())).getAmplifier() + 1;
+
+			int amp = effectInstance.getAmplifier() + 1;
+			if (amp > level) {
+				level = amp;
 			}
 		}
 		return level;
@@ -229,7 +259,7 @@ public class EntityAndItemFind {
 		}
 		return totalValue;
 	}
-
+	//抵挡魔法
 	public static boolean canSelfResistMagic(DamageSource damageSource, float amount, LivingEntity entity, int selfLevel) {
 		if (!(entity instanceof SpellUseEntity spellUse))
 			return false;
@@ -299,6 +329,7 @@ public class EntityAndItemFind {
 		n += livingEntity instanceof UseBowEntity useBowEntity && useBowEntity.getBowLevel() >= 20 ? 1 : 0;
 		n += livingEntity instanceof UseShieldEntity useShieldEntity && useShieldEntity.getShieldLevel() >= 20 ? 1 : 0;
 		n += livingEntity instanceof BossEntity ? 1 : 0;
+		n += livingEntity instanceof Player player && player.isCreative() ? 30 : 0;
 		n += isLegendary(livingEntity) ? 3 : 0;
 		n += isExalted(livingEntity) ? 3 : 0;
 		n += livingEntity instanceof Player ? 0 : Math.min(livingEntity.getExperienceReward()/200, 3);

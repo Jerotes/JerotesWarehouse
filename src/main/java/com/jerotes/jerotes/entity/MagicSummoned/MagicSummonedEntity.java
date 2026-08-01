@@ -1,10 +1,8 @@
 package com.jerotes.jerotes.entity.MagicSummoned;
 
-import com.jerotes.jerotes.entity.Interface.ChangePoseAbout;
-import com.jerotes.jerotes.entity.Interface.FactionEntity;
-import com.jerotes.jerotes.entity.Interface.JerotesEntity;
-import com.jerotes.jerotes.entity.Interface.TameMobEntity;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.goal.*;
+import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
@@ -19,11 +17,9 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.OldUsersConverter;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
@@ -40,7 +36,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.scores.Team;
 
 import javax.annotation.Nullable;
@@ -49,9 +44,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbout, NeutralMob, JerotesEntity, FactionEntity, OwnableEntity, TameMobEntity {
+public class MagicSummonedEntity extends PathfinderMob implements ContractableEntity, ChangePoseAbout, NeutralMob, JerotesEntity, FactionEntity, OwnableEntity, TameMobEntity {
 	public static final EntityDataAccessor<BlockPos> HOME_POS = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BLOCK_POS);
 	private static final EntityDataAccessor<Boolean> IS_WANDER = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> NOT_PERSISTENT = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> NOT_PERSISTENT_BECAUSE_CONCENTRATION = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Boolean> GOING_HOME = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Integer> DATA_OWNER_ID = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
 	protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID_ID = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -60,11 +57,19 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	public static final EntityDataAccessor<Integer> ANIM_TICK = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> START_TICK = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> ATTACK_ANIM = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> LIFE_TICK = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> MAX_LIFE_TICK = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.INT);
 
 	public MagicSummonedEntity(EntityType<? extends MagicSummonedEntity> entityType, Level level) {
 		super(entityType, level);
 		setPersistenceRequired();
 		this.reassessTameGoals();
+	}
+	@Override
+	public int getExperienceReward() {
+		if (this.isTame())
+			return 0;
+		return super.getExperienceReward();
 	}
 
 	@Override
@@ -103,9 +108,35 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	}
 	protected void reassessTameGoals() {
 	}
+
+
 	public void tame(LivingEntity player) {
-		this.setTame(true);
-		this.setOwnerUUID(player.getUUID());
+		MagicSummonedEntity entity = getTameEntity();
+		entity.setTame(true);
+		entity.setOwnerUUID(player.getUUID());
+	}
+	protected MagicSummonedEntity getTameEntity() {
+		return this;
+	}
+
+	//能否契约
+	public boolean isCanContract() {
+		return true;
+	}
+	//契约需要法术等级
+	public int contractShouldLevel() {
+		return contractShouldBaseLevel() + (this.isTame() && this.isNotPersistent() ? 3 : 0);
+	}
+	public int contractShouldBaseLevel() {
+		return 5;
+	}
+	//契约
+	public boolean contractUse(LivingEntity livingEntity) {
+		MagicSummonedEntity entity = getTameEntity();
+		entity.tame(livingEntity);
+		entity.setNotPersistent(false);
+		entity.setLifeTick(0);
+		return true;
 	}
 
 	//动画
@@ -146,6 +177,18 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	}
 	public int getStartTick(){
 		return this.getEntityData().get(START_TICK);
+	}
+	public void setLifeTick(int n){
+		this.getEntityData().set(LIFE_TICK, n);
+	}
+	public int getLifeTick(){
+		return this.getEntityData().get(LIFE_TICK);
+	}
+	public void setMaxLifeTick(int n){
+		this.getEntityData().set(MAX_LIFE_TICK, n);
+	}
+	public int getMaxLifeTick(){
+		return this.getEntityData().get(MAX_LIFE_TICK);
 	}
 	public int getAttackAnim() {
 		return this.getEntityData().get(ATTACK_ANIM);
@@ -251,16 +294,32 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	public void setWander(boolean bl) {
 		this.getEntityData().set(IS_WANDER, bl);
 	}
+	public boolean isNotPersistent() {
+		return this.getEntityData().get(NOT_PERSISTENT);
+	}
+	public void setNotPersistent(boolean bl) {
+		this.getEntityData().set(NOT_PERSISTENT, bl);
+	}
+	public boolean isNotPersistentBecauseConcentration() {
+		return this.getEntityData().get(NOT_PERSISTENT_BECAUSE_CONCENTRATION);
+	}
+	public void setNotPersistentBecauseConcentration(boolean bl) {
+		this.getEntityData().set(NOT_PERSISTENT_BECAUSE_CONCENTRATION, bl);
+	}
 	@Override
 	public void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
 		compoundTag.putInt("StartTick", this.getStartTick());
+		compoundTag.putInt("LifeTick", this.getLifeTick());
+		compoundTag.putInt("MaxLifeTick", this.getMaxLifeTick());
 		compoundTag.putInt("AnimTick", this.getAnimTick());
 		compoundTag.putInt("AttackAnim", this.getAttackAnim());
 		compoundTag.putBoolean("IsWander", this.isWander());
 		if (this.getOwnerUUID() != null) {compoundTag.putUUID("Owner", this.getOwnerUUID());}
 		compoundTag.putBoolean("Sitting", this.orderedToSit);
 		compoundTag.putBoolean("IsGoingHome", this.isGoingHome());
+		compoundTag.putBoolean("IsNotPersistent", this.isNotPersistent());
+		compoundTag.putBoolean("IsNotPersistentBecauseConcentration", this.isNotPersistentBecauseConcentration());
 		compoundTag.putInt("HomePosX", this.getHomePos().getX());
 		compoundTag.putInt("HomePosY", this.getHomePos().getY());
 		compoundTag.putInt("HomePosZ", this.getHomePos().getZ());
@@ -271,8 +330,12 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 		super.readAdditionalSaveData(compoundTag);
 		this.setStartTick(compoundTag.getInt("StartTick"));
 		this.setAnimTick(compoundTag.getInt("AnimTick"));
+		this.setLifeTick(compoundTag.getInt("LifeTick"));
+		this.setMaxLifeTick(compoundTag.getInt("MaxLifeTick"));
 		this.setAttackAnim(compoundTag.getInt("AttackAnim"));
 		this.setWander(compoundTag.getBoolean("IsWander"));
+		this.setNotPersistent(compoundTag.getBoolean("IsNotPersistent"));
+		this.setNotPersistentBecauseConcentration(compoundTag.getBoolean("IsNotPersistentBecauseConcentration"));
 		UUID uuid;
 		if (compoundTag.hasUUID("Owner")) {
 			uuid = compoundTag.getUUID("Owner");
@@ -299,16 +362,20 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	}
 	@Override
 	public boolean canChangeDimensions() {
-		return super.canChangeDimensions() && this.getChangeType() != 3;
+		return super.canChangeDimensions() && this.getChangeType() != 3 && !(this.isNotPersistent() && this.isNotPersistentBecauseConcentration());
 	}
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.getEntityData().define(ATTACK_ANIM, 0);
+		this.getEntityData().define(LIFE_TICK, 0);
+		this.getEntityData().define(MAX_LIFE_TICK, 600);
 		this.getEntityData().define(START_TICK, 0);
 		this.getEntityData().define(ANIM_STATE, 0);
 		this.getEntityData().define(ANIM_TICK, 0);
 		this.getEntityData().define(IS_WANDER, false);
+		this.getEntityData().define(NOT_PERSISTENT, false);
+		this.getEntityData().define(NOT_PERSISTENT_BECAUSE_CONCENTRATION, false);
 		this.getEntityData().define(DATA_OWNER_ID, -1);
 		this.getEntityData().define(DATA_FLAGS_ID, (byte)0);
 		this.getEntityData().define(DATA_OWNER_UUID_ID, Optional.empty());
@@ -444,6 +511,26 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+		if (this.isNotPersistent()) {
+			if (!this.level().isClientSide()) {
+				this.setLifeTick(Math.min(this.getLifeTick() + 1, this.getMaxLifeTick()));
+			}
+			if (this.getLifeTick() >= this.getMaxLifeTick()) {
+				this.notPersistentChange();
+			}
+		}
+	}
+	public void notPersistentChange() {
+		if (this.tickCount % 20 == 0) {
+			DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).
+					getHolderOrThrow(JerotesDamageTypes.MAGIC_EFFECT));
+			this.hurt(damageSource, 20);
+		}
+	}
+
+	@Override
 	public void aiStep() {
 		super.aiStep();
 		if (this.getOwner() != null && this.getOwnerId() == -1) {
@@ -564,6 +651,8 @@ public class MagicSummonedEntity extends PathfinderMob implements ChangePoseAbou
 	public void die(DamageSource damageSource) {
 		Component deathMessage = this.getCombatTracker().getDeathMessage();
 		super.die(damageSource);
+		if (damageSource.is(JerotesDamageTypes.MAGIC_EFFECT))
+			return;
 		if (this.dead)
 			if (!this.level().isClientSide && this.level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && this.getOwner() instanceof ServerPlayer) {
 				this.getOwner().sendSystemMessage(deathMessage);

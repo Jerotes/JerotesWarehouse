@@ -3,6 +3,7 @@ package com.jerotes.jerotes.client.model;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Other.OtherSpell.CloudOfDaggersEntity;
 import com.jerotes.jerotes.entity.Other.OtherSpell.HoldMobEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.OtherSpellBaseEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
@@ -12,7 +13,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 
-public class Modelhold_mob<T extends HoldMobEntity> extends EntityModel<T> {
+public class Modelhold_mob<T extends OtherSpellBaseEntity> extends EntityModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(JerotesWarehouse.MODID, "hold_mob"), "main");
 	private final ModelPart body;
 	private final ModelPart out;

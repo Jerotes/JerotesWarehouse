@@ -3,22 +3,17 @@ package com.jerotes.jerotes.goal;
 import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
 import com.jerotes.jerotes.entity.Interface.WizardEntity;
-import com.jerotes.jerotes.entity.Mob.HumanEntity;
 import com.jerotes.jerotes.item.Interface.MagicItem;
 import com.jerotes.jerotes.spell.*;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
-import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JerotesMainSpellAttackGoal extends Goal {
@@ -143,7 +138,7 @@ public class JerotesMainSpellAttackGoal extends Goal {
             }
             else if (magicSpell.isHelp()) {
                 boolean bl = false;
-                if (this.mob.getRandom().nextFloat() > magicSpell.shouldBeSelf()) {
+                if (this.mob.getRandom().nextFloat() > magicSpell.shouldBeSelfChance()) {
                     float distance = magicSpell.getSpellDistance();
                     List<LivingEntity> list = this.mob.level().getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(distance, distance, distance));
                     for (LivingEntity livingEntity : list) {
@@ -206,11 +201,11 @@ public class JerotesMainSpellAttackGoal extends Goal {
             //施法前摇
             wizardEntity.SpellUseAfterAttack(SpellTypeInterface.getId(), magicSpell.getMagicType(), magicSpell.getMagicType2());
             //施法
-            SpellListByString.getSpell(TrueSpellLevel, this.mob, finalTarget, SpellTypeInterface).spellUse();
+            boolean spellUse = SpellListByString.getSpell(TrueSpellLevel, this.mob, finalTarget, SpellTypeInterface).spellUse(SpellListByString.getSpell(TrueSpellLevel, this.mob, finalTarget, SpellTypeInterface).usedByNonPlayerFindSubcategory(this.mob));
             Main.getJerotesPersistentData(this.mob).putDouble("jerotes_main_spell_cooldown", Math.max(attackCooldown, Main.getJerotesPersistentData(this.mob).getDouble("jerotes_main_spell_cooldown")));
             this.mob.stopUsingItem();
             //如何损坏
-            {
+            if (spellUse) {
                 boolean shouldBreak = false;
                 boolean breakHandIsMain = true;
                 //如果没有这个法术还使用了

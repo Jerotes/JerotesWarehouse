@@ -102,9 +102,9 @@ public class EntityAboutEvent {
 		if (damageSource.getDirectEntity() != null && EntityAndItemFind.isMerorAttackEntity(damageSource.getDirectEntity().getType()))
 			event.setMerorDamage(true);
 		//近战
-		if (EntityAndItemFind.isMeleeDamage(damageSource) && damageSource.getEntity() instanceof LivingEntity livingEntity) {
+		if (AttackFind.isMeleeDamage(damageSource) && damageSource.getEntity() instanceof LivingEntity livingEntity) {
 			ItemStack handItem = livingEntity.getMainHandItem();
-			if (!EntityAndItemFind.MeleeDamageFromMainHandNotOffHand(livingEntity))
+			if (!AttackFind.MeleeDamageFromMainHandNotOffHand(livingEntity))
 				handItem = livingEntity.getOffhandItem();
 			if (EntityAndItemFind.isMerorWeapon(handItem))
 				event.setMerorDamage(true);
@@ -150,6 +150,9 @@ public class EntityAboutEvent {
 		LivingEntity hurt = event.getEntity();
 		Entity attacker = event.getSource().getEntity();
 		Entity attackerUse = event.getSource().getDirectEntity();
+		if (hurt != null && AttackFind.noKnockback(event.getSource())) {
+			Main.getJerotesPersistentData(hurt).putDouble("jerotes_no_knockback_tag", 2);
+		}
 		if (attacker instanceof LivingEntity livingEntity) {
 			//buff消失
 			attacker.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTagOrEmpty(JerotesMobEffectTags.REMOVE_AFTER_ATTACK).forEach(effect -> {
@@ -174,7 +177,7 @@ public class EntityAboutEvent {
 			DamageSource damagesource = event.getSource();
 			if (damagesource == null || livingEntity == null)
 				return;
-			if (damagesource.is(JerotesDamageTypes.CORROSION)) {
+			if (AttackFind.isCorrosionDamage(damagesource)) {
 				float damages = 1;
 				ItemStack head = livingEntity.getItemBySlot(EquipmentSlot.HEAD);
 				ItemStack chest = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
@@ -199,9 +202,9 @@ public class EntityAboutEvent {
 			return;
 		if (attackBy != null) {
 			if (attackBy instanceof LivingEntity living) {
-				if (((attackBy instanceof Mob || attackBy instanceof Player)) && event.getSource().getDirectEntity() == living && EntityAndItemFind.isMeleeDamage(event.getSource())) {
+				if (((attackBy instanceof Mob || attackBy instanceof Player)) && event.getSource().getDirectEntity() == living && AttackFind.isMeleeDamage(event.getSource())) {
 					ItemStack handItem = living.getMainHandItem();
-					if (!EntityAndItemFind.MeleeDamageFromMainHandNotOffHand(living))
+					if (!AttackFind.MeleeDamageFromMainHandNotOffHand(living))
 						handItem = living.getOffhandItem();
 
 					if (JerotesEnchantments.BANE_OF_HUMANOIDS != null && EntityFactionFind.isHumanoid(entity) && attackBy instanceof LivingEntity livingEntity && !handItem.isEmpty() && handItem.getEnchantmentLevel(JerotesEnchantments.BANE_OF_HUMANOIDS.get()) > 0) {
@@ -225,7 +228,7 @@ public class EntityAboutEvent {
 		Entity attackBy = event.getSource().getEntity();
 		if (entity == null || !entity.isAlive())
 			return;
-		if (!(entity instanceof SpellUseEntity spellUse) || !EntityAndItemFind.MagicResistance(damageSource))
+		if (!(entity instanceof SpellUseEntity spellUse) || !AttackFind.MagicResistance(damageSource))
 			return;
 		if (Float.isNaN(amount) || Float.isInfinite(amount)) {
 			return;
@@ -235,7 +238,7 @@ public class EntityAboutEvent {
 				damageSource.getEntity() instanceof MagicAbout ||
 				damageSource.getDirectEntity() instanceof MagicAbout) {
 			int selfLevel = spellUse.getSpellLevel();
-			int otherLevl = EntityAndItemFind.getOtherLevl(damageSource);
+			int otherLevl = AttackFind.getOtherLevl(damageSource);
 			if (selfLevel > otherLevl) {
 				int distance = selfLevel - otherLevl + 1;
 				float afterDamage = event.getAmount() * Math.max(0.05f, ((100f - distance * distance)/100f));
@@ -338,6 +341,7 @@ public class EntityAboutEvent {
 		LivingEntity entity = event.getEntity();
 		if (entity == null || !entity.isAlive())
 			return;
+		Main.persistentDataDoubleReduceToZero(entity, "jerotes_no_knockback_tag", true);
 		//镜影术
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_1_tick", true);
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_2_tick", true);
@@ -458,7 +462,7 @@ public class EntityAboutEvent {
 			else {
 				if ((MainConfig.HasPercentageDamage.contains(bossAttacker.getEncodeId()) || EntityAndItemFind.isLegendary(bossAttacker)) && damage > 0) {
 					float f = (float) MainConfig.BaseAttackPercentage;
-					if (EntityAndItemFind.MagicResistance(event.getSource())) {
+					if (AttackFind.MagicResistance(event.getSource())) {
 						f = (float) MainConfig.BaseMagicAttackPercentage;
 					}
 					float damageAdd = f;

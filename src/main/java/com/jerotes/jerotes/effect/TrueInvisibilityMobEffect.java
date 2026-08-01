@@ -13,7 +13,7 @@ public class TrueInvisibilityMobEffect extends BaseMobEffectAllTick {
 
 	@Override
 	public String getDescriptionId() {
-		return "effect.jerotes.true_invisbility";
+		return "effect.jerotes.true_invisible";
 	}
 
 	@Override

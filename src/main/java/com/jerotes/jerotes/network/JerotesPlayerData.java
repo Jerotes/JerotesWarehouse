@@ -67,6 +67,7 @@ public class JerotesPlayerData {
 			clone.AddSpellUseCoolDownTick = original.AddSpellUseCoolDownTick;
 			clone.AddSpellUseCoolDownTickMax = original.AddSpellUseCoolDownTickMax;
 			clone.ConcentrationSpellTarget = original.ConcentrationSpellTarget;
+			clone.SpellSubcategoryFind = original.SpellSubcategoryFind;
 
 			clone.IsLegend = original.IsLegend;
 			clone.syncPlayerVariables(event.getEntity());
@@ -114,6 +115,7 @@ public class JerotesPlayerData {
 		public int AddSpellUseCoolDownTick = 0;
 		public int AddSpellUseCoolDownTickMax = 0;
 		public String ConcentrationSpellTarget = "";
+		public int SpellSubcategoryFind = 0;
 
 		public boolean IsLegend = false;
 
@@ -147,6 +149,10 @@ public class JerotesPlayerData {
 			this.ConcentrationSpellTarget = string;
 		}
 
+		public void setSpellSubcategoryFind(int n){
+			this.SpellSubcategoryFind = n;
+		}
+
 		public void setLegend(boolean bl){
 			this.IsLegend = bl;
 		}
@@ -174,6 +180,7 @@ public class JerotesPlayerData {
 			nbt.putInt("JerotesAddSpellUseCoolDownTick", AddSpellUseCoolDownTick);
 			nbt.putInt("JerotesAddSpellUseCoolDownTickMax", AddSpellUseCoolDownTickMax);
 			nbt.putString("JerotesConcentrationSpellTarget", ConcentrationSpellTarget);
+			nbt.putInt("JerotesSpellSubcategoryFind", SpellSubcategoryFind);
 
 			nbt.putBoolean("JerotesIsLegend", IsLegend);
 			return nbt;
@@ -190,6 +197,7 @@ public class JerotesPlayerData {
 			AddSpellUseCoolDownTick = nbt.getInt("JerotesAddSpellUseCoolDownTick");
 			AddSpellUseCoolDownTickMax = nbt.getInt("JerotesAddSpellUseCoolDownTickMax");
 			ConcentrationSpellTarget = nbt.getString("JerotesConcentrationSpellTarget");
+			SpellSubcategoryFind = nbt.getInt("JerotesSpellSubcategoryFind");
 
 			IsLegend = nbt.getBoolean("JerotesIsLegend");
 		}

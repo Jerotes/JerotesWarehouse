@@ -2,6 +2,7 @@ package com.jerotes.jerotes.effect;
 
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -47,8 +48,8 @@ public class BleedingMobEffect extends BaseMobEffectSlowTick {
 			if (damage > maxDamage) {
 				damage = maxDamage;
 			}
-			DamageSource damageSources = new DamageSource(livingEntity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.BLEEDING));
-			livingEntity.hurt(damageSources, damage);
+			DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.FORCE);
+			livingEntity.hurt(damageSource, damage);
 		}
 		int num = effectLevel;
 		if (num > 10) {

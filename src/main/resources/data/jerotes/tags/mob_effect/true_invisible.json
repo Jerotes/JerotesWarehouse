@@ -2,7 +2,8 @@
   "replace": false,
   "values": [
     "jerotes:invisible_passage",
-    "jerotes:true_invisbility",
+    "jerotes:magic_invisibility",
+    "jerotes:true_invisible",
     "jerotes:cloaking",
     "jerotes:mirror_image"
   ]
