@@ -26,6 +26,7 @@ public final class MainConfig {
     public static boolean HaveSavingThrow;
     public static boolean HaveSavingThrowOnlyPlayerAndLegendary;
     public static boolean NoRollDice;
+    public static double SomeBulletSpellReachMultiplier;
 
     public static int CorrosiveStopDurabilityValue;
     public static boolean ScreenShake;
@@ -84,6 +85,7 @@ public final class MainConfig {
                 HaveSavingThrow = COMMON.HaveSavingThrow.get();
         HaveSavingThrowOnlyPlayerAndLegendary = COMMON.HaveSavingThrowOnlyPlayerAndLegendary.get();
         NoRollDice = COMMON.NoRollDice.get();
+        SomeBulletSpellReachMultiplier = COMMON.SomeBulletSpellReachMultiplier.get();
 
         CorrosiveStopDurabilityValue = COMMON.CorrosiveStopDurabilityValue.get();
                 ScreenShake = COMMON.ScreenShake.get();
@@ -139,6 +141,7 @@ public final class MainConfig {
         public final ForgeConfigSpec.BooleanValue HaveSavingThrow;
         public final ForgeConfigSpec.BooleanValue HaveSavingThrowOnlyPlayerAndLegendary;
         public final ForgeConfigSpec.BooleanValue NoRollDice;
+        public final ForgeConfigSpec.DoubleValue SomeBulletSpellReachMultiplier;
 
         public final ForgeConfigSpec.IntValue CorrosiveStopDurabilityValue;
         public final ForgeConfigSpec.BooleanValue ScreenShake;
@@ -191,6 +194,8 @@ public final class MainConfig {
                     .define("只有玩家和传奇存在生物拥有豁免判定（优先级低）", true);
             NoRollDice = builder.comment("No Roll Dice")
                     .define("无随机骰子", false);
+            SomeBulletSpellReachMultiplier = builder.comment("Some Bullet Spell Reach Multiplier")
+                    .defineInRange("部分射弹法术距离倍数", 1.5f, 0.0, Double.MAX_VALUE);
             builder.pop();
 
             builder.push("Other");

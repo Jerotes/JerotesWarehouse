@@ -20,6 +20,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -40,7 +41,10 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> JEROTES_PLAYER_SPAWN_EGG = REGISTRY.register("jerotes_player_spawn_egg", () -> new JerotesPlayerSpawnEgg());
 	public static final RegistryObject<Item> JEROTES_HORSE_SPAWN_EGG = REGISTRY.register("jerotes_horse_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_HORSE, 0xffffff, 0xffffff, new Item.Properties()));
 
+	public static final RegistryObject<Item> REDSTONE_LASER = block(JerotesBlocks.REDSTONE_LASER);
+
 	public static final RegistryObject<Item> FLAWLESS_MAGIC_SCROLL = REGISTRY.register("flawless_magic_scroll", () -> new FlawlessMagicScroll());
+	public static final RegistryObject<Item> COPPER_CARVED_COMPANY_INVESTIGATION_RECORDS = REGISTRY.register("copper_carved_company_investigation_records", () -> new CopperCarvedCompanyInvestigationRecords());
 
 	public static final RegistryObject<Item> COPPER_NUGGET = REGISTRY.register("copper_nugget", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> COPPER_SWORD = REGISTRY.register("copper_sword", () -> new ItemToolBaseSword(JerotesTiers.COPPER, 3, -2.4F, new Item.Properties()));
@@ -245,6 +249,32 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> PHANTASMAL_KILLER = REGISTRY.register("phantasmal_killer", () -> new Shoot());
 	public static final RegistryObject<Item> EYEBITE = REGISTRY.register("eyebite", () -> new Shoot());
 	public static final RegistryObject<Item> HARM = REGISTRY.register("harm", () -> new Shoot());
+
+
+	private static RegistryObject<Item> block(RegistryObject<Block> block) {
+		return REGISTRY.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
+	}
+	private static RegistryObject<Item> fireResistanceBlock(RegistryObject<Block> block) {
+		return REGISTRY.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().fireResistant()));
+	}
+	private static RegistryObject<Item> fireResistanceRareBlock(RegistryObject<Block> block) {
+		return REGISTRY.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().fireResistant().rarity(Rarity.RARE)));
+	}
+	private static RegistryObject<Item> uncommonBlock(RegistryObject<Block> block) {
+		return REGISTRY.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON)));
+	}
+	private static RegistryObject<Item> rareBlock(RegistryObject<Block> block) {
+		return REGISTRY.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().fireResistant().rarity(Rarity.RARE)));
+	}
+	private static RegistryObject<Item> fireResistanceEpicBlock(RegistryObject<Block> block) {
+		return REGISTRY.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().fireResistant().rarity(Rarity.EPIC)));
+	}
+	private static RegistryObject<Item> highBlock(RegistryObject<Block> block) {
+		return REGISTRY.register(block.getId().getPath(), () -> new DoubleHighBlockItem(block.get(), new Item.Properties()));
+	}
+	private static RegistryObject<Item> highfireResistanceEpicBlock(RegistryObject<Block> block) {
+		return REGISTRY.register(block.getId().getPath(), () -> new DoubleHighBlockItem(block.get(), new Item.Properties().fireResistant().rarity(Rarity.EPIC)));
+	}
 
 	public static void setup() {
 

@@ -52,6 +52,7 @@ public class SpellCloudEntity extends AreaEffectCloud implements MagicAbout {
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(SpellCloudEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_COLOR = SynchedEntityData.defineId(SpellCloudEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_WAITING = SynchedEntityData.defineId(SpellCloudEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_ENDERDRAGON_BREATH = SynchedEntityData.defineId(SpellCloudEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<ParticleOptions> DATA_PARTICLE = SynchedEntityData.defineId(SpellCloudEntity.class, EntityDataSerializers.PARTICLE);
     private static final EntityDataAccessor<Float> PARTICLE_SCALE_MULTIPLE = SynchedEntityData.defineId(SpellCloudEntity.class, EntityDataSerializers.FLOAT);
     private static final float MAX_RADIUS = 32.0F;
@@ -90,6 +91,7 @@ public class SpellCloudEntity extends AreaEffectCloud implements MagicAbout {
         this.getEntityData().define(DATA_COLOR, 0);
         this.getEntityData().define(DATA_RADIUS, 3.0F);
         this.getEntityData().define(DATA_WAITING, false);
+        this.getEntityData().define(IS_ENDERDRAGON_BREATH, false);
         this.getEntityData().define(DATA_PARTICLE, ParticleTypes.ENTITY_EFFECT);
         this.getEntityData().define(PARTICLE_SCALE_MULTIPLE, 1f);
     }
@@ -153,6 +155,12 @@ public class SpellCloudEntity extends AreaEffectCloud implements MagicAbout {
     }
     public boolean isWaiting() {
         return this.getEntityData().get(DATA_WAITING);
+    }
+    public void setEnderdragonBreath(boolean bl) {
+        this.getEntityData().set(IS_ENDERDRAGON_BREATH, bl);
+    }
+    public boolean isEnderdragonBreath() {
+        return this.getEntityData().get(IS_ENDERDRAGON_BREATH);
     }
     public int getDuration() {
         return this.duration;
@@ -359,6 +367,7 @@ public class SpellCloudEntity extends AreaEffectCloud implements MagicAbout {
     }
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
         compoundTag.putInt("SpellLevelDamage", this.spellLevelDamage);
+        compoundTag.putBoolean("IsEnderdragonBreath", this.isEnderdragonBreath());
         compoundTag.putInt("Age", this.tickCount);
         compoundTag.putInt("Duration", this.duration);
         compoundTag.putInt("WaitTime", this.waitTime);
@@ -387,6 +396,7 @@ public class SpellCloudEntity extends AreaEffectCloud implements MagicAbout {
     }
     protected void readAdditionalSaveData(CompoundTag compoundTag) {
         this.spellLevelDamage = compoundTag.getInt("SpellLevelDamage");
+        this.setEnderdragonBreath(compoundTag.getBoolean("IsEnderdragonBreath"));
         this.tickCount = compoundTag.getInt("Age");
         this.duration = compoundTag.getInt("Duration");
         this.waitTime = compoundTag.getInt("WaitTime");

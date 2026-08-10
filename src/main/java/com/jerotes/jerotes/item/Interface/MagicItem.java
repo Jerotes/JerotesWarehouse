@@ -1,34 +1,41 @@
 package com.jerotes.jerotes.item.Interface;
 
 import com.jerotes.jerotes.spell.SpellTypeInterface;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
 public interface MagicItem {
-    int getSpellLevel(ItemStack itemStack);
-    boolean isMelee(ItemStack itemStack);
-    boolean isHelp(ItemStack itemStack);
-    void damageMagicItem(LivingEntity livingEntity, ItemStack itemStack);
-    float getSpellDistance(ItemStack itemStack);
-    List<SpellTypeInterface> getMainSpellType(ItemStack itemStack);
-    List<SpellTypeInterface> getAddSpellType(ItemStack itemStack);
-
-    default boolean hasSpell() {
+    default boolean showItemIcon() {
         return false;
     }
-    default String getSpellId(ItemStack itemStack) {
+    default boolean showTooltipIcon() {
+        return true;
+    }
+
+
+    int getSpellLevelMagicItem(ItemStack itemStack);
+    boolean isMeleeMagicItem(ItemStack itemStack);
+    boolean isHelpMagicItem(ItemStack itemStack);
+    void damageMagicItem(LivingEntity livingEntity, ItemStack itemStack);
+    float getSpellDistanceMagicItem(ItemStack itemStack);
+    List<SpellTypeInterface> getMainSpellTypeMagicItem(ItemStack itemStack);
+    List<SpellTypeInterface> getAddSpellTypeMagicItem(ItemStack itemStack);
+
+    default boolean hasSpellMagicItem() {
+        return false;
+    }
+    default String getSpellIdMagicItem(ItemStack itemStack) {
         return "jerotes_empty";
     }
-    default boolean canChangeSubcategory(ItemStack itemStack) {
+    default boolean canChangeSubcategoryMagicItem(ItemStack itemStack) {
         return false;
     }
-    default int getSubcategory(ItemStack itemStack) {
+    default int getSubcategoryMagicItem(ItemStack itemStack) {
         return 0;
     }
-    default ItemStack setSubcategory(ItemStack itemStack, int n) {
+    default ItemStack setSubcategoryMagicItem(ItemStack itemStack, int n) {
         return itemStack;
     }
 }

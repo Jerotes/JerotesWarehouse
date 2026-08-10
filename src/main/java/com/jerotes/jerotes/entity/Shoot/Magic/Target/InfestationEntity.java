@@ -42,7 +42,7 @@ public class InfestationEntity extends BaseTargetEntity {
         if (this.level().isClientSide) {
             return;
         }
-        if (this.getOwner() != null && !this.getOwner().isSilent()) {
+        if (this.getOwner() != null) {
             if (!EntityAndItemFind.savingSpellThrow(livingEntity)) {
                 DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.POISON, this, this.getOwner());
                 boolean bl = livingEntity.hurt(damageSource,

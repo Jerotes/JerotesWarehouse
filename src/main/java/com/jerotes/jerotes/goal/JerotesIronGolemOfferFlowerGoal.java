@@ -1,9 +1,8 @@
 package com.jerotes.jerotes.goal;
 
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesIronGoelmEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.IronGolem.JerotesIronGoelmEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.Villager;
 
 import java.util.EnumSet;

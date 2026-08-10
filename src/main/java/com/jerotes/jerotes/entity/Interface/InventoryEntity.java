@@ -205,7 +205,7 @@ public interface InventoryEntity {
                 return false;
             }
             if (isMagicItem(inventory, newItem) && isMagicItem(inventory, oldItem)) {
-                if (newItem.getItem() instanceof MagicItem magicItemNew && oldItem.getItem() instanceof MagicItem magicItemOld && (magicItemNew.getSpellLevel(newItem) > magicItemOld.getSpellLevel(oldItem))){
+                if (newItem.getItem() instanceof MagicItem magicItemNew && oldItem.getItem() instanceof MagicItem magicItemOld && (magicItemNew.getSpellLevelMagicItem(newItem) > magicItemOld.getSpellLevelMagicItem(oldItem))){
                     return true;
                 }
                 if (newItem.getMaxDamage() > oldItem.getMaxDamage()){
@@ -458,7 +458,7 @@ public interface InventoryEntity {
                 return false;
             }
             if (isMagicItem(inventory, newItem) && isMagicItem(inventory, oldItem)) {
-                if (newItem.getItem() instanceof MagicItem magicItemNew && oldItem.getItem() instanceof MagicItem magicItemOld && (magicItemNew.getSpellLevel(newItem) > magicItemOld.getSpellLevel(oldItem))){
+                if (newItem.getItem() instanceof MagicItem magicItemNew && oldItem.getItem() instanceof MagicItem magicItemOld && (magicItemNew.getSpellLevelMagicItem(newItem) > magicItemOld.getSpellLevelMagicItem(oldItem))){
                     return true;
                 }
                 if (newItem.getMaxDamage() > oldItem.getMaxDamage()){
@@ -717,7 +717,7 @@ public interface InventoryEntity {
                 return false;
             }
             if (isMagicItem(newItem) && isMagicItem(oldItem)) {
-                if (newItem.getItem() instanceof MagicItem magicItemNew && oldItem.getItem() instanceof MagicItem magicItemOld && (magicItemNew.getSpellLevel(newItem) > magicItemOld.getSpellLevel(oldItem))){
+                if (newItem.getItem() instanceof MagicItem magicItemNew && oldItem.getItem() instanceof MagicItem magicItemOld && (magicItemNew.getSpellLevelMagicItem(newItem) > magicItemOld.getSpellLevelMagicItem(oldItem))){
                     return true;
                 }
                 if (newItem.getMaxDamage() > oldItem.getMaxDamage()){
@@ -1220,7 +1220,7 @@ public interface InventoryEntity {
                                     //战斗物品
                                     if (isMeleeWeapon(inventory, itemStack) || isBow(inventory, itemStack) || isOtherRange(inventory, itemStack) || isCrossbow(inventory, itemStack) || isMagicItem(inventory, itemStack) || isThrow(inventory, itemStack)) {
                                         //当前为近战
-                                        if (isMeleeWeapon(inventory, mob.getMainHandItem()) || (isMagicItem(inventory, mob.getMainHandItem()) && mob.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.isMelee(mob.getMainHandItem()) && !magicItem.isHelp(mob.getMainHandItem()))) {
+                                        if (isMeleeWeapon(inventory, mob.getMainHandItem()) || (isMagicItem(inventory, mob.getMainHandItem()) && mob.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.isMeleeMagicItem(mob.getMainHandItem()) && !magicItem.isHelpMagicItem(mob.getMainHandItem()))) {
                                             //可替换近战
                                             if (canReplaceMeleeWeapon(inventory, itemStack, findNestMainHandItem)
                                                     || canReplaceBow(inventory, itemStack, findNestMainHandItem)
@@ -1236,11 +1236,11 @@ public interface InventoryEntity {
                                         //当前为远程
                                         else {
                                             //是近战或者可替换远程
-                                            if (isMeleeWeapon(inventory, itemStack) || (isMagicItem(inventory, itemStack) && itemStack.getItem() instanceof MagicItem magicItem && magicItem.isMelee(itemStack) && !magicItem.isHelp(itemStack))
+                                            if (isMeleeWeapon(inventory, itemStack) || (isMagicItem(inventory, itemStack) && itemStack.getItem() instanceof MagicItem magicItem && magicItem.isMeleeMagicItem(itemStack) && !magicItem.isHelpMagicItem(itemStack))
                                                     || canReplaceBow(inventory, itemStack, findNestMainHandItem)
                                                     || canReplaceOtherRange(inventory, itemStack, findNestMainHandItem)
                                                     || canReplaceCrossbow(inventory, itemStack, findNestMainHandItem)
-                                                    || canReplaceMagicItem(inventory, itemStack, findNestMainHandItem) && (isMagicItem(inventory, itemStack) && itemStack.getItem() instanceof MagicItem magicItems && (!magicItems.isMelee(itemStack) || !magicItems.isHelp(itemStack)))
+                                                    || canReplaceMagicItem(inventory, itemStack, findNestMainHandItem) && (isMagicItem(inventory, itemStack) && itemStack.getItem() instanceof MagicItem magicItems && (!magicItems.isMeleeMagicItem(itemStack) || !magicItems.isHelpMagicItem(itemStack)))
                                                     || canReplaceThrow(inventory, itemStack, findNestMainHandItem)
                                                     || findNestMainHandItem.isEmpty()) {
                                                 findNestMainHandItem = itemStack;
@@ -1254,7 +1254,7 @@ public interface InventoryEntity {
                                     //战斗物品
                                     if (isMeleeWeapon(inventory, itemStack) || isBow(inventory, itemStack) || isOtherRange(inventory, itemStack) || isCrossbow(inventory, itemStack) || isMagicItem(inventory, itemStack) || isThrow(inventory, itemStack)) {
                                         //当前为远程
-                                        if (isBow(inventory, mob.getMainHandItem()) || isOtherRange(inventory, mob.getMainHandItem()) || isCrossbow(inventory, mob.getMainHandItem()) || isThrow(inventory, mob.getMainHandItem()) || isRangeJavelin(inventory, mob.getMainHandItem()) && inventory.canUseRangeJavelin() || (isMagicItem(inventory, mob.getMainHandItem()) && mob.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.isMelee(mob.getMainHandItem()) && !magicItem.isHelp(mob.getMainHandItem()))) {
+                                        if (isBow(inventory, mob.getMainHandItem()) || isOtherRange(inventory, mob.getMainHandItem()) || isCrossbow(inventory, mob.getMainHandItem()) || isThrow(inventory, mob.getMainHandItem()) || isRangeJavelin(inventory, mob.getMainHandItem()) && inventory.canUseRangeJavelin() || (isMagicItem(inventory, mob.getMainHandItem()) && mob.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.isMeleeMagicItem(mob.getMainHandItem()) && !magicItem.isHelpMagicItem(mob.getMainHandItem()))) {
                                             //可替换远程
                                             if (InventoryEntity.canReplaceMeleeWeapon(inventory, itemStack, findNestMainHandItem) && InventoryEntity.isRangeJavelin(inventory, itemStack) && InventoryEntity.isRangeJavelin(inventory, findNestMainHandItem)
                                                     || canReplaceBow(inventory, itemStack, findNestMainHandItem)
@@ -1271,8 +1271,8 @@ public interface InventoryEntity {
                                         else {
                                             //是远程或者可替换近战
                                             if (canReplaceMeleeWeapon(inventory, itemStack, findNestMainHandItem) && (isRangeJavelin(inventory, findNestMainHandItem) && inventory.canUseRangeJavelin())
-                                                    || canReplaceMagicItem(inventory, itemStack, findNestMainHandItem) && (isMagicItem(inventory, itemStack) && itemStack.getItem() instanceof MagicItem magicItems && (magicItems.isMelee(itemStack) || magicItems.isHelp(itemStack)))
-                                                    || (isMagicItem(inventory, itemStack) && itemStack.getItem() instanceof MagicItem magicItem && !magicItem.isMelee(itemStack) && !magicItem.isHelp(itemStack))
+                                                    || canReplaceMagicItem(inventory, itemStack, findNestMainHandItem) && (isMagicItem(inventory, itemStack) && itemStack.getItem() instanceof MagicItem magicItems && (magicItems.isMeleeMagicItem(itemStack) || magicItems.isHelpMagicItem(itemStack)))
+                                                    || (isMagicItem(inventory, itemStack) && itemStack.getItem() instanceof MagicItem magicItem && !magicItem.isMeleeMagicItem(itemStack) && !magicItem.isHelpMagicItem(itemStack))
                                                     || isBow(inventory, itemStack)
                                                     || isOtherRange(inventory, itemStack)
                                                     || isCrossbow(inventory, itemStack)

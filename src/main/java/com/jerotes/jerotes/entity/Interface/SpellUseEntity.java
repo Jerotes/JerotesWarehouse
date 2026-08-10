@@ -3,7 +3,7 @@ package com.jerotes.jerotes.entity.Interface;
 public interface SpellUseEntity {
     //法术等级
     default int getSpellLevel() {
-        return 0;
+        return 1;
     }
     default boolean isSpellHumanoid() {
         return false;

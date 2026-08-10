@@ -2,11 +2,8 @@ package com.jerotes.jerotes.forge;
 
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
 import com.jerotes.jerotes.spell.MagicSpell;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 
 import javax.annotation.Nullable;
@@ -14,21 +11,21 @@ import javax.annotation.Nullable;
 @Cancelable
 public class JerotesStopSpellEvent extends EntityEvent {
     private Entity caster;
-    private Entity target;
+    private Entity otherCaster;
     private MagicSpell magicSpell;
     private Entity spellEntity;
     public int type;
     public int level;
 
-    public JerotesStopSpellEvent(Entity caster, @Nullable MagicSpell magicSpell, @Nullable Entity spellEntity, Entity target, int type, int level) {
+    public JerotesStopSpellEvent(Entity caster, @Nullable MagicSpell magicSpell, @Nullable Entity spellEntity, Entity otherCaster, int type, int level) {
         super(caster);
         this.caster = caster;
-        this.target = target;
+        this.otherCaster = otherCaster;
         this.type = type;
         this.level = level;
     }
-    public JerotesStopSpellEvent(Entity caster, @Nullable MagicSpell magicSpell, @Nullable Entity spellEntity, Entity target) {
-        this(caster, magicSpell, spellEntity, target, 0, spellEntity instanceof MagicAboutEntity magicAbout ? magicAbout.getSpellLevel() : magicSpell != null ? magicSpell.getSpellLevel() : 1);
+    public JerotesStopSpellEvent(Entity caster, @Nullable MagicSpell magicSpell, @Nullable Entity spellEntity, Entity otherCaster) {
+        this(caster, magicSpell, spellEntity, otherCaster, magicSpell != null && magicSpell.isHelp() ? 3 : 1, spellEntity instanceof MagicAboutEntity magicAbout ? magicAbout.getSpellLevel() : magicSpell != null ? magicSpell.getSpellLevel() : 1);
     }
     public int getType() {
         //1-伤害性法术行为
@@ -46,11 +43,11 @@ public class JerotesStopSpellEvent extends EntityEvent {
     public void setCaster(Entity caster) {
         this.caster = caster;
     }
-    public Entity getTarget() {
-        return this.target;
+    public Entity getOtherCaster() {
+        return this.otherCaster;
     }
-    public void setTarget(Entity target) {
-        this.target = target;
+    public void setOtherCaster(Entity otherCaster) {
+        this.otherCaster = otherCaster;
     }
     public Entity getSpellEntity() {
         return this.spellEntity;

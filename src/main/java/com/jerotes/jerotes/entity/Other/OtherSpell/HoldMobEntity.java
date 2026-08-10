@@ -84,7 +84,7 @@ public class HoldMobEntity extends OtherSpellBaseEntity implements TraceableEnti
             if (getTarget() instanceof LivingEntity livingEntity && getTarget().isAlive()) {
                 livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.HOLD_MOB.get(), time, 0, false, false));
                 if ((time % 120 == 0) && time != 0) {
-                    if (EntityAndItemFind.savingSpellThrow(livingEntity)){
+                    if (EntityAndItemFind.savingSpellThrow(livingEntity, 0, true)){
                         if (!livingEntity.level().isClientSide) {
                             livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
                         }

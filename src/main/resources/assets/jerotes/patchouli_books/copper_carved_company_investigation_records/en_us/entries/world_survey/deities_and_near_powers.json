@@ -1,0 +1,32 @@
+{
+  "name": "Deities and Near-Powers",
+  "icon": "minecraft:totem_of_undying",
+  "category": "jerotes:world_survey",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "What, then, is a Deity? For those of us who dwell within the Overworld, such a question is difficult to answer. In a sense, our understanding of the Overworld is no greater than our knowledge of any other known Dimension. As a place unlike any other, the Overworld appears not to be governed by any openly acknowledged Exalted Being, as is the case in most other Dimensions."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Whether an Exalted Being is regarded as a Deity is determined not by the extent of its power, but by the origin of that power. Although every such extraordinary individual possesses immense might, and may even be the creator of a Dimension or an entire Plane, none of these qualities alone prove the possession of true Divine Power."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "With the exception of certain exceptionally powerful Deities, the essence and strength of most gods arise from the existence of their worshippers, while that power is in turn embodied within their very being. Divine Power exists within a clear and ordered hierarchy. If one Deity possesses weaker Divine Power than another, it has virtually no chance of prevailing in a direct confrontation."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Yet the outcome of a divine war has never been determined by strength alone. Loopholes within the laws of a Plane, forbidden knowledge, or even contradictions inherent to a deity's own Divine Portfolio may all become deciding factors. With the sole exception of the weakest rank of true gods, known as Dempowers, a Deity is almost impossible for a mortal to slay—unless that \"mortal\" has already stepped into the realm of the Near-Powers."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "In theory, a Near-Power possesses the potential to challenge and even defeat any Deity. Though they lack the rule-bound immortality enjoyed by true gods, neither do they rely upon worshippers to sustain their power or preserve their existence."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Being known as a Near-Power does not mean they are incapable of inspiring faith among mortal beings; they are equally capable of granting Divine Magic to their followers. Together, Near-Powers and Deities are collectively known as the Exalted Beings."
+    }
+  ],
+  "sortnum": 3
+}

@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- */
 package com.jerotes.jerotes.util;
 
 import com.jerotes.jerotes.client.particle.SummonParticleOptions;

@@ -295,6 +295,7 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
 
     public void specialExplode() {
         this.level().broadcastEntityEvent(this, (byte)3);
+        DamageSource damageSources = AttackFind.findDamageType(this, JerotesDamageTypes.FIRE_MAGIC, this, this.getOwner());
         float distance = 6;
         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, this.getSoundSource(), 15.0f, (float) (0.8f + Math.random() * 0.4f));
         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXPLODE, this.getSoundSource(), 15.0f, (float) (0.8f + Math.random() * 0.4f));
@@ -310,7 +311,6 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
 
             //生物造成伤害与击退
             if (hurt instanceof LivingEntity livingHurt) {
-                DamageSource damageSources = AttackFind.findDamageType(this, JerotesDamageTypes.FIRE_MAGIC, this, this.getOwner());
                 boolean bl = hurt.hurt(damageSources,
                         Main.rollDice(8 + (getSpellLevel() - 3), 6, this.random)
                 );
@@ -344,7 +344,7 @@ public class FireballEntity extends Entity implements TraceableEntity, OwnableEn
             }
         }
         this.setDeltaMovement(0,0,0);
-        this.level().explode(this, null, null, this.getX(), this.getY(), this.getZ(), Math.min(spellLevelDamage/1.5f, 3), true, subcategory == 1 ? (getOwner() instanceof Player player ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB) : Level.ExplosionInteraction.NONE);
+        this.level().explode(this, damageSources, null, this.getX(), this.getY(), this.getZ(), Math.min(spellLevelDamage/1.5f, 3), true, subcategory == 1 ? (getOwner() instanceof Player player ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB) : Level.ExplosionInteraction.NONE);
         AABB aABB = new AABB(this.position().x + 6, this.position().y + 6, this.position().z + 6, this.position().x - 6, this.position().y - 6, this.position().z - 6).move(0, -2, 0);
         for (BlockPos blockPos : BlockPos.betweenClosed(Mth.floor(aABB.minX), Mth.floor(aABB.minY), Mth.floor(aABB.minZ), Mth.floor(aABB.maxX), Mth.floor(aABB.maxY), Mth.floor(aABB.maxZ))) {
             if (blockPos.getCenter().distanceTo(this.position()) <= 6) {

@@ -1,13 +1,12 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.MagicShoot;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -15,11 +14,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -42,13 +38,14 @@ public class ShockBoltEntity extends BaseMagicBoltEntity {
         }
         Entity entity = entityHitResult.getEntity();
         if (entity instanceof LivingEntity livingEntity) {
-            DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.FIRE_MAGIC, this, this.getOwner());
+            DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.LIGHTNING_MAGIC, this, this.getOwner());
             boolean bl = livingEntity.hurt(damageSource,
                     //单数多出0.5
                     (spellLevelDamage > 1 && spellLevelDamage % 2 == 1) ?
                             Main.rollDice(1 + (spellLevelDamage - 2) / 2, 10, livingEntity.getRandom()) + Main.rollDice(1, 10, livingEntity.getRandom()) * 0.5f :
                             Main.rollDice(1 + (spellLevelDamage - 1) / 2, 10, livingEntity.getRandom())
             );
+            this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
         }
     }
 
@@ -76,13 +73,23 @@ public class ShockBoltEntity extends BaseMagicBoltEntity {
     }
 
     @Override
-    public int getMaxLife() {
-        return 80;
+    public void lastBreak() {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            Vec3 pos = this.position();
+            int count = 40;
+            for (int i = 0; i < count; i++) {
+                double dx = (random.nextDouble() - 0.5) * 2.0;
+                double dy = (random.nextDouble() - 0.5) * 2.0;
+                double dz = (random.nextDouble() - 0.5) * 2.0;
+                serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+                        pos.x, pos.y, pos.z,
+                        1, dx, dy, dz, 0.1);
+            }
+        }
     }
-
     @Override
-    protected ParticleOptions getTrailParticle() {
-        return ParticleTypes.SMOKE;
+    public int getMaxLife() {
+        return (int) (36 * MainConfig.SomeBulletSpellReachMultiplier);
     }
 
     @Override
@@ -93,12 +100,11 @@ public class ShockBoltEntity extends BaseMagicBoltEntity {
 
     @Override
     protected float getInertia() {
-        return 0.95f;
+        return 1.0f;
     }
-
     //@Override
     protected float getLiquidInertia() {
-        return 0.6f;
+        return 1.0f;
     }
 
     public int beamLightI() {

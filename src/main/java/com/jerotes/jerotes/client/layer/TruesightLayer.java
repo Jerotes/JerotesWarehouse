@@ -12,6 +12,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
@@ -31,6 +34,9 @@ public class TruesightLayer<T extends Entity, M extends EntityModel<T>> extends 
         Player player = minecraft.player;
 
         if (player == null || !player.hasEffect(JerotesMobEffects.TRUESIGHT.get())) {
+            return;
+        }
+        if (t.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:truesight_discern")))) {
             return;
         }
 

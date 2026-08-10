@@ -78,17 +78,31 @@ public class PhantasmalKillerEntity extends OtherSpellBaseEntity implements Trac
                 livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.ABACK.get(), time, (int)Math.ceil(getSpellLevel() / 3.0), false, false));
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, time, 0, false, false));
                 if ((time % 120 == 0) && time != 0) {
-                    if (EntityAndItemFind.savingSpellThrow(livingEntity)){
-                        if (!livingEntity.level().isClientSide) {
-                            livingEntity.removeEffect(JerotesMobEffects.PHANTASMAL_KILLER.get());
+                    if (time == 120) {
+                        if (EntityAndItemFind.savingSpellThrow(livingEntity)) {
+                            if (!livingEntity.level().isClientSide) {
+                                livingEntity.removeEffect(JerotesMobEffects.PHANTASMAL_KILLER.get());
+                            }
+                            stop();
+                        } else {
+                            DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.PSYCHIC, livingEntity);
+                            livingEntity.hurt(damageSource,
+                                    Main.rollDice(getSpellLevel(), 10, livingEntity.getRandom())
+                            );
                         }
-                        stop();
                     }
                     else {
-                        DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.PSYCHIC, livingEntity);
-                        livingEntity.hurt(damageSource,
-                                Main.rollDice(getSpellLevel(), 10, livingEntity.getRandom())
-                        );
+                        if (EntityAndItemFind.savingSpellThrow(livingEntity, 0, true)) {
+                            if (!livingEntity.level().isClientSide) {
+                                livingEntity.removeEffect(JerotesMobEffects.PHANTASMAL_KILLER.get());
+                            }
+                            stop();
+                        } else {
+                            DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.PSYCHIC, livingEntity);
+                            livingEntity.hurt(damageSource,
+                                    Main.rollDice(getSpellLevel(), 10, livingEntity.getRandom())
+                            );
+                        }
                     }
                 }
             }
@@ -99,7 +113,7 @@ public class PhantasmalKillerEntity extends OtherSpellBaseEntity implements Trac
         //额外清除
         if (this.getLifeTick() >= getMaxLife()) {
             if (getTarget() instanceof LivingEntity livingEntity) {
-                livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
+                livingEntity.removeEffect(JerotesMobEffects.PHANTASMAL_KILLER.get());
             }
             this.setOwnerUUID(UUID.fromString("00000000-0000-0000-0000-000000000000"));
             this.setTarget(null);

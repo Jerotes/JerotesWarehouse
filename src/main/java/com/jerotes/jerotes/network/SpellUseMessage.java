@@ -84,19 +84,19 @@ public class SpellUseMessage {
 		else if (type == 2) {
 			//修改法术子类别
 			//如果正在手持施法物品
-			if (player.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.hasSpell()) {
+			if (player.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.hasSpellMagicItem()) {
 				ItemStack itemStack = player.getMainHandItem();
 				var ref = new Object() {
 					int n = 0;
 				};
-				String magic = magicItem.getSpellId(itemStack);
-				int levelSpell = magicItem.getSpellLevel(itemStack);
+				String magic = magicItem.getSpellIdMagicItem(itemStack);
+				int levelSpell = magicItem.getSpellLevelMagicItem(itemStack);
 				if (!magic.isEmpty() && SpellRegistry.spellExists(magic)) {
 					Entity target = player;
 					int trueLevel = SpellListByString.getSpell(levelSpell, player, target, SpellRegistry.getSpellTypeById(magic)).getSpellLevel();
 					MagicSpell magicSpell = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(magic));
 					int max = magicSpell.getSubcategoryReach();
-					ref.n = magicItem.getSubcategory(itemStack);
+					ref.n = magicItem.getSubcategoryMagicItem(itemStack);
 					ref.n += 1;
 					if (ref.n > max) {
 						ref.n = 0;
@@ -112,21 +112,21 @@ public class SpellUseMessage {
 						}
 					}
 				}
-				player.setItemSlot(EquipmentSlot.MAINHAND, magicItem.setSubcategory(itemStack, ref.n));
+				player.setItemSlot(EquipmentSlot.MAINHAND, magicItem.setSubcategoryMagicItem(itemStack, ref.n));
 			}
-			else if (player.getOffhandItem().getItem() instanceof MagicItem magicItem && magicItem.hasSpell()) {
+			else if (player.getOffhandItem().getItem() instanceof MagicItem magicItem && magicItem.hasSpellMagicItem()) {
 				ItemStack itemStack = player.getOffhandItem();
 				var ref = new Object() {
 					int n = 0;
 				};
-				String magic = magicItem.getSpellId(itemStack);
-				int levelSpell = magicItem.getSpellLevel(itemStack);
+				String magic = magicItem.getSpellIdMagicItem(itemStack);
+				int levelSpell = magicItem.getSpellLevelMagicItem(itemStack);
 				if (!magic.isEmpty() && SpellRegistry.spellExists(magic)) {
 					Entity target = player;
 					int trueLevel = SpellListByString.getSpell(levelSpell, player, target, SpellRegistry.getSpellTypeById(magic)).getSpellLevel();
 					MagicSpell magicSpell = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(magic));
 					int max = magicSpell.getSubcategoryReach();
-					ref.n = magicItem.getSubcategory(itemStack);
+					ref.n = magicItem.getSubcategoryMagicItem(itemStack);
 					ref.n += 1;
 					if (ref.n > max) {
 						ref.n = 0;
@@ -142,7 +142,7 @@ public class SpellUseMessage {
 						}
 					}
 				}
-				player.setItemSlot(EquipmentSlot.OFFHAND, magicItem.setSubcategory(itemStack, ref.n));
+				player.setItemSlot(EquipmentSlot.OFFHAND, magicItem.setSubcategoryMagicItem(itemStack, ref.n));
 			}
 			else {
 				var ref = new Object() {

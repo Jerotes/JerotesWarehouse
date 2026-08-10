@@ -59,7 +59,7 @@ public class RayofFrostEntity extends BaseRayEntity {
                             Main.rollDice(1 + (spellLevelDamage - 1) / 2, 8, livingEntity.getRandom())
             );
             if (bl) {
-                livingEntity.setTicksFrozen(140 + 20 * spellLevelFreezeTime);
+                livingEntity.setTicksFrozen(Math.max(entity.getTicksFrozen(), 140 + 20 * spellLevelFreezeTime));
             }
             this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
             this.setUseful(false);

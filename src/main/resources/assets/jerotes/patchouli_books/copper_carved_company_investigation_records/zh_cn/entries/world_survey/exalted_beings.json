@@ -1,0 +1,12 @@
+{
+  "name": "至高存在",
+  "icon": "minecraft:enchanted_golden_apple",
+  "category": "jerotes:world_survey",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "至高存在，是位于传奇存在之上，位格顶点的最终范畴。祂们并非只是左右世界的坐标，而是世界校准的起因或原则。至高存在分为$(l:world_survey/deities_and_near_powers)神与类神$()两大类，二者的差异在于本质力量的来源。"
+    }
+  ],
+  "sortnum": 2
+}

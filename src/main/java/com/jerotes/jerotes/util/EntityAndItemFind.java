@@ -12,6 +12,7 @@ import com.jerotes.jerotes.network.JerotesPlayerData;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -340,11 +342,14 @@ public class EntityAndItemFind {
 		return (n - 10) / 2;
 	}
 	public static boolean savingSpellThrow(LivingEntity livingEntity, int add) {
+		return savingSpellThrow(livingEntity, add, false);
+	}
+	public static boolean savingSpellThrow(LivingEntity livingEntity, int add, boolean mustThrow) {
 		if (livingEntity == null)
 			return true;
-		if (!MainConfig.HaveSavingThrow)
+		if (!MainConfig.HaveSavingThrow && !mustThrow)
 			return true;
-		if (MainConfig.HaveSavingThrowOnlyPlayerAndLegendary && !(livingEntity instanceof Player) && !isLegendary(livingEntity))
+		if (MainConfig.HaveSavingThrowOnlyPlayerAndLegendary && !(livingEntity instanceof Player) && !isLegendary(livingEntity) && !mustThrow)
 			return false;
 		int n = (Main.randomReach(livingEntity.getRandom(),1, 20));
 		if (n == 1)
@@ -355,5 +360,55 @@ public class EntityAndItemFind {
 	}
 	public static boolean savingSpellThrow(LivingEntity livingEntity) {
 		return savingSpellThrow(livingEntity, 0);
+	}
+
+	public static float getItemAttackSpeedFromDPS(float DPS, float speedMultiplier, WeaponCategory weaponCategory) {
+		float speed;
+		switch (weaponCategory) {
+			case DAGGER -> speed = 2.2f;
+			case SWORD -> speed = 1.6f;
+			case AXE -> speed = 1.2f;
+			case HAMMER -> speed = 1.0f;
+			case TWO_HANDED_SWORD -> speed = 0.8f;
+			case TWO_HANDED_AXE -> speed = 0.7f;
+			case TWO_HANDED_HAMMER -> speed = 0.6f;
+			default -> speed = 4.0f;
+		}
+		speed *= speedMultiplier;
+		speed = Math.round(speed / 0.05f) * 0.05f;
+		return speed;
+	}
+	public static float getItemAttackDamageFromDPS(float DPS, float speedMultiplier, WeaponCategory weaponCategory) {
+		float speed = getItemAttackSpeedFromDPS(DPS, speedMultiplier, weaponCategory);
+		float damage = DPS/speed;
+		damage = Math.round(damage / 0.5f) * 0.5f;
+		return damage;
+	}
+	public static enum WeaponCategory {
+		SWORD,
+		DAGGER,
+		HAMMER,
+		AXE,
+		TWO_HANDED_SWORD,
+		TWO_HANDED_AXE,
+		TWO_HANDED_HAMMER;
+	}
+
+
+	public static boolean hasColor(LivingEntity livingEntity) {
+		CompoundTag compoundTag = new CompoundTag();
+		livingEntity.addAdditionalSaveData(compoundTag);
+		if (compoundTag.get("Color") != null && compoundTag.contains("Color", Tag.TAG_BYTE)) {
+			return true;
+		}
+		return false;
+	}
+	public static void setColor(LivingEntity livingEntity, DyeColor dyeColor) {
+		CompoundTag compoundTag = new CompoundTag();
+		livingEntity.addAdditionalSaveData(compoundTag);
+		if (compoundTag.get("Color") != null && compoundTag.contains("Color", Tag.TAG_BYTE)) {
+			compoundTag.putByte("Color", (byte)dyeColor.getId());
+		}
+		livingEntity.readAdditionalSaveData(compoundTag);
 	}
 }

@@ -49,9 +49,9 @@ public class JerotesCombatIMagicAttackGoal<T extends PathfinderMob> extends Goal
                 && !JerotesRangedThrowAttackGoal.isHoldingThrow(mob)
                 && !JerotesRangedJavelinAttackGoal.isHoldingRangedJavelin(mob, f);
         boolean main = !(InventoryEntity.isMeleeWeapon(mob.getMainHandItem()))
-                && mob.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelp(mob.getMainHandItem()) && !magicItem.isMelee(mob.getMainHandItem()) && magicItem.getSpellDistance(mob.getMainHandItem()) > f;
+                && mob.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelpMagicItem(mob.getMainHandItem()) && !magicItem.isMeleeMagicItem(mob.getMainHandItem()) && magicItem.getSpellDistanceMagicItem(mob.getMainHandItem()) > f;
         boolean off = !(InventoryEntity.isMeleeWeapon(mob.getMainHandItem()))
-                && mob.getOffhandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelp(mob.getOffhandItem()) && !magicItem.isMelee(mob.getOffhandItem()) && magicItem.getSpellDistance(mob.getMainHandItem()) > f;
+                && mob.getOffhandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelpMagicItem(mob.getOffhandItem()) && !magicItem.isMeleeMagicItem(mob.getOffhandItem()) && magicItem.getSpellDistanceMagicItem(mob.getMainHandItem()) > f;
         boolean mainSpell = !(InventoryEntity.isMeleeWeapon(mob.getMainHandItem()))
                 && (mob instanceof WizardEntity wizardEntity && !wizardEntity.MainSpellList().isEmpty());
         boolean offSpell = !(InventoryEntity.isMeleeWeapon(mob.getMainHandItem()))

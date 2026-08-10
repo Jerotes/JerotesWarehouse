@@ -57,6 +57,10 @@ public class PacketHandler {
 				JerotesPlayerOtherItemAboutPacket::encode,
 				JerotesPlayerOtherItemAboutPacket::decode,
 				JerotesPlayerOtherItemAboutPacket::consume);
+		NETWORK_WRAPPER.registerMessage(packetsRegistered++, SpellJavelinPacket.class,
+				SpellJavelinPacket::encode,
+				SpellJavelinPacket::decode,
+				SpellJavelinPacket::consume);
 	}
 
 	public static void sendToServer(Object msg) {

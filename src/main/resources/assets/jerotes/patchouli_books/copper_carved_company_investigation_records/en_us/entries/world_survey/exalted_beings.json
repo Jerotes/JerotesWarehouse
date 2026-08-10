@@ -1,0 +1,16 @@
+{
+  "name": "Exalted Beings",
+  "icon": "minecraft:enchanted_golden_apple",
+  "category": "jerotes:world_survey",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Exalted Beings represent the ultimate category of existence, standing above Legendary Beings at the very summit of existential hierarchy. They are not merely points by which the world is measured, but the very cause—or principle—by which the world itself is calibrated."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Exalted Beings are divided into two broad categories: $(l:world_survey/deities_and_near_powers)Deities and Near-Powers$(). The distinction between them lies not in the magnitude of their strength, but in the source from which their essential power is derived."
+    }
+  ],
+  "sortnum": 2
+}

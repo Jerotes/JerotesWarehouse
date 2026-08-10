@@ -180,7 +180,7 @@ public abstract class MagicSpellMixin extends Entity implements MagicSpellLiving
             if (!this.getLastSpellTypeJerotes().isEmpty()) {
                 if (this.level() instanceof ServerLevel serverLevel) {
                     SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(this.getLastSpellTypeJerotes());
-                    MagicSpell magicSpell = spellTypeInterface.magicSpellGet(1, livingEntity, serverLevel.getEntity(getLastSpellTargetJerotes()));
+                    MagicSpell magicSpell = spellTypeInterface.magicSpellGet(this.getLastSpellLevelJerotes(), livingEntity, serverLevel.getEntity(getLastSpellTargetJerotes()));
                     if (magicSpell.getCastingTicks() > 0) {
                         magicSpell.CastingAbout(this.getCastingTickJerotes());
                     }
@@ -189,7 +189,7 @@ public abstract class MagicSpellMixin extends Entity implements MagicSpellLiving
             if (this.getCastingTickJerotes() == 0) {
                 if (this.level() instanceof ServerLevel serverLevel) {
                     SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(this.getLastSpellTypeJerotes());
-                    MagicSpell magicSpell = spellTypeInterface.magicSpellGet(1, livingEntity, serverLevel.getEntity(getLastSpellTargetJerotes()));
+                    MagicSpell magicSpell = spellTypeInterface.magicSpellGet(this.getLastSpellLevelJerotes(), livingEntity, serverLevel.getEntity(getLastSpellTargetJerotes()));
                     magicSpell.spellCastingStop(0);
                 }
             }

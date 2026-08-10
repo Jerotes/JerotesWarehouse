@@ -2,7 +2,7 @@ package com.jerotes.jerotes.client.layer;
 
 import com.google.common.collect.ImmutableMap;
 import com.jerotes.jerotes.client.model.Modeljerotes_iron_golem;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesIronGoelmEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.IronGolem.JerotesIronGoelmEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;

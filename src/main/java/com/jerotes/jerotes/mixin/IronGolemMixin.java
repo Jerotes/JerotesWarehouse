@@ -2,8 +2,7 @@ package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.entity.Interface.ContractableEntity;
 import com.jerotes.jerotes.entity.Interface.FactionEntity;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesIronGoelmEntity;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.IronGolem.JerotesIronGoelmEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;

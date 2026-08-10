@@ -352,6 +352,36 @@
       }
     ]
   },
+  "magic_blaze_fireball": {
+    "subtitle": "subtitle.jerotes.magic_blaze_fireball",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/fire_shoot",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_ghast_fireball": {
+    "subtitle": "subtitle.jerotes.magic_ghast_fireball",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/fire_shoot",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_enderdragon_fireball": {
+    "subtitle": "subtitle.jerotes.magic_enderdragon_fireball",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/fire_shoot",
+        "volume": 1.0
+      }
+    ]
+  },
   "magic_poison_breath": {
     "subtitle": "subtitle.jerotes.magic_poison_breath",
     "category": "neutral",
@@ -367,7 +397,7 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/fire",
+        "name": "jerotes:others/magic/shoot",
         "volume": 1.0
       }
     ]
@@ -377,7 +407,7 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/freeze",
+        "name": "jerotes:others/magic/shoot",
         "volume": 1.0
       }
     ]
@@ -387,7 +417,7 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/lightning",
+        "name": "jerotes:others/magic/shoot",
         "volume": 1.0
       }
     ]
@@ -397,7 +427,17 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/lightning",
+        "name": "jerotes:others/magic/shoot",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_ice_knife": {
+    "subtitle": "subtitle.jerotes.magic_ice_knife",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/shoot",
         "volume": 1.0
       }
     ]
@@ -434,6 +474,16 @@
   },
   "magic_ray_of_sickness": {
     "subtitle": "subtitle.jerotes.magic_ray_of_sickness",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/ray",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_eldritch_blast": {
+    "subtitle": "subtitle.jerotes.magic_eldritch_blast",
     "category": "neutral",
     "sounds": [
       {
@@ -482,6 +532,16 @@
       }
     ]
   },
+  "magic_chain_lightning": {
+    "subtitle": "subtitle.jerotes.magic_chain_lightning",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/lightning",
+        "volume": 1.0
+      }
+    ]
+  },
   "magic_infestation": {
     "subtitle": "subtitle.jerotes.magic_infestation",
     "category": "neutral",
@@ -510,6 +570,16 @@
         "name": "jerotes:others/magic/electric_pulses_3",
         "volume": 1.0,
         "weight": 1.0
+      }
+    ]
+  },
+  "magic_guardian_laser": {
+    "subtitle": "subtitle.jerotes.magic_guardian_laser",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/guardian_laser",
+        "volume": 1.0
       }
     ]
   },
@@ -733,6 +803,16 @@
       }
     ]
   },
+  "magic_create_bonfire": {
+    "subtitle": "subtitle.jerotes.magic_create_bonfire",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
+  },
   "magic_insect_plague": {
     "subtitle": "subtitle.jerotes.magic_insect_plague",
     "category": "neutral",
@@ -769,6 +849,16 @@
     "sounds": [
       {
         "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_ice_storm": {
+    "subtitle": "subtitle.jerotes.magic_ice_storm",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/freeze",
         "volume": 1.0
       }
     ]
@@ -845,6 +935,16 @@
       }
     ]
   },
+  "magic_analytical_eye": {
+    "subtitle": "subtitle.jerotes.magic_analytical_eye",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/heal",
+        "volume": 1.0
+      }
+    ]
+  },
   "magic_elemental_contract": {
     "subtitle": "subtitle.jerotes.magic_elemental_contract",
     "category": "neutral",
@@ -867,6 +967,102 @@
   },
   "magic_construct_contract": {
     "subtitle": "subtitle.jerotes.magic_construct_contract",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_create_water": {
+    "subtitle": "subtitle.jerotes.magic_create_water",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_destroy_water": {
+    "subtitle": "subtitle.jerotes.magic_destroy_water",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_wither_skull": {
+    "subtitle": "subtitle.jerotes.magic_wither_skull",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/wither_shoot",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_dangerous_wither_skull": {
+    "subtitle": "subtitle.jerotes.magic_dangerous_wither_skull",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/wither_shoot",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_evokercraft": {
+    "subtitle": "subtitle.jerotes.magic_evokercraft",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/wololo",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_warden_sonic_boom": {
+    "subtitle": "subtitle.jerotes.magic_warden_sonic_boom",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/sonic_boom_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/sonic_boom_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/sonic_boom_3",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/sonic_boom_4",
+        "volume": 1.0,
+        "weight": 1.0
+      }
+    ]
+  },
+  "magic_breeze_wind_charge": {
+    "subtitle": "subtitle.jerotes.magic_breeze_wind_charge",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/wind_charge",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_redstone_laser": {
+    "subtitle": "subtitle.jerotes.magic_redstone_laser",
     "category": "neutral",
     "sounds": [
       {

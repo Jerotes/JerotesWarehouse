@@ -5,7 +5,6 @@ import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
-import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.spell.SpellType;
@@ -13,21 +12,14 @@ import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import com.jerotes.jerotes.util.ParticlesUse;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -114,9 +106,6 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
         }
         //额外清除
         if (this.getLifeTick() >= getMaxLife()) {
-            if (getTarget() instanceof LivingEntity livingEntity) {
-                livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
-            }
             this.setOwnerUUID(UUID.fromString("00000000-0000-0000-0000-000000000000"));
             this.setTarget(null);
             this.discard();
@@ -149,7 +138,7 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
             return false;
         }
         if (livingEntity2 == null) {
-            DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.CLOUD_OF_DAGGERS, this);
+            DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.BYPASSES_COOLDOWN_AND_NO_KNOCKBACK_MELEE, this);
             boolean bl = livingEntity.hurt(damageSource,
                     Main.rollDice((4 + (getSpellLevel() - 5)), 10, getRandom()) / 12f * (EntityAndItemFind.savingSpellThrow(livingEntity) ? 0.5f : 1f)
             );
@@ -158,7 +147,7 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
             if (AttackFind.FindCanNotAttack(livingEntity2, livingEntity)) {
                 return false;
             }
-            DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.CLOUD_OF_DAGGERS, this, livingEntity2);
+            DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.BYPASSES_COOLDOWN_AND_NO_KNOCKBACK_MELEE, this, livingEntity2);
             boolean bl = livingEntity.hurt(damageSource,
                     Main.rollDice((4 + (getSpellLevel() - 5)), 10, getRandom()) / 12f * (EntityAndItemFind.savingSpellThrow(livingEntity) ? 0.5f : 1f)
             );

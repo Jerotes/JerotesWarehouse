@@ -228,6 +228,9 @@ public class EntityAboutEvent {
 		Entity attackBy = event.getSource().getEntity();
 		if (entity == null || !entity.isAlive())
 			return;
+		if (entity instanceof JerotesEntity || MainConfig.AffectsNonThisModEntities) {
+			return;
+		}
 		if (!(entity instanceof SpellUseEntity spellUse) || !AttackFind.MagicResistance(damageSource))
 			return;
 		if (Float.isNaN(amount) || Float.isInfinite(amount)) {
@@ -342,40 +345,6 @@ public class EntityAboutEvent {
 		if (entity == null || !entity.isAlive())
 			return;
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_no_knockback_tag", true);
-		//镜影术
-		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_1_tick", true);
-		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_2_tick", true);
-		Main.persistentDataDoubleReduceToZero(entity, "jerotes_has_mirror_image_3_tick", true);
-		if (Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_1_tick") == null || Main.getJerotesPersistentData(entity).getDouble("jerotes_has_mirror_image_1_tick") <= 0) {
-			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_x");
-			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_y");
-			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_1_z");
-		}
-		else {
-			if (!entity.level().isClientSide()) {
-				entity.addEffect(new MobEffectInstance(JerotesMobEffects.MIRROR_IMAGE.get(), 5, 0, false, false));
-			}
-		}
-		if (Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_2_tick") == null && Main.getJerotesPersistentData(entity).getDouble("jerotes_has_mirror_image_2_tick") <= 0) {
-			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_2_x");
-			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_2_y");
-			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_2_z");
-		}
-		else {
-			if (!entity.level().isClientSide()) {
-				entity.addEffect(new MobEffectInstance(JerotesMobEffects.MIRROR_IMAGE.get(), 5, 0, false, false));
-			}
-		}
-		if (Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_3_tick") == null && Main.getJerotesPersistentData(entity).getDouble("jerotes_has_mirror_image_3_tick") <= 0) {
-			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_3_x");
-			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_3_y");
-			Main.persistentDataRemove(entity, "jerotes_has_mirror_image_3_z");
-		}
-		else {
-			if (!entity.level().isClientSide()) {
-				entity.addEffect(new MobEffectInstance(JerotesMobEffects.MIRROR_IMAGE.get(), 5, 0, false, false));
-			}
-		}
 		//伤害间隔
 		if (Main.getJerotesPersistentData(entity).getFloat("jerotes_boss_hurt_cooldown") > 0) {
 			Main.getJerotesPersistentData(entity).putFloat("jerotes_boss_hurt_cooldown", Main.getJerotesPersistentData(entity).getFloat("jerotes_boss_hurt_cooldown") - 1);

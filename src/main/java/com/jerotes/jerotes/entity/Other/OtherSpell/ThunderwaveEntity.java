@@ -56,10 +56,11 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
     public void moveToTargetTick() {
         Entity target = this.getTarget();
         if (target != null) {
-            Vec3 look = target.getLookAngle().normalize();
+            Vec3 look = getLookAngle(target).normalize();
             Vec3 targetPos = target.position()
-                    .add(0, 2 / 16f, 0)
-                    .add(look.scale(2.25));
+                    .add(0,  target.onGround() ? Main.mobHeight(target) : Main.mobHeight(target)/2, 0)
+                    .add(0, -Main.mobHeight(this)/2, 0)
+                    .add(look.scale(Main.mobWidth(this)/2));
             Vec3 currentPos = this.position();
             double speed = 0.5;
             Vec3 newPos = currentPos.lerp(targetPos, speed);
@@ -80,8 +81,8 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
                 if (caster == null) return;
 
                 Vec3 origin = caster.position();
-                Vec3 lookVec = this.getLookAngle();
-                Vec3 forward = new Vec3(lookVec.x, 0, lookVec.z).normalize();
+                Vec3 lookVec = getLookAngle(caster);
+                Vec3 forward = new Vec3(lookVec.x, lookVec.y, lookVec.z).normalize();
                 Vec3 right = forward.cross(new Vec3(0, 1, 0)).normalize();
 
                 double halfLength = 4.5;
@@ -121,7 +122,7 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
                             double verticalSpeed = 0.2;
                             itemEntity.setDeltaMovement(
                                     horizontalDir.x * speed,
-                                    verticalSpeed,
+                                    horizontalDir.y * speed,
                                     horizontalDir.z * speed
                             );
                             itemEntity.hurtMarked = true;
@@ -165,7 +166,7 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
             int life = this.getLifeTick();
             Entity caster = this;
 
-            Vec3 look = caster.getLookAngle();
+            Vec3 look = getLookAngle(caster);
             if (look.lengthSqr() < 0.001) return;
             look = look.normalize();
 
@@ -267,18 +268,18 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
         }
 
         if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
-            livingEntity.hurt(damageSource, Main.rollDice(8 + (spellLevelDamage - 3), 6, livingEntity.getRandom()));
+            livingEntity.hurt(damageSource, Main.rollDice(2 + (spellLevelDamage - 1), 6, livingEntity.getRandom()));
             if (!EntityAndItemFind.isNoSpecialKnockback(livingEntity.getType())) {
                 Entity caster = this.getOwner() != null ? this.getOwner() : this;
                 if (caster != null) {
-                    Vec3 lookVec = caster.getLookAngle();
-                    Vec3 horizontalDir = new Vec3(lookVec.x, 0, lookVec.z).normalize();
+                    Vec3 lookVec = getLookAngle(caster);
+                    Vec3 horizontalDir = new Vec3(lookVec.x, lookVec.y, lookVec.z).normalize();
                     if (!horizontalDir.equals(Vec3.ZERO)) {
                         double speed = 1.5f;
                         double verticalSpeed = 0.2;
                         livingEntity.setDeltaMovement(
                                 horizontalDir.x * speed,
-                                verticalSpeed,
+                                horizontalDir.y * speed,
                                 horizontalDir.z * speed
                         );
                         livingEntity.hurtMarked = true;
@@ -302,15 +303,17 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
     public int getSpellLevel() {
         return this.spellLevelDamage;
     }
-    public Vec3 getCasterLook() {
-        if (this.getOwner() != null) {
-            Vec3 look = this.getOwner().getLookAngle();
-            Vec3 horizontal = new Vec3(look.x, 0, look.z);
-            if (horizontal.lengthSqr() > 0.001) {
-                return horizontal.normalize();
-            }
-        }
-        return new Vec3(0, 0, 1);
+
+    protected static Vec3 getLookAngle(Entity entity) {
+        float p_20172_ = entity.getXRot();
+        float p_20173_ = entity.getYHeadRot();
+        float f = p_20172_ * ((float)Math.PI / 180F);
+        float f1 = -p_20173_ * ((float)Math.PI / 180F);
+        float f2 = Mth.cos(f1);
+        float f3 = Mth.sin(f1);
+        float f4 = Mth.cos(f);
+        float f5 = Mth.sin(f);
+        return new Vec3((double)(f3 * f4), (double)(-f5), (double)(f2 * f4));
     }
 }
 

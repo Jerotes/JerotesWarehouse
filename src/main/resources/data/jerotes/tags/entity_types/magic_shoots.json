@@ -1,15 +1,25 @@
 {
   "replace": false,
   "values": [
+    "jerotes:blaze_fireball",
+    "jerotes:breeze_wind_charge",
+    "jerotes:ghast_fireball",
+    "jerotes:enderdragon_fireball",
     "jerotes:magic_missile",
+    "jerotes:magic_missile",
+    "jerotes:lightning_bolt",
+    "jerotes:chain_lightning",
     "jerotes:poison_breath",
     "jerotes:fire_bolt",
     "jerotes:frost_bolt",
+    "jerotes:witch_bolt",
+    "jerotes:ice_knife",
     "jerotes:poison_breath",
     "jerotes:shock_bolt",
     "jerotes:ray_of_fire",
     "jerotes:ray_of_frost",
     "jerotes:ray_of_lightning",
+    "jerotes:eldritch_blast",
     "jerotes:ray_of_sickness",
     "jerotes:disintegrate",
     "jerotes:finger_of_death",
@@ -19,6 +29,7 @@
     "jerotes:blindness_curse",
     "jerotes:darkness_curse",
     "jerotes:eyebite",
-    "jerotes:harm"
+    "jerotes:harm",
+    "jerotes:jerotes_wither_skull"
   ]
 }

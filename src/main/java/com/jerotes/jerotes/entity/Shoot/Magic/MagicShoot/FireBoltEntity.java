@@ -1,13 +1,13 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.MagicShoot;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -53,6 +53,7 @@ public class FireBoltEntity extends BaseMagicBoltEntity {
             if (bl) {
                 entity.setSecondsOnFire(spellLevelFireTime);
             }
+            this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
         }
     }
 
@@ -92,12 +93,23 @@ public class FireBoltEntity extends BaseMagicBoltEntity {
 
     @Override
     public int getMaxLife() {
-        return 80;
+        return (int) (36 * MainConfig.SomeBulletSpellReachMultiplier);
     }
 
     @Override
-    protected ParticleOptions getTrailParticle() {
-        return ParticleTypes.SMOKE;
+    public void lastBreak() {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            Vec3 pos = this.position();
+            int count = 40;
+            for (int i = 0; i < count; i++) {
+                double dx = (random.nextDouble() - 0.5) * 2.0;
+                double dy = (random.nextDouble() - 0.5) * 2.0;
+                double dz = (random.nextDouble() - 0.5) * 2.0;
+                serverLevel.sendParticles(ParticleTypes.FLAME,
+                        pos.x, pos.y, pos.z,
+                        1, dx, dy, dz, 0.1);
+            }
+        }
     }
 
     @Override
@@ -108,12 +120,11 @@ public class FireBoltEntity extends BaseMagicBoltEntity {
 
     @Override
     protected float getInertia() {
-        return 0.95f;
+        return 1.0f;
     }
-
     //@Override
     protected float getLiquidInertia() {
-        return 0.6f;
+        return 1.0f;
     }
 
     public int beamLightI() {

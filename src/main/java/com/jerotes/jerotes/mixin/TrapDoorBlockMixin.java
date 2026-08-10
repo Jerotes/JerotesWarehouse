@@ -3,6 +3,7 @@ package com.jerotes.jerotes.mixin;
 import com.jerotes.jerotes.block.Interface.JerotesChangeTrapDoor;
 import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -28,5 +29,11 @@ public abstract class TrapDoorBlockMixin extends HorizontalDirectionalBlock impl
 
     public boolean isJerotesWoodenDoor() {
         return this.type.canOpenByHand();
+    }
+    public SoundEvent getOpenSoundJerotes() {
+        return this.type.trapdoorOpen();
+    }
+    public SoundEvent getCloseSoundJerotes() {
+        return this.type.trapdoorClose();
     }
 }

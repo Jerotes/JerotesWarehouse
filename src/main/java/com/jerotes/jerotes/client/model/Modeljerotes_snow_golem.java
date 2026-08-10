@@ -1,8 +1,7 @@
 package com.jerotes.jerotes.client.model;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesIronGoelmEntity;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesSnowGoelmEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.SnowGolem.JerotesSnowGoelmEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

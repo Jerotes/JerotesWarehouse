@@ -1,0 +1,15 @@
+{
+  "name": "info.jerotes.copper_carved_company_investigation_records.title",
+  "landing_text": "info.jerotes.copper_carved_company_investigation_records.landing",
+  "book_texture": "jerotes:textures/gui/copper_carved_company_investigation_records.png",
+  "version": 1,
+  "model": "jerotes:copper_carved_company_investigation_records",
+  "show_toasts": true,
+  "creative_tab": "jerotes:jerotes_tab",
+  "text_overflow_mode": "overflow",
+  "use_resource_pack": true,
+  "i18n": true,
+  "nameplate_color": "ffb124",
+  "dont_generate_book": true,
+  "custom_book_item": "jerotes:copper_carved_company_investigation_records"
+}

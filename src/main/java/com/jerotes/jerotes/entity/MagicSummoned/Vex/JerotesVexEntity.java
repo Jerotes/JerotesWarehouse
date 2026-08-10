@@ -319,24 +319,6 @@ public class JerotesVexEntity extends MagicSummonedEntity implements JerotesEnti
 		return super.finalizeSpawn(p_34002_, p_34003_, p_34004_, p_34005_, p_34006_);
 	}
 
-	@Override
-	public void tickDeath() {
-		if(deathTime <= 0){
-			this.setAnimTick(20);
-			this.setAnimationState("dead");
-		}
-		++this.deathTime;
-		if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
-			if (this.getLastDamageSource() != null && !this.getLastDamageSource().is(JerotesDamageTypes.MAGIC_EFFECT)) {
-				this.level().broadcastEntityEvent(this, (byte) 60);
-				this.remove(RemovalReason.KILLED);
-			}
-			else {
-				this.remove(RemovalReason.DISCARDED);
-			}
-		}
-	}
-
 	protected void populateDefaultEquipmentSlots(RandomSource p_219135_, DifficultyInstance p_219136_) {
 		this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
 		this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);

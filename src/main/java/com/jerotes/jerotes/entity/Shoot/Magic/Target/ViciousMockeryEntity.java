@@ -3,9 +3,15 @@ package com.jerotes.jerotes.entity.Shoot.Magic.Target;
 import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -41,12 +47,29 @@ public class ViciousMockeryEntity extends BaseTargetEntity {
         }
         if (this.getOwner() != null && !this.getOwner().isSilent()) {
             DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.PSYCHIC, this, this.getOwner());
-            livingEntity.hurt(damageSource,
+            boolean bl = livingEntity.hurt(damageSource,
                     //单数多出0.5
                     (spellLevelDamage > 1 && spellLevelDamage % 2 == 1) ?
                             Main.rollDice(1 + (spellLevelDamage - 2) / 2, 4, livingEntity.getRandom()) + Main.rollDice(1, 4, livingEntity.getRandom()) * 0.5f :
                             Main.rollDice(1 + (spellLevelDamage - 1) / 2, 4, livingEntity.getRandom())
             );
+            if (bl) {
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 60, 0), this.getEffectSource());
+            }
+            if (livingEntity instanceof ServerPlayer serverPlayer) {
+                MutableComponent component = Component.literal("").withStyle(ChatFormatting.RED);
+                for (int i = 0; i < spellLevelDamage; ++i) {
+                    int length = Main.randomReach(this.random, 6, 12);
+                    for (int i2 = 0; i2 < length; ++i2) {
+                        component = component.append(Component.literal("§k*§r").withStyle(ChatFormatting.RED));
+                    }
+                    if (i != spellLevelDamage - 1) {
+                        component = component.append(Component.literal(" ").withStyle(ChatFormatting.RED));
+                    }
+                }
+                serverPlayer.sendSystemMessage(component);
+                serverPlayer.displayClientMessage(component, true);
+            }
         }
         this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
     }

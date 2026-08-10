@@ -49,6 +49,7 @@ public class JerotesMainSpellAttackGoal extends Goal {
         }
         if (this.mob instanceof WizardEntity wizardEntity) {
             List<SpellTypeInterface> spellList = wizardEntity.MainSpellList();
+            spellList.removeIf(spellTypeInterface -> !spellTypeInterface.magicSpellGet(1, this.mob, this.mob).isCombat());
             if (!spellList.isEmpty()) {
                 this.target = livingEntity;
                 return true;
@@ -121,11 +122,11 @@ public class JerotesMainSpellAttackGoal extends Goal {
 
         TrueSpellLevel = Main.getUsedSpellLevel(TrueSpellLevel, this.mob.getRandom());
         //法术等级校对
-        if (this.mob.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.getMainSpellType(this.mob.getMainHandItem()).contains(SpellTypeInterface)) {
-            TrueSpellLevel = Math.max(magicItem.getSpellLevel(this.mob.getMainHandItem()), TrueSpellLevel);
+        if (this.mob.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.getMainSpellTypeMagicItem(this.mob.getMainHandItem()).contains(SpellTypeInterface)) {
+            TrueSpellLevel = Math.max(magicItem.getSpellLevelMagicItem(this.mob.getMainHandItem()), TrueSpellLevel);
         }
-        if (this.mob.getOffhandItem().getItem() instanceof MagicItem magicItem && magicItem.getMainSpellType(this.mob.getOffhandItem()).contains(SpellTypeInterface)) {
-            TrueSpellLevel = Math.max(magicItem.getSpellLevel(this.mob.getOffhandItem()), TrueSpellLevel);
+        if (this.mob.getOffhandItem().getItem() instanceof MagicItem magicItem && magicItem.getMainSpellTypeMagicItem(this.mob.getOffhandItem()).contains(SpellTypeInterface)) {
+            TrueSpellLevel = Math.max(magicItem.getSpellLevelMagicItem(this.mob.getOffhandItem()), TrueSpellLevel);
         }
         --this.attackTime;
 
@@ -165,6 +166,7 @@ public class JerotesMainSpellAttackGoal extends Goal {
             SpellTypeInterface = selectSpell();
             return;
         }
+        magicSpell = SpellListByString.getSpell(TrueSpellLevel, this.mob, finalTarget, SpellTypeInterface);
         //不能用
         boolean canNotUse = !magicSpell.canUse();
         //目标不正确
@@ -218,13 +220,13 @@ public class JerotesMainSpellAttackGoal extends Goal {
                 }
                 //判断哪个手
                 int spell = this.spellLevel;
-                if (this.mob.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.getMainSpellType(this.mob.getMainHandItem()).contains(SpellTypeInterface)) {
-                    if (magicItem.getSpellLevel(this.mob.getMainHandItem()) > spellLevel) {
-                        spell = magicItem.getSpellLevel(this.mob.getMainHandItem());
+                if (this.mob.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.getMainSpellTypeMagicItem(this.mob.getMainHandItem()).contains(SpellTypeInterface)) {
+                    if (magicItem.getSpellLevelMagicItem(this.mob.getMainHandItem()) > spellLevel) {
+                        spell = magicItem.getSpellLevelMagicItem(this.mob.getMainHandItem());
                     }
                 }
-                if (this.mob.getOffhandItem().getItem() instanceof MagicItem magicItem && magicItem.getMainSpellType(this.mob.getOffhandItem()).contains(SpellTypeInterface)) {
-                    if (magicItem.getSpellLevel(this.mob.getOffhandItem()) > spellLevel && magicItem.getSpellLevel(this.mob.getOffhandItem()) > spell) {
+                if (this.mob.getOffhandItem().getItem() instanceof MagicItem magicItem && magicItem.getMainSpellTypeMagicItem(this.mob.getOffhandItem()).contains(SpellTypeInterface)) {
+                    if (magicItem.getSpellLevelMagicItem(this.mob.getOffhandItem()) > spellLevel && magicItem.getSpellLevelMagicItem(this.mob.getOffhandItem()) > spell) {
                         breakHandIsMain = false;
                     }
                 }
@@ -258,6 +260,7 @@ public class JerotesMainSpellAttackGoal extends Goal {
     public SpellTypeInterface selectSpell() {
         if (this.mob instanceof WizardEntity wizardEntity) {
             List<SpellTypeInterface> spellList = wizardEntity.MainSpellList();
+            spellList.removeIf(spellTypeInterface -> !spellTypeInterface.magicSpellGet(1, this.mob, this.mob).isCombat());
 
             if (spellList.isEmpty()) {
                 throw new IllegalStateException("法术列表为空");
@@ -280,7 +283,6 @@ public class JerotesMainSpellAttackGoal extends Goal {
         if (currentOrderIndex >= spellList.size()) {
             currentOrderIndex = 0;
         }
-
         SpellTypeInterface selected = spellList.get(currentOrderIndex);
         currentOrderIndex = (currentOrderIndex + 1) % spellList.size();
         return selected;

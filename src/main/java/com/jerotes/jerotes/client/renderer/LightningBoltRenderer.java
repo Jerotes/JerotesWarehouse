@@ -20,6 +20,7 @@ import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(JerotesWarehouse.MODID, "textures/item/magic_missile.png");
     private final float scale;
@@ -68,7 +69,7 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
         float half = entity.getMaxLife() / 2.0f;
         float rawProgress = (entity.getLifeRay() - half) / half;
         float fadeFactor = 1.0f - Mth.clamp(rawProgress, 0.0f, 1.0f);
-        float currentAmplitude = 0.8f * fadeFactor;
+        float currentAmplitude = 0.8f * fadeFactor * entity.beamScale();
         int numStrands = 4 + random.nextInt(2);
         int segments = 10 + random.nextInt(4);
         float strandWidth = 0.012f;
@@ -179,7 +180,7 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
                 bOut = (int)(bOut * brightFactor);
 
                 float halfWidth = strandWidth / 2f;
-                float widthFade = 0.5f + 0.5f * fadeFactor;
+                float widthFade = (0.5f + 0.5f * fadeFactor);
                 float currentHalfWidth = halfWidth * widthFade;
 
                 renderQuadrilateralPipe(

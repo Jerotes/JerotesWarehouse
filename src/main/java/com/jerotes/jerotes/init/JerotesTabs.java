@@ -30,6 +30,7 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.JEROTES_HORSE_SPAWN_EGG.get());
 
 				tabData.accept(JerotesItems.FLAWLESS_MAGIC_SCROLL.get());
+				tabData.accept(JerotesItems.COPPER_CARVED_COMPANY_INVESTIGATION_RECORDS.get());
 
 				tabData.accept(JerotesItems.COPPER_NUGGET.get());
 				tabData.accept(JerotesItems.COPPER_SWORD.get());
@@ -131,6 +132,7 @@ public class JerotesTabs {
 	public static final RegistryObject<CreativeModeTab> JEROTES_TAB_FLAWLESS_MAGIC_SCROLL_TAB = REGISTRY.register("jerotes_tab_flawless_magic_scroll_tab",
 			() -> CreativeModeTab.builder().title(Component.translatable("item_group.jerotes.jerotes_tab_flawless_magic_scroll_tab")).icon(() ->
 					new ItemStack(JerotesItems.FLAWLESS_MAGIC_SCROLL.get())).displayItems((parameters, tabData) -> {
+				boolean isSearch = parameters.hasPermissions();
 				List<String> spells = SpellRegistry.getRegisteredSpellIds().stream()
 						.filter(id -> !id.equals("jerotes_empty"))
 						.sorted(
@@ -160,14 +162,14 @@ public class JerotesTabs {
 							tabData.accept(levelWool(
 									LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
 									separatorId++
-							));
+							), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 							column++;
 						}
 
 						tabData.accept(levelWool(
 								LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
 								separatorId++
-						));
+						), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 
 						column = 0;
 					}
@@ -181,7 +183,7 @@ public class JerotesTabs {
 						tabData.accept(levelWool(
 								LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
 								separatorId++
-						));
+						), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 						column = 0;
 					}
 				}
@@ -191,20 +193,31 @@ public class JerotesTabs {
 						tabData.accept(levelWool(
 								LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
 								separatorId++
-						));
+						), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 						column++;
 					}
 
 					tabData.accept(levelWool(
 							LEVEL_WOOL[Math.min(currentLevel, LEVEL_WOOL.length - 1)],
 							separatorId++
-					));
+					), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 				}
 
 				parameters.holders().lookup(Registries.ITEM).ifPresent(lookup -> {
 					TagKey<Item> customTag = TagKey.create(Registries.ITEM, new ResourceLocation(JerotesWarehouse.MODID, "magic_summoned_spawn_egg"));
 					lookup.get(customTag).ifPresent(holders -> {holders.forEach(holder -> holder.unwrapKey().ifPresent(key -> tabData.accept(holder.value())));});
 				});
+
+				for (String spellId : spells) {
+					MagicSpell spell = SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(spellId));
+					if (spell == null) continue;
+					int minLevel = spell.getBaseSpellLevel();
+					int maxLevel = 9;
+					for (int level = minLevel; level <= maxLevel; level++) {
+						ItemStack stack = FlawlessMagicScrollLevel(tabData, spellId, level);
+						tabData.accept(stack, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+					}
+				}
 			}).withSearchBar().build());
 
 	private static ItemStack levelWool(Item item, int index) {
@@ -213,6 +226,15 @@ public class JerotesTabs {
 		return stack;
 	}
 
+	public static ItemStack FlawlessMagicScrollLevel(CreativeModeTab.Output tabData, String string, int level) {
+		ItemStack stack = new ItemStack(JerotesItems.FLAWLESS_MAGIC_SCROLL.get());
+		CompoundTag compoundTag = new CompoundTag();
+		compoundTag.putString(FlawlessMagicScroll.SPELL, string);
+		MagicSpell spell = SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(string));
+		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, level);
+		stack.setTag(compoundTag);
+		return stack;
+	}
 	public static void FlawlessMagicScroll(CreativeModeTab.Output tabData, String string) {
 		ItemStack stack = new ItemStack(JerotesItems.FLAWLESS_MAGIC_SCROLL.get());
 		CompoundTag compoundTag = new CompoundTag();
@@ -220,6 +242,6 @@ public class JerotesTabs {
 		MagicSpell spell = SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(string));
 		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, spell == null ? 1 : spell.getBaseSpellLevel());
 		stack.setTag(compoundTag);
-		tabData.accept(stack);
+		tabData.accept(stack, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
 	}
 }

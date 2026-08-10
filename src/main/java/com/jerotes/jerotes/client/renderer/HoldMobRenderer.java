@@ -25,13 +25,15 @@ public class HoldMobRenderer extends EntityRenderer<HoldMobEntity> {
 
         poseStack.pushPose();
         poseStack.scale(t.getSize(), t.getSize(), t.getSize());
-        poseStack.scale(Math.min(1, (t.start + partialTicks) / 10), Math.min(1, (t.start + partialTicks) / 10),  Math.min(1, (t.start + partialTicks) / 10));
+        poseStack.scale(Math.min(1, (t.start + partialTicks) / 10),
+                Math.min(1, (t.start + partialTicks) / 10),
+                Math.min(1, (t.start + partialTicks) / 10));
         poseStack.scale(-1.0F, -1.0F, 1.0F);
         poseStack.translate(0.0F, -1.5F, 0.0F);
         this.model.setupAnim(f7);
         this.model.scale(t,
                 //开始
-                Mth.clamp((t.getLifeTick() + partialTicks) / 20,0 , 1),
+                Mth.clamp((t.life + partialTicks) / 20,0 , 1),
                 //自身计时
                 f7,
                 //消失

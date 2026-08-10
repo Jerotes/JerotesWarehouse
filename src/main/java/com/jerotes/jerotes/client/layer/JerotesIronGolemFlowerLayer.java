@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.client.layer;
 
 import com.jerotes.jerotes.client.model.Modeljerotes_iron_golem;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesIronGoelmEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.IronGolem.JerotesIronGoelmEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.ModelPart;

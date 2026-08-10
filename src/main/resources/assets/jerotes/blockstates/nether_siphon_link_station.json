@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "jerotes:block/redstone_laser"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.entity.Interface.ContractableEntity;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesSnowGoelmEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.SnowGolem.JerotesSnowGoelmEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;

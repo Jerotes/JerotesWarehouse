@@ -30,14 +30,13 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class MagicAboutThrowEntity extends ThrowableProjectile implements ItemSupplier, MagicAbout {
     private static final EntityDataAccessor<Optional<UUID>> HURT_ID = SynchedEntityData.defineId(MagicAboutThrowEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<ItemStack> DATA_ITEM_STACK = SynchedEntityData.defineId(MagicAboutThrowEntity.class, EntityDataSerializers.ITEM_STACK);
+
+    private final List<UUID> hurtUUIDList = new ArrayList<>();
 
     public MagicAboutThrowEntity(EntityType<? extends MagicAboutThrowEntity> entityType, Level level) {
         super(entityType, level);
@@ -114,8 +113,6 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         if (entityHitResult.getEntity() == this.getOwner()) {
             return;
         }
-        //法术取消
-        //event
         JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entityHitResult.getEntity());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
@@ -125,6 +122,7 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         this.addHurtUUID(entityHitResult.getEntity().getUUID());
         super.onHitEntity(entityHitResult);
     }
+
     protected void customHurt(Entity entity) {
         if (entity == this.getLastHurt() && !this.canNotHurtLastHurt()) {
             return;
@@ -135,8 +133,6 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         if (entity == this.getOwner()) {
             return;
         }
-        //法术取消
-        //event
         JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
@@ -146,69 +142,62 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         this.addHurtUUID(entity.getUUID());
     }
 
-    //LastHurt
     @Nullable
     private Entity lastHurt;
     @Nullable
     private UUID lastHurtUUID;
+
     @Nullable
     public Entity getLastHurt() {
         Entity entity;
         if (this.lastHurt == null && this.lastHurtUUID != null && this.level() instanceof ServerLevel && (entity = ((ServerLevel)this.level()).getEntity(this.lastHurtUUID)) instanceof Entity) {
-            this.lastHurt = (Entity)entity;
+            this.lastHurt = entity;
         }
         return this.lastHurt;
     }
+
     public void setLastHurt(@Nullable Entity lastHurt) {
         this.lastHurt = lastHurt;
         this.lastHurtUUID = lastHurt == null ? null : lastHurt.getUUID();
     }
+
     public List<UUID> getHurtUUIDs() {
-        ArrayList arrayList = Lists.newArrayList();
-        arrayList.add(this.entityData.get(HURT_ID).orElse(null));
-        return arrayList;
+        Set<UUID> combined = new HashSet<>(this.hurtUUIDList);
+        return new ArrayList<>(combined);
     }
+
     public void addHurtUUID(@Nullable UUID uUID) {
-        this.entityData.set(HURT_ID, Optional.ofNullable(uUID));
+        if (uUID == null) return;
+        if (!this.hurtUUIDList.contains(uUID)) {
+            this.hurtUUIDList.add(uUID);
+        }
     }
+
     @Override
     public int getSpellLevel() {
         return spellLevelDamage;
     }
+
     public int life = 0;
     public int lifeOfLastHurt = 0;
-    //伤害
     public int spellLevelDamage = 1;
-    //最大伤害
     public int spellLevelMaxDamage = 1;
-    //燃烧时间
     public int spellLevelFireTime = 1;
-    //冰冻时间
     public int spellLevelFreezeTime = 1;
-    //爆炸强度
     public float spellLevelExplode = 1;
-    //主要效果时间
     public int spellLevelMainEffectTime = 1;
-    //主要效果等级
     public int spellLevelMainEffectLevel = 1;
-    //次要效果时间
     public int spellLevelOtherEffectTime = 1;
-    //次要效果等级
     public int spellLevelOtherEffectLevel = 1;
-    //XZ推动
     public float spellLevelXZPush = 1;
-    //XZ推动基础
     public float spellLevelXZPushBase = 1;
-    //Y推动
     public float spellLevelYPush = 1;
-    //Y推动基础
     public float spellLevelYPushBase = 1;
-    //高度
     public int spellLevelHeight = 1;
-    //移动距离
     public int spellLevelMoveDistance = 1;
-    //子类别
     public int spellSubcategory = 0;
+    public boolean spellIsFirst = false;
+
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
@@ -219,13 +208,22 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         if (this.lastHurtUUID != null) {
             compoundTag.putUUID("LastHurt", this.lastHurtUUID);
         }
-        List<UUID> list = this.getHurtUUIDs();
         ListTag listTag = new ListTag();
-        for (UUID uUID : list) {
-            if (uUID == null) continue;
-            listTag.add(NbtUtils.createUUID(uUID));
+        for (UUID uuid : this.hurtUUIDList) {
+            if (uuid != null) {
+                listTag.add(NbtUtils.createUUID(uuid));
+            }
         }
-        compoundTag.put("Hurt", listTag);
+        compoundTag.put("HurtList", listTag);
+        List<UUID> all = this.getHurtUUIDs();
+        ListTag oldListTag = new ListTag();
+        for (UUID uuid : all) {
+            if (uuid != null) {
+                oldListTag.add(NbtUtils.createUUID(uuid));
+            }
+        }
+        compoundTag.put("Hurt", oldListTag);
+
         compoundTag.putInt("Life", this.life);
         compoundTag.putInt("LifeOfLastHurt", this.lifeOfLastHurt);
         compoundTag.putInt("SpellLevelDamage", this.spellLevelDamage);
@@ -244,7 +242,9 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         compoundTag.putInt("SpellLevelHeight", this.spellLevelHeight);
         compoundTag.putInt("SpellLevelMoveDistance", this.spellLevelMoveDistance);
         compoundTag.putInt("SpellSubcategory", this.spellSubcategory);
+        compoundTag.putBoolean("SpellIsFirst", this.spellIsFirst);
     }
+
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
@@ -253,10 +253,22 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         if (compoundTag.hasUUID("LastHurt")) {
             this.lastHurtUUID = compoundTag.getUUID("LastHurt");
         }
-        ListTag listTag = compoundTag.getList("Hurt", 11);
+        this.hurtUUIDList.clear();
+        ListTag listTag = compoundTag.getList("HurtList", 11);
         for (Tag tag : listTag) {
-            this.addHurtUUID(NbtUtils.loadUUID(tag));
+            UUID uuid = NbtUtils.loadUUID(tag);
+            if (uuid != null) {
+                this.hurtUUIDList.add(uuid);
+            }
         }
+        ListTag oldListTag = compoundTag.getList("Hurt", 11);
+        for (Tag tag : oldListTag) {
+            UUID uuid = NbtUtils.loadUUID(tag);
+            if (uuid != null && !this.hurtUUIDList.contains(uuid)) {
+                this.hurtUUIDList.add(uuid);
+            }
+        }
+
         this.life = compoundTag.getInt("Life");
         this.lifeOfLastHurt = compoundTag.getInt("LifeOfLastHurt");
         this.spellLevelDamage = compoundTag.getInt("SpellLevelDamage");
@@ -275,12 +287,15 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         this.spellLevelHeight = compoundTag.getInt("SpellLevelHeight");
         this.spellLevelMoveDistance = compoundTag.getInt("SpellLevelMoveDistance");
         this.spellSubcategory = compoundTag.getInt("SpellSubcategory");
+        this.spellIsFirst = compoundTag.getBoolean("SpellIsFirst");
     }
+
     @Override
     protected void defineSynchedData() {
         this.getEntityData().define(DATA_ITEM_STACK, ItemStack.EMPTY);
         this.getEntityData().define(HURT_ID, Optional.empty());
     }
+
     boolean isHurt(UUID uUID) {
         return this.getHurtUUIDs().contains(uUID);
     }
@@ -288,7 +303,6 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
     @Override
     public void tick() {
         super.tick();
-        //消失
         if (this.life >= this.getMaxLife()) {
             this.lastBreak();
             this.discard();
@@ -303,6 +317,7 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
             this.lifeOfLastHurt += 1;
         }
     }
+
     public void lastBreak() {
     }
 
@@ -311,9 +326,11 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
     public boolean canNotHurtLastHurt() {
         return true;
     }
+
     public boolean useUUIDFindHurtAndDisable() {
         return false;
     }
+
     public int timeOfHurtLastHurt() {
         return 10;
     }
@@ -340,9 +357,7 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         return 0f;
     }
 
-    //@Override
     protected float getLiquidInertia() {
         return 1.0f;
     }
 }
-

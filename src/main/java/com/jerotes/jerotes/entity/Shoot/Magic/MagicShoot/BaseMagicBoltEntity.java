@@ -132,7 +132,6 @@ public abstract class BaseMagicBoltEntity extends MagicAboutEntity {
     protected float getInertia() {
         return 1.0f;
     }
-
     //@Override
     protected float getLiquidInertia() {
         return 1.0f;

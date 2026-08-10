@@ -154,8 +154,6 @@ public class SpellFindUseEvent {
             }
         }
     }
-
-
     @SubscribeEvent
     public static void CasterHurt(LivingHurtEvent event) {
         if (event != null && event.getEntity() != null) {

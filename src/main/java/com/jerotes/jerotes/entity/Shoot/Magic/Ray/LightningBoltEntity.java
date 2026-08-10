@@ -141,7 +141,7 @@ public class LightningBoltEntity extends BaseRayEntity {
     }
 
     public float beamScale() {
-        return 8.0f;
+        return 3.0f;
     }
     public int beamLightI() {
         return 0x6a68ff;

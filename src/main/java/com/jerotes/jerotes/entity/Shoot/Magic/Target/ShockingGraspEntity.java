@@ -45,7 +45,7 @@ public class ShockingGraspEntity extends BaseTargetEntity {
         if (this.level().isClientSide) {
             return;
         }
-        if (this.getOwner() != null && !this.getOwner().isSilent()) {
+        if (this.getOwner() != null) {
             float chance =  (spellLevelDamage > 1 && spellLevelDamage % 2 == 1) ? Main.rollDice(1 + (spellLevelDamage - 2) / 2, 8, livingEntity.getRandom()) + Main.rollDice(1, 8, livingEntity.getRandom()) * 0.5f :
             Main.rollDice(1 + (spellLevelDamage - 1) / 2, 8, livingEntity.getRandom());
             if (EntityFactionFind.isMachine(livingEntity) || EntityAndItemFind.isMetalArmors(livingEntity.getItemBySlot(EquipmentSlot.HEAD)) || EntityAndItemFind.isMetalArmors(livingEntity.getItemBySlot(EquipmentSlot.CHEST)) || EntityAndItemFind.isMetalArmors(livingEntity.getItemBySlot(EquipmentSlot.LEGS)) || EntityAndItemFind.isMetalArmors(livingEntity.getItemBySlot(EquipmentSlot.FEET))) {

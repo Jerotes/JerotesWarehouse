@@ -2,7 +2,7 @@ package com.jerotes.jerotes.client.renderer;
 
 import com.jerotes.jerotes.client.layer.JerotesSnowGolemHeadLayer;
 import com.jerotes.jerotes.client.model.Modeljerotes_snow_golem;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesSnowGoelmEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.SnowGolem.JerotesSnowGoelmEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;

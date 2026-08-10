@@ -1,5 +1,3 @@
-
-
 package com.jerotes.jerotes.network;
 
 import net.minecraft.ChatFormatting;

@@ -5,18 +5,20 @@ import com.jerotes.jerotes.entity.Interface.EliteEntity;
 import com.jerotes.jerotes.entity.Interface.FireAbsorptionEntity;
 import com.jerotes.jerotes.entity.Interface.ColdAbsorptionEntity;
 import com.jerotes.jerotes.entity.Interface.LightningAbsorptionEntity;
-import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.MirrorImageEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
 import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.spell.SpellFind;
+import com.jerotes.jerotes.spell.SpellUtil;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -178,75 +180,62 @@ public class EffectEvent {
 		}
 	}
 
-
 	@SubscribeEvent
 	public static void MirrorImage(LivingAttackEvent event) {
 		DamageSource damagesource = event.getSource();
 		LivingEntity entity = event.getEntity();
 		if (damagesource == null || entity == null)
 			return;
-		if (damagesource.getEntity() instanceof LivingEntity living && (EntityAndItemFind.targetBlindnessTrue(living) || living.hasEffect(JerotesMobEffects.TRUESIGHT.get()))) {
+		if (!entity.hasEffect(JerotesMobEffects.MIRROR_IMAGE.get())) {
 			return;
 		}
-		boolean bl1 = Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_1_tick") != null;
-		boolean bl2 = Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_2_tick") != null;
-		boolean bl3 = Main.getJerotesPersistentData(entity).get("jerotes_has_mirror_image_3_tick") != null;
-		int n = (bl1 ? 1 : 0) + (bl2 ? 1 : 0) + (bl3 ? 1 : 0);
-		if (n == 0) {
+		if (damagesource.getEntity() instanceof LivingEntity living && (EntityAndItemFind.targetBlindnessTrue(living) ||
+				living.hasEffect(MobEffects.NIGHT_VISION) ||
+				living.hasEffect(JerotesMobEffects.TRUESIGHT.get()))) {
 			return;
 		}
-		int chance = (n == 1 ? 6 :(n == 2 ? 8 : 11));
+		if (damagesource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+			return;
+		}
+		if (!(entity.level() instanceof ServerLevel serverLevel)) {
+			return;
+		}
 
-		if (Main.randomReach(entity.getRandom(), 1, 20) >= chance && !damagesource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-			List<MirrorImageEntity> list = entity.level().getEntitiesOfClass(MirrorImageEntity.class, entity.getBoundingBox().inflate(32, 32, 32));
-			list.removeIf(mirrorImageEntity -> mirrorImageEntity.getOwner() != entity);
-			for (MirrorImageEntity mirrorImageEntity : list) {
-				if (mirrorImageEntity == null) continue;
-				if (mirrorImageEntity.getOwner() != entity) continue;
-				mirrorImageEntity.discard();
-				event.setCanceled(true);
+		List<MirrorImageEntity> list2 = serverLevel.getEntitiesOfClass(MirrorImageEntity.class, entity.getBoundingBox().inflate(32, 32, 32));
+		list2.removeIf(mirrorImageEntity -> mirrorImageEntity.getOwner() != entity);
+		if (list2.isEmpty()) {
+			return;
+		}
+
+		boolean can = false;
+		for (int i = 0; i < list2.size(); i++) {
+			if (Main.rollDice(1, 6) >= 3) {
+				can = true;
 				break;
 			}
+		}
+
+		if (can) {
+			MirrorImageEntity toDiscard = list2.get(0);
+			toDiscard.discard();
+			event.setCanceled(true);
 		}
 	}
 
 	//法术反制
 	@SubscribeEvent
 	public static void Counterspell(JerotesStopSpellEvent event) {
-		Entity entity = event.getTarget();
-		Entity spellEntity = event.getSpellEntity();
+		Entity otherCaster = event.getOtherCaster();
+		Entity otherMagic = event.getSpellEntity();
 		Entity caster = event.getCaster();
-		if (spellEntity instanceof MagicAboutEntity magicAbout && entity != null) {
-			//法术反制
-			if (!magicAbout.isHelp() && entity != caster && entity instanceof LivingEntity livingEntity &&
-					livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) &&
-					!livingEntity.hasEffect(JerotesMobEffects.SPELL_REACTION_LOCK.get()) &&
-					livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= event.getLevel() &&
-					!(caster != null &&
-							AttackFind.SameFactionAvoidDamage(caster, livingEntity, false))) {
-				if (!livingEntity.level().isClientSide()) {
-					livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
-				}
-				livingEntity.swing(InteractionHand.OFF_HAND);
-				SpellFind.Counterspell(livingEntity);
-				event.setCanceled(true);
-			}
+		if (otherMagic instanceof MagicAboutEntity magicAbout && otherCaster != null && !magicAbout.isHelp()) {
+			boolean bl = SpellUtil.SpellReaction(caster, otherCaster, otherMagic, magicAbout.getSpellLevel());
+			event.setCanceled(bl);
 		}
+		//存在危害类
 		if (event.getType() == 1) {
-			//法术反制
-			if (entity != caster && entity instanceof LivingEntity livingEntity &&
-					livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) &&
-					!livingEntity.hasEffect(JerotesMobEffects.SPELL_REACTION_LOCK.get()) &&
-					livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get()).getAmplifier() + 1 >= event.getLevel() &&
-					!(caster != null &&
-							AttackFind.SameFactionAvoidDamage(caster, livingEntity, false))) {
-				if (!livingEntity.level().isClientSide()) {
-					livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
-				}
-				livingEntity.swing(InteractionHand.OFF_HAND);
-				SpellFind.Counterspell(livingEntity);
-				event.setCanceled(true);
-			}
+			boolean bl = SpellUtil.SpellReaction(caster, otherCaster, otherMagic, event.getLevel());
+			event.setCanceled(bl);
 		}
 	}
 }

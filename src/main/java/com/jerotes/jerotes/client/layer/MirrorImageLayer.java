@@ -1,6 +1,6 @@
 package com.jerotes.jerotes.client.layer;
 
-import com.jerotes.jerotes.entity.Mob.MirrorImageEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.MirrorImageEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;

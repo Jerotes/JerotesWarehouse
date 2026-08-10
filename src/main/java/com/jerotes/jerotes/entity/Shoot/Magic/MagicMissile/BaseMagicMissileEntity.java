@@ -1,8 +1,8 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
-import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -95,6 +94,13 @@ public abstract class BaseMagicMissileEntity extends MagicAboutEntity {
             float f6 = Mth.sqrt(f3 * f3 + f4 * f4 + f5 * f5);
             float f7 = 0.2f;
             this.setDeltaMovement(vec3.multiply(0.5f, 0.5f, 0.5f).add(f3 *= f7 / f6 * 2, f4 *= f7 / f6 * 2, f5 *= f7 / f6 * 2).scale(speed));
+        }
+        //超过距离
+        if (this.getOwner() != null && this.position().distanceTo(this.getOwner().position()) > getMaxReach()) {
+            if (!this.level().isClientSide()) {
+                this.lastBreak();
+                this.discard();
+            }
         }
 
         if (level().isClientSide) {
@@ -176,7 +182,10 @@ public abstract class BaseMagicMissileEntity extends MagicAboutEntity {
 
     @Override
     public int getMaxLife() {
-        return 40;
+        return 60;
+    }
+    public int getMaxReach() {
+        return 36;
     }
 
     @Override

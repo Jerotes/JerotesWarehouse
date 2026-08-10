@@ -1,17 +1,12 @@
 package com.jerotes.jerotes.client.renderer;
 
-import com.jerotes.jerotes.client.layer.JerotesSnowGolemHeadLayer;
-import com.jerotes.jerotes.client.model.Modeljerotes_snow_golem;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesBlazeEntity;
-import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesSnowGoelmEntity;
+import com.jerotes.jerotes.entity.MagicSummoned.Blaze.JerotesBlazeEntity;
 import net.minecraft.client.model.BlazeModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.entity.BlazeRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.monster.Blaze;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

@@ -1,9 +1,11 @@
 package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
 import com.jerotes.jerotes.entity.Other.OtherSpell.HoldMobEntity;
 import com.jerotes.jerotes.entity.Other.OtherSpell.HoldPersonMainEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.MirrorImageMainEntity;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
@@ -19,6 +21,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.monster.warden.WardenAi;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
@@ -57,7 +60,7 @@ public class SpellList {
 					SpellFind.MagicMissile(getCaster(), (entity instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel(), getSpellAccuracy(), 1, 1, 1, getCaster() instanceof Player);
 					if (!getCaster().isSilent()) {
 						getCaster().level().playSound(null, getCaster().getX(), getCaster().getY(), getCaster().getZ(), getSound(),
-								getCaster().getSoundSource(), 1.0f, 1.0F);
+								getCaster().getSoundSource(), getSoundLevel(), 1.0F);
 					}
 				}
 				return true;
@@ -68,11 +71,94 @@ public class SpellList {
 			public boolean canUseTargetNone() {
 				return true;
 			}
+			public int getBaseSpellLevel() {
+				return 1;
+			}
 			public float getSpellDistanceBase() {
 				return 36;
 			}
 			public SpellSchool getSpellSchool() {
 				return SpellSchool.EVOCATION;
+			}
+		};
+	}
+	//烈焰人火球
+	public static MagicSpell BlazeFireball(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "blaze_fireball", JerotesParticleTypes.BLAZE_FIREBALL_DISPLAY.get(), JerotesSoundEvents.MAGIC_BLAZE_FIREBALL){
+			public boolean spellFindUse() {
+				return SpellFind.BlazeFireball(getCaster(), getTarget(), getSpellLevel(), 6 + getSpellLevel() * 3, getSpellAccuracy(), 1, 5, getCaster() instanceof Player);
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
+			}
+			public boolean isCantrip() {
+				return true;
+			}
+			public float getSpellDistanceBase() {
+				return 240;
+			}
+		};
+	}
+	//旋风人风弹
+	public static MagicSpell BreezeWindCharge(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "breeze_wind_charge", JerotesParticleTypes.BREEZE_WIND_CHARGE_DISPLAY.get(), JerotesSoundEvents.MAGIC_BREEZE_WIND_CHARGE){
+			public boolean spellFindUse() {
+				return SpellFind.BreezeWindCharge(getCaster(), getTarget(), getSpellLevel(), 3 + (getSpellLevel() - 1) * 0.25f, getSpellAccuracy(), 1, 5, getCaster() instanceof Player);
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
+			}
+			public boolean isCantrip() {
+				return true;
+			}
+			public float getSpellDistanceBase() {
+				return 240;
+			}
+		};
+	}
+	//恶魂火球
+	public static MagicSpell GhastFireball(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "ghast_fireball", JerotesParticleTypes.GHAST_FIREBALL_DISPLAY.get(), JerotesSoundEvents.MAGIC_GHAST_FIREBALL){
+			public boolean spellFindUse() {
+				return SpellFind.GhastFireball(getCaster(), getTarget(), getSpellLevel(), 6 + getSpellLevel() * 3, 1 + (getSpellLevel() - 1) * 0.25f, getSpellAccuracy(), 1, 5, getCaster() instanceof Player, getSubcategory());
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
+			}
+			public int getBaseSpellLevel() {
+				return 1;
+			}
+			public float getSpellDistanceBase() {
+				return 240;
+			}
+		};
+	}
+	//末影龙火球
+	public static MagicSpell EnderdragonFireball(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "enderdragon_fireball", JerotesParticleTypes.ENDERDRAGON_FIREBALL_DISPLAY.get(), JerotesSoundEvents.MAGIC_ENDERDRAGON_FIREBALL){
+			public boolean spellFindUse() {
+				return SpellFind.EnderdragonFireball(getCaster(), getTarget(), getSpellLevel(), 1, (int) ((getSpellLevel() - 2)/2f) + 2, getSpellAccuracy(), 1, 5, getCaster() instanceof Player);
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
+			}
+			public int getBaseSpellLevel() {
+				return 3;
+			}
+			public float getSpellDistanceBase() {
+				return 60;
 			}
 		};
 	}
@@ -87,6 +173,9 @@ public class SpellList {
 			}
 			public SpellSchool getSpellSchool() {
 				return SpellSchool.CONJURATION;
+			}
+			public float getSpellDistanceBase() {
+				return 30;
 			}
 		};
 	}
@@ -105,6 +194,9 @@ public class SpellList {
 			public boolean isCantrip() {
 				return true;
 			}
+			public float getSpellDistanceBase() {
+				return (int) (36 * MainConfig.SomeBulletSpellReachMultiplier);
+			}
 		};
 	}
 	//寒冰箭
@@ -121,6 +213,9 @@ public class SpellList {
 			}
 			public boolean isCantrip() {
 				return true;
+			}
+			public float getSpellDistanceBase() {
+				return (int) (36 * MainConfig.SomeBulletSpellReachMultiplier);
 			}
 		};
 	}
@@ -139,6 +234,9 @@ public class SpellList {
 			public boolean isCantrip() {
 				return true;
 			}
+			public float getSpellDistanceBase() {
+				return (int) (36 * MainConfig.SomeBulletSpellReachMultiplier);
+			}
 		};
 	}
 	//巫术箭
@@ -155,6 +253,29 @@ public class SpellList {
 			}
 			public boolean isConcentration() {
 				return true;
+			}
+			public float getSpellDistanceBase() {
+				return (int) (18 * MainConfig.SomeBulletSpellReachMultiplier);
+			}
+		};
+	}
+	//冰刃
+	public static MagicSpell IceKnife(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "ice_knife", JerotesParticleTypes.ICE_KNIFE_DISPLAY.get(), JerotesSoundEvents.MAGIC_ICE_KNIFE){
+			public boolean spellFindUse() {
+				return SpellFind.IceKnife(getCaster(), getTarget(), getSpellLevel(), 6 + getSpellLevel() * 3, getSpellAccuracy(), 1, 5, getCaster() instanceof Player);
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
+			}
+			public int getBaseSpellLevel() {
+				return 1;
+			}
+			public float getSpellDistanceBase() {
+				return (int) (36 * MainConfig.SomeBulletSpellReachMultiplier);
 			}
 		};
 	}
@@ -209,6 +330,41 @@ public class SpellList {
 			}
 			public float getSpellDistanceBase() {
 				return 18;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
+			}
+			public boolean isCantrip() {
+				return true;
+			}
+		};
+	}
+	//魔能爆
+	public static MagicSpell EldritchBlast(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "eldritch_blast", JerotesParticleTypes.ELDRITCH_BLAST_DISPLAY.get(), JerotesSoundEvents.MAGIC_ELDRITCH_BLAST){
+			public boolean spellFindUse() {
+				return SpellFind.EldritchBlast(getCaster(), getTarget(), getSpellLevel(), getSpellAccuracy(), 1, 5, getCaster() instanceof Player);
+			}
+			public int getCastingTicks() {
+				int count = 1 + (getSpellLevel() - 1) / 2;
+				return count <= 1 ? 0 : (count - 1) * 5 + 4;
+			}
+			public boolean CastingAboutBase(int n) {
+				if (n % 5 == 0 && n != 0) {
+					getCaster().swing(InteractionHand.MAIN_HAND, true);
+					SpellFind.EldritchBlast(getCaster(), getTarget(), getSpellLevel(), getSpellAccuracy(), 1, 5, getCaster() instanceof Player);
+					if (!getCaster().isSilent()) {
+						getCaster().level().playSound(null, getCaster().getX(), getCaster().getY(), getCaster().getZ(), getSound(),
+								getCaster().getSoundSource(), getSoundLevel(), 1.0F);
+					}
+				}
+				return true;
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public float getSpellDistanceBase() {
+				return 36;
 			}
 			public SpellSchool getSpellSchool() {
 				return SpellSchool.EVOCATION;
@@ -331,6 +487,34 @@ public class SpellList {
 			}
 		};
 	}
+	//连锁闪电
+	public static MagicSpell ChainLightning(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "chain_lightning", JerotesParticleTypes.CHAIN_LIGHTNING_DISPLAY.get(), JerotesSoundEvents.MAGIC_CHAIN_LIGHTNING){
+			public boolean spellFindUse() {
+				return SpellFind.ChainLightning(getCaster(), getTarget(), getSpellLevel(), getSpellAccuracy(), 1, 5, getCaster() instanceof Player, getSubcategory(), true);
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public int getBaseSpellLevel() {
+				return 6;
+			}
+			public float getSpellDistanceBase() {
+				return 45;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
+			}
+			//
+			public int getCustomSubcategoryReachAdd() {
+				return 1;
+			}
+			public int usedByNonPlayerFindSubcategory(LivingEntity livingEntity) {
+				return 0;
+			}
+			//
+		};
+	}
 	//虫群孳生
 	public static MagicSpell Infestation(int n, LivingEntity caster, Entity target) {
 		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "infestation", JerotesParticleTypes.INFESTATION_DISPLAY.get(), JerotesSoundEvents.MAGIC_INFESTATION){
@@ -368,6 +552,26 @@ public class SpellList {
 			}
 			public SpellSchool getSpellSchool() {
 				return SpellSchool.EVOCATION;
+			}
+			public boolean isCantrip() {
+				return true;
+			}
+		};
+	}
+	//守卫者光束
+	public static MagicSpell GuardianLaser(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "guardian_laser", JerotesParticleTypes.GUARDIAN_LASER_DISPLAY.get(), JerotesSoundEvents.MAGIC_GUARDIAN_LASER){
+			public boolean spellFindUse() {
+				return SpellFind.GuardianLaser(getCaster(), getTarget(), getSpellLevel());
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public float getSpellDistanceBase() {
+				return 16;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ENCHANTMENT;
 			}
 			public boolean isCantrip() {
 				return true;
@@ -439,7 +643,7 @@ public class SpellList {
 							}
 							if (!getCaster().isSilent()) {
 								getCaster().level().playSound(null, getCaster().getX(), getCaster().getY(), getCaster().getZ(), getSound(),
-										getCaster().getSoundSource(), 1.0f, 1.0F);
+										getCaster().getSoundSource(), getSoundLevel(), 1.0F);
 							}
 						}
 					}
@@ -874,16 +1078,9 @@ public class SpellList {
 			}
 			public boolean canUse() {
 				if (getCaster() != null) {
-					if (Main.getJerotesPersistentData(getCaster()).get("jerotes_has_mirror_image_1_tick") != null && Main.getJerotesPersistentData(getCaster()).getDouble("jerotes_has_mirror_image_1_tick") > 0) {
-						return false;
-					}
-					if (Main.getJerotesPersistentData(getCaster()).get("jerotes_has_mirror_image_2_tick") != null && Main.getJerotesPersistentData(getCaster()).getDouble("jerotes_has_mirror_image_2_tick") > 0) {
-						return false;
-					}
-					if (Main.getJerotesPersistentData(getCaster()).get("jerotes_has_mirror_image_3_tick") != null && Main.getJerotesPersistentData(getCaster()).getDouble("jerotes_has_mirror_image_3_tick") > 0) {
-						return false;
-					}
-					return super.canUse();
+					List<MirrorImageMainEntity> list = getCaster().level().getEntitiesOfClass(MirrorImageMainEntity.class, getCaster().getBoundingBox().inflate(128, 128, 128));
+					list.removeIf(summon -> summon.getOwner() != getCaster());
+					return super.canUse() && list.isEmpty();
 				}
 				return super.canUse();
 			}
@@ -1056,6 +1253,35 @@ public class SpellList {
 			}
 		};
 	}
+	//创造篝火
+	public static MagicSpell CreateBonfire(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "create_bonfire", JerotesParticleTypes.CREATE_BONFIRE_DISPLAY.get(), JerotesSoundEvents.MAGIC_CREATE_BONFIRE){
+			public boolean spellFindUse() {
+				return SpellFind.CreateBonfire(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel());
+			}
+			public int getBaseSpellLevel() {
+				return 1;
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public float getSpellDistanceBase() {
+				return 18;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public boolean isConcentration() {
+				return true;
+			}
+			public boolean isCantrip() {
+				return true;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
+			}
+		};
+	}
 	//疫病虫群
 	public static MagicSpell InsectPlague(int n, LivingEntity caster, Entity target) {
 		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "insect_plague", JerotesParticleTypes.INSECT_PLAGUE_DISPLAY.get(), JerotesSoundEvents.MAGIC_INSECT_PLAGUE){
@@ -1100,6 +1326,12 @@ public class SpellList {
 			public boolean canUseTargetNone() {
 				return true;
 			}
+			public boolean canUseToEntity(Entity entity) {
+				if (!(entity instanceof Player player)) {
+					return false;
+				}
+				return super.canUseToEntity(entity);
+			}
 			public SpellSchool getSpellSchool() {
 				return SpellSchool.TRANSMUTATION;
 			}
@@ -1130,6 +1362,12 @@ public class SpellList {
 			}
 			public boolean canUseTargetNone() {
 				return true;
+			}
+			public boolean canUseToEntity(Entity entity) {
+				if (!(entity instanceof Player player)) {
+					return false;
+				}
+				return super.canUseToEntity(entity);
 			}
 			public SpellSchool getSpellSchool() {
 				return SpellSchool.TRANSMUTATION;
@@ -1175,9 +1413,32 @@ public class SpellList {
 			//
 		};
 	}
+	//冰风暴
+	public static MagicSpell IceStorm(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "ice_storm", JerotesParticleTypes.ICE_STORM_DISPLAY.get(), JerotesSoundEvents.MAGIC_ICE_STORM){
+			public boolean spellFindUse() {
+				return SpellFind.IceStorm(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel(), getSubcategory());
+			}
+			public int getBaseSpellLevel() {
+				return 4;
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public float getSpellDistanceBase() {
+				return 90;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
+			}
+		};
+	}
 	//雷鸣波
 	public static MagicSpell Thunderwave(int n, LivingEntity caster, Entity target) {
-		return new MagicSpell(n, caster, target, MagicType.SELF, MagicType.MAIN, "thunderwave", JerotesParticleTypes.THUNDERWAVE_DISPLAY.get(), JerotesSoundEvents.MAGIC_THUNDERWAVE){
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "thunderwave", JerotesParticleTypes.THUNDERWAVE_DISPLAY.get(), JerotesSoundEvents.MAGIC_THUNDERWAVE){
 			public boolean spellFindUse() {
 				return SpellFind.Thunderwave(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel());
 			}
@@ -1188,7 +1449,10 @@ public class SpellList {
 				return JerotesWarehouse.MODID;
 			}
 			public float getSpellDistanceBase() {
-				return 2;
+				return 4.5f;
+			}
+			public boolean canUseTargetNone() {
+				return true;
 			}
 			public SpellSchool getSpellSchool() {
 				return SpellSchool.EVOCATION;
@@ -1202,7 +1466,7 @@ public class SpellList {
 	public static MagicSpell LinearEvokerFang(int n, LivingEntity caster, Entity target) {
 		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "linear_evoker_fang", JerotesParticleTypes.LINEAR_EVOKER_FANG_DISPLAY.get(), JerotesSoundEvents.MAGIC_LINEAR_EVOKER_FANG){
 			public boolean spellFindUse() {
-				return SpellFind.LinearEvokerFang(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel(), getSpellLevel() * 4, 2f);
+				return SpellFind.LinearEvokerFang(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel());
 			}
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
@@ -1215,6 +1479,9 @@ public class SpellList {
 			}
 			public SpellSchool getSpellSchool() {
 				return SpellSchool.CONJURATION;
+			}
+			public float getSpellDistanceBase() {
+				return 20;
 			}
 		};
 	}
@@ -1231,7 +1498,7 @@ public class SpellList {
 				return true;
 			}
 			public float getSpellDistanceBase() {
-				return 6;
+				return 3;
 			}
 			public int getBaseSpellLevel() {
 				return 2;
@@ -1295,7 +1562,7 @@ public class SpellList {
 	}
 	//探查之眼
 	public static MagicSpell ProbingEye(int n, LivingEntity caster, Entity target) {
-		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "probing_eye", JerotesParticleTypes.PROBING_EYE_DISPLAY.get(), JerotesSoundEvents.MAGIC_PROBING_EYE){
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.ADD, "probing_eye", JerotesParticleTypes.PROBING_EYE_DISPLAY.get(), JerotesSoundEvents.MAGIC_PROBING_EYE){
 			public boolean spellFindUse() {
 				return SpellFind.ProbingEye(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel());
 			}
@@ -1305,6 +1572,9 @@ public class SpellList {
 			public int getBaseSpellLevel() {
 				return 6;
 			}
+			public boolean isCombat() {
+				return false;
+			}
 			public float getSpellDistanceBase() {
 				return 90;
 			}
@@ -1313,6 +1583,40 @@ public class SpellList {
 			}
 			public boolean canUseTargetNone() {
 				return true;
+			}
+		};
+	}
+	//识别之眼
+	public static MagicSpell AnalyticalEye(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SELF, MagicType.ADD, "analytical_eye", JerotesParticleTypes.ANALYTICAL_EYE_DISPLAY.get(), JerotesSoundEvents.MAGIC_ANALYTICAL_EYE){
+			public boolean spellFindUse() {
+				return !caster.level().isClientSide() && caster.addEffect(new MobEffectInstance(JerotesMobEffects.ANALYTICAL_EYE.get(), getSpellLevel() * 60 * 20, 0));
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public int getBaseSpellLevel() {
+				return 6;
+			}
+			public float getSpellDistanceBase() {
+				return 2;
+			}
+			public boolean isHelp() {
+				return true;
+			}
+			public boolean isCombat() {
+				return false;
+			}
+			public boolean canUse() {
+				if (getCaster() != null && getCaster().hasEffect(JerotesMobEffects.ANALYTICAL_EYE.get()) &&
+						Objects.requireNonNull(getCaster().getEffect(JerotesMobEffects.ANALYTICAL_EYE.get())).getDuration() > 6 * 20 &&
+						!(getCaster() instanceof Player)) {
+					return false;
+				}
+				return super.canUse();
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.DIVINATION;
 			}
 		};
 	}
@@ -1335,6 +1639,9 @@ public class SpellList {
 				return SpellSchool.ENCHANTMENT;
 			}
 			public boolean canUseTargetNone() {
+				return false;
+			}
+			public boolean isCombat() {
 				return false;
 			}
 		};
@@ -1360,6 +1667,9 @@ public class SpellList {
 			public boolean canUseTargetNone() {
 				return false;
 			}
+			public boolean isCombat() {
+				return false;
+			}
 		};
 	}
 	//构造契约术
@@ -1382,6 +1692,222 @@ public class SpellList {
 			}
 			public boolean canUseTargetNone() {
 				return false;
+			}
+			public boolean isCombat() {
+				return false;
+			}
+		};
+	}
+	//造水术
+	public static MagicSpell CreateWater(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "create_water", JerotesParticleTypes.CREATE_WATER_DISPLAY.get(), JerotesSoundEvents.MAGIC_CREATE_WATER){
+			public boolean spellFindUse() {
+				return SpellFind.CreateWater(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel(), getSubcategory());
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public int getBaseSpellLevel() {
+				return 1;
+			}
+			public float getSpellDistanceBase() {
+				return 9;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.TRANSMUTATION;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public boolean isCombat() {
+				return false;
+			}
+			//
+			public int getCustomSubcategoryReachAdd() {
+				return 5;
+			}
+			public int usedByNonPlayerFindSubcategory(LivingEntity livingEntity) {
+				return 0;
+			}
+			//
+		};
+	}
+	//枯水术
+	public static MagicSpell DestroyWater(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "destroy_water", JerotesParticleTypes.DESTROY_WATER_DISPLAY.get(), JerotesSoundEvents.MAGIC_DESTROY_WATER){
+			public boolean spellFindUse() {
+				return SpellFind.DestroyWater(getCaster(), (getTarget() instanceof LivingEntity livingEntity) ? livingEntity : getCaster(), getSpellLevel(), getSubcategory());
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public int getBaseSpellLevel() {
+				return 1;
+			}
+			public float getSpellDistanceBase() {
+				return 9;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.TRANSMUTATION;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public boolean isCombat() {
+				return false;
+			}
+			//
+			public int getCustomSubcategoryReachAdd() {
+				return 2;
+			}
+			public int usedByNonPlayerFindSubcategory(LivingEntity livingEntity) {
+				return 0;
+			}
+			//
+		};
+	}
+	//凋灵之首
+	public static MagicSpell WitherSkull(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "wither_skull", JerotesParticleTypes.WITHER_SKULL_DISPLAY.get(), JerotesSoundEvents.MAGIC_WITHER_SKULL){
+			public boolean spellFindUse() {
+				return SpellFind.WitherSkull(getCaster(), getTarget(), getSpellLevel(), getSpellLevel() * 6, (int) (getSpellLevel()/2f), 1 + (getSpellLevel() - 1) * 0.125f, getSpellAccuracy(), 1, 5, getCaster() instanceof Player, getSubcategory());
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public int getBaseSpellLevel() {
+				return 1;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
+			}
+			public float getSpellDistanceBase() {
+				return 60;
+			}
+			//
+			public int getCustomSubcategoryReachAdd() {
+				return 1;
+			}
+			public int usedByNonPlayerFindSubcategory(LivingEntity livingEntity) {
+				return 0;
+			}
+			//
+		};
+	}
+	//危险凋灵之首
+	public static MagicSpell DangerousWitherSkull(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "dangerous_wither_skull", JerotesParticleTypes.DANGEROUS_WITHER_SKULL_DISPLAY.get(), JerotesSoundEvents.MAGIC_DANGEROUS_WITHER_SKULL){
+			public boolean spellFindUse() {
+				return SpellFind.DangerousWitherSkull(getCaster(), getTarget(), getSpellLevel(), getSpellLevel() * 6, (int) (getSpellLevel()/2f), 1 + (getSpellLevel() - 1) * 0.125f, getSpellAccuracy(), 1, 5, getCaster() instanceof Player, getSubcategory());
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public int getBaseSpellLevel() {
+				return 3;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.CONJURATION;
+			}
+			public float getSpellDistanceBase() {
+				return 36;
+			}
+			//
+			public int getCustomSubcategoryReachAdd() {
+				return 1;
+			}
+			public int usedByNonPlayerFindSubcategory(LivingEntity livingEntity) {
+				return 0;
+			}
+			//
+		};
+	}
+	//唤魔者伎俩
+	public static MagicSpell Evokercraft(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "evokercraft", JerotesParticleTypes.EVOKERCRAFT_DISPLAY.get(), JerotesSoundEvents.MAGIC_EVOKERCRAFT){
+			public boolean spellFindUse() {
+				return SpellFind.Evokercraft(getCaster(), getTarget(), getSpellLevel(), getSubcategory());
+			}
+			public float getSpellDistanceBase() {
+				return 30;
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public int getBaseSpellLevel() {
+				return 1;
+			}
+			public boolean isCantrip() {
+				return true;
+			}
+			public boolean isCombat() {
+				return false;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.TRANSMUTATION;
+			}
+			//
+			public int getCustomSubcategoryReachAdd() {
+				return 5;
+			}
+			public int usedByNonPlayerFindSubcategory(LivingEntity livingEntity) {
+				return 0;
+			}
+			//
+		};
+	}
+	//监守者音爆
+	public static MagicSpell WardenSonicBoom(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "warden_sonic_boom", JerotesParticleTypes.WARDEN_SNOIC_BOOM_DISPLAY.get(), JerotesSoundEvents.MAGIC_WARDEN_SONIC_BOOM){
+			public boolean spellFindUse() {
+				return SpellFind.WardenSonicBoom(getCaster(), getTarget(), getSpellLevel());
+			}
+			public float getSpellDistanceBase() {
+				return 20;
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public int getBaseSpellLevel() {
+				return 2;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
+			}
+			public float getSoundLevel() {
+				return 3f;
+			}
+		};
+	}
+	//红石激光
+	public static MagicSpell RedstoneLaser(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.TARGET, MagicType.MAIN, "redstone_laser", JerotesParticleTypes.REDSTONE_LASER_DISPLAY.get(), JerotesSoundEvents.MAGIC_REDSTONE_LASER){
+			public boolean spellFindUse() {
+				return SpellFind.RedstoneLaser(getCaster(), getTarget(), getSpellLevel());
+			}
+			public float getSpellDistanceBase() {
+				return 36;
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+			public boolean isCantrip() {
+				return true;
+			}
+			public boolean isCombat() {
+				return false;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.EVOCATION;
 			}
 		};
 	}

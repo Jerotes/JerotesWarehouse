@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.block.Interface.JerotesChangeFenceGate;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
@@ -12,11 +13,26 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(FenceGateBlock.class)
 public abstract class FenceGateBlockMixin extends HorizontalDirectionalBlock implements JerotesChangeFenceGate {
 
+    @Shadow(remap = false)
+    @Final
+    private SoundEvent openSound;
+
+    @Shadow(remap = false)
+    @Final
+    private SoundEvent closeSound;
+
+
     protected FenceGateBlockMixin(Properties p_54120_) {
         super(p_54120_);
     }
 
     public boolean isJerotesWoodenDoor() {
         return true;
+    }
+    public SoundEvent getOpenSoundJerotes() {
+        return openSound;
+    }
+    public SoundEvent getCloseSoundJerotes() {
+        return closeSound;
     }
 }

@@ -5,6 +5,7 @@ import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Interface.EliteEntity;
 import com.jerotes.jerotes.entity.Interface.MagicSpellLivingEntity;
 import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.forge.JerotesUseSpellEvent;
 import com.jerotes.jerotes.init.JerotesMobEffectTags;
 import com.jerotes.jerotes.init.JerotesMobEffects;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
@@ -69,9 +71,11 @@ public class MagicSpell {
 			return false;
 		}
 		if (getCaster() != null && SpellType.getCastingTickJerotes(getCaster()) >= 0 && !SpellType.getLastSpellTypeJerotes(getCaster()).isEmpty()) {
-			SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(SpellType.getLastSpellTypeJerotes(getCaster()));
-			MagicSpell magicSpell = SpellListByString.getSpellEasy(spellTypeInterface);
-			magicSpell.spellCastingStop(SpellType.getCastingTickJerotes(getCaster()));
+			if (!(getMagicType2() == MagicType.ADD && getCastingTicks() <= 0)) {
+				SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(SpellType.getLastSpellTypeJerotes(getCaster()));
+				MagicSpell magicSpell = SpellListByString.getSpellEasy(spellTypeInterface);
+				magicSpell.spellCastingStop(SpellType.getCastingTickJerotes(getCaster()));
+			}
 		}
 		//结束正在蓄力的技能
 		Main.getJerotesPersistentData(getCaster()).putString("jerotes_using_magic", "");
@@ -111,7 +115,9 @@ public class MagicSpell {
 		//记录自身上次使用的法术
 		SpellType.setLastSpellTypeJerotes(getCaster(), getSpellModId() + "_" + getSpellId());
 		SpellType.setLastSpellLevelJerotes(getCaster(), spellLevel);
-		SpellType.setLastSpellTargetJerotes(getCaster(), getTarget().getUUID());
+		if (getTarget() != null) {
+			SpellType.setLastSpellTargetJerotes(getCaster(), getTarget().getUUID());
+		}
 		//
 		SpellType.setCastCooldownJerotes(getCaster(), Math.max(2, SpellType.getCastCooldownJerotes(caster)));
 		//正在使用法术 探查
@@ -197,22 +203,11 @@ public class MagicSpell {
 		this.spellLevel = event.getLevel();
 
 		//法术反制·被动影响
-		if (canBeBreak() && !isHelp() && !(getTarget() instanceof LivingEntity livingEntityTarget && SpellType.getCastingTickJerotes(livingEntityTarget) > -1)) {
-			if (getTarget() instanceof LivingEntity livingEntity && livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get()) && !livingEntity.hasEffect(JerotesMobEffects.SPELL_REACTION_LOCK.get()) && getCaster() != getTarget() && getCaster().distanceTo(getTarget()) <= 32) {
-				//等级不如对方
-				if (!(AttackFind.SameFactionAvoidDamage(getCaster(), livingEntity, false)) && Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1 >= this.getSpellLevel()) {
-					//自身清除计时
-					{
-						SpellRegistry.getSpellTypeById(this.getSpellModId()+ "_" + this.getSpellId()).stop(getCaster(), Objects.requireNonNull(livingEntity.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1, false);
-					}
-					//去除对方buff
-					if (!livingEntity.level().isClientSide()) {
-						livingEntity.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
-					}
-					livingEntity.swing(InteractionHand.OFF_HAND);
-					SpellFind.Counterspell(livingEntity);
-					return false;
-				}
+		if (canBeBreak()) {
+			JerotesStopSpellEvent jerotesstopspellevent = new JerotesStopSpellEvent(getTarget(), this, null, getCaster(), this.isHelp() ? 3 : 1, getSpellLevel());
+			MinecraftForge.EVENT_BUS.post(jerotesstopspellevent);
+			if (jerotesstopspellevent.isCanceled()) {
+				return false;
 			}
 		}
 		//法术反制·主动影响
@@ -226,14 +221,9 @@ public class MagicSpell {
 			if (!list.isEmpty()) {
 				for (LivingEntity target : list) {
 					if (isHelp() && target == getTarget()) continue;
-					//等级不如对方
-					if (!(AttackFind.SameFactionAvoidDamage(getCaster(), target, false)) && Objects.requireNonNull(target.getEffect(JerotesMobEffects.COUNTERSPELL.get())).getAmplifier() + 1 >= this.getSpellLevel()) {
-						//去除对方buff
-						if (!target.level().isClientSide()) {
-							target.removeEffect(JerotesMobEffects.COUNTERSPELL.get());
-						}
-						target.swing(InteractionHand.OFF_HAND);
-						SpellFind.Counterspell(target);
+					JerotesStopSpellEvent jerotesstopspellevent = new JerotesStopSpellEvent(target, this, null, getCaster(), this.isHelp() ? 3 : 1, getSpellLevel());
+					MinecraftForge.EVENT_BUS.post(jerotesstopspellevent);
+					if (jerotesstopspellevent.isCanceled()) {
 						return false;
 					}
 				}
@@ -331,6 +321,9 @@ public class MagicSpell {
 	public SpellSchool getSpellSchool() {
 		return SpellSchool.EVOCATION;
 	}
+	public float getSpellCost() {
+		return 1;
+	}
 	public float getSoundLevel() {
 		return 1f;
 	}
@@ -339,6 +332,9 @@ public class MagicSpell {
 	}
 	public boolean isHelp() {
 		return false;
+	}
+	public boolean isCombat() {
+		return true;
 	}
 	public boolean isCantrip() {
 		return false;
@@ -429,7 +425,7 @@ public class MagicSpell {
 		if (magicSpell.hasCustomSubcategoryReach()) {
 			for (int i = 0; i <= magicSpell.getCustomSubcategoryReachAdd(); i++) {
 				boolean bl = false;
-				if (itemStack != null && itemStack.getItem() instanceof MagicItem magicItem && magicItem.getSubcategory(itemStack) == i) {
+				if (itemStack != null && itemStack.getItem() instanceof MagicItem magicItem && magicItem.getSubcategoryMagicItem(itemStack) == i) {
 					bl = true;
 				}
 				if (itemStack == null && player != null &&

@@ -18,7 +18,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-
 public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends EntityRenderer<T> {
 
     private static final ResourceLocation TEXTURE_LOCATION =
@@ -32,6 +31,7 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
     private static final float EFFECT_SCALE = 1.6f;
     // 地面特效贴地偏移，只做很小的抬升防止 z-fighting，不再跟 targetHeight 挂钩
     private static final float GROUND_LIFT = 0.03f;
+
 
     private final ItemRenderer itemRenderer;
     private final float scale;
@@ -57,7 +57,7 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource buffer, int packedLight) {
 
-       // renderRound(entity, partialTick, poseStack, buffer);
+        // renderRound(entity, partialTick, poseStack, buffer);
         renderRitualCircles(entity, partialTick, poseStack, buffer);
         renderGroundGlyphRays(entity, partialTick, poseStack, buffer);
         renderRisingSpikes(entity, partialTick, poseStack, buffer);
@@ -66,49 +66,6 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
 
         super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
     }
-
-//    // ============================================================
-//    // 原有：垂直发光柱体（放大尺寸系数）
-//    // ============================================================
-//    private void renderRound(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer) {
-//
-//        float growProgress = 0;
-//        float fadeAlpha = 0;
-//
-//        int lifeNeed = entity.life / 3;
-//        if (entity.life > 2 && entity.life < lifeNeed) {
-//            growProgress = (entity.life + partialTick) / (float) lifeNeed;
-//            fadeAlpha = 1.0F;
-//        } else if (entity.life > 2) {
-//            growProgress = 1.0F - ((entity.life - lifeNeed + partialTick) / (float) (entity.getMaxLife() / 2 - lifeNeed));
-//            growProgress = Mth.clamp(growProgress, 0F, 1F);
-//            fadeAlpha = Mth.clamp(1.0F, 0F, 1F);
-//        }
-//
-//        float halfWidth = (entity.getSize() * growProgress * 1.1f + 0.15f) * EFFECT_SCALE;
-//        float height = (entity.getSize() * growProgress * 1.2F + 0.5f) * EFFECT_SCALE;
-//
-//        int topColor = entity.roundLightI();
-//        int bottomColor = entity.roundLightII();
-//
-//        int tr = (topColor >> 16) & 255, tg = (topColor >> 8) & 255, tb = topColor & 255;
-//        int br = (bottomColor >> 16) & 255, bg = (bottomColor >> 8) & 255, bb = bottomColor & 255;
-//
-//        int bottomAlpha = (int) (220 * fadeAlpha);
-//
-//        VertexConsumer consumer = buffer.getBuffer(JerotesRenderType.glowDoubleSidedTranslucent(GLOW_LOCATION));
-//        PoseStack.Pose pose = poseStack.last();
-//        Matrix4f matrix = pose.pose();
-//        Matrix3f normal = pose.normal();
-//
-//        float yBottom = 0.0F; // 贴地，不再跟 targetHeight 挂钩
-//        float yTop = height;
-//
-//        addQuad(consumer, matrix, normal, -halfWidth, yBottom, halfWidth, -halfWidth, yTop, halfWidth, halfWidth, yTop, halfWidth, halfWidth, yBottom, halfWidth, br, bg, bb, tr, tg, tb, bottomAlpha);
-//        addQuad(consumer, matrix, normal, halfWidth, yBottom, -halfWidth, halfWidth, yTop, -halfWidth, -halfWidth, yTop, -halfWidth, -halfWidth, yBottom, -halfWidth, br, bg, bb, tr, tg, tb, bottomAlpha);
-//        addQuad(consumer, matrix, normal, -halfWidth, yBottom, -halfWidth, -halfWidth, yTop, -halfWidth, -halfWidth, yTop, halfWidth, -halfWidth, yBottom, halfWidth, br, bg, bb, tr, tg, tb, bottomAlpha);
-//        addQuad(consumer, matrix, normal, halfWidth, yBottom, halfWidth, halfWidth, yTop, halfWidth, halfWidth, yTop, -halfWidth, halfWidth, yBottom, -halfWidth, br, bg, bb, tr, tg, tb, bottomAlpha);
-//    }
 
     private void addQuad(VertexConsumer consumer, Matrix4f matrix, Matrix3f normal,
                          float x1, float y1, float z1, float x2, float y2, float z2,
@@ -125,12 +82,20 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
                 .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normal, 0, 1, 0).endVertex();
     }
 
+    // ============================================================
+    // 法阵环:抬高到半空悬浮 + 正反双面绘制,解决只有从下往上看才可见的问题
+    // ============================================================
     private void renderRitualCircles(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer) {
         float time = entity.tickCount + partialTick;
         float t = Mth.clamp((entity.life + partialTick) / entity.getMaxLife(), 0f, 1f);
-        float ringScale = Mth.clamp(t * 4f, 0f, 1f) * (1.0f - Mth.clamp((t - 0.8f) / 0.2f, 0f, 1f) * 0.3f);
+        // 快速长出,然后在最后25%时间里线性淡出到0——之前的写法最多只能淡到0.7,
+        // 导致消失前一帧还有alpha≈140,entity被移除时直接硬切,不平滑。
+        float growth = Mth.clamp(t * 4f, 0f, 1f);
+        float fadeOut = 1.0f - Mth.clamp((t - 0.75f) / 0.25f, 0f, 1f);
+        float ringScale = growth * fadeOut;
         if (ringScale <= 0.01f) return;
 
+        // 贴地,只做很小的抬升防止z-fighting
         float yBase = GROUND_LIFT;
         float baseRadius = (entity.getSize() * 0.9f + 1.2f) * EFFECT_SCALE;
 
@@ -149,6 +114,9 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
 
             float ringWidth = (0.08f + ring * 0.015f) * EFFECT_SCALE;
             int alpha = (int) (200 * ringScale * (0.7f + 0.3f * Mth.sin(time * 0.1f + ring)));
+
+            // 三层都贴地,只留极小偏移防止z-fighting,不再做高度差
+            float ringY = yBase + ring * 0.002f;
 
             for (int i = 0; i < segments; i++) {
                 float a0 = (float) (i * 2 * Math.PI / segments) + spin;
@@ -170,10 +138,17 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
                 int r0 = colorMain[0], g0 = colorMain[1], b0 = colorMain[2];
                 int r1 = colorEdge[0], g1 = colorEdge[1], b1 = colorEdge[2];
 
-                addVertex(consumer, matrix, ix0, yBase, iz0, r0, g0, b0, alpha);
-                addVertex(consumer, matrix, ox0, yBase, oz0, r1, g1, b1, alpha);
-                addVertex(consumer, matrix, ox1, yBase, oz1, r1, g1, b1, alpha);
-                addVertex(consumer, matrix, ix1, yBase, iz1, r0, g0, b0, alpha);
+                // 正面绕序(原来只有这一半,导致背面剔除后只能从下往上看到)
+                addVertex(consumer, matrix, ix0, ringY, iz0, r0, g0, b0, alpha);
+                addVertex(consumer, matrix, ox0, ringY, oz0, r1, g1, b1, alpha);
+                addVertex(consumer, matrix, ox1, ringY, oz1, r1, g1, b1, alpha);
+                addVertex(consumer, matrix, ix1, ringY, iz1, r0, g0, b0, alpha);
+
+                // 反面绕序:同一个四边形反过来再画一遍,从上方也能看到
+                addVertex(consumer, matrix, ix1, ringY, iz1, r0, g0, b0, alpha);
+                addVertex(consumer, matrix, ox1, ringY, oz1, r1, g1, b1, alpha);
+                addVertex(consumer, matrix, ox0, ringY, oz0, r1, g1, b1, alpha);
+                addVertex(consumer, matrix, ix0, ringY, iz0, r0, g0, b0, alpha);
             }
         }
     }

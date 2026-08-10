@@ -1,0 +1,50 @@
+{
+  "name": "Legendary Beings",
+  "icon": "minecraft:diamond",
+  "category": "jerotes:world_survey",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "What defines a Legendary Being? Great power, eternal life, or a status approaching divinity—any of these might appear to be the answer. Yet the title of Legendary Being is not one granted by opinion. It is a tangible concept, an objective truth of one's very existence."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:diamond_sword",
+      "title": "Legendary Being",
+      "text": "Whether a being is truly legendary depends on whether the world in which it resides has come to align itself around that being as one of its fundamental points of reference."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Perhaps the Plane in which we live is too unusual to serve as an appropriate example, while the tales of other worlds remain too distant to provide meaningful comparison. Those who truly understand the nature of Legendary Beings have always been few. Of all the qualities associated with this rank, one stands above the rest: extraordinary power is not the defining criterion of legend, though it undeniably carries the greatest weight in determining a being's nature."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "A Legendary Being is not necessarily a living creature. So long as it is regarded as an autonomous existence—whether a soulless machine or a shadow that engulfs an entire world—its form neither diminishes nor invalidates its legendary status."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Every Legendary Being, without exception, was once a legendary figure within its own world: a sovereign who united a continent, a champion blessed by the gods, or the mastermind behind the hidden currents of conspiracy. Even if they were not exceptionally powerful in themselves, their deeds became permanently etched into the Plane upon which they lived."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "More commonly, however, Legendary Beings are the ancient dragons that have survived since primordial ages, the liches sealed away within forgotten legends, or the greatest wizards ever known to the kingdoms of mortals."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "What defines a Legendary Being? Some names are sung by bards and remembered by common folk. Their deeds may seem legendary, and their fame may approach legend itself, yet their existence has never shifted the course of the world by even the slightest measure."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "When mortals call someone \"legendary,\" it is merely praise. Only when one Legendary Being acknowledges—or deliberately avoids—another does that recognition become an objective fact."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Yet legend is not the end. The legend of a great sovereign may collapse with age and ruin, remembered centuries later as nothing more than a fleeting moment. The legend of an ancient dragon may be brought low by heroes defending their homeland, its corpse cooling beneath solidified lava."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The legend of a mighty wizard may end the very instant they dare challenge the gods. Countless Legendary Beings continue to seek a higher state still, striving to ascend toward the realm of the $(l:world_survey/exalted_beings)Exalted Beings$()."
+    }
+  ],
+  "sortnum": 1
+}

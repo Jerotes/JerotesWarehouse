@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.MagicThrow;
 
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutThrowEntity;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
@@ -21,7 +22,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -157,7 +157,7 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
     public void tick() {
         super.tick();
         if (this.getOwner() != null) {
-            if (this.distanceTo(this.getOwner()) > 30 || !Main.hasLineOfSightEntity(this, this.getOwner())) {
+            if (this.distanceTo(this.getOwner()) > (int) (18 * MainConfig.SomeBulletSpellReachMultiplier) || !Main.hasLineOfSightEntity(this, this.getOwner())) {
                 this.lastBreak();
                 this.endConcentration();
                 return;
@@ -180,12 +180,14 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
                     livingTarget.hurt(damageSource,
                             Main.rollDice(1, 12, livingTarget.getRandom())
                     );
-                    this.setUseful(true);
+                    if (!this.level().isClientSide()) {
+                        this.setUseful(true);
+                    }
                     this.setTarget(livingTarget);
                     scaleTick = 10;
                 }
             }
-            if (this.level().isClientSide) {
+            if (this.level().isClientSide()) {
                 if (this.life % 120 > 110)
                     this.scaleTick = Math.min(10, this.scaleTick + 1);
                 else

@@ -49,8 +49,8 @@ public class JerotesCombatIVMagicAttackGoal<T extends PathfinderMob> extends Goa
         if (InventoryEntity.isMeleeWeapon(mob.getMainHandItem()) && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) <= reach) {
             return false;
         }
-        boolean main = mob.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelp(mob.getMainHandItem()) && !magicItem.isMelee(mob.getMainHandItem()) && magicItem.getSpellDistance(mob.getMainHandItem()) > f;
-        boolean off = mob.getOffhandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelp(mob.getOffhandItem()) && !magicItem.isMelee(mob.getOffhandItem()) && magicItem.getSpellDistance(mob.getMainHandItem()) > f;
+        boolean main = mob.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelpMagicItem(mob.getMainHandItem()) && !magicItem.isMeleeMagicItem(mob.getMainHandItem()) && magicItem.getSpellDistanceMagicItem(mob.getMainHandItem()) > f;
+        boolean off = mob.getOffhandItem().getItem() instanceof MagicItem magicItem && !magicItem.isHelpMagicItem(mob.getOffhandItem()) && !magicItem.isMeleeMagicItem(mob.getOffhandItem()) && magicItem.getSpellDistanceMagicItem(mob.getMainHandItem()) > f;
         boolean mainSpell = (mob instanceof WizardEntity wizardEntity && !wizardEntity.MainSpellList().isEmpty());
         boolean offSpell = (mob instanceof WizardEntity wizardEntity && !wizardEntity.AddSpellList().isEmpty());
         return (main || off || mainSpell || offSpell);

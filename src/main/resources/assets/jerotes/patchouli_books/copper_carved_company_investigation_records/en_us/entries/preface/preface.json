@@ -1,0 +1,48 @@
+{
+  "name": "Preface",
+  "icon": "minecraft:writable_book",
+  "category": "jerotes:preface",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "What is the Copper Carved Company? If you have only recently joined the Company, or have never before heard its name, this is likely the first question that comes to mind."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "jerotes:copper_sword",
+      "title": "Three Blades Covenant",
+      "text": "The predecessor of the Copper Carved Company, the Copper Carved Society, was founded in the aftermath of the Three Blades Covenant. Drawn together by a common purpose, three founders established the Society to safeguard the interests of villagers, oppose calamitous forces and hostile powers, and provide aid to villagers without asking for compensation."
+    },
+    {
+      "type": "patchouli:image",
+      "images": ["jerotes:textures/gui/entries/copper_carved_company.png"],
+      "border": true,
+      "text": "Copper Carved Company"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Over the years, the Society evolved into what is now known as the Copper Carved Company. Yet this change of name does not signify our transformation into a mercenary organization that fights solely for coin. Rather, it reflects our willingness to cooperate with individuals and organizations who share our ideals and stand beside us in mutual support. Today, our ranks welcome members from many peoples—including Illagers, Piglins, and Endermen."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "So long as one strives to improve the lives of settlements and restore stability and peace to the Overworld, the Nether, and The End, our willingness to offer aid without reward extends far beyond villagers alone."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "From the moment we adopted our new name, our ambitions ceased to be confined to protecting only our own people or harboring hostility toward other races. Instead, we embraced a vision greater in scope. Beneath the worlds we inhabit lies a truth, one that remains unknown to the Overworld, the Nether, and The End. We cannot accept that, within an infinite cosmos of countless worlds, ours alone should remain isolated as an exception, cut off from the greater whole."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "We readily admit that we are neither a vast organization nor a dominant power. Even within the Overworld, our name is far from renowned. Nevertheless, we have achieved progress that rivals—and in some fields even surpasses—that of organizations from other Planes. Through our exploration of new Dimensions and our pursuit of knowledge concerning the origins of the worlds, we have accumulated discoveries beyond what many believed possible."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Today, the Copper Carved Company stands as something between a mercenary company and a scholarly society. We refuse to fall behind other factions in the exploration of distant Dimensions. Among ourselves, we often joke that perhaps too many of our members have lived in peace for too long, for they now possess an extraordinary enthusiasm for venturing into the unknown."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "We believe that one can remain disciplined, forge new friendships, and pursue discovery within the limits of one's own capabilities—without seeking conquest or expansion."
+    }
+  ],
+  "sortnum": 0
+}

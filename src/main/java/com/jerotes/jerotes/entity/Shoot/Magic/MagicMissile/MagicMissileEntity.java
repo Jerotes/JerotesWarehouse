@@ -1,12 +1,12 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.MagicMissile;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -65,7 +65,10 @@ public class MagicMissileEntity extends BaseMagicMissileEntity {
 
     @Override
     public int getMaxLife() {
-        return 40;
+        return 60;
+    }
+    public int getMaxReach() {
+        return 36;
     }
     protected boolean shouldTail() {
         return false;

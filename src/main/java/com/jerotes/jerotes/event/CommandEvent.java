@@ -754,6 +754,8 @@ public class CommandEvent {
 												player.setChangeInventoryCooldownTick(5);
 												player.setCombatStyle(4);
 												player.setArchmage(true);
+												Objects.requireNonNull(player.getAttribute(Attributes.MAX_HEALTH)).setBaseValue(300);
+												player.setHealth(300);
 												Objects.requireNonNull(player.getAttribute(Attributes.FOLLOW_RANGE)).setBaseValue(128);
 												player.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.AIR));
 												player.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(Items.AIR));

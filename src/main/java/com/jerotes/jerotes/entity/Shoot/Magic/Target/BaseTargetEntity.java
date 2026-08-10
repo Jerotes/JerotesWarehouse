@@ -8,6 +8,7 @@ import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.spell.SpellFind;
 import com.jerotes.jerotes.util.AttackFind;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -27,11 +28,14 @@ import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class BaseTargetEntity extends MagicAboutEntity {
     private static final EntityDataAccessor<Float> ID_SIZE = SynchedEntityData.defineId(BaseTargetEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> TARGET_HEIGHT = SynchedEntityData.defineId(BaseTargetEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Optional<UUID>> DATA_TARGET_UUID = SynchedEntityData.defineId(BaseTargetEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Integer> DATA_TARGET_ID = SynchedEntityData.defineId(BaseTargetEntity.class, EntityDataSerializers.INT);
 
     public BaseTargetEntity(EntityType<? extends MagicAboutEntity> entityType, Level level) {
         super(entityType, level);
@@ -58,34 +62,55 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
     }
 
     @Nullable
-    private Entity target;
-    @Nullable
-    private UUID targetUUID;
-    @Nullable
     public Entity getTarget() {
-        Entity entity;
-        if (this.target == null && this.targetUUID != null && this.level() instanceof ServerLevel && (entity = ((ServerLevel)this.level()).getEntity(this.targetUUID)) instanceof Entity) {
-            this.target = entity;
+        if (!this.level().isClientSide) {
+            UUID uuid = this.getTargetUUID();
+            return uuid == null ? null : Main.getEntityByUUID(this.level(), uuid);
+        } else {
+            int id = this.getTargetId();
+            return id <= -1 ? null : this.level().getEntity(id);
         }
-        return this.target;
     }
+
     public void setTarget(@Nullable Entity entity) {
-        //法术取消
-        //event
         JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;
         }
-        this.target = entity;
-        this.targetUUID = entity == null ? null : entity.getUUID();
         if (entity != null) {
+            this.setTargetUUID(entity.getUUID());
+            if (!this.level().isClientSide) {
+                this.setTargetId(entity.getId());
+            }
             this.entityData.set(TARGET_HEIGHT, entity.getBbHeight());
+        } else {
+            this.setTargetUUID(null);
+            this.setTargetId(-1);
         }
     }
+
+    @Nullable
+    public UUID getTargetUUID() {
+        return this.entityData.get(DATA_TARGET_UUID).orElse(null);
+    }
+
+    public void setTargetUUID(@Nullable UUID uuid) {
+        this.entityData.set(DATA_TARGET_UUID, Optional.ofNullable(uuid));
+    }
+
+    public int getTargetId() {
+        return this.entityData.get(DATA_TARGET_ID);
+    }
+
+    public void setTargetId(int id) {
+        this.entityData.set(DATA_TARGET_ID, id);
+    }
+
     public float getSize() {
         return this.entityData.get(ID_SIZE);
     }
+
     @VisibleForTesting
     public void setSize(float f) {
         float f2 = Mth.clamp(f, 0, 256);
@@ -93,37 +118,45 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
         this.reapplyPosition();
         this.refreshDimensions();
     }
+
     public float getTargetHeight() {
         return this.entityData.get(TARGET_HEIGHT);
     }
+
     @VisibleForTesting
     public void setTargetHeight(float f) {
         this.entityData.set(TARGET_HEIGHT, f);
     }
+
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        if (this.targetUUID != null) {
-            compoundTag.putUUID("Target", this.targetUUID);
+        if (this.getTargetUUID() != null) {
+            compoundTag.putUUID("Target", this.getTargetUUID());
         }
         compoundTag.putFloat("Size", this.getSize());
         compoundTag.putFloat("TargetHeight", this.getTargetHeight());
     }
+
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         if (compoundTag.hasUUID("Target")) {
-            this.targetUUID = compoundTag.getUUID("Target");
+            this.setTargetUUID(compoundTag.getUUID("Target"));
         }
         this.setSize(compoundTag.getFloat("Size"));
         this.setTargetHeight(compoundTag.getFloat("TargetHeight"));
     }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.getEntityData().define(ID_SIZE, 1f);
         this.getEntityData().define(TARGET_HEIGHT, 1f);
+        this.getEntityData().define(DATA_TARGET_UUID, Optional.empty());
+        this.getEntityData().define(DATA_TARGET_ID, -1);
     }
+
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> entityDataAccessor) {
         if (ID_SIZE.equals(entityDataAccessor)) {
@@ -135,8 +168,15 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
     @Override
     public void tick() {
         super.tick();
-        //跟随
-        //初始粒子
+
+        if (!this.level().isClientSide) {
+            if (this.getTarget() != null && this.getTargetId() == -1) {
+                this.setTargetId(this.getTarget().getId());
+            }
+        }
+        if (this.getTarget() != null && !this.getTarget().isAlive()) {
+            this.setTarget(null);
+        }
         if (this.life <= this.getMaxLife()) {
             if (this.level() instanceof ServerLevel _level && this.getTrailParticle() != null) {
                 if (this.tickCount % 20 == 0) {
@@ -147,7 +187,7 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
                 this.moveTo(this.getTarget().getX(), this.getTarget().getY(0.5), this.getTarget().getZ());
             }
         }
-        //附近
+
         if (this.life == this.getUseLife()) {
             List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.2, 0.0, 0.2));
             list.removeIf(livingEntity -> livingEntity != this.getTarget());
@@ -162,8 +202,6 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
     }
 
     public void useMagicTo(LivingEntity livingEntity) {
-        //法术取消
-        //event
         JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, livingEntity);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
@@ -194,7 +232,6 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
         return 1.0f;
     }
 
-    //@Override
     protected float getLiquidInertia() {
         return 1.0f;
     }
@@ -202,9 +239,11 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
     public boolean showRound() {
         return true;
     }
+
     public int roundLightI() {
         return 0x64a63a;
     }
+
     public int roundLightII() {
         return 0xbfe970;
     }

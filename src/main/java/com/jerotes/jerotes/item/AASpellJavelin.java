@@ -3,8 +3,10 @@ package com.jerotes.jerotes.item;
 import com.jerotes.jerotes.item.Interface.MagicItem;
 import com.jerotes.jerotes.spell.*;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -36,72 +38,124 @@ public class AASpellJavelin extends Item implements MagicItem {
 	public int getUseDuration(ItemStack itemStack) {
 		return 72000;
 	}
+	@Override
+	public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int count) {
+		if (!livingEntity.isShiftKeyDown()) {
+			super.onUseTick(level, livingEntity, itemStack, count);
+			return;
+		}
+		int n2 = this.getUseDuration(itemStack) - count;
+		if (n2 % 1 == 0) {
+			if (!(livingEntity instanceof Player player)) {
+				return;
+			}
+			if (SpellType.getCastCooldownJerotes(player) > 0) {
+				return;
+			}
+			livingEntity.swing(InteractionHand.MAIN_HAND, true);
+			if (!this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack))) {
+				Entity target = player;
+				int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), player, target, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getSpellLevel();
 
+				MagicSpell magicSpellStart = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack)));
+
+				if (Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) != null &&
+						(Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) instanceof LivingEntity || magicSpellStart.canTargetNonLivingEntity())) {
+					if (magicSpellStart.getMagicType() != MagicType.SELF)
+						target = Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable());
+				}
+				if (target == null) {
+					target = player;
+				}
+
+				MagicSpell magicSpell = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack)));
+				boolean CanUse = magicSpell.canUse();
+				boolean NoCanNotSelf = magicSpell.canUseTargetNone() || (target != player || magicSpell.getMagicType() != MagicType.TARGET);
+				boolean CanUseTo = !(magicSpell.getMagicType() == MagicType.TARGET && !magicSpell.canUseToEntity(target));
+				boolean DistanceIsTrue = !(magicSpell.getMagicType() == MagicType.TARGET && player.distanceTo(target) > magicSpell.getSpellDistance());
+				if (CanUse && NoCanNotSelf && CanUseTo && DistanceIsTrue) {
+					if (!(magicSpell.getMagicType() == MagicType.TARGET && !magicSpell.canUseToEntity(target))) {
+						//法术列表
+						SpellListByString.getSpell(trueLevel, livingEntity, target, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).spellUse(getSubcategoryMagicItem(itemStack));
+					}
+				}
+
+			}
+			player.awardStat(Stats.ITEM_USED.get(this));
+		}
+		super.onUseTick(level, livingEntity, itemStack, count);
+	}
 	@Override
 	public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int n) {
-		if (!(livingEntity instanceof Player player)) {
-			return;
-		}
-		if (SpellType.getCastCooldownJerotes(player) > 0) {
-			return;
-		}
-		livingEntity.swing(InteractionHand.MAIN_HAND, true);
-		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))) {
-			Entity target = player;
-			int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), player, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
-
-			MagicSpell magicSpellStart = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack)));
-
-			if (Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) != null &&
-					(Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) instanceof LivingEntity || magicSpellStart.canTargetNonLivingEntity())) {
-				if (magicSpellStart.getMagicType() != MagicType.SELF)
-					target = Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable());
+		if (!livingEntity.isShiftKeyDown()) {
+			if (!(livingEntity instanceof Player player)) {
+				return;
 			}
-			if (target == null) {
-				target = player;
+			if (SpellType.getCastCooldownJerotes(player) > 0) {
+				return;
 			}
+			livingEntity.swing(InteractionHand.MAIN_HAND, true);
+			if (!this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack))) {
+				Entity target = player;
+				int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), player, target, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getSpellLevel();
 
-			MagicSpell magicSpell = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack)));
-			boolean CanUse = magicSpell.canUse();
-			boolean NoCanNotSelf = magicSpell.canUseTargetNone() || (target != player || magicSpell.getMagicType() != MagicType.TARGET);
-			boolean CanUseTo = !(magicSpell.getMagicType() == MagicType.TARGET && !magicSpell.canUseToEntity(target));
-			boolean DistanceIsTrue = !(magicSpell.getMagicType() == MagicType.TARGET && player.distanceTo(target) > magicSpell.getSpellDistance());
-			if (CanUse && NoCanNotSelf && CanUseTo && DistanceIsTrue) {
-				if (!(magicSpell.getMagicType() == MagicType.TARGET && !magicSpell.canUseToEntity(target))) {
-					//法术列表
-					SpellListByString.getSpell(trueLevel, livingEntity, target, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).spellUse(getSubcategory(itemStack));
+				MagicSpell magicSpellStart = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack)));
+
+				if (Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) != null &&
+						(Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) instanceof LivingEntity || magicSpellStart.canTargetNonLivingEntity())) {
+					if (magicSpellStart.getMagicType() != MagicType.SELF)
+						target = Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable());
 				}
-			}
+				if (target == null) {
+					target = player;
+				}
 
+				MagicSpell magicSpell = SpellListByString.getSpell(trueLevel, player, target, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack)));
+				boolean CanUse = magicSpell.canUse();
+				boolean NoCanNotSelf = magicSpell.canUseTargetNone() || (target != player || magicSpell.getMagicType() != MagicType.TARGET);
+				boolean CanUseTo = !(magicSpell.getMagicType() == MagicType.TARGET && !magicSpell.canUseToEntity(target));
+				boolean DistanceIsTrue = !(magicSpell.getMagicType() == MagicType.TARGET && player.distanceTo(target) > magicSpell.getSpellDistance());
+				if (CanUse && NoCanNotSelf && CanUseTo && DistanceIsTrue) {
+					if (!(magicSpell.getMagicType() == MagicType.TARGET && !magicSpell.canUseToEntity(target))) {
+						//法术列表
+						SpellListByString.getSpell(trueLevel, livingEntity, target, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).spellUse(getSubcategoryMagicItem(itemStack));
+					}
+				}
+
+			}
+			player.awardStat(Stats.ITEM_USED.get(this));
 		}
-		player.awardStat(Stats.ITEM_USED.get(this));
 	}
 	public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag tooltipFlag) {
 		super.appendHoverText(itemStack, level, list, tooltipFlag);
-		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))) {
-			int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
-			MagicSpell magicSpellStart = SpellListByString.getSpell(trueLevel, null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack)));
+		if (!this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack))) {
+			int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getSpellLevel();
+			MagicSpell magicSpellStart = SpellListByString.getSpell(trueLevel, null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack)));
 			MagicSpell.MagicTooltip(list, magicSpellStart, trueLevel(itemStack), null, itemStack);
 		}
+		list.add(this.getDisplayName().withStyle(ChatFormatting.GRAY));
+	}
+	public MutableComponent getDisplayName() {
+		return Component.translatable(this.getDescriptionId() + ".desc");
 	}
 
 	@Override
-	public List<SpellTypeInterface> getMainSpellType(ItemStack itemStack) {
-		int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
+	public List<SpellTypeInterface> getMainSpellTypeMagicItem(ItemStack itemStack) {
+		int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getSpellLevel();
 		List<SpellTypeInterface> spellList = new ArrayList<>();
-		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))
-				&& SpellListByString.getSpell(trueLevel, null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getMagicType2() == MagicType.MAIN) {
-			spellList.add(SpellRegistry.getSpellTypeById(this.getSpellId(itemStack)));
+		if (!this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack))
+				&& SpellListByString.getSpell(trueLevel, null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getMagicType2() == MagicType.MAIN) {
+			spellList.add(SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack)));
 		}
 		return spellList;
 	}
 	@Override
-	public List<SpellTypeInterface> getAddSpellType(ItemStack itemStack) {
-		int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
+	public List<SpellTypeInterface> getAddSpellTypeMagicItem(ItemStack itemStack) {
+		int trueLevel = SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getSpellLevel();
 		List<SpellTypeInterface> spellList = new ArrayList<>();
-		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))
-				&& SpellListByString.getSpell(trueLevel, null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getMagicType2() == MagicType.ADD) {
-			spellList.add(SpellRegistry.getSpellTypeById(this.getSpellId(itemStack)));
+		if (!this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack))
+				&& SpellListByString.getSpell(trueLevel, null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getMagicType2() == MagicType.ADD) {
+			spellList.add(SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack)));
 		}
 		return spellList;
 	}
@@ -113,29 +167,29 @@ public class AASpellJavelin extends Item implements MagicItem {
 
 	}
 
-	public boolean canChangeSubcategory(ItemStack itemStack) {
+	public boolean canChangeSubcategoryMagicItem(ItemStack itemStack) {
 		return true;
 	}
 
 	public int trueLevel(ItemStack itemStack) {
-		return SpellListByString.getSpell(getSpellLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellLevel();
+		return SpellListByString.getSpell(getSpellLevelMagicItem(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getSpellLevel();
 	}
 
 	public boolean isFoil(ItemStack itemStack) {
-		return !this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack)) || super.isFoil(itemStack);
+		return !this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack)) || super.isFoil(itemStack);
 	}
 
 	@Override
 	public String getDescriptionId(ItemStack itemStack) {
-		return !this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))
-				? "spell." + SpellListByString.getSpell(getSpellLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellModId() + "." + SpellListByString.getSpell(getSpellLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellId()
+		return !this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack))
+				? "spell." + SpellListByString.getSpell(getSpellLevelMagicItem(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getSpellModId() + "." + SpellListByString.getSpell(getSpellLevelMagicItem(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getSpellId()
 				: super.getDescriptionId(itemStack);
 	}
 
-	public boolean hasSpell() {
+	public boolean hasSpellMagicItem() {
 		return true;
 	}
-	public String getSpellId(ItemStack stack) {
+	public String getSpellIdMagicItem(ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.getString(SPELL).isEmpty()) {
 			if (stack.hasCustomHoverName()) {
@@ -145,37 +199,36 @@ public class AASpellJavelin extends Item implements MagicItem {
 		return tag.getString(SPELL);
 	}
 	@Override
-	public int getSpellLevel(ItemStack itemStack) {
+	public int getSpellLevelMagicItem(ItemStack itemStack) {
 		CompoundTag tag = itemStack.getOrCreateTag();
 		return tag.getInt(SPELL_LEVEL);
 	}
 	@Override
-	public int getSubcategory(ItemStack itemStack) {
+	public int getSubcategoryMagicItem(ItemStack itemStack) {
 		CompoundTag tag = itemStack.getOrCreateTag();
 		return tag.getInt(SPELL_SUBCATEGORY);
 	}
 	@Override
-	public ItemStack setSubcategory(ItemStack itemStack, int n) {
+	public ItemStack setSubcategoryMagicItem(ItemStack itemStack, int n) {
 		ItemStack stack = itemStack;
 		CompoundTag compoundTag = new CompoundTag();
-		compoundTag.putString(FlawlessMagicScroll.SPELL, getSpellId(itemStack));
-		MagicSpell spell = SpellListByString.getSpell(1, null, null, SpellRegistry.getSpellTypeById(getSpellId(itemStack)));
-		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, spell == null ? 1 : spell.getBaseSpellLevel());
+		compoundTag.putString(FlawlessMagicScroll.SPELL, getSpellIdMagicItem(itemStack));
+		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, getSpellLevelMagicItem(itemStack));
 		compoundTag.putInt(FlawlessMagicScroll.SPELL_SUBCATEGORY, n);
 		stack.setTag(compoundTag);
 		return stack;
 	}
 	@Override
-	public boolean isMelee(ItemStack itemStack) {
-		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))) {
-			return SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).isMelee();
+	public boolean isMeleeMagicItem(ItemStack itemStack) {
+		if (!this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack))) {
+			return SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).isMelee();
 		}
 		return false;
 	}
 	@Override
-	public boolean isHelp(ItemStack itemStack) {
-		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))) {
-			return SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).isHelp();
+	public boolean isHelpMagicItem(ItemStack itemStack) {
+		if (!this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack))) {
+			return SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).isHelp();
 		}
 		return false;
 	}
@@ -185,10 +238,21 @@ public class AASpellJavelin extends Item implements MagicItem {
 	}
 
 	@Override
-	public float getSpellDistance(ItemStack itemStack) {
-		if (!this.getSpellId(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellId(itemStack))) {
-			return SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellId(itemStack))).getSpellDistance();
+	public float getSpellDistanceMagicItem(ItemStack itemStack) {
+		if (!this.getSpellIdMagicItem(itemStack).isEmpty() && SpellRegistry.spellExists(this.getSpellIdMagicItem(itemStack))) {
+			return SpellListByString.getSpell(trueLevel(itemStack), null, null, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack))).getSpellDistance();
 		}
 		return 0;
+	}
+
+
+	public ItemStack setSpellJavelin(ItemStack self, ItemStack magicItem) {
+		ItemStack stack = self;
+		CompoundTag compoundTag = new CompoundTag();
+		compoundTag.putString(FlawlessMagicScroll.SPELL, getSpellIdMagicItem(magicItem));
+		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, getSpellLevelMagicItem(magicItem));
+		compoundTag.putInt(FlawlessMagicScroll.SPELL_SUBCATEGORY, getSubcategoryMagicItem(magicItem));
+		stack.setTag(compoundTag);
+		return stack;
 	}
 }

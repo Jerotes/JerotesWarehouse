@@ -378,6 +378,9 @@ public class Main {
 	public static Entity getTargetedEntity(Player player, double maxDistance) {
 		return getTargetedEntity(player, maxDistance, false, true);
 	}
+	public static Entity getTargetedEntity(Player player, double maxDistance, boolean bl) {
+		return getTargetedEntity(player, maxDistance, bl, true);
+	}
 	public static Entity getTargetedEntity(Player player, double maxDistance, boolean bl, boolean mustPickable) {
 		Entity entity = getTargetedEntityBase(player, maxDistance, bl, mustPickable);
 		if (bl && entity != null && entity.isInvisible()) {
@@ -713,6 +716,23 @@ public class Main {
 				startPos.add(viewVector.scale(maxDistance)) :
 				adjustedPos;
 	}
+
+	public static Vec3 adjustPositionForSolidHit(BlockHitResult hitResult, Vec3 startPos, Vec3 viewVector, double maxDistance, double offset) {
+		Vec3 adjustedPos = hitResult.getLocation();
+		if (hitResult.getType() == HitResult.Type.BLOCK) {
+			Direction hitDirection = hitResult.getDirection();
+			adjustedPos = adjustedPos.subtract(
+					hitDirection.getStepX() * offset,
+					hitDirection.getStepY() * offset,
+					hitDirection.getStepZ() * offset
+			);
+		}
+		double distance = startPos.distanceTo(adjustedPos);
+		return distance > maxDistance ?
+				startPos.add(viewVector.scale(maxDistance)) :
+				adjustedPos;
+	}
+
 	public static BlockPos findSafePosition(ServerLevel level, Vec3 targetPos) {
 		BlockPos.MutableBlockPos basePos = new BlockPos.MutableBlockPos(
 				(int) targetPos.x,

@@ -273,7 +273,7 @@ public class BasePartLivingEntity extends LivingEntity implements EntityTrueBase
 		}
 		if (this.getTicksFrozen() > 0) {
 			if (getParent() instanceof LivingEntity livingEntity && this.getTicksFrozen() > livingEntity.getTicksFrozen()) {
-				livingEntity.setTicksFrozen(this.getTicksFrozen());
+				livingEntity.setTicksFrozen(Math.max(livingEntity.getTicksFrozen(), this.getTicksFrozen()));
 			}
 			this.setTicksFrozen(0);
 		}

@@ -29,6 +29,7 @@ public class JerotesWarehouse
     public JerotesWarehouse() {
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         JerotesItems.REGISTRY.register(modEventBus);
+        JerotesBlocks.REGISTRY.register(modEventBus);
         JerotesMenus.REGISTRY.register(modEventBus);
         JerotesEntityType.REGISTRY.register(modEventBus);
         JerotesTabs.REGISTRY.register(modEventBus);

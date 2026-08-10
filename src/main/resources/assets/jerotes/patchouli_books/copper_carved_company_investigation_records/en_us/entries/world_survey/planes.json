@@ -1,0 +1,24 @@
+{
+  "name": "Planes",
+  "icon": "minecraft:ender_eye",
+  "category": "jerotes:world_survey",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "According to the theories proposed by the scholars of the Copper Carved Company, as well as our exchanges with scholars of several other races, if the world we live in is but one among countless worlds—what we commonly refer to as Dimensions—then we believe that Dimensions differ fundamentally in nature."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "A greater Dimension may encompass a realm equal in scale to the combined expanse of countless lesser Dimensions. Likewise, multiple Dimensions may collectively be regarded as a single Plane. Within the vastness of existence, if a powerful individual, a collective consciousness, a civilization, or a Deity holds absolute dominion over such a Plane, that entity is known as the Plane Sovereign."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Under most circumstances, if the Plane Sovereign is a singular being of immense power or one who possesses true Divine Power, it is instead referred to as the Plane Lord. A Plane Lord is often the creator of the Dimension it governs. The power of different Plane Lords varies greatly. Some are merely extraordinary mortal beings, while others are mighty incarnations rivaling the gods themselves, or even true Deities of immense divine might."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Not every organization, however, accepts this system of classification, nor do we claim it to be the only correct interpretation. One obvious question remains unanswered: to which Plane does our so-called Overworld truly belong, and who, if anyone, is its Plane Lord?"
+    }
+  ],
+  "sortnum": 0
+}

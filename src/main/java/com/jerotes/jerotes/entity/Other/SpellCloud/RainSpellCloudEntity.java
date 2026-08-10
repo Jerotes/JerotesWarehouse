@@ -84,6 +84,8 @@ public class RainSpellCloudEntity extends SpellCloudEntity {
     public int spellLevelMoveDistance = 1;
     //子类别
     public int spellSubcategory = 0;
+    //是否初始
+    public boolean spellIsFirst = false;
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
@@ -104,6 +106,7 @@ public class RainSpellCloudEntity extends SpellCloudEntity {
         compoundTag.putInt("SpellLevelHeight", this.spellLevelHeight);
         compoundTag.putInt("SpellLevelMoveDistance", this.spellLevelMoveDistance);
         compoundTag.putInt("SpellSubcategory", this.spellSubcategory);
+        compoundTag.putBoolean("SpellIsFirst", this.spellIsFirst);
     }
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
@@ -125,6 +128,7 @@ public class RainSpellCloudEntity extends SpellCloudEntity {
         this.spellLevelHeight = compoundTag.getInt("SpellLevelHeight");
         this.spellLevelMoveDistance = compoundTag.getInt("SpellLevelMoveDistance");
         this.spellSubcategory = compoundTag.getInt("SpellSubcategory");
+        this.spellIsFirst = compoundTag.getBoolean("SpellIsFirst");
     }
 
     @Override

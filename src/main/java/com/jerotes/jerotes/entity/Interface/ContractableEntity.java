@@ -19,6 +19,9 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 public interface ContractableEntity {
+    default boolean isNotPersistent() {
+        return false;
+    }
     //能否契约
     default boolean isCanContract() {
         return true;

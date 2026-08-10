@@ -43,13 +43,14 @@ public interface WizardEntity {
             spellList.addAll(SelfMainSpellStringList());
         }
         if (this instanceof LivingEntity livingEntity) {
-            if (livingEntity.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.getMainSpellType(livingEntity.getMainHandItem()).isEmpty()) {
-                spellList.addAll(magicItem.getMainSpellType(livingEntity.getMainHandItem()));
+            if (livingEntity.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.getMainSpellTypeMagicItem(livingEntity.getMainHandItem()).isEmpty()) {
+                spellList.addAll(magicItem.getMainSpellTypeMagicItem(livingEntity.getMainHandItem()));
             }
-            if (livingEntity.getOffhandItem().getItem() instanceof MagicItem magicItem && !magicItem.getMainSpellType(livingEntity.getOffhandItem()).isEmpty()) {
-                spellList.addAll(magicItem.getMainSpellType(livingEntity.getOffhandItem()));
+            if (livingEntity.getOffhandItem().getItem() instanceof MagicItem magicItem && !magicItem.getMainSpellTypeMagicItem(livingEntity.getOffhandItem()).isEmpty()) {
+                spellList.addAll(magicItem.getMainSpellTypeMagicItem(livingEntity.getOffhandItem()));
             }
         }
+        spellList.removeIf(spellTypeInterface -> !spellTypeInterface.magicSpellGet(1, null, null).isCombat());
         return spellList;
     }
     default List<SpellTypeInterface> AddSpellList() {
@@ -61,13 +62,14 @@ public interface WizardEntity {
             spellList.addAll(SelfAddSpellStringList());
         }
         if (this instanceof LivingEntity livingEntity) {
-            if (livingEntity.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.getAddSpellType(livingEntity.getMainHandItem()).isEmpty()) {
-                spellList.addAll(magicItem.getAddSpellType(livingEntity.getMainHandItem()));
+            if (livingEntity.getMainHandItem().getItem() instanceof MagicItem magicItem && !magicItem.getAddSpellTypeMagicItem(livingEntity.getMainHandItem()).isEmpty()) {
+                spellList.addAll(magicItem.getAddSpellTypeMagicItem(livingEntity.getMainHandItem()));
             }
-            if (livingEntity.getOffhandItem().getItem() instanceof MagicItem magicItem && !magicItem.getAddSpellType(livingEntity.getOffhandItem()).isEmpty()) {
-                spellList.addAll(magicItem.getAddSpellType(livingEntity.getOffhandItem()));
+            if (livingEntity.getOffhandItem().getItem() instanceof MagicItem magicItem && !magicItem.getAddSpellTypeMagicItem(livingEntity.getOffhandItem()).isEmpty()) {
+                spellList.addAll(magicItem.getAddSpellTypeMagicItem(livingEntity.getOffhandItem()));
             }
         }
+        spellList.removeIf(spellTypeInterface -> !spellTypeInterface.magicSpellGet(1, null, null).isCombat());
         return spellList;
     }
 

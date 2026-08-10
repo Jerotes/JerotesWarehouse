@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class MagicSummonedEntity extends PathfinderMob implements ContractableEntity, ChangePoseAbout, NeutralMob, JerotesEntity, FactionEntity, OwnableEntity, TameMobEntity {
+public class MagicSummonedEntity extends PathfinderMob implements ContractableEntity, SpellUseEntity, ChangePoseAbout, NeutralMob, JerotesEntity, FactionEntity, OwnableEntity, TameMobEntity {
 	public static final EntityDataAccessor<BlockPos> HOME_POS = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BLOCK_POS);
 	private static final EntityDataAccessor<Boolean> IS_WANDER = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> NOT_PERSISTENT = SynchedEntityData.defineId(MagicSummonedEntity.class, EntityDataSerializers.BOOLEAN);
@@ -67,7 +67,7 @@ public class MagicSummonedEntity extends PathfinderMob implements ContractableEn
 	}
 	@Override
 	public int getExperienceReward() {
-		if (this.isTame())
+		if (this.getOwner() != null || this.isNotPersistent())
 			return 0;
 		return super.getExperienceReward();
 	}
@@ -125,7 +125,7 @@ public class MagicSummonedEntity extends PathfinderMob implements ContractableEn
 	}
 	//契约需要法术等级
 	public int contractShouldLevel() {
-		return contractShouldBaseLevel() + (this.isTame() && this.isNotPersistent() ? 3 : 0);
+		return contractShouldBaseLevel() + (this.getOwner() != null && this.isNotPersistent() ? 3 : 0);
 	}
 	public int contractShouldBaseLevel() {
 		return 5;
@@ -139,6 +139,11 @@ public class MagicSummonedEntity extends PathfinderMob implements ContractableEn
 		return true;
 	}
 
+	public int spellLevel = 0;
+	@Override
+	public int getSpellLevel() {
+		return this.spellLevel;
+	}
 	//动画
 	public void setAnimTick(int n){
 		this.getEntityData().set(ANIM_TICK, n);
@@ -309,6 +314,7 @@ public class MagicSummonedEntity extends PathfinderMob implements ContractableEn
 	@Override
 	public void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
+		compoundTag.putInt("SpellLevel", this.spellLevel);
 		compoundTag.putInt("StartTick", this.getStartTick());
 		compoundTag.putInt("LifeTick", this.getLifeTick());
 		compoundTag.putInt("MaxLifeTick", this.getMaxLifeTick());
@@ -328,6 +334,7 @@ public class MagicSummonedEntity extends PathfinderMob implements ContractableEn
 	@Override
 	public void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
+		this.spellLevel = compoundTag.getInt("SpellLevel");
 		this.setStartTick(compoundTag.getInt("StartTick"));
 		this.setAnimTick(compoundTag.getInt("AnimTick"));
 		this.setLifeTick(compoundTag.getInt("LifeTick"));
@@ -646,6 +653,24 @@ public class MagicSummonedEntity extends PathfinderMob implements ContractableEn
 		this.setHomePos(this.blockPosition());
 		return super.finalizeSpawn(serverLevelAccessor, difficultyInstance, mobSpawnType, spawnGroupData, compoundTag);
 	}
+
+	@Override
+	public void tickDeath() {
+		if (this.getLastDamageSource() != null && this.getLastDamageSource().is(JerotesDamageTypes.MAGIC_EFFECT)) {
+			this.remove(RemovalReason.DISCARDED);
+		}
+		++this.deathTime;
+		if (this.deathTime >= 20 && !this.level().isClientSide() && !this.isRemoved()) {
+			if (this.getLastDamageSource() != null && !this.getLastDamageSource().is(JerotesDamageTypes.MAGIC_EFFECT)) {
+				this.level().broadcastEntityEvent(this, (byte) 60);
+				this.remove(RemovalReason.KILLED);
+			}
+			else {
+				this.remove(RemovalReason.DISCARDED);
+			}
+		}
+	}
+
 
 	@Override
 	public void die(DamageSource damageSource) {

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "blackgoldalliance:block/nether_siphon_core"
+    },
+    "age=1": {
+      "model": "blackgoldalliance:block/nether_siphon_core_can_use"
+    },
+    "age=2": {
+      "model": "blackgoldalliance:block/nether_siphon_core_use"
+    },
+    "age=3": {
+      "model": "blackgoldalliance:block/nether_siphon_core_close"
+    }
+  }
+}

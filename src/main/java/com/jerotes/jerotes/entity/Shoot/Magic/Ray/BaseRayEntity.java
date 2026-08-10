@@ -299,7 +299,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
                 }
             }
             //超过距离
-            if (this.position().distanceTo(new Vec3(this.xStartRay, this.yStartRay, this.zStartRay)) > getMaxReach()) {
+            if (this.position().distanceTo(new Vec3(this.xStartRay, this.yStartRay, this.zStartRay)) > getMaxReach() && this.isUseful()) {
                 this.setUseful(false);
             }
         }
@@ -449,5 +449,21 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     }
     public int beamLightII() {
         return 0xbfe970;
+    }
+
+    public boolean isForceBlast() {
+        return false;
+    }
+    public float forceCrackleJitter() {
+        return 0.06f;
+    }
+    public int forceCrackleSegments() {
+        return 10;
+    }
+    public int forceShadowColor() {
+        return beamLightI();
+    }
+    public int forceShadowMaxTicks() {
+        return 16;
     }
 }

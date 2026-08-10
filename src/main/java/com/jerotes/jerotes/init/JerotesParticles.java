@@ -19,6 +19,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.INSECT_FLY.get(), InsectParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.INSECT_LOCUST.get(), InsectParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.MIRROR_IMAGE.get(), MirrorImageParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.SMALL_GUST.get(), GustParticle.SmallProvider::new);
 		event.registerSpriteSet(JerotesParticleTypes.GUST.get(), GustParticle.Provider::new);
 		event.registerSpriteSet(JerotesParticleTypes.THUNDERWAVE.get(), GustParticle.Provider::new);
 		event.registerSpriteSet(JerotesParticleTypes.POWER_WORD.get(), PowerWordParticle::provider);
@@ -45,8 +46,11 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.SUMMON_PARTICLE.get(), SummonParticle.Provider::create);
 
 		event.registerSpriteSet(JerotesParticleTypes.MAGIC_MISSILE.get(), MagicMissileParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.COUNTERSPELL.get(), CounterspellParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.COUNTERSPELL_FAIL.get(), CounterspellParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.POISON_BREATH.get(), ShootParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.POISON_BREATH_FOG.get(), FogParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.ELDRITCH_BLAST.get(), RayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_SICKNESS.get(), RayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_ENFEEBLEMENT.get(), RayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.DISINTEGRATE.get(), RayParticle::provider);
@@ -64,21 +68,29 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.BEAST_TOUGH_BREAK.get(), BigGlowDisplayParticle.Provider::new);
 
 		event.registerSpriteSet(JerotesParticleTypes.MAGIC_MISSILE_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.BLAZE_FIREBALL_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.BREEZE_WIND_CHARGE_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.GHAST_FIREBALL_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.ENDERDRAGON_FIREBALL_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.POISON_BREATH_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.FIRE_BOLT_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.FROST_BOLT_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.SHOCK_BOLT_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.WITCH_BOLT_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.ICE_KNIFE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_FIRE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_FROST_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_LIGHTNING_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.ELDRITCH_BLAST_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_SICKNESS_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.RAY_OF_ENFEEBLEMENT_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.DISINTEGRATE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.FINGER_OF_DEATH_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.LIGHTNING_BOLT_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.CHAIN_LIGHTNING_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.INFESTATION_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.SHOCKING_GRASP_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.GUARDIAN_LASER_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.VICIOUS_MOCKERY_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.HOLD_PERSON_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.BESTOW_CURSE_DISPLAY.get(), DisplayParticle::provider);
@@ -103,18 +115,28 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.BEAST_TOUGH_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ACTION_SURGE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.CLOUD_OF_DAGGERS_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.CREATE_BONFIRE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.INSECT_PLAGUE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.PLANT_GROWTH_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.DIMINISH_PLANTS_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.FIREBALL_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.ICE_STORM_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.THUNDERWAVE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.LINEAR_EVOKER_FANG_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.CIRCULAR_EVOKER_FANG_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.CONJURE_VEXES_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.POWER_WORD_KILL_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.PROBING_EYE_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.ANALYTICAL_EYE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ELEMENTAL_CONTRACT_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.FEY_CONTRACT_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.CONSTRUCT_CONTRACT_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.CREATE_WATER_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.DESTROY_WATER_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.WITHER_SKULL_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.DANGEROUS_WITHER_SKULL_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.EVOKERCRAFT_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.WARDEN_SNOIC_BOOM_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.REDSTONE_LASER_DISPLAY.get(), DisplayParticle::provider);
 	}
 }

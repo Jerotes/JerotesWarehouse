@@ -21,6 +21,30 @@ public class JerotesRenderType extends RenderType {
 		super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
 	}
 
+	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(
+			"textures/entity/guardian_beam.png"
+	);
+	public static final RenderType GUARDIAN_BEAM = RenderType.create(
+			"jerotes_guardian_laser",
+			DefaultVertexFormat.NEW_ENTITY,
+			VertexFormat.Mode.QUADS,
+			256,
+			false,
+			false,
+			RenderType.CompositeState.builder()
+					.setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEntityCutoutShader))
+					.setTextureState(new RenderStateShard.TextureStateShard(BEAM_TEXTURE, false, false))
+					.setTransparencyState(new RenderStateShard.TransparencyStateShard("no_transparency", () -> {}, () -> {}))
+					.setCullState(new RenderStateShard.CullStateShard(false))
+					.setLightmapState(new RenderStateShard.LightmapStateShard(true))
+					.setOverlayState(new RenderStateShard.OverlayStateShard(true))
+					.setDepthTestState(new RenderStateShard.DepthTestStateShard("always", 519))
+					.setWriteMaskState(new RenderStateShard.WriteMaskStateShard(true, false))
+					.createCompositeState(false)
+	);
+
+
+
 	private static final RenderType BEAST_TOUGH_GLINT = create("tough_glint",
 			DefaultVertexFormat.POSITION_TEX,
 			VertexFormat.Mode.QUADS,

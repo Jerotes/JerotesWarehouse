@@ -1,54 +1,32 @@
-package com.jerotes.jerotes.entity.MagicSummoned.Vex;
+package com.jerotes.jerotes.entity.MagicSummoned.Blaze;
 
-import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.MagicSummoned.MagicSummonedEntity;
-import net.minecraft.core.BlockPos;
+import com.jerotes.jerotes.entity.Other.FallingBlock.JerotesEarthrendBlock;
+import com.jerotes.jerotes.spell.SpellList;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BiomeTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Blaze;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.SmallFireball;
-import net.minecraft.world.entity.projectile.Snowball;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.IForgeShearable;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.List;
 
 public class JerotesBlazeEntity extends MagicSummonedEntity {
 	private static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(JerotesBlazeEntity.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Boolean> TRUE_FIREBALL = SynchedEntityData.defineId(JerotesBlazeEntity.class, EntityDataSerializers.BOOLEAN);
 
 	public JerotesBlazeEntity(EntityType<? extends JerotesBlazeEntity> entityType, Level level) {
 		super(entityType, level);
@@ -96,7 +74,6 @@ public class JerotesBlazeEntity extends MagicSummonedEntity {
 	public boolean isOnFire() {
 		return this.isCharged();
 	}
-
 	private boolean isCharged() {
 		return (this.entityData.get(DATA_FLAGS_ID) & 1) != 0;
 	}
@@ -109,10 +86,35 @@ public class JerotesBlazeEntity extends MagicSummonedEntity {
 		}
 		this.entityData.set(DATA_FLAGS_ID, b0);
 	}
+
+	public int spellLevel = 1;
+	@Override
+	public int getSpellLevel() {
+		return this.spellLevel;
+	}
+	public boolean isTrueFireball() {
+		return this.entityData.get(TRUE_FIREBALL);
+	}
+	public void setTrueFireball(boolean bl) {
+		this.entityData.set(TRUE_FIREBALL, bl);
+	}
 	private float allowedHeightOffset = 0.5F;
 	private int nextHeightOffsetChangeTick;
+	@Override
+	public void addAdditionalSaveData(CompoundTag compoundTag) {
+		super.addAdditionalSaveData(compoundTag);
+		compoundTag.putInt("SpellLevel", this.spellLevel);
+		compoundTag.putBoolean("TrueFireball", isTrueFireball());
+	}
+	@Override
+	public void readAdditionalSaveData(CompoundTag compoundTag) {
+		super.readAdditionalSaveData(compoundTag);
+		this.spellLevel = compoundTag.getInt("SpellLevel");
+		this.setTrueFireball(compoundTag.getBoolean("TrueFireball"));
+	}
 	protected void defineSynchedData() {
 		super.defineSynchedData();
+		this.getEntityData().define(TRUE_FIREBALL, false);
 		this.entityData.define(DATA_FLAGS_ID, (byte)0);
 	}
 
@@ -222,9 +224,16 @@ public class JerotesBlazeEntity extends MagicSummonedEntity {
 							}
 
 							for(int i = 0; i < 1; ++i) {
-								SmallFireball smallfireball = new SmallFireball(this.blaze.level(), this.blaze, this.blaze.getRandom().triangle(d1, 2.297D * d4), d2, this.blaze.getRandom().triangle(d3, 2.297D * d4));
-								smallfireball.setPos(smallfireball.getX(), this.blaze.getY(0.5D) + 0.5D, smallfireball.getZ());
-								this.blaze.level().addFreshEntity(smallfireball);
+
+								if (this.blaze.isTrueFireball()) {
+									SpellList.Fireball(3, this.blaze, livingentity).spellUse();
+								}
+								else {
+//									SmallFireball smallfireball = new SmallFireball(this.blaze.level(), this.blaze, this.blaze.getRandom().triangle(d1, 2.297D * d4), d2, this.blaze.getRandom().triangle(d3, 2.297D * d4));
+//									smallfireball.setPos(smallfireball.getX(), this.blaze.getY(0.5D) + 0.5D, smallfireball.getZ());
+//									this.blaze.level().addFreshEntity(smallfireball);
+									SpellList.BlazeFireball(this.blaze.getSpellLevel(), this.blaze, livingentity).spellUse();
+								}
 							}
 						}
 					}

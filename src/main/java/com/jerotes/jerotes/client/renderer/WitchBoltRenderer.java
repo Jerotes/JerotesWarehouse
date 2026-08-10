@@ -3,11 +3,13 @@ package com.jerotes.jerotes.client.renderer;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.client.model.Modeljavelin;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicThrow.WitchBoltEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.Target.GuardianLaserEntity;
 import com.jerotes.jerotes.init.JerotesRenderType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -45,7 +47,7 @@ public class WitchBoltRenderer extends EntityRenderer<WitchBoltEntity> {
 	private void renderBeam(WitchBoltEntity entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
 		if (entity.getOwner() == null) return;
 		Vec3 renderPos = entity.getPosition(partialTick);
-		Vec3 startWorld = entity.getOwner().getPosition(0.6f);
+		Vec3 startWorld = entity.getOwner().position().add(0,entity.getOwner().getBbHeight()/2,0);
 		Vec3 endWorld = renderPos;
 		double raiseY = entity.getBbHeight() / 3.0;
 		Vec3 startLocal = startWorld.subtract(renderPos).add(0.0, raiseY, 0.0);
@@ -222,6 +224,11 @@ public class WitchBoltRenderer extends EntityRenderer<WitchBoltEntity> {
 		consumer.vertex(matrix,  halfWidth, -halfWidth, distance).color(r,g,b,a).uv(0,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 1,0,0).endVertex();
 		consumer.vertex(matrix,  halfWidth,  halfWidth, distance).color(r,g,b,a).uv(1,1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 1,0,0).endVertex();
 		consumer.vertex(matrix,  halfWidth,  halfWidth, 0).color(r,g,b,a).uv(1,0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 1,0,0).endVertex();
+	}
+
+	@Override
+	public boolean shouldRender(WitchBoltEntity entity, Frustum frustum, double camX, double camY, double camZ) {
+		return entity.getOwner() != null && entity.getTarget() != null;
 	}
 
 	@Override

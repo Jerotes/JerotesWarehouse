@@ -1,10 +1,7 @@
-package com.jerotes.jerotes.entity.MagicSummoned.Vex;
+package com.jerotes.jerotes.entity.MagicSummoned.SnowGolem;
 
-import com.google.common.collect.ImmutableList;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.MagicSummoned.MagicSummonedEntity;
-import com.jerotes.jerotes.goal.JerotesIronGolemOfferFlowerGoal;
-import com.jerotes.jerotes.util.AttackFind;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -25,8 +22,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Snowball;
@@ -43,9 +38,6 @@ import net.minecraftforge.common.IForgeShearable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Stream;
 
 public class JerotesSnowGoelmEntity extends MagicSummonedEntity implements JerotesEntity, RangedAttackMob, IForgeShearable, Shearable {
 	private static final EntityDataAccessor<Byte> DATA_PUMPKIN_ID = SynchedEntityData.defineId(JerotesSnowGoelmEntity.class, EntityDataSerializers.BYTE);

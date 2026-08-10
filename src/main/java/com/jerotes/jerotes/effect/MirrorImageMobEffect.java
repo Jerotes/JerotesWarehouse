@@ -19,8 +19,5 @@ public class MirrorImageMobEffect extends BaseMobEffectAllTick {
 	@Override
 	public void applyEffectTick(LivingEntity livingEntity, int n) {
 		super.applyEffectTick(livingEntity, n);
-		if (!livingEntity.level().isClientSide()) {
-			livingEntity.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 5, 0, false, false));
-		}
 	}
 }

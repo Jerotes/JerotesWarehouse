@@ -2,8 +2,10 @@ package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.entity.Interface.FactionEntity;
 import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
+import com.jerotes.jerotes.entity.Interface.WizardEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAbout;
 import com.jerotes.jerotes.util.EntityAndItemFind;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -19,9 +21,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(Witch.class)
-public abstract class WitchMixin extends Raider implements FactionEntity {
+public abstract class WitchMixin extends Raider implements FactionEntity, SpellUseEntity {
     protected WitchMixin(EntityType<? extends Raider> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public int spellLevel = 2;
+    @Override
+    public int getSpellLevel() {
+        return this.spellLevel;
+    }
+    @Override
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putInt("SpellLevel", this.spellLevel);
+    }
+    @Override
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.spellLevel = compoundTag.getInt("SpellLevel");
     }
 
     @Override

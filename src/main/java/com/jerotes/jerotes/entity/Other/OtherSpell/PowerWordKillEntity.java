@@ -44,7 +44,7 @@ public class PowerWordKillEntity extends OtherSpellBaseEntity implements Traceab
     }
     @Override
     public int getMaxLife() {
-        return 60;
+        return 30;
     }
     public boolean moveToTarget() {
         return true;

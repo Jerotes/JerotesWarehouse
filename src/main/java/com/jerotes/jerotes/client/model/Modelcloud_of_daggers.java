@@ -65,17 +65,16 @@ public class Modelcloud_of_daggers<T extends CloudOfDaggersEntity> extends Entit
 				.texOffs(168, 189).addBox(4.0F, -18.0F, 25.0F, 21.0F, 18.0F, 0.0F, new CubeDeformation(0.0F))
 				.texOffs(210, 189).addBox(-25.0F, -18.0F, 25.0F, 21.0F, 18.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -0.1F, 0.0F));
 
-		PartDefinition cloud = partdefinition.addOrReplaceChild("cloud", CubeListBuilder.create().texOffs(0, 439).addBox(-19.0F, -17.1F, -19.0F, 38.0F, 35.0F, 38.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 349).addBox(-30.0F, -30.1F, -30.0F, 60.0F, 30.0F, 60.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 250).addBox(-35.0F, -49.1F, -35.0F, 70.0F, 30.0F, 70.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, 0.0F));
+		PartDefinition cloud = partdefinition.addOrReplaceChild("cloud", CubeListBuilder.create().texOffs(0, 439).addBox(-19.0F, -39.1F, -19.0F, 38.0F, 35.0F, 38.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 349).addBox(-30.0F, -52.1F, -30.0F, 60.0F, 30.0F, 60.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 250).addBox(-35.0F, -71.1F, -35.0F, 70.0F, 30.0F, 70.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
 		PartDefinition body_r1 = cloud.addOrReplaceChild("body_r1", CubeListBuilder.create().texOffs(0, 250).addBox(-35.0F, -15.0F, -35.0F, 70.0F, 30.0F, 70.0F, new CubeDeformation(-7.0F))
 				.texOffs(0, 349).addBox(-30.0F, 4.0F, -30.0F, 60.0F, 30.0F, 60.0F, new CubeDeformation(-6.0F))
-				.texOffs(0, 439).addBox(-19.0F, 17.0F, -19.0F, 38.0F, 35.0F, 38.0F, new CubeDeformation(-4.0F)), PartPose.offsetAndRotation(0.0F, -34.1F, 0.0F, 0.0F, 3.1416F, 0.0F));
+				.texOffs(0, 439).addBox(-19.0F, 17.0F, -19.0F, 38.0F, 35.0F, 38.0F, new CubeDeformation(-4.0F)), PartPose.offsetAndRotation(0.0F, -56.1F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 512, 512);
 	}
-
 
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
@@ -89,9 +88,9 @@ public class Modelcloud_of_daggers<T extends CloudOfDaggersEntity> extends Entit
 		this.body.yScale = f * 0.65f * f3;
 		this.body.xScale = f3;
 		this.body.zScale = f3;
-		this.cloud.xScale = f3;
-		this.cloud.yScale = Math.max(0, f3 * f);
-		this.cloud.zScale = f3;
+		this.cloud.xScale = f3 * entity.cloudScale();
+		this.cloud.yScale = Math.max(0, f3 * f) * entity.cloudScale();
+		this.cloud.zScale = f3 * entity.cloudScale();
 		if (entity.getStartTick() < 40)
 			return;
 		float fs = f2 % 10 - 5;

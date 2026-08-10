@@ -37,9 +37,8 @@ public class PowerWordParticle extends TextureSheetParticle {
 	private final int fadeInTime = 5;
 	private final int fadeOutTime = 15;
 
-	// 死亡色调：起始深红/暗紫 -> 收尾苍白粉，对应律令死亡的配色
-	private static final float START_R = 0.51f, START_G = 0.0f, START_B = 0.1f;   // 0x820019 附近
-	private static final float END_R = 1.0f, END_G = 0.88f, END_B = 1.0f;          // 0xffe1ff 附近
+	private static final float START_R = 0.51f, START_G = 0.0f, START_B = 0.1f;
+	private static final float END_R = 1.0f, END_G = 0.88f, END_B = 1.0f;
 
 	private float rollSpeed;
 	private float baseQuadSize;
@@ -57,7 +56,6 @@ public class PowerWordParticle extends TextureSheetParticle {
 		this.yd = vy * 2;
 		this.zd = vz * 2;
 
-		// 每颗粒子自转速度/方向随机，避免所有粒子步调一致显得呆板
 		this.rollSpeed = (this.random.nextBoolean() ? 1f : -1f) * (0.3f + this.random.nextFloat() * 0.4f);
 		this.roll = this.random.nextFloat() * (float) Math.PI * 2f;
 		this.oRoll = this.roll;
@@ -85,32 +83,27 @@ public class PowerWordParticle extends TextureSheetParticle {
 
 		float lifeProgress = Mth.clamp((float) this.age / this.lifetime, 0f, 1f);
 
-		// 颜色随时间从深红/暗紫过渡到苍白粉，末尾再叠加一点发白的"燃尽"效果
 		float colorT = Mth.clamp(lifeProgress * 1.3f, 0f, 1f);
 		float r = Mth.lerp(colorT, START_R, END_R);
 		float g = Mth.lerp(colorT, START_G, END_G);
 		float b = Mth.lerp(colorT, START_B, END_B);
 		this.setColor(r, g, b);
 
-		// 缩放：入场带一点"过冲"回弹，收尾收缩成一个点消失，而不是单纯变淡
 		float scale;
 		if (this.age < fadeInTime) {
 			float t = (float) this.age / fadeInTime;
-			// 简易 back-out 过冲曲线：先冲到 1.25 倍再回落到 1.0
 			float overshoot = 1.7f;
 			float tm1 = t - 1f;
 			scale = 1f + tm1 * tm1 * ((overshoot + 1f) * tm1 + overshoot);
 			scale = Mth.clamp(scale, 0f, 1.35f);
 		} else if (this.age > this.lifetime - fadeOutTime) {
 			float t = (float) (this.age - (this.lifetime - fadeOutTime)) / fadeOutTime;
-			scale = 1f - easeInCubic(t); // 收缩成一个点
+			scale = 1f - easeInCubic(t);
 		} else {
-			// 中段轻微呼吸波动，避免死板
 			scale = 1f + 0.06f * Mth.sin(this.age * 0.5f);
 		}
 		this.quadSize = this.baseQuadSize * Math.max(scale, 0.001f);
 
-		// 透明度：入场快速拉满，收尾淡出（保留原逻辑，但收尾更晚开始收缩配合上面的缩放）
 		float alpha;
 		if (this.age < fadeInTime) {
 			float progress = (float) this.age / fadeInTime;
@@ -139,14 +132,12 @@ public class PowerWordParticle extends TextureSheetParticle {
 		float rollLerp = Mth.lerp(partialTicks, this.oRoll, this.roll);
 		camRot.mul(Axis.ZP.rotation(rollLerp));
 
-		// 速度大小决定拉伸比例：速度越大，沿运动方向越长，垂直方向略微收窄
 		double speed = Math.sqrt(this.xd * this.xd + this.yd * this.yd + this.zd * this.zd);
 		float stretch = 1.0f + Mth.clamp((float) speed * 6.0f, 0f, 2.2f);
 		float widthScale = 1.0f / (1.0f + Mth.clamp((float) speed * 1.5f, 0f, 0.5f));
 
 		float size = this.getQuadSize(partialTicks);
 
-		// 基础四角（局部空间）：X 轴方向作为"运动拉伸轴"，Y 轴作为宽度
 		Vector3f[] corners = new Vector3f[]{
 				new Vector3f(-stretch, -widthScale, 0.0f),
 				new Vector3f(-stretch, widthScale, 0.0f),
@@ -164,8 +155,6 @@ public class PowerWordParticle extends TextureSheetParticle {
 		float v0 = this.getV0(), v1 = this.getV1();
 		int light = this.getLightColor(partialTicks);
 
-		// 拖尾方向（corners[0]/corners[1] 一侧，也就是运动"后方"）透明度降低，
-		// 前方（corners[2]/corners[3]）保持较高不透明度，制造彗星头亮尾淡的效果
 		int tailAlpha = (int) (this.alpha * 255 * 0.15f);
 		int headAlpha = (int) (this.alpha * 255f);
 

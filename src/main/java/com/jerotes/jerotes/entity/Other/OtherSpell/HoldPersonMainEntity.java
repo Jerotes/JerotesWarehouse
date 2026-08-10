@@ -51,12 +51,12 @@ public class HoldPersonMainEntity extends OtherSpellBaseEntity implements Tracea
     public void tick() {
         super.tick();
         if (this.getLifeTick() >= 20 && this.getLifeTick() % 10 == 0) {
-            boolean bl = false;
+            boolean bl = true;
             for (UUID uuid : getList()) {
                 if (this.level() instanceof ServerLevel serverLevel) {
                     Entity entity = serverLevel.getEntity(uuid);
-                    if (!(entity instanceof HoldMobEntity)) {
-                        bl = true;
+                    if (entity instanceof HoldMobEntity) {
+                        bl = false;
                     }
                 }
             }
@@ -65,7 +65,6 @@ public class HoldPersonMainEntity extends OtherSpellBaseEntity implements Tracea
             }
         }
     }
-
 
     public List<UUID> ListHoldMob = new ArrayList<>();
 

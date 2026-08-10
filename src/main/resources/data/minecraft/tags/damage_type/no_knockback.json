@@ -2,7 +2,7 @@
   "replace": false,
   "values": [
     "jerotes:bypasses_cooldown_magic",
-    "jerotes:cloud_of_daggers",
+    "jerotes:bypasses_cooldown_and_no_knockback_melee",
     "jerotes:syringe",
     "jerotes:magic_effect",
     "jerotes:bleed",

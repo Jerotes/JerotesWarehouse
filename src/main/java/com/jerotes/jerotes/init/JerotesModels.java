@@ -19,6 +19,7 @@ public class JerotesModels {
 		event.registerLayerDefinition(Modeljerotes_snow_golem.LAYER_LOCATION, Modeljerotes_snow_golem::createBodyLayer);
 		event.registerLayerDefinition(Modelblock.LAYER_LOCATION, Modelblock::createBodyLayer);
 		event.registerLayerDefinition(Modelcloud_of_daggers.LAYER_LOCATION, Modelcloud_of_daggers::createBodyLayer);
+		event.registerLayerDefinition(Modelmagic_bonfire.LAYER_LOCATION, Modelmagic_bonfire::createBodyLayer);
 		event.registerLayerDefinition(Modelinsect_plague.LAYER_LOCATION, Modelinsect_plague::createBodyLayer);
 		event.registerLayerDefinition(Modelhold_mob.LAYER_LOCATION, Modelhold_mob::createBodyLayer);
 		event.registerLayerDefinition(Modeljavelin.LAYER_LOCATION, Modeljavelin::createBodyLayer);
@@ -33,5 +34,7 @@ public class JerotesModels {
 		event.registerLayerDefinition(Modeljerotes_abstract_zombie.LAYER_LOCATION, Modeljerotes_abstract_zombie::createBodyLayer);
 		event.registerLayerDefinition(Modeljerotes_horse_saddle.LAYER_LOCATION, Modeljerotes_horse_saddle::createBodyLayer);
 		event.registerLayerDefinition(Modeljerotes_horse_armor.LAYER_LOCATION, Modeljerotes_horse_armor::createBodyLayer);
+		event.registerLayerDefinition(Modelice_knife.LAYER_LOCATION, Modelice_knife::createBodyLayer);
+		event.registerLayerDefinition(Modelice_knife_shard.LAYER_LOCATION, Modelice_knife_shard::createBodyLayer);
 	}
 }
