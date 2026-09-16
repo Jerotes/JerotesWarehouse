@@ -84,7 +84,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
         if (!itemStack.isItemEnabled(this.level.enabledFeatures())) {
             return;
         }
-        if (itemStack.getItem() instanceof ItemSpecialAttack itemToolBaseSpearBase) {
+        if (itemStack.getItem() instanceof ItemSpecialAttack itemToolBaseSpearBase && itemToolBaseSpearBase.jerotesHasSpecialAttack(player)) {
             if (player.getAttackStrengthScale(0) < 1) {
                 cir.setReturnValue(false);
                 return;

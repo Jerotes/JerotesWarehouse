@@ -49,11 +49,6 @@ public class InsectParticle extends TextureSheetParticle {
 	}
 
 	@Override
-	public int getLightColor(float f) {
-		return 240;
-	}
-
-	@Override
 	public void tick() {
 		super.tick();
 		this.setSpriteFromAge(this.spriteSet);

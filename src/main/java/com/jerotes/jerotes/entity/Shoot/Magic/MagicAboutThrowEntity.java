@@ -1,10 +1,6 @@
 package com.jerotes.jerotes.entity.Shoot.Magic;
 
-import com.google.common.collect.Lists;
-import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
-import com.jerotes.jerotes.init.JerotesMobEffects;
-import com.jerotes.jerotes.spell.SpellFind;
 import com.jerotes.jerotes.util.AttackFind;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -15,7 +11,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -28,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.entity.PartEntity;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -103,7 +99,14 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         return f + f4;
     }
 
+    public boolean changeHitEntityToPartParent() {
+        return true;
+    }
+
     protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (entityHitResult.getEntity() instanceof PartEntity<?> partEntity && partEntity.getParent() != null && changeHitEntityToPartParent()) {
+            entityHitResult = new EntityHitResult(partEntity.getParent(), entityHitResult.getLocation());
+        }
         if (entityHitResult.getEntity() == this.getLastHurt() && !this.canNotHurtLastHurt()) {
             return;
         }
@@ -113,7 +116,7 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         if (entityHitResult.getEntity() == this.getOwner()) {
             return;
         }
-        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entityHitResult.getEntity());
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(entityHitResult.getEntity(), null, this, getOwner());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;
@@ -133,7 +136,7 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
         if (entity == this.getOwner()) {
             return;
         }
-        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(entity, null, this, getOwner());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;

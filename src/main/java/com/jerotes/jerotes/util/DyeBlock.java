@@ -46,6 +46,34 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DyeBlock {
 	private static Block getSpecialDyedVariant(Block block, DyeColor color) {
+		//地毯
+		if (block == Blocks.WHITE_CARPET || block == Blocks.ORANGE_CARPET || block == Blocks.MAGENTA_CARPET
+				|| block == Blocks.LIGHT_BLUE_CARPET || block == Blocks.YELLOW_CARPET
+				|| block == Blocks.LIME_CARPET || block == Blocks.PINK_CARPET
+				|| block == Blocks.GRAY_CARPET || block == Blocks.LIGHT_GRAY_CARPET
+				|| block == Blocks.CYAN_CARPET || block == Blocks.PURPLE_CARPET
+				|| block == Blocks.BLUE_CARPET || block == Blocks.BROWN_CARPET
+				|| block == Blocks.GREEN_CARPET || block == Blocks.RED_CARPET
+				|| block == Blocks.BLACK_CARPET) {
+			return switch (color) {
+				case WHITE -> Blocks.WHITE_CARPET;
+				case ORANGE -> Blocks.ORANGE_CARPET;
+				case MAGENTA -> Blocks.MAGENTA_CARPET;
+				case LIGHT_BLUE -> Blocks.LIGHT_BLUE_CARPET;
+				case YELLOW -> Blocks.YELLOW_CARPET;
+				case LIME -> Blocks.LIME_CARPET;
+				case PINK -> Blocks.PINK_CARPET;
+				case GRAY -> Blocks.GRAY_CARPET;
+				case LIGHT_GRAY -> Blocks.LIGHT_GRAY_CARPET;
+				case CYAN -> Blocks.CYAN_CARPET;
+				case PURPLE -> Blocks.PURPLE_CARPET;
+				case BLUE -> Blocks.BLUE_CARPET;
+				case BROWN -> Blocks.BROWN_CARPET;
+				case GREEN -> Blocks.GREEN_CARPET;
+				case RED -> Blocks.RED_CARPET;
+				case BLACK -> Blocks.BLACK_CARPET;
+			};
+		}
 		//混凝土
 		if (block == Blocks.WHITE_CONCRETE || block == Blocks.ORANGE_CONCRETE || block == Blocks.MAGENTA_CONCRETE
 				|| block == Blocks.LIGHT_BLUE_CONCRETE || block == Blocks.YELLOW_CONCRETE
@@ -330,11 +358,9 @@ public class DyeBlock {
 		Block special = getSpecialDyedVariant(block, color);
 		if (special != null)
 			return special;
-
 		Block craft = getDyedVariantCraftI(block, color);
 		if (craft != null)
 			return craft;
-
 		craft = getDyedVariantCraftII(block, color);
 		if (craft != null)
 			return craft;

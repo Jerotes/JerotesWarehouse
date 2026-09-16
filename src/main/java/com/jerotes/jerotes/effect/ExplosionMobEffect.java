@@ -29,9 +29,7 @@ public class ExplosionMobEffect extends BaseMobEffectInstantenous {
 
 	@Override
 	public void applyInstantenousEffect(@Nullable Entity p_19462_, @Nullable Entity p_19463_, LivingEntity p_19464_, int p_19465_, double p_19466_) {
-
 		p_19464_.level().explode(null, p_19464_.getX(), p_19464_.getY(), p_19464_.getZ(), p_19465_ + 1, Level.ExplosionInteraction.NONE);
 		p_19464_.removeEffect(JerotesMobEffects.EXPLOSION.get());
-
 	}
 }

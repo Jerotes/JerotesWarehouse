@@ -1,6 +1,8 @@
 package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.client.particle.BallParticleOptions;
+import com.jerotes.jerotes.client.particle.ElementBoltParticle;
 import com.jerotes.jerotes.client.particle.SummonParticleOptions;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleType;
@@ -13,7 +15,11 @@ public class JerotesParticleTypes {
 	public static final DeferredRegister<ParticleType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, JerotesWarehouse.MODID);
 	public static final RegistryObject<SimpleParticleType> NULL = REGISTRY.register("null", () -> new SimpleParticleType(false));
 	public static final RegistryObject<SimpleParticleType> ABACK = REGISTRY.register("aback", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> FLAME = REGISTRY.register("flame", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> FROST = REGISTRY.register("frost", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> SHOCK = REGISTRY.register("shock", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> BLOOD = REGISTRY.register("blood", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> FEATHER = REGISTRY.register("feather", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> INSECT_BUG_BLACK = REGISTRY.register("insect_bug_black", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> INSECT_BUG_YELLOW = REGISTRY.register("insect_bug_yellow", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> INSECT_BUG_BROWN = REGISTRY.register("insect_bug_brown", () -> new SimpleParticleType(true));
@@ -44,9 +50,28 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> TARGET = REGISTRY.register("target", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> LIFE_MEND = REGISTRY.register("life_mend", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> CURE_WOUNDS = REGISTRY.register("cure_wounds", () -> new SimpleParticleType(true));
-	public static final RegistryObject<ParticleType<SummonParticleOptions>> SUMMON_PARTICLE = REGISTRY.register("summon", () -> new ParticleType<SummonParticleOptions>(false, SummonParticleOptions.DESERIALIZER) {
+	public static final RegistryObject<ParticleType<ElementBoltParticle.BoltParticleOptions>> ELEMENT_BOLT =
+			REGISTRY.register(
+					"element_bolt",
+					() -> new ParticleType<ElementBoltParticle.BoltParticleOptions>(
+							false,
+							ElementBoltParticle.BoltParticleOptions.DESERIALIZER
+					) {
+						@Override
+						public Codec<ElementBoltParticle.BoltParticleOptions> codec() {
+							return ElementBoltParticle.BoltParticleOptions.CODEC;
+						}
+					}
+			);
+	public static final RegistryObject<ParticleType<SummonParticleOptions>> SUMMON_PARTICLE = REGISTRY.register("summon", () -> new ParticleType<>(false, SummonParticleOptions.DESERIALIZER) {
 		@Override
 		public Codec<SummonParticleOptions> codec() {
+			return null;
+		}
+	});
+	public static final RegistryObject<ParticleType<BallParticleOptions>> BALL_PARTICLE = REGISTRY.register("ball", () -> new ParticleType<>(false, BallParticleOptions.DESERIALIZER) {
+		@Override
+		public Codec<BallParticleOptions> codec() {
 			return null;
 		}
 	});
@@ -57,6 +82,7 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> POISON_BREATH = REGISTRY.register("poison_breath", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> POISON_BREATH_FOG = REGISTRY.register("poison_breath_fog", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> ELDRITCH_BLAST = REGISTRY.register("eldritch_blast", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> SCORCHING_RAY = REGISTRY.register("scorching_ray", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> RAY_OF_SICKNESS = REGISTRY.register("ray_of_sickness", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> RAY_OF_ENFEEBLEMENT = REGISTRY.register("ray_of_enfeeblement", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> DISINTEGRATE = REGISTRY.register("disintegrate", () -> new SimpleParticleType(true));
@@ -65,6 +91,7 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> VICIOUS_MOCKERY = REGISTRY.register("vicious_mockery", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> HOLD_PERSON = REGISTRY.register("hold_person", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> BESTOW_CURSE = REGISTRY.register("bestow_curse", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> REMOVE_CURSE = REGISTRY.register("remove_curse", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> BLINDNESS_CURSE = REGISTRY.register("blindness_curse", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> DARKNESS_CURSE = REGISTRY.register("darkness_curse", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> FATIGUE_CURSE = REGISTRY.register("fatigue_curse", () -> new SimpleParticleType(true));
@@ -82,24 +109,30 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> FIRE_BOLT_DISPLAY = REGISTRY.register("fire_bolt_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> FROST_BOLT_DISPLAY = REGISTRY.register("frost_bolt_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> SHOCK_BOLT_DISPLAY = REGISTRY.register("shock_bolt_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> FLAMES_SPRAY_DISPLAY = REGISTRY.register("flames_spray_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> FROSTBITE_SPRAY_DISPLAY = REGISTRY.register("frostbite_spray_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> SPARKS_SPRAY_DISPLAY = REGISTRY.register("sparks_spray_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> WITCH_BOLT_DISPLAY = REGISTRY.register("witch_bolt_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> ICE_KNIFE_DISPLAY = REGISTRY.register("ice_knife_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> RAY_OF_FIRE_DISPLAY = REGISTRY.register("ray_of_fire_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> RAY_OF_FROST_DISPLAY = REGISTRY.register("ray_of_frost_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> RAY_OF_LIGHTNING_DISPLAY = REGISTRY.register("ray_of_lightning_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> ELDRITCH_BLAST_DISPLAY = REGISTRY.register("eldritch_blast_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> SCORCHING_RAY_DISPLAY = REGISTRY.register("scorching_ray_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> RAY_OF_SICKNESS_DISPLAY = REGISTRY.register("ray_of_sickness_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> RAY_OF_ENFEEBLEMENT_DISPLAY = REGISTRY.register("ray_of_enfeeblement_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> DISINTEGRATE_DISPLAY = REGISTRY.register("disintegrate_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> FINGER_OF_DEATH_DISPLAY = REGISTRY.register("finger_of_death_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> LIGHTNING_BOLT_DISPLAY = REGISTRY.register("lightning_bolt_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> CHAIN_LIGHTNING_DISPLAY = REGISTRY.register("chain_lightning_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> SUNBEAM_DISPLAY = REGISTRY.register("sunbeam_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> INFESTATION_DISPLAY = REGISTRY.register("infestation_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> SHOCKING_GRASP_DISPLAY = REGISTRY.register("shocking_grasp_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> GUARDIAN_LASER_DISPLAY = REGISTRY.register("guardian_laser_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> VICIOUS_MOCKERY_DISPLAY = REGISTRY.register("vicious_mockery_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> HOLD_PERSON_DISPLAY = REGISTRY.register("hold_person_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> BESTOW_CURSE_DISPLAY = REGISTRY.register("bestow_curse_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> REMOVE_CURSE_DISPLAY = REGISTRY.register("remove_curse_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> BLINDNESS_CURSE_DISPLAY = REGISTRY.register("blindness_curse_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> DARKNESS_CURSE_DISPLAY = REGISTRY.register("darkness_curse_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> FATIGUE_CURSE_DISPLAY = REGISTRY.register("fatigue_curse_display", () -> new SimpleParticleType(true));
@@ -112,7 +145,10 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> LIFE_MEND_DISPLAY = REGISTRY.register("life_mend_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> CURE_WOUNDS_DISPLAY = REGISTRY.register("cure_wounds_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> MENDING_DISPLAY = REGISTRY.register("mending_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> FEATHER_FALL_DISPLAY = REGISTRY.register("feather_fall_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> DARKVISION_DISPLAY = REGISTRY.register("darkvision_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> MISTY_STEP_DISPLAY = REGISTRY.register("misty_step_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> ENDER_STEP_DISPLAY = REGISTRY.register("ender_step_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> MIRROR_IMAGE_DISPLAY = REGISTRY.register("mirror_image_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> INVISIBILITY_DISPLAY = REGISTRY.register("invisibility_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> INVISIBLE_PASSAGE_DISPLAY = REGISTRY.register("invisible_passage_display", () -> new SimpleParticleType(true));
@@ -142,6 +178,9 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> WITHER_SKULL_DISPLAY = REGISTRY.register("wither_skull_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> DANGEROUS_WITHER_SKULL_DISPLAY = REGISTRY.register("dangerous_wither_skull_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> EVOKERCRAFT_DISPLAY = REGISTRY.register("evokercraft_display", () -> new SimpleParticleType(true));
-	public static final RegistryObject<SimpleParticleType> WARDEN_SNOIC_BOOM_DISPLAY = REGISTRY.register("warden_snoic_boom_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> WARDEN_SONIC_BOOM_DISPLAY = REGISTRY.register("warden_sonic_boom_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> REDSTONE_LASER_DISPLAY = REGISTRY.register("redstone_laser_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> INSTANT_FORGE_DISPLAY = REGISTRY.register("instant_forge_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> ENDER_CHEST_DISPLAY = REGISTRY.register("ender_chest_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> LOCK_AIM_DISPLAY = REGISTRY.register("lock_aim_display", () -> new SimpleParticleType(true));
 }

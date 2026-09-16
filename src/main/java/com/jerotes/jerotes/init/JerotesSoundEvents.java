@@ -25,6 +25,7 @@ public class JerotesSoundEvents {
     public static final SoundEvent TELEPORT = createSoundEvent("teleport");
     public static final SoundEvent ITEM_THROW = createSoundEvent("item_throw");
     public static final SoundEvent WIND = createSoundEvent("wind");
+    public static final SoundEvent WIND_SHORT = createSoundEvent("wind_short");
     public static final SoundEvent CLOAKING = createSoundEvent("cloaking");
     public static final SoundEvent WIND_BURST = createSoundEvent("wind_burst");
     public static final SoundEvent ATTACK_1 = createSoundEvent("attack_1");
@@ -48,24 +49,30 @@ public class JerotesSoundEvents {
     public static final SoundEvent MAGIC_FIRE_BOLT = createSoundEvent("magic_fire_bolt");
     public static final SoundEvent MAGIC_FROST_BOLT = createSoundEvent("magic_frost_bolt");
     public static final SoundEvent MAGIC_SHOCK_BOLT = createSoundEvent("magic_shock_bolt");
+    public static final SoundEvent MAGIC_FLAMES_SPRAY = createSoundEvent("magic_flames_spray");
+    public static final SoundEvent MAGIC_FROSTBITE_SPRAY = createSoundEvent("magic_frostbite_spray");
+    public static final SoundEvent MAGIC_SPARKS_SPRAY = createSoundEvent("magic_sparks_spray");
     public static final SoundEvent MAGIC_WITCH_BOLT = createSoundEvent("magic_witch_bolt");
     public static final SoundEvent MAGIC_ICE_KNIFE = createSoundEvent("magic_ice_knife");
     public static final SoundEvent MAGIC_RAY_OF_FIRE = createSoundEvent("magic_ray_of_fire");
     public static final SoundEvent MAGIC_RAY_OF_FROST = createSoundEvent("magic_ray_of_frost");
     public static final SoundEvent MAGIC_RAY_OF_LIGHTNING = createSoundEvent("magic_ray_of_lightning");
     public static final SoundEvent MAGIC_ELDRITCH_BLAST = createSoundEvent("magic_eldritch_blast");
+    public static final SoundEvent MAGIC_SCORCHING_RAY = createSoundEvent("magic_scorching_ray");
     public static final SoundEvent MAGIC_RAY_OF_SICKNESS = createSoundEvent("magic_ray_of_sickness");
     public static final SoundEvent MAGIC_RAY_OF_ENFEEBLEMENT = createSoundEvent("magic_ray_of_enfeeblement");
     public static final SoundEvent MAGIC_DISINTEGRATE = createSoundEvent("magic_disintegrate");
     public static final SoundEvent MAGIC_FINGER_OF_DEATH = createSoundEvent("magic_finger_of_death");
     public static final SoundEvent MAGIC_LIGHTNING_BOLT = createSoundEvent("magic_lightning_bolt");
     public static final SoundEvent MAGIC_CHAIN_LIGHTNING = createSoundEvent("magic_chain_lightning");
+    public static final SoundEvent MAGIC_SUNBEAM = createSoundEvent("magic_sunbeam");
     public static final SoundEvent MAGIC_INFESTATION = createSoundEvent("magic_infestation");
     public static final SoundEvent MAGIC_SHOCKING_GRASP = createSoundEvent("magic_shocking_grasp");
     public static final SoundEvent MAGIC_GUARDIAN_LASER = createSoundEvent("magic_guardian_laser");
     public static final SoundEvent MAGIC_VICIOUS_MOCKERY = createSoundEvent("magic_vicious_mockery");
     public static final SoundEvent MAGIC_HOLD_PERSON = createSoundEvent("magic_hold_person");
     public static final SoundEvent MAGIC_BESTOW_CURSE = createSoundEvent("magic_bestow_curse");
+    public static final SoundEvent MAGIC_REMOVE_CURSE = createSoundEvent("magic_remove_curse");
     public static final SoundEvent MAGIC_BLINDNESS_CURSE = createSoundEvent("magic_blindness_curse");
     public static final SoundEvent MAGIC_DARKNESS_CURSE = createSoundEvent("magic_darkness_curse");
     public static final SoundEvent MAGIC_FATIGUE_CURSE = createSoundEvent("magic_fatigue_curse");
@@ -78,7 +85,10 @@ public class JerotesSoundEvents {
     public static final SoundEvent MAGIC_LIFE_MEND = createSoundEvent("magic_life_mend");
     public static final SoundEvent MAGIC_CURE_WOUNDS = createSoundEvent("magic_cure_wounds");
     public static final SoundEvent MAGIC_MENDING = createSoundEvent("magic_mending");
+    public static final SoundEvent MAGIC_FEATHER_FALL = createSoundEvent("magic_feather_fall");
+    public static final SoundEvent MAGIC_DARKVISION = createSoundEvent("magic_darkvision");
     public static final SoundEvent MAGIC_MISTY_STEP = createSoundEvent("magic_misty_step");
+    public static final SoundEvent MAGIC_ENDER_STEP = createSoundEvent("magic_ender_step");
     public static final SoundEvent MAGIC_MIRROR_IMAGE = createSoundEvent("magic_mirror_image");
     public static final SoundEvent MAGIC_INVISIBILITY = createSoundEvent("magic_invisibility");
     public static final SoundEvent MAGIC_INVISIBLE_PASSAGE = createSoundEvent("magic_invisible_passage");
@@ -108,6 +118,9 @@ public class JerotesSoundEvents {
     public static final SoundEvent MAGIC_EVOKERCRAFT = createSoundEvent("magic_evokercraft");
     public static final SoundEvent MAGIC_WARDEN_SONIC_BOOM = createSoundEvent("magic_warden_sonic_boom");
     public static final SoundEvent MAGIC_REDSTONE_LASER = createSoundEvent("magic_redstone_laser");
+    public static final SoundEvent MAGIC_INSTANT_FORGE = createSoundEvent("magic_instant_forge");
+    public static final SoundEvent MAGIC_ENDER_CHEST = createSoundEvent("magic_ender_chest");
+    public static final SoundEvent MAGIC_LOCK_AIM = createSoundEvent("magic_lock_aim");
 
     private static SoundEvent createSoundEvent(final String soundName) {
         final ResourceLocation soundID = new ResourceLocation(JerotesWarehouse.MODID, soundName);

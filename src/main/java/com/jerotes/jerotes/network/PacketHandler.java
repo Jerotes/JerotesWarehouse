@@ -61,6 +61,10 @@ public class PacketHandler {
 				SpellJavelinPacket::encode,
 				SpellJavelinPacket::decode,
 				SpellJavelinPacket::consume);
+		NETWORK_WRAPPER.registerMessage(packetsRegistered++, SatchelPageC2SPacket.class,
+				SatchelPageC2SPacket::encode,
+				SatchelPageC2SPacket::decode,
+				SatchelPageC2SPacket::consume);
 	}
 
 	public static void sendToServer(Object msg) {

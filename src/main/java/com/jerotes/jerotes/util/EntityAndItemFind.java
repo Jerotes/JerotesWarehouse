@@ -336,6 +336,10 @@ public class EntityAndItemFind {
 		n += isExalted(livingEntity) ? 3 : 0;
 		n += livingEntity instanceof Player ? 0 : Math.min(livingEntity.getExperienceReward()/200, 3);
 		n += Math.min((int) Main.luck(livingEntity), 5);
+		n += livingEntity.hasEffect(JerotesMobEffects.PARALYZED.get()) ? -3 : 0;
+		n += livingEntity.hasEffect(JerotesMobEffects.ANESTHETIZED_HOLD.get()) ? -2 : 0;
+		n += livingEntity.hasEffect(JerotesMobEffects.ENSLAVEMENT.get()) ? -2 : 0;
+		n += livingEntity.hasEffect(JerotesMobEffects.PRONE.get()) ? -2 : 0;
 		return Math.min(n, 30);
 	}
 	public static int getModifier(int n) {
@@ -362,6 +366,22 @@ public class EntityAndItemFind {
 		return savingSpellThrow(livingEntity, 0);
 	}
 
+
+	public static boolean savingNormalThrow(LivingEntity livingEntity, int add, boolean mustThrow) {
+		if (livingEntity == null)
+			return true;
+		if (!MainConfig.HaveSavingThrow && !mustThrow)
+			return true;
+		if (MainConfig.HaveSavingThrowOnlyPlayerAndLegendary && !(livingEntity instanceof Player) && !isLegendary(livingEntity) && !mustThrow)
+			return false;
+		int n = (Main.randomReach(livingEntity.getRandom(),1, 20));
+		if (n == 1)
+			return false;
+		if (n == 20)
+			return true;
+		return n >= EntityAndItemFind.getModifier(EntityAndItemFind.getNormalSaving(livingEntity)) + add;
+	}
+
 	public static float getItemAttackSpeedFromDPS(float DPS, float speedMultiplier, WeaponCategory weaponCategory) {
 		float speed;
 		switch (weaponCategory) {
@@ -372,6 +392,7 @@ public class EntityAndItemFind {
 			case TWO_HANDED_SWORD -> speed = 0.8f;
 			case TWO_HANDED_AXE -> speed = 0.7f;
 			case TWO_HANDED_HAMMER -> speed = 0.6f;
+			case PIKE -> speed = 0.7f;
 			default -> speed = 4.0f;
 		}
 		speed *= speedMultiplier;
@@ -391,6 +412,7 @@ public class EntityAndItemFind {
 		AXE,
 		TWO_HANDED_SWORD,
 		TWO_HANDED_AXE,
+		PIKE,
 		TWO_HANDED_HAMMER;
 	}
 
@@ -404,7 +426,7 @@ public class EntityAndItemFind {
 		return false;
 	}
 	public static void setColor(LivingEntity livingEntity, DyeColor dyeColor) {
-		CompoundTag compoundTag = new CompoundTag();
+		CompoundTag compoundTag = livingEntity.getPersistentData();
 		livingEntity.addAdditionalSaveData(compoundTag);
 		if (compoundTag.get("Color") != null && compoundTag.contains("Color", Tag.TAG_BYTE)) {
 			compoundTag.putByte("Color", (byte)dyeColor.getId());

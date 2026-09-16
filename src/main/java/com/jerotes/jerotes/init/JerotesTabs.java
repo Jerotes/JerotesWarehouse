@@ -29,6 +29,7 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.JEROTES_PLAYER_SPAWN_EGG.get());
 				tabData.accept(JerotesItems.JEROTES_HORSE_SPAWN_EGG.get());
 
+				tabData.accept(JerotesItems.LEATHER_BOOK_SATCHEL.get());
 				tabData.accept(JerotesItems.FLAWLESS_MAGIC_SCROLL.get());
 				tabData.accept(JerotesItems.COPPER_CARVED_COMPANY_INVESTIGATION_RECORDS.get());
 
@@ -65,6 +66,15 @@ public class JerotesTabs {
 				tabData.accept(JerotesItems.GOLDEN_HAMMER.get());
 				tabData.accept(JerotesItems.DIAMOND_HAMMER.get());
 				tabData.accept(JerotesItems.NETHERITE_HAMMER.get());
+
+				tabData.accept(JerotesItems.SIMPLE_GREATSWORD.get());
+				tabData.accept(JerotesItems.WOODEN_GREATSWORD.get());
+				tabData.accept(JerotesItems.STONE_GREATSWORD.get());
+				tabData.accept(JerotesItems.COPPER_GREATSWORD.get());
+				tabData.accept(JerotesItems.IRON_GREATSWORD.get());
+				tabData.accept(JerotesItems.GOLDEN_GREATSWORD.get());
+				tabData.accept(JerotesItems.DIAMOND_GREATSWORD.get());
+				tabData.accept(JerotesItems.NETHERITE_GREATSWORD.get());
 
 				tabData.accept(JerotesItems.SIMPLE_JAVELIN.get());
 				tabData.accept(JerotesItems.HEAL_JAVELIN.get());

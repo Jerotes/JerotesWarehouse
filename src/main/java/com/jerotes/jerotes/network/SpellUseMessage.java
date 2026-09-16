@@ -84,6 +84,9 @@ public class SpellUseMessage {
 		else if (type == 2) {
 			//修改法术子类别
 			//如果正在手持施法物品
+			if (SpellType.getCastingTickJerotes(player) > -1) {
+				return;
+			}
 			if (player.getMainHandItem().getItem() instanceof MagicItem magicItem && magicItem.hasSpellMagicItem()) {
 				ItemStack itemStack = player.getMainHandItem();
 				var ref = new Object() {
@@ -195,6 +198,9 @@ public class SpellUseMessage {
 				if (magicSpellStart.getMagicType() != MagicType.SELF)
 					target = Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable());
 			}
+			if (magicSpellStart.getMagicType() == MagicType.TARGET && player.distanceTo(target) > magicSpellStart.getSpellDistance() && magicSpellStart.canUseTargetNone()) {
+				target = player;
+			}
 			if (target == null) {
 				target = player;
 			}
@@ -236,6 +242,9 @@ public class SpellUseMessage {
 					(Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) instanceof LivingEntity || magicSpellStart.canTargetNonLivingEntity())) {
 				if (magicSpellStart.getMagicType() != MagicType.SELF)
 					target = Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable());
+			}
+			if (magicSpellStart.getMagicType() == MagicType.TARGET && player.distanceTo(target) > magicSpellStart.getSpellDistance() && magicSpellStart.canUseTargetNone()) {
+				target = player;
 			}
 			if (target == null) {
 				target = player;

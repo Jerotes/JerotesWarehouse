@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:force",
+    "jerotes:bypasses_cooldown_force"
+  ]
+}

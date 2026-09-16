@@ -4,6 +4,7 @@ import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
@@ -46,6 +47,7 @@ public class RayofFrostEntity extends BaseRayEntity {
         super.hitEntity(entity);
         if (!this.isUseful())
             return;
+        this.setUseful(false);
         if (this.level().isClientSide) {
             return;
         }
@@ -61,8 +63,7 @@ public class RayofFrostEntity extends BaseRayEntity {
             if (bl) {
                 livingEntity.setTicksFrozen(Math.max(entity.getTicksFrozen(), 140 + 20 * spellLevelFreezeTime));
             }
-            this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
-            this.setUseful(false);
+            this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
         }
     }
     @Override
@@ -70,17 +71,31 @@ public class RayofFrostEntity extends BaseRayEntity {
         super.onHit(hitResult);
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
     protected void afterHasLineOfSight() {
         super.afterHasLineOfSight();
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
+        this.setUseful(false);
+        if (this.level().isClientSide) {
+            return;
         }
+        BlockPos center = BlockPos.containing(this.position());
+        Level level = this.level();
+        Entity owner = this.getOwner();
+        int radius = 2;
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    if (dx*dx + dy*dy + dz*dz > radius*radius) continue;
+                    BlockPos pos = center.offset(dx, dy, dz);
+                    Main.freezeBlock(level, pos, owner);
+                    Main.extinguishFire(level, pos, owner);
+                }
+            }
+        }
+
     }
 
     public BaseRayEntity getRay() {
@@ -94,7 +109,7 @@ public class RayofFrostEntity extends BaseRayEntity {
 
     @Override
     protected ParticleOptions getTrailParticle() {
-        return ParticleTypes.SNOWFLAKE;
+        return JerotesParticleTypes.FROST.get();
     }
 
     @Override

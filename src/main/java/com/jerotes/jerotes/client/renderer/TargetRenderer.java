@@ -22,7 +22,6 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 public class TargetRenderer<T extends BaseTargetEntity> extends EntityRenderer<T> {
-
     private static final ResourceLocation TEXTURE_LOCATION =
             new ResourceLocation(JerotesWarehouse.MODID,
                     "textures/item/magic_missile.png");

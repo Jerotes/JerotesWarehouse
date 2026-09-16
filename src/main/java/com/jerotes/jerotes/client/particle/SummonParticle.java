@@ -12,7 +12,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,7 +20,7 @@ import org.joml.Vector3f;
 
 @OnlyIn(Dist.CLIENT)
 public class SummonParticle extends Particle {
-	private final SummonParticleOptions cfg;  // 配置对象
+	private final SummonParticleOptions cfg;
 
 	private float innerHeight;
 	private float innerHalfWidth;
@@ -33,7 +32,7 @@ public class SummonParticle extends Particle {
 	public SummonParticle(ClientLevel level, double x, double y, double z, SummonParticleOptions options) {
 		super(level, x, y, z);
 		this.cfg = options;
-		this.lifetime = cfg.innerLifespan;  // 使用配置的生命周期
+		this.lifetime = cfg.innerLifespan;
 		this.hasPhysics = false;
 		this.innerAge = 0;
 		this.outerAge = 0;
@@ -53,7 +52,6 @@ public class SummonParticle extends Particle {
 		innerAge = this.age;
 		outerAge = Math.min(this.age, cfg.outerLifespan);
 
-		// --- 内层高度与宽度（完全使用 cfg） ---
 		float innerProgress = (float) innerAge / cfg.innerLifespan;
 		if (innerProgress <= 0.5F) {
 			float t = innerProgress / 0.5F;
@@ -65,7 +63,6 @@ public class SummonParticle extends Particle {
 			innerHalfWidth = cfg.innerHalfWidthPeak + (cfg.innerHalfWidthEnd - cfg.innerHalfWidthPeak) * t;
 		}
 
-		// --- 外层高度与半径 ---
 		if (outerAge < cfg.outerLifespan) {
 			float outerProgress = (float) outerAge / cfg.outerLifespan;
 			if (outerProgress <= 0.5F) {
@@ -122,7 +119,6 @@ public class SummonParticle extends Particle {
 		return Mth.clamp(alpha, 0.0f, 1.0f);
 	}
 
-	// ---------- 渲染方法（从 cfg 中取颜色，其余逻辑不变） ----------
 	private void renderInnerCube(VertexConsumer consumer, float px, float py, float pz,
 								 float height, float halfWidth, float globalAlpha) {
 		float yBottom = py;

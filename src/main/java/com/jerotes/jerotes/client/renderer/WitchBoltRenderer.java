@@ -3,7 +3,6 @@ package com.jerotes.jerotes.client.renderer;
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.client.model.Modeljavelin;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicThrow.WitchBoltEntity;
-import com.jerotes.jerotes.entity.Shoot.Magic.Target.GuardianLaserEntity;
 import com.jerotes.jerotes.init.JerotesRenderType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -16,6 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -144,7 +144,7 @@ public class WitchBoltRenderer extends EntityRenderer<WitchBoltEntity> {
 					pitch = segDir.y > 0.0 ? -(float)Math.PI / 2F : (float)Math.PI / 2F;
 				} else {
 					yaw = (float)Math.atan2(segDir.x, segDir.z);
-					pitch = (float)-Math.atan2(segDir.y, hDist);
+					pitch = (float)Math.asin(-segDir.y / segLen);
 				}
 
 				poseStack.pushPose();
@@ -227,8 +227,19 @@ public class WitchBoltRenderer extends EntityRenderer<WitchBoltEntity> {
 	}
 
 	@Override
-	public boolean shouldRender(WitchBoltEntity entity, Frustum frustum, double camX, double camY, double camZ) {
-		return entity.getOwner() != null && entity.getTarget() != null;
+	public boolean shouldRender(WitchBoltEntity witchBoltEntity, Frustum frustum, double d, double d2, double d3) {
+		if (!witchBoltEntity.shouldRender(d, d2, d3)) {
+			return false;
+		} else if (witchBoltEntity.noCulling) {
+			return true;
+		} else {
+			AABB aabb = witchBoltEntity.getBoundingBoxForCulling().inflate(128.0D);
+			if (aabb.hasNaN() || aabb.getSize() == 0.0D) {
+				aabb = new AABB(witchBoltEntity.getX() - 128.0D, witchBoltEntity.getY() - 128.0D, witchBoltEntity.getZ() - 128.0D,
+						witchBoltEntity.getX() + 128.0D, witchBoltEntity.getY() + 128.0D, witchBoltEntity.getZ() + 128.0D);
+			}
+			return frustum.isVisible(aabb);
+		}
 	}
 
 	@Override

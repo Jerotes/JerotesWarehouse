@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:necrotic",
+    "jerotes:bypasses_cooldown_necrotic",
+    "jerotes:cursed_additional_damage"
+  ]
+}

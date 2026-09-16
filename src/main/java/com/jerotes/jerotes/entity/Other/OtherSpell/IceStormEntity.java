@@ -106,11 +106,10 @@ public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEnt
         //攻击
         if (this.getLifeTick() == 20) {
             List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1,0,1));
-            List<LivingEntity> list2 = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().deflate(1,0,1));
             double radius = 6.0;
             double radiusSq = radius * radius;
             for (LivingEntity livingEntity : list) {
-                if (livingEntity.distanceToSqr(this) <= radiusSq || list2.contains(livingEntity)) {
+                if (livingEntity.distanceToSqr(this) <= radiusSq) {
                     this.dealDamageTo(livingEntity);
                 }
             }
@@ -127,27 +126,8 @@ public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEnt
                 for (int dy = -radius; dy <= radius; dy++) {
                     for (int dz = -radius; dz <= radius; dz++) {
                         BlockPos pos = center.offset(dx, dy, dz);
-                        BlockState state = serverLevel.getBlockState(pos);
-                        if (state.getFluidState().getType() == Fluids.WATER && state.getFluidState().isSource()) {
-                            serverLevel.setBlock(pos, Blocks.FROSTED_ICE.defaultBlockState(), 3);
-                        }
-                        if (state.is(Blocks.FIRE) || state.is(Blocks.SOUL_FIRE)) {
-                            serverLevel.removeBlock(pos, false);
-                        }
-                        if (state.hasProperty(CampfireBlock.LIT) && state.getValue(CampfireBlock.LIT)) {
-                            serverLevel.setBlock(
-                                    pos,
-                                    state.setValue(CampfireBlock.LIT, false),
-                                    Block.UPDATE_ALL
-                            );
-                        }
-                        if (state.hasProperty(AbstractCandleBlock.LIT) && state.getValue(AbstractCandleBlock.LIT)) {
-                            serverLevel.setBlock(
-                                    pos,
-                                    state.setValue(AbstractCandleBlock.LIT, false),
-                                    Block.UPDATE_ALL
-                            );
-                        }
+                        Main.freezeBlock(serverLevel, pos, getOwner());
+                        Main.extinguishFire(serverLevel, pos, getOwner());
                     }
                 }
             }
@@ -155,27 +135,8 @@ public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEnt
                 for (int dz = -radius; dz <= radius; dz++) {
                     for (int dy = -12; dy < 0; dy++) {
                         BlockPos pos = center.offset(dx, dy, dz);
-                        BlockState state = serverLevel.getBlockState(pos);
-                        if (state.getFluidState().getType() == Fluids.WATER && state.getFluidState().isSource()) {
-                            serverLevel.setBlock(pos, Blocks.FROSTED_ICE.defaultBlockState(), 3);
-                        }
-                        if (state.is(Blocks.FIRE) || state.is(Blocks.SOUL_FIRE)) {
-                            serverLevel.removeBlock(pos, false);
-                        }
-                        if (state.hasProperty(CampfireBlock.LIT) && state.getValue(CampfireBlock.LIT)) {
-                            serverLevel.setBlock(
-                                    pos,
-                                    state.setValue(CampfireBlock.LIT, false),
-                                    Block.UPDATE_ALL
-                            );
-                        }
-                        if (state.hasProperty(AbstractCandleBlock.LIT) && state.getValue(AbstractCandleBlock.LIT)) {
-                            serverLevel.setBlock(
-                                    pos,
-                                    state.setValue(AbstractCandleBlock.LIT, false),
-                                    Block.UPDATE_ALL
-                            );
-                        }
+                        Main.freezeBlock(serverLevel, pos, getOwner());
+                        Main.extinguishFire(serverLevel, pos, getOwner());
                     }
                 }
             }
@@ -187,6 +148,8 @@ public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEnt
         if (!livingEntity.isAlive() || livingEntity.isInvulnerable() || livingEntity == livingEntity2) {
             return false;
         }
+        if (AttackFind.FindCanNotAttack(this.getOwner(), livingEntity))
+            return false;
         if (livingEntity.getUseItem().getItem() instanceof ShieldItem) {
             if (livingEntity instanceof Player player) {
                 player.disableShield(true);
@@ -216,11 +179,6 @@ public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEnt
             }
         }
         return true;
-    }
-
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
     }
 
     @Override

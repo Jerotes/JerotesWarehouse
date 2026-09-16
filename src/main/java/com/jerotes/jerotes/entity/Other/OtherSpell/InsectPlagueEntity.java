@@ -57,7 +57,7 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
         return 10 * 60 * 20;
     }
     protected void doPush(Entity entity) {
-        if (shouldPush()) {
+        if (shouldPush() && this.distanceToSqr(entity) <= 36.0D) {
             entity.makeStuckInBlock(Blocks.AIR.defaultBlockState(), new Vec3(0.5D, 0.5D, 0.5D));
         }
     }
@@ -73,28 +73,35 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
                 }
             }
         }
-            if (this.getLifeTick() <= 40 && this.getLifeTick() > 30) {
-                if (this.level() instanceof ServerLevel serverLevel) {
-                    for (int j = 0; j < 6; j++) {
-                        serverLevel.sendParticles(JerotesParticleTypes.INSECT_LOCUST.get(), this.getRandomX(0.5f), this.getRandomY(), this.getRandomZ(0.5f), 0,
-                                this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f,
-                                0.2f);
-                    }
-                }
-            } else if (this.getLifeTick() > 40) {
-                if (this.level() instanceof ServerLevel serverLevel) {
-                    for (int j = 0; j < 20; j++) {
-                        serverLevel.sendParticles(JerotesParticleTypes.INSECT_LOCUST.get(), this.getRandomX(0.5f), this.getRandomY(), this.getRandomZ(0.5f), 0,
-                                this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f,
-                                0.2f);
-                    }
+        if (this.getLifeTick() <= 40 && this.getLifeTick() > 30) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                for (int j = 0; j < 6; j++) {
+                    double x = this.getRandomX(0.5f);
+                    double z = this.getRandomZ(0.5f);
+                    if (this.distanceToSqr(x, this.getY(), z) > 36.0D) continue;
+                    serverLevel.sendParticles(JerotesParticleTypes.INSECT_LOCUST.get(), x, this.getRandomY(), z, 0,
+                            this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f,
+                            0.2f);
                 }
             }
+        } else if (this.getLifeTick() > 40) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                for (int j = 0; j < 20; j++) {
+                    double x = this.getRandomX(0.5f);
+                    double z = this.getRandomZ(0.5f);
+                    if (this.distanceToSqr(x, this.getY(), z) > 36.0D) continue;
+                    serverLevel.sendParticles(JerotesParticleTypes.INSECT_LOCUST.get(), x, this.getRandomY(), z, 0,
+                            this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f, this.getRandom().nextFloat() - 0.5f,
+                            0.2f);
+                }
+            }
+        }
         if (this.getLifeTick() % 5 == 0) {
             if (this.getLifeTick() > 20) {
                 boolean bl = false;
                 List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox());
                 for (LivingEntity livingEntity : list) {
+                    if (this.distanceToSqr(livingEntity) > 36.0D) continue;
                     if (this.dealDamageTo(livingEntity)) {
                         bl = true;
                     }
@@ -137,6 +144,8 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
         if (!livingEntity.isAlive() || livingEntity.isInvulnerable() || livingEntity == livingEntity2) {
             return false;
         }
+        if (AttackFind.FindCanNotAttack(this.getOwner(), livingEntity))
+            return false;
         if (livingEntity2 == null) {
             DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.BYPASSES_COOLDOWN_AND_NO_KNOCKBACK_MELEE, this);
             boolean bl = livingEntity.hurt(damageSource,
@@ -153,11 +162,6 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
             );
         }
         return true;
-    }
-
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
     }
 
     @Override

@@ -50,14 +50,21 @@ public class ColorMagicWindRenderer extends EntityRenderer<ColorMagicWindEntity>
         Matrix4f matrix = pose.pose();
         Matrix3f normal = pose.normal();
 
-        // ===== 动态计算条带数量：随 width 和 height 增加 =====
-        float sizeFactor = (float) (width * 0.6 + height * 0.4);
-        int numSegments = Mth.clamp(6 + (int) (sizeFactor * 1.8), 6, 24);
-        int pointsPerSegment = Mth.clamp(20 + (int) (sizeFactor * 2.5), 20, 50);
+        // 以 width=1, height=2 为基准，直接加法调整
+        float widthOffset = (float) (width - 1.0);
+        float heightOffset = (float) (height - 2.0);
+
+        int numSegments = 6 + (int) (widthOffset * 2 + heightOffset * 1.5);
+        numSegments = Mth.clamp(numSegments, 6, 24);
+        int pointsPerSegment = 20 + (int) (widthOffset * 2 + heightOffset * 2);
+        pointsPerSegment = Mth.clamp(pointsPerSegment, 20, 50);
         float maxHeight = (float) height;
 
         float riseOffset = (life + partialTick) * 0.025f;
         float baseRotation = (life + partialTick) * 0.20f;
+
+        // 基础半径 = width/2，不再乘以额外系数
+        float baseMaxRadius = (float) width * 0.5f;
 
         for (int s = 0; s < numSegments; s++) {
             Random random = new Random(entity.getId() * 31L + 17L + s * 101L);
@@ -71,10 +78,15 @@ public class ColorMagicWindRenderer extends EntityRenderer<ColorMagicWindEntity>
             alphaFactor = Mth.clamp(alphaFactor, 0.0f, 1.0f);
             if (alphaFactor < 0.01f) continue;
 
-            float maxRadius = (float) width * 0.5f * (1 + (life + partialTick) * 0.025f);
-            float radiusBase = (0.5f + 2.3f * random.nextFloat()) * maxRadius;
-            float yBase = (-0.5f + 0.2f * random.nextFloat()) * maxHeight;
-            float segHeight = (0.6f + 0.4f * random.nextFloat()) * maxHeight;
+            // 半径：基准半径 + 随时间的扩散
+            float radius = baseMaxRadius * (1.0f + (life + partialTick) * 0.025f);
+            // 随机缩放：0.3 ~ 2.0（去掉原来的 0.5 + 2.3 * random）
+            float randomScale = 0.3f + 1.7f * random.nextFloat();
+            float finalRadius = radius * randomScale;
+
+            // Y位置：直接使用高度范围，不再乘以额外系数
+            float yBase = (-0.2f + 0.4f * random.nextFloat()) * maxHeight;
+            float segHeight = (0.3f + 0.7f * random.nextFloat()) * maxHeight;
             float angleOffset = random.nextFloat() * 2.0f * (float) Math.PI;
             float turns = 1.5f + 2.5f * random.nextFloat();
             float speedFactor = 0.2f + 1.8f * random.nextFloat();
@@ -82,11 +94,11 @@ public class ColorMagicWindRenderer extends EntityRenderer<ColorMagicWindEntity>
             Vec3[] points = new Vec3[pointsPerSegment + 1];
             for (int i = 0; i <= pointsPerSegment; i++) {
                 float progress = (float) i / pointsPerSegment;
-                float radius = radiusBase * progress;
+                float r = finalRadius * progress;
                 float y = yBase + progress * segHeight + riseOffset;
                 float angle = angleOffset + progress * turns * 2.0f * (float) Math.PI + baseRotation * speedFactor;
-                float x = radius * Mth.cos(angle);
-                float z = radius * Mth.sin(angle);
+                float x = r * Mth.cos(angle);
+                float z = r * Mth.sin(angle);
                 points[i] = new Vec3(x, y, z);
             }
 
@@ -115,7 +127,6 @@ public class ColorMagicWindRenderer extends EntityRenderer<ColorMagicWindEntity>
                 int a0 = (int) (255 * alpha0);
                 int a1 = (int) (255 * alpha1);
 
-                // ===== 端点颜色：p0 用 colorIII，p1 用 colorIV =====
                 consumer.vertex(matrix, (float) p0.x, (float) p0.y, (float) p0.z)
                         .color(rIII, gIII, bIII, a0)
                         .uv(0, 0)
@@ -153,16 +164,22 @@ public class ColorMagicWindRenderer extends EntityRenderer<ColorMagicWindEntity>
         Matrix4f matrix = pose.pose();
         Matrix3f normal = pose.normal();
 
-        // ===== 动态计算条带数量和宽度：随 width 和 height 增加 =====
-        float sizeFactor = (float) (width * 0.6 + height * 0.4);
-        int numSegments = Mth.clamp(6 + (int) (sizeFactor * 1.8), 6, 24);
-        int pointsPerSegment = Mth.clamp(20 + (int) (sizeFactor * 2.5), 20, 50);
+        // 以 width=1, height=2 为基准，直接加法调整
+        float widthOffset = (float) (width - 1.0);
+        float heightOffset = (float) (height - 2.0);
+
+        int numSegments = 6 + (int) (widthOffset * 2 + heightOffset * 1.5);
+        numSegments = Mth.clamp(numSegments, 6, 24);
+        int pointsPerSegment = 20 + (int) (widthOffset * 2 + heightOffset * 2);
+        pointsPerSegment = Mth.clamp(pointsPerSegment, 20, 50);
         float maxHeight = (float) height;
-        // ===== 条带宽度随 width 增加 =====
-        float baseHalfWidth = 0.04f * (1.0f + (float) width * 0.08f);
+
+        // 宽度：基准 0.04 + 宽度变化 * 0.02（不再用 1.0 + width * 0.08）
+        float baseHalfWidth = 0.04f + (float) width * 0.02f;
 
         float riseOffset = (life + partialTick) * 0.025f;
         float baseRotation = (life + partialTick) * 0.20f;
+        float baseMaxRadius = (float) width * 0.5f;
 
         for (int s = 0; s < numSegments; s++) {
             Random random = new Random(entity.getId() * 31L + 19L + s * 103L);
@@ -176,10 +193,12 @@ public class ColorMagicWindRenderer extends EntityRenderer<ColorMagicWindEntity>
             alphaFactor = Mth.clamp(alphaFactor, 0.0f, 1.0f);
             if (alphaFactor < 0.01f) continue;
 
-            float maxRadius = (float) width * 0.5f * (1 + (life + partialTick) * 0.025f);
-            float radiusBase = (0.5f + 2.3f * random.nextFloat()) * maxRadius;
-            float yBase = (-0.5f + 0.2f * random.nextFloat()) * maxHeight;
-            float segHeight = (0.6f + 0.4f * random.nextFloat()) * maxHeight;
+            float radius = baseMaxRadius * (1.0f + (life + partialTick) * 0.025f);
+            float randomScale = 0.3f + 1.7f * random.nextFloat();
+            float finalRadius = radius * randomScale;
+
+            float yBase = (-0.2f + 0.4f * random.nextFloat()) * maxHeight;
+            float segHeight = (0.3f + 0.7f * random.nextFloat()) * maxHeight;
             float angleOffset = random.nextFloat() * 2.0f * (float) Math.PI;
             float turns = 1.5f + 2.5f * random.nextFloat();
             float speedFactor = 0.2f + 1.8f * random.nextFloat();
@@ -187,11 +206,11 @@ public class ColorMagicWindRenderer extends EntityRenderer<ColorMagicWindEntity>
             Vec3[] points = new Vec3[pointsPerSegment + 1];
             for (int i = 0; i <= pointsPerSegment; i++) {
                 float progress = (float) i / pointsPerSegment;
-                float radius = radiusBase * progress;
+                float r = finalRadius * progress;
                 float y = yBase + progress * segHeight + riseOffset;
                 float angle = angleOffset + progress * turns * 2.0f * (float) Math.PI + baseRotation * speedFactor;
-                float x = radius * Mth.cos(angle);
-                float z = radius * Mth.sin(angle);
+                float x = r * Mth.cos(angle);
+                float z = r * Mth.sin(angle);
                 points[i] = new Vec3(x, y, z);
             }
 
@@ -234,14 +253,9 @@ public class ColorMagicWindRenderer extends EntityRenderer<ColorMagicWindEntity>
                 int a0 = (int) (255 * alpha0);
                 int a1 = (int) (255 * alpha1);
 
-                // ===== 左侧用 colorI，右侧用 colorII =====
-                // p0l (左底) - colorI
                 addVertex(consumer, matrix, normal, p0l, rI, gI, bI, a0, u0, v0);
-                // p0r (右底) - colorII
                 addVertex(consumer, matrix, normal, p0r, rII, gII, bII, a0, u1, v0);
-                // p1r (右顶) - colorII
                 addVertex(consumer, matrix, normal, p1r, rII, gII, bII, a1, u1, v1);
-                // p1l (左顶) - colorI
                 addVertex(consumer, matrix, normal, p1l, rI, gI, bI, a0, u0, v1);
             }
         }

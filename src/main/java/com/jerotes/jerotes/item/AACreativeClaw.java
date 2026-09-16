@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
 import com.jerotes.jerotes.entity.Other.Beam.BaseBeamEntity;
+import com.jerotes.jerotes.entity.Other.BreathAreaSpell.PoisonBreathAreaEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.ThunderwaveEntity;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesMobEffects;
@@ -99,13 +101,15 @@ public class AACreativeClaw extends Item {
 		if (level instanceof ServerLevel serverLevel) {
 //			Main.spawnUnevenBlockByPos(serverLevel, livingEntity.getOnPos(), 4);
 		}
-		BaseBeamEntity baseBeamEntity = new BaseBeamEntity(JerotesEntityType.TEST_BEAM.get(), level);
-		baseBeamEntity.setPos(player.getX(), player.getY(0.75), player.getZ());
-		baseBeamEntity.setLightLockX((float) player.getX());
-		baseBeamEntity.setLightLockY((float) (player.getY(0.75)));
-		baseBeamEntity.setLightLockZ((float) player.getZ());
-		baseBeamEntity.setOwner(player);
-		level.addFreshEntity(baseBeamEntity);
+//		BaseBeamEntity baseBeamEntity = new BaseBeamEntity(JerotesEntityType.TEST_BEAM.get(), level);
+//		baseBeamEntity.setPos(player.getX(), player.getY(0.75), player.getZ());
+//		baseBeamEntity.setLightLockX((float) player.getX());
+//		baseBeamEntity.setLightLockY((float) (player.getY(0.75)));
+//		baseBeamEntity.setLightLockZ((float) player.getZ());
+//		baseBeamEntity.setOwner(player);
+//		level.addFreshEntity(baseBeamEntity);
+
+
 
 //		AddHandEntity addHandEntity = Main.spawnAddHand(livingEntity, ((MeleeItem)JerotesItems.IRON_SPEAR.get()).swingTimes(), 100);
 //		if (addHandEntity != null) {

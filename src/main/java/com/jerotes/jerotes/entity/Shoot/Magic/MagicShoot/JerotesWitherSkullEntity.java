@@ -21,6 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.projectile.WitherSkull;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -52,8 +53,10 @@ public class JerotesWitherSkullEntity extends MagicAboutEntity {
         this.spellSubcategory = spellSubcategory;
     }
 
-    public float getBlockExplosionResistance(Explosion p_37619_, BlockGetter p_37620_, BlockPos p_37621_, BlockState p_37622_, FluidState p_37623_, float p_37624_) {
-        return this.isDangerous() && p_37622_.canEntityDestroy(p_37620_, p_37621_, this) ? Math.min(0.8F, p_37624_) : p_37624_;
+    public float getBlockExplosionResistance(Explosion explosion, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, FluidState fluidState, float f) {
+        if (blockState.isAir() || WitherBoss.canDestroy(blockState))
+            return this.isDangerous() && blockState.canEntityDestroy(blockGetter, blockPos, this) ? Math.min(0.8F, f) : f;
+        return f;
     }
 
     public boolean isDangerous() {

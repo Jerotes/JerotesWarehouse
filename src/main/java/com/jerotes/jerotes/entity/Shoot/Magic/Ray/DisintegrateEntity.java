@@ -57,6 +57,7 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
         super.hitEntity(entity);
         if (!this.isUseful())
             return;
+        this.setUseful(false);
         if (this.level().isClientSide) {
             return;
         }
@@ -83,25 +84,23 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
                     }
                 }
             }
-            this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
-            this.setUseful(false);
+            this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
         }
     }
-
     @Override
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
     protected void afterHasLineOfSight() {
         super.afterHasLineOfSight();
         if (!this.isUseful()) return;
-        if (this.level().isClientSide) return;
-
+        this.setUseful(false);
+        if (this.level().isClientSide) {
+            return;
+        }
         BlockPos centerPos = BlockPos.containing(this.position());
         LivingEntity owner = this.getOwner() instanceof LivingEntity ? (LivingEntity) this.getOwner() : null;
 
@@ -137,10 +136,7 @@ public class DisintegrateEntity extends BaseRayEntity implements DisintegrateLik
             }
         }
 
-        this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
     }
 
     public BaseRayEntity getRay() {

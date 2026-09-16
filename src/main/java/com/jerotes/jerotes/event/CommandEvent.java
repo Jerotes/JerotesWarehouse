@@ -363,7 +363,6 @@ public class CommandEvent {
 																	.withStyle(ChatFormatting.GRAY);
 															arguments.getSource().sendSuccess(() -> message, false);
 														} else {
-															// 收集所有阵营字符串
 															List<String> factions = new ArrayList<>();
 															for (Tag tag : factionList) {
 																factions.add(tag.getAsString());

@@ -48,6 +48,7 @@ public class RayofEnfeeblementEntity extends BaseRayEntity {
         super.hitEntity(entity);
         if (!this.isUseful())
             return;
+        this.setUseful(false);
         if (this.level().isClientSide) {
             return;
         }
@@ -55,8 +56,7 @@ public class RayofEnfeeblementEntity extends BaseRayEntity {
             DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.MAGIC_EFFECT), this, this.getOwner());
             livingEntity.hurt(damageSource, 0f);
             livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel - 1), this.getEffectSource());
-            this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
-            this.setUseful(false);
+            this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
         }
     }
     @Override
@@ -64,17 +64,13 @@ public class RayofEnfeeblementEntity extends BaseRayEntity {
         super.onHit(hitResult);
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
     protected void afterHasLineOfSight() {
         super.afterHasLineOfSight();
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
 
     public BaseRayEntity getRay() {

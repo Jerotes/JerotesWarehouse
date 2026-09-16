@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 import java.util.List;
 
@@ -88,17 +89,13 @@ public class LightningBoltEntity extends BaseRayEntity {
         super.onHitBlock(blockHitResult);
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
     protected void afterHasLineOfSight() {
         super.afterHasLineOfSight();
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
 
     public BaseRayEntity getRay() {
@@ -141,7 +138,7 @@ public class LightningBoltEntity extends BaseRayEntity {
     }
 
     public float beamScale() {
-        return 3.0f;
+        return 2.0f;
     }
     public int beamLightI() {
         return 0x6a68ff;

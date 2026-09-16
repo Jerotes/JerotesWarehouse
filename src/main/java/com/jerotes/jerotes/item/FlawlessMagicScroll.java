@@ -123,9 +123,13 @@ public class FlawlessMagicScroll extends Item implements MagicItem {
 						target = mob.getTarget();
 				}
 			}
+			if (magicSpellStart.getMagicType() == MagicType.TARGET && livingEntity.distanceTo(target) > magicSpellStart.getSpellDistance() && magicSpellStart.canUseTargetNone()) {
+				target = livingEntity;
+			}
 			if (target == null) {
 				target = livingEntity;
 			}
+
 
 			MagicSpell magicSpell = SpellListByString.getSpell(trueLevel, livingEntity, target, SpellRegistry.getSpellTypeById(this.getSpellIdMagicItem(itemStack)));
 			boolean CanUse = magicSpell.canUse();

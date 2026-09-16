@@ -25,43 +25,59 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
         super(context);
     }
 
+    protected float getBeamWidthMultiplier(BaseBeamEntity baseBeamEntity) {
+        return baseBeamEntity.getBeamScale();
+    }
+
     @Override
-    public void render(T t, float f, float f2, PoseStack poseStack, MultiBufferSource multiBufferSource, int n) {
-        t.thisTickRenderTime += 1;
-        float fs = t.lastTickRenderTime + 1;
-        float smoothFactor = 1;
+    public void render(T t, float f, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int light) {
+        float targetX = t.getTargetX();
+        float targetY = t.getTargetY();
+        float targetZ = t.getTargetZ();
+
         float selfX = (float) t.getX();
-        t.selfXProgress = Mth.lerp(smoothFactor, t.selfXProgress, selfX);
         float selfY = (float) t.getY();
-        t.selfYProgress = Mth.lerp(smoothFactor, t.selfYProgress, selfY);
         float selfZ = (float) t.getZ();
-        t.selfZProgress = Mth.lerp(smoothFactor, t.selfZProgress, selfZ);
-        float smoothFactor2 = 1 / fs;
-        float ownerX = t.getLightLockX();
-        t.ownerXProgress = Mth.lerp(smoothFactor2, t.ownerXProgress, ownerX);
-        float ownerY = t.getLightLockY();
-        t.ownerYProgress = Mth.lerp(smoothFactor2, t.ownerYProgress, ownerY);
-        float ownerZ = t.getLightLockZ();
-        t.ownerZProgress = Mth.lerp(smoothFactor2, t.ownerZProgress, ownerZ);
 
-        poseStack.pushPose();
-        float f7 = t.ownerXProgress;
-        float f8 = t.ownerYProgress;
-        float f9 = t.ownerZProgress;
+        if (!t.renderInitialized || t.life < 10) {
+            t.selfXProgress = selfX;
+            t.selfYProgress = selfY;
+            t.selfZProgress = selfZ;
 
-        float f10 = t.selfXProgress;
-        float f11 = t.selfYProgress;
-        float f12 = t.selfZProgress;
-        if (t.tickCount <= 5) {
-            poseStack.popPose();
+            t.targetXProgress = targetX;
+            t.targetYProgress = targetY;
+            t.targetZProgress = targetZ;
+
+            t.renderInitialized = true;
+        } else {
+            t.selfXProgress = Mth.lerp(1.0f, t.selfXProgress, selfX);
+            t.selfYProgress = Mth.lerp(1.0f, t.selfYProgress, selfY);
+            t.selfZProgress = Mth.lerp(1.0f, t.selfZProgress, selfZ);
+
+            float targetSmooth = 0.35f;
+
+            t.targetXProgress = Mth.lerp(targetSmooth, t.targetXProgress, targetX);
+            t.targetYProgress = Mth.lerp(targetSmooth, t.targetYProgress, targetY);
+            t.targetZProgress = Mth.lerp(targetSmooth, t.targetZProgress, targetZ);
+        }
+
+        if (t.tickCount <= 3) {
             return;
         }
-        float f13 = (float) (f7 - Mth.lerp((double) f2, t.xo, f10));
-        float f14 = (float) (f8 - Mth.lerp((double) f2, t.yo, f11));
-        float f15 = (float) (f9 - Mth.lerp((double) f2, t.zo, f12));
-        renderLightLock(t, f13, f14, f15, f2, t.tickCount, poseStack, multiBufferSource, n);
+
+        float startX = Mth.lerp(partialTick, (float) t.xo, t.selfXProgress);
+        float startY = Mth.lerp(partialTick, (float) t.yo, t.selfYProgress);
+        float startZ = Mth.lerp(partialTick, (float) t.zo, t.selfZProgress);
+
+        float f13 = t.targetXProgress - startX;
+        float f14 = t.targetYProgress - startY;
+        float f15 = t.targetZProgress - startZ;
+
+        poseStack.pushPose();
+        renderLightLock(t, f13, f14, f15, partialTick, t.tickCount, poseStack, buffer, light);
         poseStack.popPose();
-        super.render(t, f, f2, poseStack, multiBufferSource, n);
+
+        super.render(t, f, partialTick, poseStack, buffer, light);
     }
 
     @Override
@@ -71,6 +87,27 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
 
     public ResourceLocation getBeamLocation(BaseBeamEntity baseBeamEntity) {
         return baseBeamEntity.getBeamLocation();
+    }
+
+    private static Quaternionf rotationBetween(Vector3f from, Vector3f to) {
+        Vector3f f = new Vector3f(from).normalize();
+        Vector3f t = new Vector3f(to).normalize();
+        float dot = f.dot(t);
+
+        if (dot > 0.999999f) {
+            return new Quaternionf();
+        }
+
+        if (dot < -0.999999f) {
+            Vector3f axis = new Vector3f(1.0f, 0.0f, 0.0f).cross(f);
+            if (axis.lengthSquared() < 1.0E-6f) {
+                axis = new Vector3f(0.0f, 1.0f, 0.0f).cross(f);
+            }
+            axis.normalize();
+            return new Quaternionf().fromAxisAngleRad(axis.x(), axis.y(), axis.z(), (float) Math.PI);
+        }
+
+        return new Quaternionf().rotationTo(f, t);
     }
 
     public void renderLightLock(BaseBeamEntity baseBeamEntity, float f, float f2, float f3, float f4, int n, PoseStack poseStack, MultiBufferSource multiBufferSource, int n2) {
@@ -83,18 +120,18 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
         if (dir.lengthSquared() > 1.0E-6f) {
             dir.normalize();
             Vector3f zAxis = new Vector3f(0.0f, 0.0f, 1.0f);
-            Quaternionf rot = new Quaternionf().rotationTo(zAxis, dir);
+            Quaternionf rot = rotationBetween(zAxis, dir);
             poseStack.mulPose(rot);
         }
 
         final Vector3f FIXED_NORMAL = new Vector3f(0.0f, 0.0f, 1.0f);
-
+        final float widthMul = getBeamWidthMultiplier(baseBeamEntity);
         {
             VertexConsumer vertexConsumer = multiBufferSource.getBuffer(JerotesRenderType.glowDoubleSidedLightning(getBeamLocation(baseBeamEntity)));
             float uvBottom = 0.0f - ((float) n + f4) * 0.01f;
             float uvTop = totalDistance / 32.0f - ((float) n + f4) * 0.01f;
 
-            float beamWidth = 0.15f;
+            float beamWidth = 0.15f * widthMul;
             float halfWidth = beamWidth / 2.0f;
 
             PoseStack.Pose pose = poseStack.last();
@@ -148,7 +185,7 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
             float uvBottom = 0.0f - ((float) n + f4) * 0.01f;
             float uvTop = totalDistance / 32.0f - ((float) n + f4) * 0.01f;
 
-            float beamWidth = 0.15f;
+            float beamWidth = 0.15f * widthMul;
             float halfWidth = beamWidth / 2.0f;
 
             PoseStack.Pose pose = poseStack.last();
@@ -203,18 +240,18 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
             float time = n + f4;
             int seed = baseBeamEntity.getId();
 
-            renderEnergyRings(tex, time, seed, poseStack, multiBufferSource, n2, totalDistance);
-            renderPulseStreaks(tex, time, seed, poseStack, multiBufferSource, n2, totalDistance);
+            renderEnergyRings(tex, time, seed, poseStack, multiBufferSource, n2, totalDistance, widthMul);
+            renderPulseStreaks(tex, time, seed, poseStack, multiBufferSource, n2, totalDistance, widthMul);
         }
 
         poseStack.popPose();
     }
 
     private void renderEnergyRings(ResourceLocation tex, float time, int seed,
-                                   PoseStack poseStack, MultiBufferSource buffer, int light, float totalDistance) {
+                                   PoseStack poseStack, MultiBufferSource buffer, int light, float totalDistance, float widthMul) {
         int ringCount = Math.max(2, (int) (totalDistance / 1.2f));
         int segmentsPerRing = 10;
-        float ringRadius = 0.11f;
+        float ringRadius = 0.11f * widthMul;
         float spinSpeed = 0.5f;
 
         Matrix4f matrix = poseStack.last().pose();
@@ -224,7 +261,7 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
         for (int r = 0; r < ringCount; r++) {
             float z = totalDistance * ((r + 0.5f) / ringCount);
             float ringSpin = time * spinSpeed * (r % 2 == 0 ? 1.0f : -1.0f) + seed * 0.3f + r * 0.9f;
-            float ringWidth = 0.02f;
+            float ringWidth = 0.02f * widthMul;
 
             int alpha = (int) Mth.clamp(180 * (0.6f + 0.4f * Mth.sin(time * 0.3f + r * 1.3f)), 30f, 200f);
 
@@ -249,11 +286,11 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
     }
 
     private void renderPulseStreaks(ResourceLocation tex, float time, int seed,
-                                    PoseStack poseStack, MultiBufferSource buffer, int light, float totalDistance) {
+                                    PoseStack poseStack, MultiBufferSource buffer, int light, float totalDistance, float widthMul) {
         int streakCount = 4;
         float streakLength = Math.min(0.9f, totalDistance * 0.35f);
         float pulseSpeed = 0.9f;
-        float streakHalfWidth = 0.045f;
+        float streakHalfWidth = 0.045f * widthMul;
 
         Matrix4f matrix = poseStack.last().pose();
         Matrix3f normal = poseStack.last().normal();
@@ -265,8 +302,8 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
             float centerZ = travel * totalDistance;
 
             float angle = (float) (i * Math.PI / 2) + seed * 0.2f;
-            float x = Mth.cos(angle) * 0.07f;
-            float y = Mth.sin(angle) * 0.07f;
+            float x = Mth.cos(angle) * 0.07f * widthMul;
+            float y = Mth.sin(angle) * 0.07f * widthMul;
 
             float z0 = Mth.clamp(centerZ - streakLength * 0.5f, 0, totalDistance);
             float z1 = Mth.clamp(centerZ + streakLength * 0.5f, 0, totalDistance);
@@ -288,6 +325,20 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
                                 float x2, float y2, float z2, float u2, float v2,
                                 float x3, float y3, float z3, float u3, float v3,
                                 int r, int g, int b, int a) {
+        emitQuad(consumer, matrix, normal, fixedNormal, light,
+                x0, y0, z0, u0, v0, x1, y1, z1, u1, v1, x2, y2, z2, u2, v2, x3, y3, z3, u3, v3,
+                r, g, b, a);
+        emitQuad(consumer, matrix, normal, fixedNormal, light,
+                x0, y0, z0, u0, v0, x3, y3, z3, u3, v3, x2, y2, z2, u2, v2, x1, y1, z1, u1, v1,
+                r, g, b, a);
+    }
+
+    private static void emitQuad(VertexConsumer consumer, Matrix4f matrix, Matrix3f normal, Vector3f fixedNormal, int light,
+                                 float x0, float y0, float z0, float u0, float v0,
+                                 float x1, float y1, float z1, float u1, float v1,
+                                 float x2, float y2, float z2, float u2, float v2,
+                                 float x3, float y3, float z3, float u3, float v3,
+                                 int r, int g, int b, int a) {
         consumer.vertex(matrix, x0, y0, z0).color(r, g, b, a).uv(u0, v0)
                 .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light)
                 .normal(normal, fixedNormal.x, fixedNormal.y, fixedNormal.z).endVertex();

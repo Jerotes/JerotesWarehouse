@@ -21,6 +21,13 @@ public class JerotesRenderType extends RenderType {
 		super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
 	}
 
+
+	private static final RenderType LIGHTNING = create("lightning", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_LIGHTNING_SHADER).setWriteMaskState(COLOR_DEPTH_WRITE).setTransparencyState(LIGHTNING_TRANSPARENCY).setOutputState(WEATHER_TARGET).createCompositeState(false));
+
+	public static RenderType lightning() {
+		return LIGHTNING;
+	}
+
 	public static final ResourceLocation BEAM_TEXTURE = new ResourceLocation(
 			"textures/entity/guardian_beam.png"
 	);
@@ -199,6 +206,34 @@ public class JerotesRenderType extends RenderType {
 	public static RenderType glowDoubleSidedLightningAdd(ResourceLocation resourceLocation) {
 		return GLOW_DOUBLE_SIDED_LIGHTNING.apply(resourceLocation, LIGHTNING_TRANSPARENCY);
 	}
+
+	private static final BiFunction<ResourceLocation, TransparencyStateShard, RenderType> GLOW_DOUBLE_SIDED_LIGHTNING_OVERLAY =
+			Util.memoize((resourceLocation, transparencyStateShard) -> {
+				TextureStateShard textureStateShard = new TextureStateShard(resourceLocation, false, false);
+				return RenderType.create(
+						"glow_double_sided_lightning_overlay",
+						DefaultVertexFormat.NEW_ENTITY,
+						VertexFormat.Mode.QUADS,
+						1536,
+						false,
+						true,
+						CompositeState.builder()
+								.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+								.setTextureState(textureStateShard)
+								.setTransparencyState(transparencyStateShard)
+								.setWriteMaskState(COLOR_WRITE)
+								.setCullState(NO_CULL)
+								.setDepthTestState(NO_DEPTH_TEST)
+								.setOutputState(MAIN_TARGET)
+								.createCompositeState(false)
+				);
+			});
+
+	public static RenderType glowDoubleSidedLightningOverlay(ResourceLocation resourceLocation) {
+		return GLOW_DOUBLE_SIDED_LIGHTNING_OVERLAY.apply(resourceLocation, LIGHTNING_TRANSPARENCY);
+	}
+
+
 	public static final TransparencyStateShard PREMULTIPLIED_ADDITIVE = new TransparencyStateShard(
 			"premultiplied_additive",
 			() -> {
@@ -210,6 +245,7 @@ public class JerotesRenderType extends RenderType {
 				RenderSystem.defaultBlendFunc();
 			}
 	);
+
 
 	private static final RenderType GLOWING_OUTLINE = create("glowing_outline",
 			DefaultVertexFormat.POSITION_COLOR_TEX,

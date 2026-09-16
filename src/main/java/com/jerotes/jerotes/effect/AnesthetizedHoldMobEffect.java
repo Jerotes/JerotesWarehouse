@@ -47,7 +47,7 @@ public class AnesthetizedHoldMobEffect extends BaseMobEffectAllTick {
 		if (livingEntity.onGround() || livingEntity.isInWater()) {
 			livingEntity.makeStuckInBlock(livingEntity.getBlockStateOn(), new Vec3(0.2, 0, 0.2));
 		}
-		else if (!livingEntity.noPhysics && livingEntity.getDeltaMovement().y > -1d) {
+		else if (!livingEntity.noPhysics && livingEntity.getDeltaMovement().y > -1d && !livingEntity.onGround()) {
 			livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().x, -1d, livingEntity.getDeltaMovement().z);
 		}
 		if (livingEntity instanceof Mob mob) {

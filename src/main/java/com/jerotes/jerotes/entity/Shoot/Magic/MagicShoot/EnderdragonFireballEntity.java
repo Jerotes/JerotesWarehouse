@@ -64,12 +64,10 @@ public class EnderdragonFireballEntity extends MagicAboutEntity {
                         }
                     }
                 }
-
                 this.level().levelEvent(2006, this.blockPosition(), this.isSilent() ? -1 : 1);
                 this.level().addFreshEntity(areaeffectcloud);
                 this.discard();
             }
-
         }
     }
     @Override

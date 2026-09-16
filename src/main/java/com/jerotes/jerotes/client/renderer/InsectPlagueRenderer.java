@@ -325,6 +325,11 @@ public class InsectPlagueRenderer extends EntityRenderer<InsectPlagueEntity> {
                 addVertex(consumer, matrix, cx + o0[0], cy + o0[1], cz + o0[2], r, g, b, alphaOuter);
                 addVertex(consumer, matrix, cx + o1[0], cy + o1[1], cz + o1[2], r, g, b, alphaOuter);
                 addVertex(consumer, matrix, cx + i1[0], cy + i1[1], cz + i1[2], r, g, b, alphaInner);
+
+                addVertex(consumer, matrix, cx + i1[0], cy + i1[1], cz + i1[2], r, g, b, alphaInner);
+                addVertex(consumer, matrix, cx + o1[0], cy + o1[1], cz + o1[2], r, g, b, alphaOuter);
+                addVertex(consumer, matrix, cx + o0[0], cy + o0[1], cz + o0[2], r, g, b, alphaOuter);
+                addVertex(consumer, matrix, cx + i0[0], cy + i0[1], cz + i0[2], r, g, b, alphaInner);
             }
         }
     }
@@ -370,6 +375,11 @@ public class InsectPlagueRenderer extends EntityRenderer<InsectPlagueEntity> {
             addVertex(consumer, matrix, cx + o0[0], cy + o0[1], cz + o0[2], r, g, b, a);
             addVertex(consumer, matrix, cx + o1[0], cy + o1[1], cz + o1[2], r, g, b, a);
             addVertex(consumer, matrix, cx + i1[0], cy + i1[1], cz + i1[2], r, g, b, a);
+
+            addVertex(consumer, matrix, cx + i1[0], cy + i1[1], cz + i1[2], r, g, b, a);
+            addVertex(consumer, matrix, cx + o1[0], cy + o1[1], cz + o1[2], r, g, b, a);
+            addVertex(consumer, matrix, cx + o0[0], cy + o0[1], cz + o0[2], r, g, b, a);
+            addVertex(consumer, matrix, cx + i0[0], cy + i0[1], cz + i0[2], r, g, b, a);
         }
     }
 

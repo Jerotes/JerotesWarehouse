@@ -26,27 +26,9 @@ public class HoldMobEffect extends BaseMobEffectAllTick {
 	@Override
 	public void applyEffectTick(LivingEntity livingEntity, int n) {
 		super.applyEffectTick(livingEntity, n);
-		if(livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())){
-			if (!livingEntity.level().isClientSide) {
-				if (!livingEntity.level().isClientSide()) {
-					livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.SPELL_REACTION_LOCK.get(), 5, 0, false, false));
-				}
-			}
-		}
-		if(livingEntity.getDeltaMovement().y > 0){
-			livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().multiply(0.2, 0, 0.2));
-		}
-		livingEntity.setJumping(false);
-		livingEntity.stopUsingItem();
-		if (livingEntity.onGround() || livingEntity.isInWater() || livingEntity.isNoGravity()) {
-			livingEntity.makeStuckInBlock(livingEntity.getBlockStateOn(), new Vec3(0.25, 0.05, 0.25));
-		}
-		if (livingEntity instanceof Mob mob) {
-			mob.getNavigation().stop();
-			if (!mob.level().isClientSide) {
-				mob.goalSelector.setControlFlag(Goal.Flag.MOVE, false);
-				mob.goalSelector.setControlFlag(Goal.Flag.JUMP, false);
-				mob.goalSelector.setControlFlag(Goal.Flag.LOOK, false);
+		if (!livingEntity.level().isClientSide) {
+			if (!livingEntity.level().isClientSide()) {
+				livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.PARALYZED.get(), 5, n, false, false));
 			}
 		}
 	}

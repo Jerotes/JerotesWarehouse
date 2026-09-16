@@ -1,6 +1,8 @@
 package com.jerotes.jerotes.entity.Mob;
 
 import com.google.common.collect.ImmutableMap;
+import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
+import com.jerotes.jerotes.entity.Interface.SpecialProneEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -78,11 +80,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBaseEntity {
-	//其他内容↓
-	//信标效果BeaconBlockEntityMixin
-	//被生物主动攻击NearestAttackableTargetGoalMixin
-	//其他适用玩家的判定
+public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBaseEntity, SpecialProneEntity {
 	public static final EntityDimensions STANDING_DIMENSIONS = EntityDimensions.scalable(0.6F, 1.8F);
 	private static final ImmutableMap<Object, Object> POSES = ImmutableMap.builder().put(Pose.STANDING, STANDING_DIMENSIONS).put(Pose.SLEEPING, SLEEPING_DIMENSIONS).put(Pose.FALL_FLYING, EntityDimensions.scalable(0.6F, 0.6F)).put(Pose.SWIMMING, EntityDimensions.scalable(0.6F, 0.6F)).put(Pose.SPIN_ATTACK, EntityDimensions.scalable(0.6F, 0.6F)).put(Pose.CROUCHING, EntityDimensions.scalable(0.6F, 1.5F)).put(Pose.DYING, EntityDimensions.fixed(0.2F, 0.2F)).build();
 	private static final EntityDataAccessor<Integer> LOOK_LEVEL = SynchedEntityData.defineId(JerotesPlayerEntity.class, EntityDataSerializers.INT);
@@ -211,6 +209,9 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 	@Override
 	public boolean hurtByEnderPearlAsPlayer() {
 		return true;
+	}
+	@Override
+	public void specialProneTick() {
 	}
 	@Override
 	//使用盾牌和双手武器
@@ -401,6 +402,9 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 		return this.level().noCollision(this, this.getDimensions(pose).makeBoundingBox(this.position()).deflate(1.0E-7));
 	}
 	private Pose getDesiredPose() {
+		if (this instanceof JerotesChangeLivingEntity jerotesChangeLivingEntity && jerotesChangeLivingEntity.getProneTickJerotes() > 0) {
+			return Pose.SWIMMING;
+		}
 		if (this.isSleeping()) {
 			return Pose.SLEEPING;
 		}

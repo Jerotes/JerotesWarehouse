@@ -26,8 +26,10 @@ public class JerotesDamageTypes {
 	public static final ResourceKey<DamageType> POISON = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "poison"));
 	public static final ResourceKey<DamageType> RADIANT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "radiant"));
 	public static final ResourceKey<DamageType> NECROTIC = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "necrotic"));
+	public static final ResourceKey<DamageType> CURSED_ADDITIONAL_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "cursed_additional_damage"));
 	public static final ResourceKey<DamageType> PSYCHIC = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "psychic"));
 	public static final ResourceKey<DamageType> THUNDER = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "thunder"));
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_THUNDER = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_thunder"));
 	public static final ResourceKey<DamageType> FORCE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "force"));
 	public static final ResourceKey<DamageType> ACID = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "acid"));
 
@@ -36,14 +38,31 @@ public class JerotesDamageTypes {
 	public static final ResourceKey<DamageType> BYPASSES_SHIELD_MELEE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_shield_melee"));
 	public static final ResourceKey<DamageType> BYPASSES_ARMOR_AND_SHIELD_MELEE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(JerotesWarehouse.MODID, "bypasses_armor_and_shield_melee"));
 
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_ACID = ResourceKey.create(Registries.DAMAGE_TYPE,
+			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_acid"));
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_BLEED = ResourceKey.create(Registries.DAMAGE_TYPE,
+			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_bleed"));
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_CORROSION = ResourceKey.create(Registries.DAMAGE_TYPE,
+			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_corrosion"));
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_DROWN = ResourceKey.create(Registries.DAMAGE_TYPE,
+			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_drown"));
 	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_FIRE = ResourceKey.create(Registries.DAMAGE_TYPE,
 			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_fire"));
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_FORCE = ResourceKey.create(Registries.DAMAGE_TYPE,
+			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_force"));
 	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_FREEZE = ResourceKey.create(Registries.DAMAGE_TYPE,
 			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_freeze"));
 	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_LIGHTNING = ResourceKey.create(Registries.DAMAGE_TYPE,
 			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_lightning"));
-	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_DROWN = ResourceKey.create(Registries.DAMAGE_TYPE,
-			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_drown"));
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_NECROTIC = ResourceKey.create(Registries.DAMAGE_TYPE,
+			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_necrotic"));
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_POISON = ResourceKey.create(Registries.DAMAGE_TYPE,
+			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_poison"));
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_PSYCHIC = ResourceKey.create(Registries.DAMAGE_TYPE,
+			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_psychic"));
+	public static final ResourceKey<DamageType> BYPASSES_COOLDOWN_RADIANT = ResourceKey.create(Registries.DAMAGE_TYPE,
+			new ResourceLocation(JerotesWarehouse.MODID, "bypasses_cooldown_radiant"));
+
 	public static final ResourceKey<DamageType> FIRE_MELEE = ResourceKey.create(Registries.DAMAGE_TYPE,
 			new ResourceLocation(JerotesWarehouse.MODID, "fire_melee"));
 	public static final ResourceKey<DamageType> FREEZE_MELEE = ResourceKey.create(Registries.DAMAGE_TYPE,

@@ -64,6 +64,9 @@ public class AASpellJavelin extends Item implements MagicItem {
 					if (magicSpellStart.getMagicType() != MagicType.SELF)
 						target = Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable());
 				}
+				if (magicSpellStart.getMagicType() == MagicType.TARGET && livingEntity.distanceTo(target) > magicSpellStart.getSpellDistance() && magicSpellStart.canUseTargetNone()) {
+					target = livingEntity;
+				}
 				if (target == null) {
 					target = player;
 				}
@@ -105,6 +108,9 @@ public class AASpellJavelin extends Item implements MagicItem {
 						(Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable()) instanceof LivingEntity || magicSpellStart.canTargetNonLivingEntity())) {
 					if (magicSpellStart.getMagicType() != MagicType.SELF)
 						target = Main.getTargetedEntity(player, 256, false, magicSpellStart.mustTargetPickable());
+				}
+				if (magicSpellStart.getMagicType() == MagicType.TARGET && livingEntity.distanceTo(target) > magicSpellStart.getSpellDistance() && magicSpellStart.canUseTargetNone()) {
+					target = livingEntity;
 				}
 				if (target == null) {
 					target = player;
@@ -249,9 +255,11 @@ public class AASpellJavelin extends Item implements MagicItem {
 	public ItemStack setSpellJavelin(ItemStack self, ItemStack magicItem) {
 		ItemStack stack = self;
 		CompoundTag compoundTag = new CompoundTag();
-		compoundTag.putString(FlawlessMagicScroll.SPELL, getSpellIdMagicItem(magicItem));
-		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, getSpellLevelMagicItem(magicItem));
-		compoundTag.putInt(FlawlessMagicScroll.SPELL_SUBCATEGORY, getSubcategoryMagicItem(magicItem));
+		compoundTag.putString(FlawlessMagicScroll.SPELL, magicItem.getItem() instanceof MagicItem magicItem1 ? magicItem1.getSpellIdMagicItem(magicItem) : "");
+		compoundTag.putInt(FlawlessMagicScroll.SPELL_LEVEL, magicItem.getItem() instanceof MagicItem magicItem1 ? magicItem1.getSpellLevelMagicItem(magicItem) : 1);
+		if (magicItem.getItem() instanceof MagicItem magicItem1 && magicItem1.canChangeSubcategoryMagicItem(magicItem)) {
+			compoundTag.putInt(FlawlessMagicScroll.SPELL_SUBCATEGORY, magicItem1.getSubcategoryMagicItem(magicItem));
+		}
 		stack.setTag(compoundTag);
 		return stack;
 	}

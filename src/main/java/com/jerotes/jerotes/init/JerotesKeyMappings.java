@@ -1,10 +1,5 @@
-
-/*
- *	MCreator note: This file will be REGENERATED on each build.
- */
 package com.jerotes.jerotes.init;
 
-import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.ControlVehicleEntity;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseParryShield;
 import com.jerotes.jerotes.network.ControlVehiclePacket;

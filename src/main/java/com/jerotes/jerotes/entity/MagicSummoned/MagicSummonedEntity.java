@@ -73,6 +73,18 @@ public class MagicSummonedEntity extends PathfinderMob implements ContractableEn
 	}
 
 	@Override
+	public void MobInventoryAddTooltip(List<Component> tooltip, LivingEntity livingEntity) {
+		if (this.isCanContract()) {
+			tooltip.add(Component.translatable("spell.jerotes.message.contract_need_level", this.contractShouldBaseLevel()).
+					withStyle(ChatFormatting.AQUA));
+		}
+		if (this.isNotPersistent()) {
+			tooltip.add(Component.translatable("message.jerotes.magic_summoned_second", (getMaxLifeTick() - this.getLifeTick())/20).
+					withStyle(ChatFormatting.AQUA));
+		}
+	}
+
+	@Override
 	protected void registerGoals() {
 		this.addGoals();
 		if (!(this.isJerotesFlyingMob())) {
@@ -86,10 +98,13 @@ public class MagicSummonedEntity extends PathfinderMob implements ContractableEn
 		this.goalSelector.addGoal(MagicSummonedGoHomeGoalUse(), new MagicSummonedGoHomeGoal(this, 1.0f));
 		this.goalSelector.addGoal(3, new JerotesChangeFollowMobOwnerGoal(this, 1.0f));
 		this.targetSelector.addGoal(1, new JerotesChangeHelpMobOwnerGoal(this));
-		this.targetSelector.addGoal(1, new JerotesChangeOwnerHurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new JerotesChangeOwnerHurtTargetGoal(this));
+		this.targetGoals();
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<Player>(this, Player.class, 10, true, false, this::isAngryAt));
 		this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<MagicSummonedEntity>(this, false));
+	}
+	protected void targetGoals() {
+		this.targetSelector.addGoal(1, new JerotesChangeOwnerHurtByTargetGoal(this));
+		this.targetSelector.addGoal(2, new JerotesChangeOwnerHurtTargetGoal(this));
 	}
 
 	public int MagicSummonedGoHomeGoalUse() {

@@ -78,7 +78,7 @@ public class ItemEvent {
 					}
 					event.setAmount(amount + Float.MAX_VALUE);
 				}
-				if (((attackBy instanceof Mob || attackBy instanceof Player)) && event.getSource().getDirectEntity() == living && AttackFind.isMeleeDamage(event.getSource())) {
+				if (((attackBy instanceof Mob || attackBy instanceof Player)) && (event.getSource().getDirectEntity() == living || event.getSource().getDirectEntity() == null) && AttackFind.isMeleeDamage(event.getSource())) {
 					if (living.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
 						float baseDamage = (float) living.getAttributeValue(Attributes.ATTACK_DAMAGE);
 						if (baseDamage <= 0)

@@ -20,6 +20,8 @@ public class JerotesStopSpellEvent extends EntityEvent {
     public JerotesStopSpellEvent(Entity caster, @Nullable MagicSpell magicSpell, @Nullable Entity spellEntity, Entity otherCaster, int type, int level) {
         super(caster);
         this.caster = caster;
+        this.magicSpell = magicSpell;
+        this.spellEntity = spellEntity;
         this.otherCaster = otherCaster;
         this.type = type;
         this.level = level;

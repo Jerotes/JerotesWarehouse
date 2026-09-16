@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.entity.PartEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -73,20 +74,16 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
     }
 
     public void setTarget(@Nullable Entity entity) {
-        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(entity, null, this, getOwner());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;
         }
         if (entity != null) {
             this.setTargetUUID(entity.getUUID());
-            if (!this.level().isClientSide) {
-                this.setTargetId(entity.getId());
-            }
             this.entityData.set(TARGET_HEIGHT, entity.getBbHeight());
         } else {
             this.setTargetUUID(null);
-            this.setTargetId(-1);
         }
     }
 
@@ -168,14 +165,12 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
     @Override
     public void tick() {
         super.tick();
-
-        if (!this.level().isClientSide) {
-            if (this.getTarget() != null && this.getTargetId() == -1) {
-                this.setTargetId(this.getTarget().getId());
-            }
+        if (getTarget() != null && this.getTargetId() == -1) {
+            this.setTargetId(getTarget().getId());
         }
-        if (this.getTarget() != null && !this.getTarget().isAlive()) {
+        if (getTarget() != null && !this.getTarget().isAlive()) {
             this.setTarget(null);
+            this.setTargetId(-1);
         }
         if (this.life <= this.getMaxLife()) {
             if (this.level() instanceof ServerLevel _level && this.getTrailParticle() != null) {
@@ -183,26 +178,42 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
                     _level.sendParticles(this.getTrailParticle(), this.getX() + ((this.random.nextDouble() - 0.5d)), this.getY() + ((this.random.nextDouble() - 0.5d) * getSize() * 1), this.getZ() + ((this.random.nextDouble() - 0.5d) * getSize() * 1), 0, 0, 0, 0, 0);
                 }
             }
-            if (this.getTarget() != null && !(this.getTarget() instanceof Player)) {
+            if (this.getTarget() != null && (!(this.getTarget() instanceof Player) || this.mustFollowTarget())) {
+                this.moveTo(this.getTarget().getX(), this.getTarget().getY(0.5), this.getTarget().getZ());
+            }
+            if (this.getTarget() != null && this.life == 1) {
                 this.moveTo(this.getTarget().getX(), this.getTarget().getY(0.5), this.getTarget().getZ());
             }
         }
 
         if (this.life == this.getUseLife()) {
-            List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.2, 0.0, 0.2));
-            list.removeIf(livingEntity -> livingEntity != this.getTarget());
-            for (LivingEntity livingEntity : list) {
-                if (livingEntity == null) continue;
-                Entity entity = this.getOwner();
-                if (livingEntity.isAlive() && !livingEntity.isInvulnerable() && livingEntity != entity) {
+            List<Entity> list = this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(0.2, 0.0, 0.2));
+            list.removeIf(entity -> entity != this.getTarget());
+            for (Entity entity : list) {
+                if (entity == null) continue;
+                if (entity instanceof PartEntity<?> partEntity && partEntity.getParent() instanceof LivingEntity livingEntitys) {
+                    this.useMagicTo(livingEntitys);
+                }
+                else if (entity instanceof LivingEntity livingEntity) {
                     this.useMagicTo(livingEntity);
+                }
+                else {
+                    this.useMagicToNonLivingEntity(entity);
                 }
             }
         }
     }
 
     public void useMagicTo(LivingEntity livingEntity) {
-        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, livingEntity);
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(livingEntity, null, this, getOwner());
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.isCanceled()) {
+            return;
+        }
+    }
+
+    public void useMagicToNonLivingEntity(Entity entity) {
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(entity, null, this, getOwner());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;
@@ -238,6 +249,9 @@ public abstract class BaseTargetEntity extends MagicAboutEntity {
 
     public boolean showRound() {
         return true;
+    }
+    public boolean mustFollowTarget() {
+        return false;
     }
 
     public int roundLightI() {

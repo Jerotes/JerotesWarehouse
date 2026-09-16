@@ -11,6 +11,7 @@ import com.jerotes.jerotes.spell.SpellType;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -26,10 +27,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.OwnableEntity;
-import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
@@ -72,6 +70,14 @@ public class MagicBonfireEntity extends OtherSpellBaseEntity implements Traceabl
     }
     public int getMaxLife() {
         return 60 * 20;
+    }
+    @Override
+    public boolean canCollideWith(Entity entity) {
+        return this.isAlive();
+    }
+    @Override
+    public boolean canBeCollidedWith() {
+        return this.isAlive();
     }
 
     @Override
@@ -183,7 +189,7 @@ public class MagicBonfireEntity extends OtherSpellBaseEntity implements Traceabl
         }
         if (this.getLifeTick() % 10 == 0 && this.getLifeTick() > 20) {
             boolean bl = false;
-            List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox());
+            List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().deflate(Main.mobWidth(this) / 2, Main.mobHeight(this) / 2, Main.mobWidth(this) / 2).inflate(1.5f,1.5f,1.5f).move(0,1.5f, 0));
             for (LivingEntity livingEntity : list) {
                 if (this.dealDamageTo(livingEntity)) {
                     bl = true;
@@ -209,6 +215,8 @@ public class MagicBonfireEntity extends OtherSpellBaseEntity implements Traceabl
         if (!livingEntity.isAlive() || livingEntity.isInvulnerable() || livingEntity == livingEntity2) {
             return false;
         }
+        if (AttackFind.FindCanNotAttack(this.getOwner(), livingEntity))
+            return false;
         DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.BYPASSES_COOLDOWN_AND_NO_KNOCKBACK_MELEE, this, getOwner());
         if (livingEntity2 == null) {
             damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.BYPASSES_COOLDOWN_AND_NO_KNOCKBACK_MELEE, this);
@@ -231,7 +239,7 @@ public class MagicBonfireEntity extends OtherSpellBaseEntity implements Traceabl
     }
 
     public ResourceLocation getTextureLocation() {
-        int n = this.tickCount % 8;
+        int n = ((int) this.level().getGameTime()) % 16 / 2;
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/other/magic_bonfire/magic_" + (this.isSoulFire() ? "soul_" : "") + "bonfire_" + n + ".png");
     }
     public ResourceLocation getOtherTextureLocation() {
@@ -277,11 +285,6 @@ public class MagicBonfireEntity extends OtherSpellBaseEntity implements Traceabl
         this.getEntityData().define(IS_SOUL_FIRE, false);
         this.getEntityData().define(COOK_COOLDOWN, 0);
         this.getEntityData().define(ATTACK_TICK, 0);
-    }
-
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
     }
 
     @Override

@@ -59,7 +59,6 @@ public class JerotesEvokerFangEntity extends Entity implements TraceableEntity, 
         this.owner = livingEntity;
         this.ownerUUID = livingEntity == null ? null : livingEntity.getUUID();
     }
-
     @Nullable
     @Override
     public LivingEntity getOwner() {

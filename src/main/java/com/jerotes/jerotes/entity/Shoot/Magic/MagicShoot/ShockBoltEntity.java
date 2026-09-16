@@ -4,6 +4,7 @@ import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
@@ -45,7 +46,6 @@ public class ShockBoltEntity extends BaseMagicBoltEntity {
                             Main.rollDice(1 + (spellLevelDamage - 2) / 2, 10, livingEntity.getRandom()) + Main.rollDice(1, 10, livingEntity.getRandom()) * 0.5f :
                             Main.rollDice(1 + (spellLevelDamage - 1) / 2, 10, livingEntity.getRandom())
             );
-            this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
         }
     }
 
@@ -57,6 +57,7 @@ public class ShockBoltEntity extends BaseMagicBoltEntity {
     @Override
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
+        this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
         if (this.level() instanceof ServerLevel serverLevel) {
             Vec3 pos = this.position();
             int count = 40;
@@ -64,7 +65,7 @@ public class ShockBoltEntity extends BaseMagicBoltEntity {
                 double dx = (random.nextDouble() - 0.5) * 2.0;
                 double dy = (random.nextDouble() - 0.5) * 2.0;
                 double dz = (random.nextDouble() - 0.5) * 2.0;
-                serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+                serverLevel.sendParticles(JerotesParticleTypes.SHOCK.get(), 
                         pos.x, pos.y, pos.z,
                         1, dx, dy, dz, 0.1);
             }
@@ -81,7 +82,7 @@ public class ShockBoltEntity extends BaseMagicBoltEntity {
                 double dx = (random.nextDouble() - 0.5) * 2.0;
                 double dy = (random.nextDouble() - 0.5) * 2.0;
                 double dz = (random.nextDouble() - 0.5) * 2.0;
-                serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+                serverLevel.sendParticles(JerotesParticleTypes.SHOCK.get(),
                         pos.x, pos.y, pos.z,
                         1, dx, dy, dz, 0.1);
             }

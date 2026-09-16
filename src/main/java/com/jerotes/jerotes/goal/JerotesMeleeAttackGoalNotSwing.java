@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.146.
- */
 package com.jerotes.jerotes.goal;
 
 import com.jerotes.jerotes.entity.Interface.InventoryEntity;

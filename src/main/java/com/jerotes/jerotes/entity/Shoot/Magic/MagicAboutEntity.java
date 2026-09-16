@@ -27,6 +27,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.entity.PartEntity;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -100,7 +101,14 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
         return super.canHitEntity(p_36743_);
     }
 
+    public boolean changeHitEntityToPartParent() {
+        return true;
+    }
+
     protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (entityHitResult.getEntity() instanceof PartEntity<?> partEntity && partEntity.getParent() != null && changeHitEntityToPartParent()) {
+            entityHitResult = new EntityHitResult(partEntity.getParent(), entityHitResult.getLocation());
+        }
         if (entityHitResult.getEntity() == this.getLastHurt() && !this.canNotHurtLastHurt()) {
             return;
         }
@@ -110,7 +118,7 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
         if (entityHitResult.getEntity() == this.getOwner()) {
             return;
         }
-        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entityHitResult.getEntity());
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(entityHitResult.getEntity(), null, this, getOwner());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;
@@ -130,7 +138,7 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
         if (entity == this.getOwner()) {
             return;
         }
-        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(entity, null, this, getOwner());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;

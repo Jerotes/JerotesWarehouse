@@ -194,6 +194,7 @@ public class JerotesEarthrendBlock extends BaseFallingBlock implements OwnableEn
 	@Override
 	protected void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
+		compoundTag.putString("Mode", getMode().toString());
 		if (this.ownerUUID != null) {
 			compoundTag.putUUID("Owner", this.ownerUUID);
 		}
@@ -211,18 +212,21 @@ public class JerotesEarthrendBlock extends BaseFallingBlock implements OwnableEn
 	@Override
 	protected void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
+		if (compoundTag.contains("Mode")) {
+			setMode(FallingMoveType.valueOf(compoundTag.getString("Mode")));
+		}
 		if (compoundTag.hasUUID("Owner")) {
 			this.ownerUUID = compoundTag.getUUID("Owner");
 		}
 		this.setAnimVY(compoundTag.getFloat("AnimVY"));
 		this.setDuration(compoundTag.getInt("Duration"));
 		this.setPushTick(compoundTag.getInt("PushTick"));
-		this.setPushSpeed(compoundTag.getInt("PushSpeed"));
-		this.setPushAddHeight(compoundTag.getInt("PushAddHeight"));
+		this.setPushSpeed(compoundTag.getFloat("PushSpeed"));
+		this.setPushAddHeight(compoundTag.getFloat("PushAddHeight"));
 		this.setCanBreakBlock(compoundTag.getBoolean("CanBreakBlock"));
-		this.setBreakBlockLevel(compoundTag.getInt("BreakBlockLevel"));
-		this.setAttackDamage(compoundTag.getInt("AttackDamage"));
-		this.setGravity(compoundTag.getInt("Gravity"));
+		this.setBreakBlockLevel(compoundTag.getFloat("BreakBlockLevel"));
+		this.setAttackDamage(compoundTag.getFloat("AttackDamage"));
+		this.setGravity(compoundTag.getFloat("Gravity"));
 		this.setCanPush(compoundTag.getBoolean("CanPush"));
 	}
 	@Override

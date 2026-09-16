@@ -1,12 +1,6 @@
 package com.jerotes.jerotes.client.particle;
-// 该类可在服务器端调用，不要加 @OnlyIn(Dist.CLIENT)
-import com.jerotes.jerotes.init.JerotesParticleTypes;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
 
+import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,7 +31,6 @@ public class SummonParticleOptions implements ParticleOptions {
 	public static final int DEFAULT_INNER_LIFESPAN = 20;
 	public static final int DEFAULT_OUTER_LIFESPAN = 12;
 
-	// ---------- 实例字段（声明时赋默认值，非final） ----------
 	public float innerHalfWidthStart = DEFAULT_INNER_HALF_WIDTH_START;
 	public float innerHalfWidthPeak = DEFAULT_INNER_HALF_WIDTH_PEAK;
 	public float innerHalfWidthEnd = DEFAULT_INNER_HALF_WIDTH_END;
@@ -60,7 +53,6 @@ public class SummonParticleOptions implements ParticleOptions {
 	public int innerLifespan = DEFAULT_INNER_LIFESPAN;
 	public int outerLifespan = DEFAULT_OUTER_LIFESPAN;
 
-	// ---------- 无参构造（调用全参构造，传入默认常量） ----------
 	public SummonParticleOptions() {
 		this(
 				DEFAULT_INNER_HALF_WIDTH_START, DEFAULT_INNER_HALF_WIDTH_PEAK, DEFAULT_INNER_HALF_WIDTH_END,
@@ -74,7 +66,6 @@ public class SummonParticleOptions implements ParticleOptions {
 		);
 	}
 
-	// ---------- 全参数构造函数（覆盖所有字段） ----------
 	public SummonParticleOptions(
 			float innerHalfWidthStart, float innerHalfWidthPeak, float innerHalfWidthEnd,
 			float outerBaseRadius, float outerPeakRadius,
@@ -107,7 +98,6 @@ public class SummonParticleOptions implements ParticleOptions {
 		this.outerLifespan = outerLifespan;
 	}
 
-	// ---------- 网络读取构造（直接调用全参构造） ----------
 	public SummonParticleOptions(FriendlyByteBuf buf) {
 		this(
 				buf.readFloat(), buf.readFloat(), buf.readFloat(),
@@ -140,19 +130,13 @@ public class SummonParticleOptions implements ParticleOptions {
 
 	@Override
 	public ParticleType<?> getType() {
-		return JerotesParticleTypes.SUMMON_PARTICLE.get(); // 确保你的注册类存在
+		return JerotesParticleTypes.SUMMON_PARTICLE.get();
 	}
 
-	// ---------- 三种工厂方法 ----------
-
-	/** 模式1：完全默认（使用无参构造） */
 	public static SummonParticleOptions defaults() {
 		return new SummonParticleOptions();
 	}
 
-	/**
-	 * 模式2：自定义颜色和整体高度/宽度（传入你想要的目标高度和宽度，内部自动缩放）
-	 */
 	public static SummonParticleOptions withColorsAndSize(
 			float targetHeight, float targetWidth,
 			float rBottom, float gBottom, float bBottom,
@@ -179,9 +163,6 @@ public class SummonParticleOptions implements ParticleOptions {
 		);
 	}
 
-	/**
-	 * 模式3：全量自定义
-	 */
 	public static SummonParticleOptions full(
 			float innerHalfWidthStart, float innerHalfWidthPeak, float innerHalfWidthEnd,
 			float outerBaseRadius, float outerPeakRadius,
@@ -203,11 +184,10 @@ public class SummonParticleOptions implements ParticleOptions {
 		);
 	}
 
-	// ---------- 反序列化器 ----------
 	public static final Deserializer<SummonParticleOptions> DESERIALIZER = new Deserializer<>() {
 		@Override
 		public SummonParticleOptions fromCommand(ParticleType<SummonParticleOptions> type, StringReader reader) throws CommandSyntaxException {
-			return new SummonParticleOptions(); // 命令简化为默认
+			return new SummonParticleOptions();
 		}
 
 		@Override

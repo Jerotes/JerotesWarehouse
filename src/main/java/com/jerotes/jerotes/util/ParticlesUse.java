@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.util;
 
+import com.jerotes.jerotes.client.particle.BallParticleOptions;
 import com.jerotes.jerotes.client.particle.SummonParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -40,6 +41,33 @@ public class ParticlesUse {
         summonParticle(serverLevel, entity, 1.65, 1.65, x, y, z, colorBottom, colorTop);
     }
 
+
+    //球渲染粒子
+    public static void ballRendererParticle(ServerLevel level, double x, double y, double z,
+                                         int beginColor, int targetColor,
+                                            float startRadius, float peakRadius, float endRadius,
+                                            float startAlpha, float peakAlpha, float endAlpha,
+                                         int lifespan) {
+        BallParticleOptions options = BallParticleOptions.withColors(
+                startRadius, peakRadius, endRadius,
+                lifespan,
+                beginColor, targetColor,
+                startAlpha, peakAlpha, endAlpha
+        );
+        level.sendParticles(options, x, y, z, 0, 0, 0, 0, 0);
+    }
+    public static void ballRendererParticle(ServerLevel level, double x, double y, double z,
+                                         float maxRadius, int beginColor, int targetColor) {
+        float endRadius = maxRadius * 0.5f;
+        int lifespan = 10;
+        BallParticleOptions options = BallParticleOptions.withColors(
+                0.0f, maxRadius, endRadius,
+                lifespan,
+                beginColor, targetColor,
+                0.0f, 1.0f, 0.0f
+        );
+        level.sendParticles(options, x, y, z, 0, 0, 0, 0, 0);
+    }
 
     //球粒子
     public static void sendBallParticles(Entity entity, ParticleOptions simpleParticleType) {
@@ -93,7 +121,6 @@ public class ParticlesUse {
             double z = radius * Math.sin(phi) * Math.sin(theta);
             Vec3 worldPos = new Vec3(x, y, z);
 
-            // 2. 计算该方向与轴的夹角
             Vec3 worldDir = worldPos.normalize();
             double dot = worldDir.dot(axis);
             double angle = Math.acos(Math.min(1, Math.max(-1, dot)));

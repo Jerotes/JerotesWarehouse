@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.init;
 
+import com.jerotes.jerotes.client.gui.BookSatchelScreen;
 import com.jerotes.jerotes.client.gui.MobInventoryGUIScreen;
 import com.jerotes.jerotes.client.gui.SuchInventoryScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -15,6 +16,7 @@ public class JerotesScreens {
         event.enqueueWork(() -> {
             MenuScreens.register(JerotesMenus.MOB_INVENTORY_GUI.get(), MobInventoryGUIScreen::new);
             MenuScreens.register(JerotesMenus.SUCH_INVENTORY.get(), SuchInventoryScreen::new);
+            MenuScreens.register(JerotesMenus.BOOK_SATCHEL.get(), BookSatchelScreen::new);
         });
     }
 }

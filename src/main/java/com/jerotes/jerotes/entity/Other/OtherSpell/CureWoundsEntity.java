@@ -90,10 +90,5 @@ public class CureWoundsEntity extends OtherSpellBaseEntity implements TraceableE
     public ResourceLocation getTextureLocation() {
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png");
     }
-
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
-    }
 }
 

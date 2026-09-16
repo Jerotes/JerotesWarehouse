@@ -119,9 +119,5 @@ public class MirrorImageMainEntity extends OtherSpellBaseEntity implements Trace
             }
         }
     }
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
-    }
 }
 

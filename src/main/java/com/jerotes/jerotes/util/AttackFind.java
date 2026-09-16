@@ -18,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -114,12 +115,12 @@ public class AttackFind {
                 || damagesource.getEntity() instanceof Warden && damagesource.is(DamageTypes.SONIC_BOOM);
     }
     //是否纯粹魔法
-    public static boolean isMagic(DamageSource damagesource) {
-        return damagesource.is(DamageTypes.MAGIC) || damagesource.is(DamageTypes.INDIRECT_MAGIC);
+    public static boolean isTrueMagic(DamageSource damagesource) {
+        return damagesource.is(JerotesDamageTypeTags.IS_TRUE_MAGIC);
     }
     //是否力场
     public static boolean isForceDamage(DamageSource damagesource) {
-        return damagesource.is(JerotesDamageTypes.FORCE);
+        return damagesource.is(JerotesDamageTypeTags.IS_FORCE);
     }
     //是否火焰
     public static boolean isFireDamage(DamageSource damagesource) {
@@ -141,39 +142,39 @@ public class AttackFind {
         return isCorrosionDamage(damagesource);
     }
     public static boolean isCorrosionDamage(DamageSource damagesource) {
-        return damagesource.is(JerotesDamageTypes.CORROSION) || damagesource.is(JerotesDamageTypes.ACID);
+        return damagesource.is(JerotesDamageTypeTags.IS_CORROSION) || damagesource.is(JerotesDamageTypes.ACID);
     }
     //是否雷鸣/音波
     public static boolean isThunderDamage(DamageSource damagesource) {
         return isSonicDamage(damagesource);
     }
     public static boolean isSonicDamage(DamageSource damagesource) {
-        return damagesource.is(JerotesDamageTypes.THUNDER) || damagesource.is(DamageTypes.SONIC_BOOM);
+        return damagesource.is(JerotesDamageTypeTags.IS_THUNDER);
     }
     //是否中毒
     public static boolean isPoisonDamage(DamageSource damagesource) {
-        return damagesource.is(JerotesDamageTypes.POISON);
+        return damagesource.is(JerotesDamageTypeTags.IS_POISON);
     }
     //是否心灵/精神
     public static boolean isMentalDamage(DamageSource damagesource) {
         return isPsychicDamage(damagesource);
     }
     public static boolean isPsychicDamage(DamageSource damagesource) {
-        return damagesource.is(JerotesDamageTypes.PSYCHIC);
+        return damagesource.is(JerotesDamageTypeTags.IS_PSYCHIC);
     }
     //是否光耀/正能量
     public static boolean isPositiveDamage(DamageSource damagesource) {
         return isRadiantDamage(damagesource);
     }
     public static boolean isRadiantDamage(DamageSource damagesource) {
-        return damagesource.is(JerotesDamageTypes.RADIANT);
+        return damagesource.is(JerotesDamageTypeTags.IS_RADIANT);
     }
     //是否黯蚀/负能量
     public static boolean isNegativeDamage(DamageSource damagesource) {
         return isNecroticDamage(damagesource);
     }
     public static boolean isNecroticDamage(DamageSource damagesource) {
-        return damagesource.is(JerotesDamageTypes.NECROTIC);
+        return damagesource.is(JerotesDamageTypeTags.IS_NECROTIC);
     }
     //是否溺水/水
     public static boolean isWaterDamage(DamageSource damagesource) {
@@ -184,11 +185,11 @@ public class AttackFind {
     }
     //是否流血
     public static boolean isBleedDamage(DamageSource damagesource) {
-        return damagesource.is(JerotesDamageTypes.BLEED);
+        return damagesource.is(JerotesDamageTypeTags.IS_BLEED);
     }
     //是否凋零
     public static boolean isWitherDamage(DamageSource damagesource) {
-        return damagesource.is(DamageTypes.WITHER) || damagesource.is(DamageTypes.WITHER_SKULL);
+        return damagesource.is(JerotesDamageTypeTags.IS_WITHER);
     }
 
     //削减
@@ -353,8 +354,11 @@ public class AttackFind {
         reachs += sweepEnchantmentAdd * weapon.getEnchantmentLevel(Enchantments.SWEEPING_EDGE);
         return reachs;
     }
+    public static boolean shouldCritAttack(LivingEntity attacker, Entity target) {
+        return attacker.fallDistance > 0.0F && !attacker.onGround() && !attacker.onClimbable() && !attacker.isInWater() && !attacker.hasEffect(MobEffects.BLINDNESS) && !attacker.isPassenger() && target instanceof LivingEntity;
+    }
 
-    //非常规攻击触发效果
+        //非常规攻击触发效果
     public static void attackBegin(LivingEntity attacker, Entity hurt) {
         int i = EnchantmentHelper.getFireAspect(attacker);
         if (i > 0) {
@@ -599,7 +603,11 @@ public class AttackFind {
     public static boolean SameFactionAvoidDamage(Entity attacker, LivingEntity hurt, boolean shouldJerotesEntity) {
         if (!MainConfig.SameFactionAvoidDamage && shouldJerotesEntity)
             return false;
-        if (!(attacker instanceof Mob) || !(hurt instanceof Mob)) {
+        if (attacker == null || hurt == null)
+            return false;
+        if (!(attacker instanceof Mob)
+//                || !(hurt instanceof Mob)
+        ) {
             if (shouldJerotesEntity) {
                 return false;
             }

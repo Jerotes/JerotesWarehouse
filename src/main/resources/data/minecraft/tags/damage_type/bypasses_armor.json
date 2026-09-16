@@ -11,9 +11,10 @@
     "jerotes:corrosion",
     "jerotes:acid",
     "jerotes:thunder",
+    "jerotes:bypasses_cooldown_thunder",
     "jerotes:force",
-    "jerotes:thunder",
     "jerotes:necrotic",
+    "jerotes:cursed_additional_damage",
     "jerotes:radiant",
     "jerotes:psychic",
     "jerotes:poison",
@@ -36,6 +37,15 @@
     "jerotes:bypasses_cooldown_fire",
     "jerotes:bypasses_cooldown_freeze",
     "jerotes:bypasses_cooldown_lightning",
-    "jerotes:bypasses_cooldown_drown"
+    "jerotes:bypasses_cooldown_drown",
+
+    "jerotes:bypasses_cooldown_necrotic",
+    "jerotes:bypasses_cooldown_corrosion",
+    "jerotes:bypasses_cooldown_acid",
+    "jerotes:bypasses_cooldown_force",
+    "jerotes:bypasses_cooldown_poison",
+    "jerotes:bypasses_cooldown_psychic",
+    "jerotes:bypasses_cooldown_radiant",
+    "jerotes:bypasses_cooldown_bleed"
   ]
 }

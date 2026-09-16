@@ -3,6 +3,7 @@ package com.jerotes.jerotes.entity.Interface;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
+import com.jerotes.jerotes.util.EntityFactionFind;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
@@ -10,6 +11,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.monster.Shulker;
+import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
@@ -46,10 +52,27 @@ public interface JerotesEntity {
     default boolean isJerotesFlyingMob() {
         return false;
     }
+    default boolean isImmuneToProne() {
+        if (this instanceof LivingEntity livingEntity) {
+            if (EntityFactionFind.isOoze(livingEntity) ||
+                    EntityFactionFind.isElemental(livingEntity) ||
+                    livingEntity.isNoGravity() ||
+                    isJerotesFlyingMob() ||
+                    EntityAndItemFind.isNoSpecialKnockback(livingEntity.getType())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     //命令攻击
     default boolean OwnerCanOrderAttack() {
         return true;
+    }
+
+    //恐惧阳光
+    default boolean hasSunlightFear() {
+        return this instanceof LivingEntity livingEntity && livingEntity.getMobType() == MobType.UNDEAD;
     }
 
 

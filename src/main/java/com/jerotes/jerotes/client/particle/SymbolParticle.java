@@ -28,8 +28,8 @@ public class SymbolParticle extends TextureSheetParticle {
 	private final SpriteSet spriteSet;
 	private float initialScale = 0f;
 	private float peakScale = 0.2f;
-	private int fadeInTime = 5;   // 淡入帧数
-	private int fadeOutTime = 5;  // 淡出帧数
+	private int fadeInTime = 5;
+	private int fadeOutTime = 5;
 
 	protected SymbolParticle(ClientLevel world, double x, double y, double z,
                              double vx, double vy, double vz, SpriteSet spriteSet) {

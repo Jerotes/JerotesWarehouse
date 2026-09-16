@@ -27,6 +27,8 @@ public final class MainConfig {
     public static boolean HaveSavingThrowOnlyPlayerAndLegendary;
     public static boolean NoRollDice;
     public static double SomeBulletSpellReachMultiplier;
+    public static double BeamDamageMultipler;
+    public static boolean OnlyPlayerAndLegendaryCanCounterHigherSpells;
 
     public static int CorrosiveStopDurabilityValue;
     public static boolean ScreenShake;
@@ -82,10 +84,12 @@ public final class MainConfig {
         TamedMobHurtByOwnerHasReduce = COMMON.TamedMobHurtByOwnerHasReduce.get();
         TamedMobAttackCreeperAndGhast = COMMON.TamedMobAttackCreeperAndGhast.get();
         AffectsNonThisModEntities = COMMON.AffectsNonThisModEntities.get();
-                HaveSavingThrow = COMMON.HaveSavingThrow.get();
+        HaveSavingThrow = COMMON.HaveSavingThrow.get();
         HaveSavingThrowOnlyPlayerAndLegendary = COMMON.HaveSavingThrowOnlyPlayerAndLegendary.get();
         NoRollDice = COMMON.NoRollDice.get();
         SomeBulletSpellReachMultiplier = COMMON.SomeBulletSpellReachMultiplier.get();
+        BeamDamageMultipler = COMMON.BeamDamageMultipler.get();
+        OnlyPlayerAndLegendaryCanCounterHigherSpells = COMMON.OnlyPlayerAndLegendaryCanCounterHigherSpells.get();
 
         CorrosiveStopDurabilityValue = COMMON.CorrosiveStopDurabilityValue.get();
                 ScreenShake = COMMON.ScreenShake.get();
@@ -142,6 +146,8 @@ public final class MainConfig {
         public final ForgeConfigSpec.BooleanValue HaveSavingThrowOnlyPlayerAndLegendary;
         public final ForgeConfigSpec.BooleanValue NoRollDice;
         public final ForgeConfigSpec.DoubleValue SomeBulletSpellReachMultiplier;
+        public final ForgeConfigSpec.DoubleValue BeamDamageMultipler;
+        public final ForgeConfigSpec.BooleanValue OnlyPlayerAndLegendaryCanCounterHigherSpells;
 
         public final ForgeConfigSpec.IntValue CorrosiveStopDurabilityValue;
         public final ForgeConfigSpec.BooleanValue ScreenShake;
@@ -196,6 +202,10 @@ public final class MainConfig {
                     .define("无随机骰子", false);
             SomeBulletSpellReachMultiplier = builder.comment("Some Bullet Spell Reach Multiplier")
                     .defineInRange("部分射弹法术距离倍数", 1.5f, 0.0, Double.MAX_VALUE);
+            BeamDamageMultipler = builder.comment("Beam Damage Multiplier")
+                    .defineInRange("光束类伤害倍数", 2.0f, 0.0, Double.MAX_VALUE);
+            OnlyPlayerAndLegendaryCanCounterHigherSpells = builder.comment("Only Player And Legendary Can Counter Higher Spells")
+                    .define("只有玩家和传奇存在生物能反制更高环数的法术", true);
             builder.pop();
 
             builder.push("Other");

@@ -35,4 +35,33 @@ public class JerotesParticleRenderTypes {
 			RenderSystem.defaultBlendFunc();
 		}
 	};
+
+	public static final ParticleRenderType ELEMENT_BOLT = new ParticleRenderType() {
+		@Override
+		public void begin(BufferBuilder builder, TextureManager manager) {
+			RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(
+					GlStateManager.SourceFactor.SRC_ALPHA,
+					GlStateManager.DestFactor.ONE
+			);
+			RenderSystem.depthMask(false);
+			RenderSystem.disableCull();
+			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+		}
+
+		@Override
+		public void end(Tesselator tesselator) {
+			tesselator.end();
+			RenderSystem.enableCull();
+			RenderSystem.depthMask(true);
+			RenderSystem.defaultBlendFunc();
+		}
+
+		@Override
+		public String toString() {
+			return "ELEMENT_BOLT";
+		}
+	};
 }

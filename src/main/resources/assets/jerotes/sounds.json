@@ -130,6 +130,27 @@
       }
     ]
   },
+  "wind_short": {
+    "subtitle": "subtitle.jerotes.wind_short",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/other/wind_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/other/wind_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/other/wind_3",
+        "volume": 1.0,
+        "weight": 1.0
+      }
+    ]
+  },
   "cloaking": {
     "subtitle": "subtitle.jerotes.cloaking",
     "category": "neutral",
@@ -422,6 +443,69 @@
       }
     ]
   },
+  "magic_flames_spray": {
+    "subtitle": "subtitle.jerotes.magic_flames_spray",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/fire_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fire_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fire_3",
+        "volume": 1.0,
+        "weight": 1.0
+      }
+    ]
+  },
+  "magic_frostbite_spray": {
+    "subtitle": "subtitle.jerotes.magic_frostbite_spray",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/freeze_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/freeze_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/freeze_3",
+        "volume": 1.0,
+        "weight": 1.0
+      }
+    ]
+  },
+  "magic_sparks_spray": {
+    "subtitle": "subtitle.jerotes.magic_sparks_spray",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/electric_pulses_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/electric_pulses_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/electric_pulses_3",
+        "volume": 1.0,
+        "weight": 1.0
+      }
+    ]
+  },
   "magic_witch_bolt": {
     "subtitle": "subtitle.jerotes.magic_witch_bolt",
     "category": "neutral",
@@ -447,8 +531,19 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/ray",
-        "volume": 1.0
+        "name": "jerotes:others/magic/fire_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fire_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fire_3",
+        "volume": 1.0,
+        "weight": 1.0
       }
     ]
   },
@@ -457,8 +552,19 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/ray",
-        "volume": 1.0
+        "name": "jerotes:others/magic/freeze_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/freeze_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/freeze_3",
+        "volume": 1.0,
+        "weight": 1.0
       }
     ]
   },
@@ -467,8 +573,19 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/ray",
-        "volume": 1.0
+        "name": "jerotes:others/magic/electric_pulses_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/electric_pulses_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/electric_pulses_3",
+        "volume": 1.0,
+        "weight": 1.0
       }
     ]
   },
@@ -489,6 +606,27 @@
       {
         "name": "jerotes:others/magic/ray",
         "volume": 1.0
+      }
+    ]
+  },
+  "magic_scorching_ray": {
+    "subtitle": "subtitle.jerotes.magic_scorching_ray",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/fire_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fire_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fire_3",
+        "volume": 1.0,
+        "weight": 1.0
       }
     ]
   },
@@ -538,6 +676,16 @@
     "sounds": [
       {
         "name": "jerotes:others/magic/lightning",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_sunbeam": {
+    "subtitle": "subtitle.jerotes.magic_sunbeam",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/force",
         "volume": 1.0
       }
     ]
@@ -613,6 +761,16 @@
       }
     ]
   },
+  "magic_remove_curse": {
+    "subtitle": "subtitle.jerotes.magic_remove_curse",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
+  },
   "magic_blindness_curse": {
     "subtitle": "subtitle.jerotes.magic_blindness_curse",
     "category": "neutral",
@@ -678,8 +836,19 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/fire",
-        "volume": 1.0
+        "name": "jerotes:others/magic/fire_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fire_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/fire_3",
+        "volume": 1.0,
+        "weight": 1.0
       }
     ]
   },
@@ -688,8 +857,19 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/freeze",
-        "volume": 1.0
+        "name": "jerotes:others/magic/freeze_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/freeze_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/freeze_3",
+        "volume": 1.0,
+        "weight": 1.0
       }
     ]
   },
@@ -733,8 +913,38 @@
       }
     ]
   },
+  "magic_feather_fall": {
+    "subtitle": "subtitle.jerotes.magic_feather_fall",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/heal",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_darkvision": {
+    "subtitle": "subtitle.jerotes.magic_darkvision",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/heal",
+        "volume": 1.0
+      }
+    ]
+  },
   "magic_misty_step": {
     "subtitle": "subtitle.jerotes.magic_misty_step",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/teleport",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_ender_step": {
+    "subtitle": "subtitle.jerotes.magic_ender_step",
     "category": "neutral",
     "sounds": [
       {
@@ -774,7 +984,7 @@
     ]
   },
   "magic_counterspell": {
-    "subtitle": "subtitle.jerotes.magic_misty_step",
+    "subtitle": "subtitle.jerotes.magic_counterspell",
     "category": "neutral",
     "sounds": [
       {
@@ -858,8 +1068,19 @@
     "category": "neutral",
     "sounds": [
       {
-        "name": "jerotes:others/magic/freeze",
-        "volume": 1.0
+        "name": "jerotes:others/magic/freeze_1",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/freeze_2",
+        "volume": 1.0,
+        "weight": 1.0
+      },
+      {
+        "name": "jerotes:others/magic/freeze_3",
+        "volume": 1.0,
+        "weight": 1.0
       }
     ]
   },
@@ -1063,6 +1284,36 @@
   },
   "magic_redstone_laser": {
     "subtitle": "subtitle.jerotes.magic_redstone_laser",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/target",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_instant_forge": {
+    "subtitle": "subtitle.jerotes.magic_instant_forge",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/instant_forge",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_ender_chest": {
+    "subtitle": "subtitle.jerotes.magic_ender_chest",
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "jerotes:others/magic/ender_chest",
+        "volume": 1.0
+      }
+    ]
+  },
+  "magic_lock_aim": {
+    "subtitle": "subtitle.jerotes.magic_lock_aim",
     "category": "neutral",
     "sounds": [
       {

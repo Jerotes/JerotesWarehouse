@@ -19,10 +19,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.ModList;
+import vazkii.patchouli.api.PatchouliAPI;
+
+import java.util.List;
 
 public class CopperCarvedCompanyInvestigationRecords extends Item {
 	public CopperCarvedCompanyInvestigationRecords() {
@@ -60,5 +64,11 @@ public class CopperCarvedCompanyInvestigationRecords extends Item {
 			}
 			return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
 		}
+	}
+
+	@Override
+	public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
+		super.appendHoverText(itemStack, level, list, tooltipFlag);
+		list.add(Component.translatable("item.jerotes.unviewed").withStyle(ChatFormatting.DARK_GRAY));
 	}
 }

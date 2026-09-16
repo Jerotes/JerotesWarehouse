@@ -1,15 +1,13 @@
 package com.jerotes.jerotes.mixin;
 
-import com.jerotes.jerotes.entity.Interface.JerotesChangeCamel;
-import com.jerotes.jerotes.entity.Interface.JerotesChangeLivingEntity;
-import com.jerotes.jerotes.entity.Interface.JerotesChangeStray;
-import com.jerotes.jerotes.entity.Interface.JerotesEntity;
+import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.entity.Mob.AddHandEntity;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.item.Interface.MeleeItem;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import com.jerotes.jerotes.network.JerotesSpearRushAttackPacket;
 import com.jerotes.jerotes.network.PacketHandler;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
@@ -19,8 +17,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
@@ -31,6 +32,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.monster.Shulker;
+import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,6 +43,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -57,6 +63,8 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     private static final EntityDataAccessor<Boolean> IS_TRUE_INVISIBLE_JEROTES = SynchedEntityData.defineId(LivingEntityMixin.class, EntityDataSerializers.BOOLEAN);
     @Unique
     private static final EntityDataAccessor<Integer> ANESTHETIZED_TICK_JEROTES = SynchedEntityData.defineId(LivingEntityMixin.class, EntityDataSerializers.INT);
+    @Unique
+    private static final EntityDataAccessor<Integer> PRONE_TICK_JEROTES = SynchedEntityData.defineId(LivingEntityMixin.class, EntityDataSerializers.INT);
 
     protected LivingEntityMixin(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
@@ -94,6 +102,12 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     public void setAnesthetizedTickJerotes(int tick) {
         this.getEntityData().set(ANESTHETIZED_TICK_JEROTES, tick);
     }
+    public int getProneTickJerotes() {
+        return this.getEntityData().get(PRONE_TICK_JEROTES);
+    }
+    public void setProneTickJerotes(int tick) {
+        this.getEntityData().set(PRONE_TICK_JEROTES, tick);
+    }
 
 
     @Shadow public abstract boolean hasEffect(MobEffect p_21024_);
@@ -129,6 +143,30 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
             ci.cancel();
     }
 
+    @Unique
+    public float thisTickRenderTimeJerotes = 0;
+    @Unique
+    public float lastTickRenderTimeJerotes = 6;
+    @Unique
+    public float proneTickProgressJerotes = 0.0f;
+    public float getThisTickRenderTimeJerotes() {
+        return thisTickRenderTimeJerotes;
+    }
+    public void setThisTickRenderTimeJerotes(float tick) {
+        thisTickRenderTimeJerotes = tick;
+    }
+    public float getLastTickRenderTimeJerotes() {
+        return lastTickRenderTimeJerotes;
+    }
+    public void setLastTickRenderTimeJerotes(float tick) {
+        lastTickRenderTimeJerotes = tick;
+    }
+    public float getProneTickProgressJerotes() {
+        return proneTickProgressJerotes;
+    }
+    public void setProneTickProgressJerotes(float tick) {
+        proneTickProgressJerotes = tick;
+    }
     @Shadow
     @Nullable
     private DamageSource lastDamageSource;
@@ -136,15 +174,29 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
         compoundTag.putBoolean("IsTrueInvisibleJerotes", this.isTrueInvisibleJerotes());
         compoundTag.putFloat("MaxHealthReduceCountJerotes", this.getMaxHealthReduceCountJerotes());
-        compoundTag.putFloat("MaxHealthReduceTickJerotes", this.getMaxHealthReduceTickJerotes());
-        compoundTag.putInt("AnesthetizedTickJerotes", this.getAnesthetizedTickJerotes());
+        if (this.getMaxHealthReduceTickJerotes() != 0) {
+            compoundTag.putFloat("MaxHealthReduceTickJerotes", this.getMaxHealthReduceTickJerotes());
+        }
+        if (this.getAnesthetizedTickJerotes() != 0) {
+            compoundTag.putInt("AnesthetizedTickJerotes", this.getAnesthetizedTickJerotes());
+        }
+        if (this.getProneTickJerotes() != 0) {
+            compoundTag.putInt("ProneTickJerotes", this.getProneTickJerotes());
+        }
     }
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
     private void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
         this.setTrueInvisibleJerotes(compoundTag.getBoolean("IsTrueInvisibleJerotes"));
         this.setMaxHealthReduceCountJerotes(compoundTag.getFloat("MaxHealthReduceCountJerotes"));
-        this.setMaxHealthReduceTickJerotes(compoundTag.getFloat("MaxHealthReduceTickJerotes"));
-        this.setAnesthetizedTickJerotes(compoundTag.getInt("AnesthetizedTickJerotes"));
+        if (compoundTag.getFloat("MaxHealthReduceTickJerotes") != 0) {
+            this.setMaxHealthReduceTickJerotes(compoundTag.getFloat("MaxHealthReduceTickJerotes"));
+        }
+        if (compoundTag.getInt("AnesthetizedTickJerotes") != 0) {
+            this.setAnesthetizedTickJerotes(compoundTag.getInt("AnesthetizedTickJerotes"));
+        }
+        if (compoundTag.getInt("ProneTickJerotes") != 0) {
+            this.setProneTickJerotes(compoundTag.getInt("ProneTickJerotes"));
+        }
     }
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
     protected void defineSynchedData(CallbackInfo ci) {
@@ -152,14 +204,33 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
         this.getEntityData().define(MAX_HEALTH_REDUCE_COUNT_JEROTES, 0f);
         this.getEntityData().define(MAX_HEALTH_REDUCE_TICK_JEROTES, 120f);
         this.getEntityData().define(ANESTHETIZED_TICK_JEROTES, 0);
+        this.getEntityData().define(PRONE_TICK_JEROTES, 0);
     }
     @Inject(method = "tick", at = @At("HEAD"))
     protected void tick(CallbackInfo ci) {
+        if (level().isClientSide()) {
+            lastTickRenderTimeJerotes = thisTickRenderTimeJerotes;
+            thisTickRenderTimeJerotes = 0;
+        }
         if (this.isInvisible()) {
             boolean trueInvisible = EntityAndItemFind.isTrueInvisibleBuff(this);
             if (entityData.get(IS_TRUE_INVISIBLE_JEROTES) != trueInvisible) {
                 if (!this.level().isClientSide())
                     this.entityData.set(IS_TRUE_INVISIBLE_JEROTES, trueInvisible);
+            }
+        }
+
+        if (this.hasEffect(JerotesMobEffects.PRONE.get())) {
+            if (this instanceof SpecialProneEntity specialProneEntity) {
+                specialProneEntity.specialProneTick();
+            }
+            if (!this.level().isClientSide()) {
+                this.setProneTickJerotes(Math.min(10, getProneTickJerotes() + 2));
+            }
+        }
+        else if (this.getProneTickJerotes() > 0) {
+            if (!this.level().isClientSide()) {
+                this.setProneTickJerotes(Math.max(0, getProneTickJerotes() - 1));
             }
         }
 
@@ -299,28 +370,48 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     public void canBeAffected(MobEffectInstance mobEffectInstance, CallbackInfoReturnable<Boolean> cir) {
         if (this instanceof JerotesChangeStray jerotesChangeStray && jerotesChangeStray.isJerotesParched() && mobEffectInstance.getEffect() == MobEffects.WEAKNESS)
             cir.setReturnValue(false);
-    }
-
-
-//    @Redirect(
-//            method = "hurt",
-//            at = @At(
-//                    value = "INVOKE",
-//                    target = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z",
-//                    ordinal = 7
-//            )
-//    )
-//    private boolean redirectExplosionCheck(DamageSource source, TagKey<DamageType> tag) {
-//        if (tag == DamageTypeTags.IS_EXPLOSION)
-//            return source.is(tag) || EntityAndItemFind.noKnockback(source);
-//        return source.is(tag);
-//    }
-
-    @Inject(method = "knockback", at = @At("HEAD"), cancellable = true)
-    private void knockback(double strength, double x, double z, CallbackInfo ci) {
-        if (Main.getJerotesPersistentData(this).getDouble("jerotes_no_knockback_tag") > 0) {
-            Main.getJerotesPersistentData(this).putDouble("jerotes_no_knockback_tag", 0);
-            ci.cancel();
+        LivingEntity livingEntity = (LivingEntity)(Object)this;
+        //倒地
+        if (mobEffectInstance.getEffect() == JerotesMobEffects.PRONE.get()) {
+            if (livingEntity instanceof JerotesEntity jerotes && jerotes.isImmuneToProne()) {
+                cir.setReturnValue(false);
+            }
+            else if (EntityFactionFind.isOoze(livingEntity) ||
+                    livingEntity.isNoGravity() ||
+                    livingEntity instanceof Shulker ||
+                    livingEntity instanceof Vex ||
+                    livingEntity instanceof Allay||
+                    EntityAndItemFind.isNoSpecialKnockback(livingEntity.getType())  ) {
+                cir.setReturnValue(false);
+            }
+        }
+        //束缚
+        if (mobEffectInstance.getEffect() == JerotesMobEffects.ENSLAVEMENT.get() && EntityFactionFind.isOoze(livingEntity)) {
+            cir.setReturnValue(false);
         }
     }
+
+
+    @Redirect(
+            method = "hurt",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z",
+                    ordinal = 7
+            )
+    )
+    private boolean redirectExplosionCheck(DamageSource source, TagKey<DamageType> tag) {
+        boolean originalResult = source.is(tag);
+        if (tag == DamageTypeTags.IS_EXPLOSION) {
+            return originalResult || AttackFind.noKnockback(source);
+        }
+        return originalResult;
+    }
+//    @Inject(method = "knockback", at = @At("HEAD"), cancellable = true)
+//    private void knockback(double strength, double x, double z, CallbackInfo ci) {
+//        if (Main.getJerotesPersistentData(this).getDouble("jerotes_no_knockback_tag") > 0) {
+//            Main.getJerotesPersistentData(this).putDouble("jerotes_no_knockback_tag", 0);
+//            ci.cancel();
+//        }
+//    }
 }

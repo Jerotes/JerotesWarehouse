@@ -115,10 +115,6 @@ public class HoldPersonMainEntity extends OtherSpellBaseEntity implements Tracea
             }
         }
     }
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
-    }
 
     @Override
     public boolean endConcentration() {

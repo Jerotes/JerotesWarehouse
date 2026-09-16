@@ -70,7 +70,7 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
         float rawProgress = (entity.getLifeRay() - half) / half;
         float fadeFactor = 1.0f - Mth.clamp(rawProgress, 0.0f, 1.0f);
         float currentAmplitude = 0.8f * fadeFactor * entity.beamScale();
-        int numStrands = 4 + random.nextInt(2);
+        int numStrands = entity.lightningBoltCount();
         int segments = 10 + random.nextInt(4);
         float strandWidth = 0.012f;
 
@@ -148,7 +148,7 @@ public class LightningBoltRenderer<T extends BaseRayEntity> extends EntityRender
                     pitch = segDir.y > 0.0 ? -(float)Math.PI / 2F : (float)Math.PI / 2F;
                 } else {
                     yaw = (float)Math.atan2(segDir.x, segDir.z);
-                    pitch = (float)-Math.atan2(segDir.y, hDist);
+                    pitch = (float)Math.asin(-segDir.y / segLen);
                 }
 
                 poseStack.pushPose();

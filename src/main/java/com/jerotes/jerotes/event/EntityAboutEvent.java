@@ -151,7 +151,10 @@ public class EntityAboutEvent {
 		Entity attacker = event.getSource().getEntity();
 		Entity attackerUse = event.getSource().getDirectEntity();
 		if (hurt != null && AttackFind.noKnockback(event.getSource())) {
-			Main.getJerotesPersistentData(hurt).putDouble("jerotes_no_knockback_tag", 2);
+			Main.getJerotesPersistentData(hurt).putDouble("jerotes_no_knockback_tag", 1);
+		}
+		else if (hurt != null) {
+			Main.getJerotesPersistentData(hurt).putDouble("jerotes_no_knockback_tag", 0);
 		}
 		if (attacker instanceof LivingEntity livingEntity) {
 			//buff消失
@@ -206,11 +209,21 @@ public class EntityAboutEvent {
 					ItemStack handItem = living.getMainHandItem();
 					if (!AttackFind.MeleeDamageFromMainHandNotOffHand(living))
 						handItem = living.getOffhandItem();
+					if (attackBy instanceof LivingEntity livingEntity && living.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+						float baseDamage = (float) living.getAttributeValue(Attributes.ATTACK_DAMAGE);
+						if (!handItem.isEmpty()) {
+							float add = 0;
+							if (JerotesEnchantments.BANE_OF_HUMANOIDS != null && EntityFactionFind.isHumanoid(entity) &&
+									handItem.getEnchantmentLevel(JerotesEnchantments.BANE_OF_HUMANOIDS.get()) > 0) {
+								add += amount / baseDamage * (livingEntity.getMainHandItem().getEnchantmentLevel(JerotesEnchantments.BANE_OF_HUMANOIDS.get()) * 2.5f);
+							}
 
-					if (JerotesEnchantments.BANE_OF_HUMANOIDS != null && EntityFactionFind.isHumanoid(entity) && attackBy instanceof LivingEntity livingEntity && !handItem.isEmpty() && handItem.getEnchantmentLevel(JerotesEnchantments.BANE_OF_HUMANOIDS.get()) > 0) {
-						if (living.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
-							float baseDamage = (float) living.getAttributeValue(Attributes.ATTACK_DAMAGE);
-							event.setAmount(amount + amount / baseDamage * (livingEntity.getMainHandItem().getEnchantmentLevel(JerotesEnchantments.BANE_OF_HUMANOIDS.get()) * 2.5f));
+							if (JerotesEnchantments.BANE_OF_FEYS != null && EntityFactionFind.isFey(entity) &&
+									handItem.getEnchantmentLevel(JerotesEnchantments.BANE_OF_FEYS.get()) > 0) {
+								add += amount / baseDamage * (livingEntity.getMainHandItem().getEnchantmentLevel(JerotesEnchantments.BANE_OF_FEYS.get()) * 2.5f);
+							}
+
+							event.setAmount(amount + add);
 						}
 					}
 				}
@@ -345,6 +358,7 @@ public class EntityAboutEvent {
 		if (entity == null || !entity.isAlive())
 			return;
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_no_knockback_tag", true);
+		Main.persistentDataDoubleReduceToZero(entity, "jerotes_sun_burn_tick", true);
 		//伤害间隔
 		if (Main.getJerotesPersistentData(entity).getFloat("jerotes_boss_hurt_cooldown") > 0) {
 			Main.getJerotesPersistentData(entity).putFloat("jerotes_boss_hurt_cooldown", Main.getJerotesPersistentData(entity).getFloat("jerotes_boss_hurt_cooldown") - 1);

@@ -87,7 +87,8 @@ public class PowerWordKillEntity extends OtherSpellBaseEntity implements Traceab
             if (getTarget().level() instanceof ServerLevel) {
                 if (this.getLifeTick() == 10) {
                     DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.PSYCHIC, this, this.getOwner());
-                    if (livingEntity.getHealth() <= 100 && !(livingEntity instanceof Player player && player.isCreative())) {
+                    float health = livingEntity.getHealth() + (livingEntity instanceof Player player ? player.experienceLevel : 0);
+                    if (100 >= health && !(livingEntity instanceof Player player && player.isCreative())) {
                         for (int i = 0; i < 40; ++i) {
                             livingEntity.invulnerableTime = 0;
                             livingEntity.hurt(damageSource, Float.MAX_VALUE);
@@ -104,7 +105,7 @@ public class PowerWordKillEntity extends OtherSpellBaseEntity implements Traceab
                             livingEntity.hurt(this.damageSources().fellOutOfWorld(), Float.MAX_VALUE);
                             livingEntity.setDeltaMovement(0,0,0);
                         }
-                        if (livingEntity.getHealth() > 0) {
+                        if (health > 0) {
                             livingEntity.setHealth(0);
                         }
                         livingEntity.setDeltaMovement(0,0,0);
@@ -123,10 +124,6 @@ public class PowerWordKillEntity extends OtherSpellBaseEntity implements Traceab
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png");
     }
 
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
-    }
     public int roundLightI() {
         return 0x820019;
     }

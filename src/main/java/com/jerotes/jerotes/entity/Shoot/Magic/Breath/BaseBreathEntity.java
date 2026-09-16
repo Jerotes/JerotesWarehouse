@@ -43,6 +43,13 @@ public class BaseBreathEntity extends MagicAboutEntity {
                 this.level().addParticle(this.getTrailParticle(), this.getX() + ((this.random.nextDouble() - 0.5d) * getBbWidth() * (life * 0.1)), this.getY() + ((this.random.nextDouble() - 0.5d) * getBbWidth() * (life * 0.1)), this.getZ() + ((this.random.nextDouble() - 0.5d) * getBbWidth() * (life * 0.1)), 0.0d, 0.0d, 0.0d);
             }
         }
+        if (this.getOwner() != null && this.position().distanceTo(this.getOwner().position()) > getMaxReach()) {
+            if (!this.level().isClientSide()) {
+                this.lastBreak();
+                this.Cloud(this.getX(), this.getY(), this.getZ());
+                this.discard();
+            }
+        }
     }
 
     public boolean Cloud(double x, double y, double z) {
@@ -87,6 +94,13 @@ public class BaseBreathEntity extends MagicAboutEntity {
     }
     public MobEffect getCloudEffect() {
         return MobEffects.POISON;
+    }
+    public float getMaxReach() {
+        int level = getSpellLevel();
+        if (level <= 3) return 4.5f;
+        if (level <= 6) return 9.0f;
+        if (level <= 8) return 18.0f;
+        return 27.0f;
     }
 
     @Override

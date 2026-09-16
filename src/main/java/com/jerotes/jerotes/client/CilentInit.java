@@ -1,11 +1,16 @@
 package com.jerotes.jerotes.client;
 
 import com.jerotes.jerotes.init.JerotesItems;
+import com.jerotes.jerotes.inventory.BookSatchelMenu;
+import com.jerotes.jerotes.item.BookSatchelItem;
 import com.jerotes.jerotes.item.FlawlessMagicScroll;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+
+import java.util.UUID;
 
 public class CilentInit
 {
@@ -42,6 +47,17 @@ public class CilentInit
                     return 0.0f;
                 }
             });
+            ItemProperties.register(item.get(), new ResourceLocation("jerotes_book_satchel_open"), (stack, level, entity, seed) -> {
+                if (entity instanceof Player player && player.containerMenu instanceof BookSatchelMenu menu) {
+                    UUID renderingUUID = BookSatchelItem.readSatchelUUID(stack);
+                    UUID openUUID = BookSatchelItem.readSatchelUUID(menu.getSatchelStack());
+                    if (renderingUUID != null && renderingUUID.equals(openUUID)) {
+                        return 1.0F;
+                    }
+                }
+                return 0.0F;
+            });
         });
+
     }
 }

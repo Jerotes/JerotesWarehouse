@@ -5,6 +5,7 @@ import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutThrowEntity;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.network.JerotesPlayerData;
 import com.jerotes.jerotes.spell.SpellType;
 import com.jerotes.jerotes.util.AttackFind;
@@ -16,6 +17,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -77,12 +79,8 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
     public void setTarget(@Nullable Entity entity) {
         if (entity != null) {
             this.setTargetUUID(entity.getUUID());
-            if (!this.level().isClientSide) {
-                this.setTargetId(entity.getId());
-            }
         } else {
             this.setTargetUUID(null);
-            this.setTargetId(-1);
         }
     }
 
@@ -138,6 +136,8 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
         this.scaleTick = compoundTag.getInt("ScaleTick");
         if (compoundTag.hasUUID("Target")) {
             this.setTargetUUID(compoundTag.getUUID("Target"));
+        } else {
+            this.setTargetUUID(null);
         }
         this.setRelativeYaw(compoundTag.getFloat("RelativeYaw"));
         this.setRelativePitch(compoundTag.getFloat("RelativePitch"));
@@ -156,6 +156,13 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
     @Override
     public void tick() {
         super.tick();
+        if (getTarget() != null && this.getTargetId() == -1) {
+            this.setTargetId(getTarget().getId());
+        }
+        if (getTarget() != null && !this.getTarget().isAlive()) {
+            this.setTarget(null);
+            this.setTargetId(-1);
+        }
         if (this.getOwner() != null) {
             if (this.distanceTo(this.getOwner()) > (int) (18 * MainConfig.SomeBulletSpellReachMultiplier) || !Main.hasLineOfSightEntity(this, this.getOwner())) {
                 this.lastBreak();
@@ -168,7 +175,7 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
             this.setDeltaMovement(0, 0, 0);
             this.setNoGravity(true);
             this.setPos(target.position().add(0, target.getBbHeight() / 2, 0));
-            this.setRot(target.getYRot() + this.getRelativeYaw(), target.getXRot() + this.getRelativePitch());
+            this.setRot(target.getYRot() - this.getRelativeYaw(), target.getXRot() - this.getRelativePitch());
             if (!target.isAlive()) {
                 this.lastBreak();
                 this.endConcentration();
@@ -209,7 +216,7 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
                 double dx = (random.nextDouble() - 0.5) * 2.0;
                 double dy = (random.nextDouble() - 0.5) * 2.0;
                 double dz = (random.nextDouble() - 0.5) * 2.0;
-                serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+                serverLevel.sendParticles(JerotesParticleTypes.SHOCK.get(),
                         pos.x, pos.y, pos.z,
                         1, dx, dy, dz, 0.1);
             }
@@ -257,7 +264,7 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
     }
 
     protected ParticleOptions getTrailParticle() {
-        return ParticleTypes.SNOWFLAKE;
+        return JerotesParticleTypes.SHOCK.get();
     }
 
     @Override

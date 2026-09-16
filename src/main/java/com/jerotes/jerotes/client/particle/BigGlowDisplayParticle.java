@@ -19,7 +19,6 @@ public class BigGlowDisplayParticle extends TextureSheetParticle {
 		this.sprites = sprites;
 		this.setSpriteFromAge(sprites);
 
-		// 基础参数
 		this.rCol = 1.0f;
 		this.gCol = 1.0f;
 		this.bCol = 1.0f;
@@ -37,13 +36,8 @@ public class BigGlowDisplayParticle extends TextureSheetParticle {
 		float progress = (float)this.age / this.lifetime;
 		float easeOut = 1 - (float)Math.pow(1 - progress, 4);
 
-		// 平滑放大
 		this.quadSize = (baseScale * (1 + easeOut * 2f));
-
-		// 透明度衰减
 		this.alpha = 0.9f * (1 - progress);
-
-		// 扭曲进度
 		this.distortionProgress = easeOut;
 	}
 

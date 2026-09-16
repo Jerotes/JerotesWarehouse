@@ -1,6 +1,7 @@
 package com.jerotes.jerotes.entity.Other.Beam;
 
 import com.jerotes.jerotes.JerotesWarehouse;
+import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.util.AttackFind;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +27,12 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 	private static final EntityDataAccessor<Float> SELF_X = SynchedEntityData.defineId(BaseBeamEntity.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Float> SELF_Y = SynchedEntityData.defineId(BaseBeamEntity.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Float> SELF_Z = SynchedEntityData.defineId(BaseBeamEntity.class, EntityDataSerializers.FLOAT);
+
+	// 新增：光束目标点
+	private static final EntityDataAccessor<Float> TARGET_X = SynchedEntityData.defineId(BaseBeamEntity.class, EntityDataSerializers.FLOAT);
+	private static final EntityDataAccessor<Float> TARGET_Y = SynchedEntityData.defineId(BaseBeamEntity.class, EntityDataSerializers.FLOAT);
+	private static final EntityDataAccessor<Float> TARGET_Z = SynchedEntityData.defineId(BaseBeamEntity.class, EntityDataSerializers.FLOAT);
+
 	private static final double MAX_DISTANCE = 64.0;
 
 	public BaseBeamEntity(EntityType<? extends BaseBeamEntity> entityType, Level level) {
@@ -43,46 +50,65 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 	public boolean isInWall() {
 		return false;
 	}
+
 	public double getMaxDistance() {
 		return MAX_DISTANCE;
 	}
 
-	public void setLightLockX(float f){
+	// ---------- LightLock ----------
+	public void setLightLockX(float f) {
 		this.getEntityData().set(LIGHT_LOCK_X, f);
 	}
-	public float getLightLockX() {return this.getEntityData().get(LIGHT_LOCK_X);}
-	public void setLightLockY(float f){
+	public float getLightLockX() { return this.getEntityData().get(LIGHT_LOCK_X); }
+
+	public void setLightLockY(float f) {
 		this.getEntityData().set(LIGHT_LOCK_Y, f);
 	}
-	public float getLightLockY() {
-		return this.getEntityData().get(LIGHT_LOCK_Y);
-	}
-	public void setLightLockZ(float f){
+	public float getLightLockY() { return this.getEntityData().get(LIGHT_LOCK_Y); }
+
+	public void setLightLockZ(float f) {
 		this.getEntityData().set(LIGHT_LOCK_Z, f);
 	}
-	public float getLightLockZ() {
-		return this.getEntityData().get(LIGHT_LOCK_Z);
-	}
-	public void setSelfX(float f){
+	public float getLightLockZ() { return this.getEntityData().get(LIGHT_LOCK_Z); }
+
+	// ---------- Self ----------
+	public void setSelfX(float f) {
 		this.getEntityData().set(SELF_X, f);
 	}
-	public float getSelfX() {return this.getEntityData().get(SELF_X);}
-	public void setSelfY(float f){
+	public float getSelfX() { return this.getEntityData().get(SELF_X); }
+
+	public void setSelfY(float f) {
 		this.getEntityData().set(SELF_Y, f);
 	}
-	public float getSelfY() {
-		return this.getEntityData().get(SELF_Y);
-	}
-	public void setSelfZ(float f){
+	public float getSelfY() { return this.getEntityData().get(SELF_Y); }
+
+	public void setSelfZ(float f) {
 		this.getEntityData().set(SELF_Z, f);
 	}
-	public float getSelfZ() {
-		return this.getEntityData().get(SELF_Z);
+	public float getSelfZ() { return this.getEntityData().get(SELF_Z); }
+
+	// ---------- Target ----------
+	public void setTargetX(float f) {
+		this.getEntityData().set(TARGET_X, f);
 	}
+	public float getTargetX() { return this.getEntityData().get(TARGET_X); }
+
+	public void setTargetY(float f) {
+		this.getEntityData().set(TARGET_Y, f);
+	}
+	public float getTargetY() { return this.getEntityData().get(TARGET_Y); }
+
+	public void setTargetZ(float f) {
+		this.getEntityData().set(TARGET_Z, f);
+	}
+	public float getTargetZ() { return this.getEntityData().get(TARGET_Z); }
+
+	// ---------- Owner ----------
 	@Nullable
 	private LivingEntity owner;
 	@Nullable
 	private UUID ownerUUID;
+
 	@Nullable
 	@Override
 	public UUID getOwnerUUID() {
@@ -93,28 +119,28 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 		this.owner = livingEntity;
 		this.ownerUUID = livingEntity == null ? null : livingEntity.getUUID();
 	}
+
 	@Nullable
 	@Override
 	public LivingEntity getOwner() {
 		Entity entity;
-		if (this.owner == null && this.ownerUUID != null && this.level() instanceof ServerLevel && (entity = ((ServerLevel)this.level()).getEntity(this.ownerUUID)) instanceof LivingEntity) {
-			this.owner = (LivingEntity)entity;
+		if (this.owner == null && this.ownerUUID != null && this.level() instanceof ServerLevel
+				&& (entity = ((ServerLevel) this.level()).getEntity(this.ownerUUID)) instanceof LivingEntity) {
+			this.owner = (LivingEntity) entity;
 		}
 		return this.owner;
 	}
+
 	@Override
 	public boolean isAlliedTo(Entity entity) {
 		if (this.getOwner() != null) {
 			LivingEntity livingEntity = this.getOwner();
-			if (entity == livingEntity) {
-				return true;
-			}
-			if (livingEntity != null) {
-				return livingEntity.isAlliedTo(entity);
-			}
+			if (entity == livingEntity) return true;
+			if (livingEntity != null) return livingEntity.isAlliedTo(entity);
 		}
 		return super.isAlliedTo(entity);
 	}
+
 	@Override
 	public Team getTeam() {
 		LivingEntity livingEntity;
@@ -123,18 +149,23 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 		}
 		return super.getTeam();
 	}
+
+	public int life = 0;
 	@Override
 	protected void addAdditionalSaveData(CompoundTag compoundTag) {
 		if (this.ownerUUID != null) {
 			compoundTag.putUUID("Owner", this.ownerUUID);
 		}
-		compoundTag.putInt("TickCount", tickCount);
+		compoundTag.putInt("Life", life);
 		compoundTag.putFloat("LightLockX", this.getLightLockX());
 		compoundTag.putFloat("LightLockY", this.getLightLockY());
 		compoundTag.putFloat("LightLockZ", this.getLightLockZ());
 		compoundTag.putFloat("SelfX", this.getSelfX());
 		compoundTag.putFloat("SelfY", this.getSelfY());
 		compoundTag.putFloat("SelfZ", this.getSelfZ());
+		compoundTag.putFloat("TargetX", this.getTargetX());
+		compoundTag.putFloat("TargetY", this.getTargetY());
+		compoundTag.putFloat("TargetZ", this.getTargetZ());
 	}
 
 	@Override
@@ -142,13 +173,16 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 		if (compoundTag.hasUUID("Owner")) {
 			this.ownerUUID = compoundTag.getUUID("Owner");
 		}
-		this.tickCount = compoundTag.getInt("TickCount");
+		this.life = compoundTag.getInt("Life");
 		this.setLightLockX(compoundTag.getFloat("LightLockX"));
 		this.setLightLockY(compoundTag.getFloat("LightLockY"));
 		this.setLightLockZ(compoundTag.getFloat("LightLockZ"));
 		this.setSelfX(compoundTag.getFloat("SelfX"));
 		this.setSelfY(compoundTag.getFloat("SelfY"));
 		this.setSelfZ(compoundTag.getFloat("SelfZ"));
+		this.setTargetX(compoundTag.getFloat("TargetX"));
+		this.setTargetY(compoundTag.getFloat("TargetY"));
+		this.setTargetZ(compoundTag.getFloat("TargetZ"));
 	}
 
 	@Override
@@ -159,10 +193,15 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 		this.getEntityData().define(SELF_X, 0f);
 		this.getEntityData().define(SELF_Y, 0f);
 		this.getEntityData().define(SELF_Z, 0f);
+		this.getEntityData().define(TARGET_X, 0f);
+		this.getEntityData().define(TARGET_Y, 0f);
+		this.getEntityData().define(TARGET_Z, 0f);
 	}
-	protected int getMaxTick() {
+
+	public int getMaxTick() {
 		return 400;
 	}
+
 	public float thisTickRenderTime = 0;
 	public float lastTickRenderTime = 6;
 	public float selfXProgress = 0.0f;
@@ -171,6 +210,11 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 	public float ownerXProgress = 0.0f;
 	public float ownerYProgress = 0.0f;
 	public float ownerZProgress = 0.0f;
+	public float targetXProgress = 0.0f;
+	public float targetYProgress = 0.0f;
+	public float targetZProgress = 0.0f;
+	public boolean renderInitialized = false;
+
 	@Override
 	public void tick() {
 		super.tick();
@@ -180,68 +224,108 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 			thisTickRenderTime = 0;
 		}
 
-		if (this.tickCount >= getMaxTick()) {
-			this.discard();
-			return;
-		}
-		if (this.getOwner() != null) {
-			if (!this.level().isClientSide()) {
-				this.setLightLockX((float) this.getOwner().getX());
-				this.setLightLockY((float) (this.getOwner().getY(0.75f)));
-				this.setLightLockZ((float) this.getOwner().getZ());
+
+		if (this.life <= 1) {
+			if (this.getOwner() != null) {
+				LivingEntity caster = this.getOwner();
+				this.setLightLockX((float) caster.getX());
+				this.setLightLockY((float) (caster.getY(0.75f)));
+				this.setLightLockZ((float) caster.getZ());
+
+				Vec3 targetPos = calculateTargetPosition(caster);
+				this.setTargetX((float) targetPos.x);
+				this.setTargetY((float) targetPos.y);
+				this.setTargetZ((float) targetPos.z);
+
+				this.setSelfX((float) this.getX());
+				this.setSelfY((float) this.getY());
+				this.setSelfZ((float) this.getZ());
 			}
 		}
-		else {
+		this.life ++;
+
+		if (this.life >= getMaxTick()) {
+			if (this instanceof ConcentrationSpellEntity concentrationSpellEntity) {
+				concentrationSpellEntity.endConcentration();
+			} else {
+				this.discard();
+			}
+			return;
+		}
+
+		if (this.getOwner() != null) {
+			LivingEntity caster = this.getOwner();
+
+			if (!this.level().isClientSide()) {
+				this.setLightLockX((float) caster.getX());
+				this.setLightLockY((float) (caster.getY(0.75f)));
+				this.setLightLockZ((float) caster.getZ());
+
+				Vec3 targetPos = calculateTargetPosition(caster);
+				targetPosAbout();
+
+				this.setTargetX((float) targetPos.x);
+				this.setTargetY((float) targetPos.y);
+				this.setTargetZ((float) targetPos.z);
+
+				this.setSelfX((float) this.getX());
+				this.setSelfY((float) this.getY());
+				this.setSelfZ((float) this.getZ());
+
+				int n = 0;
+				if (attackCooldown() > 5) n = 5;
+				if (attackCooldown() > 10) n = 10;
+				if (this.life % attackCooldown() == n) {
+					List<Entity> hitEntities = findEntitiesOnRay(caster.getEyePosition(), targetPos, caster);
+					if (!hitEntities.isEmpty()) {
+						for (Entity entity : hitEntities) {
+							if (entity == this) continue;
+							if (entity == this.getOwner()) continue;
+							if (!this.getOwner().hasLineOfSight(entity)) continue;
+							this.customHurt(entity);
+						}
+					}
+				}
+			}
+
+			this.setPos(caster.getX(), caster.getY(0.75f), caster.getZ());
+
+			this.setYRot(caster.getYHeadRot());
+			this.setXRot(caster.getXRot());
+		} else {
 			if (!this.level().isClientSide()) {
 				this.setLightLockX((float) this.getX());
 				this.setLightLockY((float) this.getEyeY());
 				this.setLightLockZ((float) this.getZ());
+				this.setTargetX((float) this.getX());
+				this.setTargetY((float) this.getEyeY());
+				this.setTargetZ((float) this.getZ());
+				this.setSelfX((float) this.getX());
+				this.setSelfY((float) this.getY());
+				this.setSelfZ((float) this.getZ());
 			}
 		}
-
-		if (!this.level().isClientSide()) {
-			this.setSelfX((float) this.getX());
-			this.setSelfY((float) this.getY());
-			this.setSelfZ((float) this.getZ());
-		}
-		if (this.getOwner() == null) {
-			return;
-		}
-
-		Vec3 prevPos = this.position();
-		LivingEntity caster = this.getOwner();
-
-		Vec3 targetPos = calculateTargetPosition(caster);
-		List<Entity> hitEntities = findEntitiesOnRay(caster.getEyePosition(), targetPos, caster);
-		if (!hitEntities.isEmpty()) {
-			for (Entity entity : hitEntities) {
-				if (entity == this) continue;
-				if (entity == this.getOwner()) continue;
-				if (!this.getOwner().hasLineOfSight(entity)) continue;
-				this.customHurt(entity);
-			}
-		}
-
-		double moveSpeed = this.tickCount > 30 ? 0.8 : 0.25;
-		Vec3 newPos = prevPos.add(targetPos.subtract(prevPos).scale(moveSpeed));
-		if (this.tickCount <= getMaxTick() * 0.95f) {
-			this.setPos(newPos.x, newPos.y, newPos.z);
-		}
-		else {
-			this.setPos(this.getX() * 0.8f + this.getOwner().getX() * 0.2f,
-					this.getY() * 0.8f + this.getOwner().getY() * 0.2f,
-					this.getZ() * 0.8f + this.getOwner().getZ() * 0.2f);
-		}
-		this.setYRot(caster.getYRot());
-		this.setXRot(caster.getXRot());
 	}
-	protected void customHurt(Entity entity) {
+
+	public int attackCooldown() {
+		return 1;
+	}
+
+	public void customHurt(Entity entity) {
 		entity.hurt(AttackFind.findDamageType(this, JerotesDamageTypes.BYPASSES_COOLDOWN_MAGIC, this, this.getOwner()), 8);
+	}
+	public void targetPosAbout() {
 	}
 
 	private Vec3 calculateTargetPosition(LivingEntity caster) {
 		Vec3 eyePos = caster.getEyePosition();
-		Vec3 lookAngle = caster.getLookAngle();
+		float yaw = caster.getYHeadRot() * ((float) Math.PI / 180F);
+		float pitch = caster.getXRot() * ((float) Math.PI / 180F);
+		Vec3 lookAngle = new Vec3(
+				-Math.sin(yaw) * Math.cos(pitch),
+				-Math.sin(pitch),
+				Math.cos(yaw) * Math.cos(pitch)
+		);
 		for (int i = 0; i < getMaxDistance(); i++) {
 			Vec3 checkPos = eyePos.add(lookAngle.scale(i));
 			ClipContext clipContext = new ClipContext(
@@ -267,8 +351,8 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 		double d2 = target.getZ() - this.getZ();
 		double d3 = Math.sqrt(d0 * d0 + d2 * d2);
 
-		float f = (float)(Mth.atan2(d2, d0) * (180F / Math.PI)) - 90.0F;
-		float f1 = (float)(-(Mth.atan2(d1, d3) * (180F / Math.PI)));
+		float f = (float) (Mth.atan2(d2, d0) * (180F / Math.PI)) - 90.0F;
+		float f1 = (float) (-(Mth.atan2(d1, d3) * (180F / Math.PI)));
 
 		this.setYRot(this.rotlerp(this.getYRot(), f, maxYawChange));
 		this.setXRot(this.rotlerp(this.getXRot(), f1, maxPitchChange));
@@ -277,13 +361,8 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 	private float rotlerp(float current, float target, float maxChange) {
 		float f = Mth.wrapDegrees(target - current);
 
-		if (f > maxChange) {
-			f = maxChange;
-		}
-
-		if (f < -maxChange) {
-			f = -maxChange;
-		}
+		if (f > maxChange) f = maxChange;
+		if (f < -maxChange) f = -maxChange;
 
 		return current + f;
 	}
@@ -308,6 +387,18 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 		return hitContext.getEntities();
 	}
 
+	public float getBeamScaleAdd() {
+		int maxTick = getMaxTick();
+		int current = this.life;
+		float fadeIn = Mth.clamp((float) current / 10.0f, 0.0f, 1.0f);
+		float fadeOut = Mth.clamp((float) (maxTick - current) / 20.0f, 0.0f, 1.0f);
+		return Math.min(fadeIn, fadeOut);
+	}
+
+	public float getBeamScale() {
+		return 1.0f * getBeamScaleAdd();
+	}
+
 	private static class HitResultContext {
 		private final Vec3 start;
 		private final Map<Entity, Vec3> hits = new HashMap<>();
@@ -324,6 +415,7 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 
 		public void sortByDistance() {
 		}
+
 		public List<Entity> getEntities() {
 			List<Entity> sorted = new ArrayList<>(hits.keySet());
 			sorted.sort(Comparator.comparingDouble(e -> distances.get(e)));

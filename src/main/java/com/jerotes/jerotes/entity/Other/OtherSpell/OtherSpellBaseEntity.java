@@ -38,6 +38,8 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     private static final EntityDataAccessor<Float> TARGET_HEIGHT = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Optional<UUID>> DATA_TARGET_UUID = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<Integer> DATA_TARGET_ID = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> DATA_SPELL_LEVEL = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> DATA_SUBCATEGORY = SynchedEntityData.defineId(OtherSpellBaseEntity.class, EntityDataSerializers.INT);
 
     public OtherSpellBaseEntity(EntityType<? extends OtherSpellBaseEntity> entityType, Level level) {
         super(entityType, level);
@@ -99,15 +101,14 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
         return AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getSize() / 2, this.getZ()), this.getSize(), this.getSize(), this.getSize());
     }
 
-    public int spellLevelDamage = getBaseSpellLevelDamage();
     public int life = 0;
     public int start = 0;
     public void setSpellLevelDamage(int n) {
-        this.spellLevelDamage = n;
+        this.getEntityData().set(DATA_SPELL_LEVEL, n);
     }
     @Override
     public int getSpellLevel() {
-        return this.spellLevelDamage;
+        return this.getEntityData().get(DATA_SPELL_LEVEL);
     }
     public void setStartTick(int n) {
         this.entityData.set(START_TICK, n);
@@ -121,9 +122,11 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     public int getLifeTick() {
         return this.entityData.get(LIFE_TICK);
     }
-    public int subcategory = 0;
+    public int getSubcategory() {
+        return this.getEntityData().get(DATA_SUBCATEGORY);
+    }
     public void setSubcategory(int n) {
-        this.subcategory = n;
+        this.getEntityData().set(DATA_SUBCATEGORY, n);
     }
     public boolean isOwnedBy(LivingEntity livingEntity) {
         return livingEntity == this.getOwner();
@@ -197,19 +200,15 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     }
 
     public void setTarget(@Nullable Entity entity) {
-        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(entity, null, this, getOwner());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;
         }
         if (entity != null) {
             this.setTargetUUID(entity.getUUID());
-            if (!this.level().isClientSide) {
-                this.setTargetId(entity.getId());
-            }
         } else {
             this.setTargetUUID(null);
-            this.setTargetId(-1);
         }
     }
 
@@ -229,8 +228,8 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
-        compoundTag.putInt("SpellLevelDamage", this.spellLevelDamage);
-        compoundTag.putInt("SpellLevelDamage", this.spellLevelDamage);
+        compoundTag.putInt("SpellLevelDamage", this.getSpellLevel());
+        compoundTag.putInt("Subcategory", this.getSubcategory());
         compoundTag.putInt("LifeTick", this.getLifeTick());
         compoundTag.putInt("StartTick", this.getStartTick());
         if (this.getOwnerUUID() != null) {
@@ -244,8 +243,8 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
     }
     @Override
     protected void readAdditionalSaveData(CompoundTag compoundTag) {
-        this.spellLevelDamage = compoundTag.getInt("SpellLevelDamage");
-        this.spellLevelDamage = compoundTag.getInt("SpellLevelDamage");
+        this.setSpellLevelDamage(compoundTag.getInt("SpellLevelDamage"));
+        this.setSubcategory(compoundTag.getInt("Subcategory"));
         this.setLifeTick(compoundTag.getInt("LifeTick"));
         this.setStartTick(compoundTag.getInt("StartTick"));
         UUID uuid;
@@ -262,16 +261,9 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
             }
         }
         if (compoundTag.hasUUID("Target")) {
-            uuid = compoundTag.getUUID("Target");
+            this.setTargetUUID(compoundTag.getUUID("Target"));
         } else {
-            String string = compoundTag.getString("Target");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), string);
-        }
-        if (uuid != null) {
-            try {
-                this.setTargetUUID(uuid);
-            } catch (Throwable throwable) {
-            }
+            this.setTargetUUID(null);
         }
         this.setSize(compoundTag.getFloat("Size"));
         this.setTargetHeight(compoundTag.getFloat("TargetHeight"));
@@ -287,6 +279,8 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
         this.getEntityData().define(DATA_OWNER_UUID_ID, Optional.empty());
         this.getEntityData().define(DATA_TARGET_UUID, Optional.empty());
         this.getEntityData().define(DATA_TARGET_ID, -1);
+        this.getEntityData().define(DATA_SPELL_LEVEL, getBaseSpellLevelDamage());
+        this.getEntityData().define(DATA_SUBCATEGORY, 0);
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> entityDataAccessor) {
@@ -314,12 +308,12 @@ public class OtherSpellBaseEntity extends Entity implements TraceableEntity, Own
         if (getTarget() != null && this.getTargetId() == -1) {
             this.setTargetId(getTarget().getId());
         }
-        if (this.shouldPush()) {
-            this.pushEntities();
-        }
         if (getTarget() != null && !this.getTarget().isAlive()) {
             this.setTarget(null);
             this.setTargetId(-1);
+        }
+        if (this.shouldPush()) {
+            this.pushEntities();
         }
         if (this.moveToTarget() && this.getTarget() != null) {
             this.moveToTargetTick();

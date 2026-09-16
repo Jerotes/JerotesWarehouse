@@ -29,7 +29,6 @@ public class ReturnShockwaveParticle extends TextureSheetParticle {
 		this.sprites = sprites;
 		this.setSpriteFromAge(sprites);
 
-		// 基础参数
 		this.rCol = 1.0f;
 		this.gCol = 1.0f;
 		this.bCol = 1.0f;
@@ -47,13 +46,8 @@ public class ReturnShockwaveParticle extends TextureSheetParticle {
 		float progress = (float)this.age / this.lifetime;
 		float easeOut = 1 - (float)Math.pow(1 - progress, 4);
 
-		// 平滑放大
 		this.quadSize = (baseScale * (1 + easeOut * 2f));
-
-		// 透明度衰减
 		this.alpha = 0.9f * (1 - progress);
-
-		// 扭曲进度
 		this.distortionProgress = easeOut;
 	}
 
@@ -67,7 +61,7 @@ public class ReturnShockwaveParticle extends TextureSheetParticle {
 	public void render(VertexConsumer vertexConsumer, Camera camera, float f) {
 		this.alpha = 1.0f - Mth.clamp(((float)this.age + f) / (float)this.lifetime, 0.0f, 1.0f);
 		this.renderRotatedParticle(vertexConsumer, camera, f, quaternionf -> quaternionf.mul((Quaternionfc)new Quaternionf().rotationYXZ(0.0f, Mth.HALF_PI, 0.0f)));
-		this.renderRotatedParticleDown(vertexConsumer, camera, f, quaternionf -> quaternionf.mul((Quaternionfc)new Quaternionf().rotationYXZ(0.0f, Mth.PI, 0.0f)));
+		this.renderRotatedParticleDown(vertexConsumer, camera, f, quaternionf -> quaternionf.mul((Quaternionfc)new Quaternionf().rotationYXZ(0.0f, -Mth.HALF_PI, 0.0f)));
 	}
 	private void renderRotatedParticle(VertexConsumer vertexConsumer, Camera camera, float f, Consumer<Quaternionf> consumer) {
 		int n;

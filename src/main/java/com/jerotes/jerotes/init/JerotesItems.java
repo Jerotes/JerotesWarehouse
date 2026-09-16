@@ -42,7 +42,9 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> JEROTES_HORSE_SPAWN_EGG = REGISTRY.register("jerotes_horse_spawn_egg", () -> new ForgeSpawnEggItem(JerotesEntityType.JEROTES_HORSE, 0xffffff, 0xffffff, new Item.Properties()));
 
 	public static final RegistryObject<Item> REDSTONE_LASER = block(JerotesBlocks.REDSTONE_LASER);
+	public static final RegistryObject<Item> JEROTES_LIGHT = block(JerotesBlocks.JEROTES_LIGHT);
 
+	public static final RegistryObject<Item> LEATHER_BOOK_SATCHEL = REGISTRY.register("leather_book_satchel", () -> new BookSatchelItem(new Item.Properties().stacksTo(1), 2));
 	public static final RegistryObject<Item> FLAWLESS_MAGIC_SCROLL = REGISTRY.register("flawless_magic_scroll", () -> new FlawlessMagicScroll());
 	public static final RegistryObject<Item> COPPER_CARVED_COMPANY_INVESTIGATION_RECORDS = REGISTRY.register("copper_carved_company_investigation_records", () -> new CopperCarvedCompanyInvestigationRecords());
 
@@ -67,18 +69,27 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> STONE_DAGGER = REGISTRY.register("stone_dagger", () -> new ItemToolBaseDagger(Tiers.STONE, 1.5f, -1.8F, new Item.Properties()));
 	public static final RegistryObject<Item> COPPER_DAGGER = REGISTRY.register("copper_dagger", () -> new ItemToolBaseDagger(JerotesTiers.COPPER, 1.5f, -1.8F, new Item.Properties()));
 	public static final RegistryObject<Item> IRON_DAGGER = REGISTRY.register("iron_dagger", () -> new ItemToolBaseDagger(Tiers.IRON, 1.5f, -1.8F, new Item.Properties()));
-	public static final RegistryObject<Item> GOLDEN_DAGGER = REGISTRY.register("golden_dagger", () -> new ItemToolBaseDagger(Tiers.GOLD, 1.5f, -1.8F, new Item.Properties()));
+	public static final RegistryObject<Item> GOLDEN_DAGGER = REGISTRY.register("golden_dagger", () -> new ItemToolBaseDagger(Tiers.GOLD, 2f, -1.8F, new Item.Properties()));
 	public static final RegistryObject<Item> DIAMOND_DAGGER = REGISTRY.register("diamond_dagger", () -> new ItemToolBaseDagger(Tiers.DIAMOND, 1f, -1.8F, new Item.Properties()));
 	public static final RegistryObject<Item> NETHERITE_DAGGER = REGISTRY.register("netherite_dagger", () -> new ItemToolBaseDagger(Tiers.NETHERITE, 1f, -1.8F, (new Item.Properties()).fireResistant()));
 
 	public static final RegistryObject<Item> SIMPLE_HAMMER = REGISTRY.register("simple_hammer", () -> new SimpleHammer());
-	public static final RegistryObject<Item> WOODEN_HAMMER = REGISTRY.register("wooden_hammer", () -> new ItemToolBaseHammer(Tiers.WOOD, 7.0F, -3.3F, new Item.Properties()));
-	public static final RegistryObject<Item> STONE_HAMMER = REGISTRY.register("stone_hammer", () -> new ItemToolBaseHammer(Tiers.STONE, 8.0F, -3.3F, new Item.Properties()));
-	public static final RegistryObject<Item> COPPER_HAMMER = REGISTRY.register("copper_hammer", () -> new ItemToolBaseHammer(JerotesTiers.COPPER, 8.0F, -3.3F, new Item.Properties()));
-	public static final RegistryObject<Item> IRON_HAMMER = REGISTRY.register("iron_hammer", () -> new ItemToolBaseHammer(Tiers.IRON, 7.0F, -3.2F, new Item.Properties()));
-	public static final RegistryObject<Item> GOLDEN_HAMMER = REGISTRY.register("golden_hammer", () -> new ItemToolBaseHammer(Tiers.GOLD, 10.0F, -3.35F, new Item.Properties()));
-	public static final RegistryObject<Item> DIAMOND_HAMMER = REGISTRY.register("diamond_hammer", () -> new ItemToolBaseHammer(Tiers.DIAMOND, 6.0F, -3.1F, new Item.Properties()));
-	public static final RegistryObject<Item> NETHERITE_HAMMER = REGISTRY.register("netherite_hammer", () -> new ItemToolBaseHammer(Tiers.NETHERITE, 6.0F, -3.1F, (new Item.Properties()).fireResistant()));
+	public static final RegistryObject<Item> WOODEN_HAMMER = REGISTRY.register("wooden_hammer", () -> new ItemToolBaseHammer(Tiers.WOOD, 5.5F, -3.0F, new Item.Properties()));
+	public static final RegistryObject<Item> STONE_HAMMER = REGISTRY.register("stone_hammer", () -> new ItemToolBaseHammer(Tiers.STONE, 6.0F, -3.0F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_HAMMER = REGISTRY.register("copper_hammer", () -> new ItemToolBaseHammer(JerotesTiers.COPPER, 6.0F, -3.0F, new Item.Properties()));
+	public static final RegistryObject<Item> IRON_HAMMER = REGISTRY.register("iron_hammer", () -> new ItemToolBaseHammer(Tiers.IRON, 7.0F, -3.0F, new Item.Properties()));
+	public static final RegistryObject<Item> GOLDEN_HAMMER = REGISTRY.register("golden_hammer", () -> new ItemToolBaseHammer(Tiers.GOLD, 10.0F, -3.0F, new Item.Properties()));
+	public static final RegistryObject<Item> DIAMOND_HAMMER = REGISTRY.register("diamond_hammer", () -> new ItemToolBaseHammer(Tiers.DIAMOND, 6.0F, -3.0F, new Item.Properties()));
+	public static final RegistryObject<Item> NETHERITE_HAMMER = REGISTRY.register("netherite_hammer", () -> new ItemToolBaseHammer(Tiers.NETHERITE, 6.0F, -3.0F, (new Item.Properties()).fireResistant()));
+
+	public static final RegistryObject<Item> SIMPLE_GREATSWORD = REGISTRY.register("simple_greatsword", () -> new SimpleGreatsword());
+	public static final RegistryObject<Item> WOODEN_GREATSWORD = REGISTRY.register("wooden_greatsword", () -> new ItemToolBaseTwoHandedSword(Tiers.WOOD, 7.0F, -3.2F, new Item.Properties()));
+	public static final RegistryObject<Item> STONE_GREATSWORD = REGISTRY.register("stone_greatsword", () -> new ItemToolBaseTwoHandedSword(Tiers.STONE, 8.0F, -3.2F, new Item.Properties()));
+	public static final RegistryObject<Item> COPPER_GREATSWORD = REGISTRY.register("copper_greatsword", () -> new ItemToolBaseTwoHandedSword(JerotesTiers.COPPER, 8.0F, -3.2F, new Item.Properties()));
+	public static final RegistryObject<Item> IRON_GREATSWORD = REGISTRY.register("iron_greatsword", () -> new ItemToolBaseTwoHandedSword(Tiers.IRON, 9F, -3.2F, new Item.Properties()));
+	public static final RegistryObject<Item> GOLDEN_GREATSWORD = REGISTRY.register("golden_greatsword", () -> new ItemToolBaseTwoHandedSword(Tiers.GOLD, 7.0F, -3.2F, new Item.Properties()));
+	public static final RegistryObject<Item> DIAMOND_GREATSWORD = REGISTRY.register("diamond_greatsword", () -> new ItemToolBaseTwoHandedSword(Tiers.DIAMOND, 10.0F, -3.2F, new Item.Properties()));
+	public static final RegistryObject<Item> NETHERITE_GREATSWORD = REGISTRY.register("netherite_greatsword", () -> new ItemToolBaseTwoHandedSword(Tiers.NETHERITE, 11.0F, -3.2F, (new Item.Properties()).fireResistant()));
 
 	public static final RegistryObject<Item> SIMPLE_JAVELIN = REGISTRY.register("simple_javelin", () -> new SimpleJavelin());
 	public static final RegistryObject<Item> HEAL_JAVELIN = REGISTRY.register("heal_javelin", () -> new HealJavelin());
@@ -154,7 +165,7 @@ public class JerotesItems implements JerotesItemsAdd {
 			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
 	public static final RegistryObject<Item> STONE_PIKE = REGISTRY.register("stone_pike", () -> new ItemToolBasePike(
 			Tiers.STONE, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
-			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			11.5f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
 			0.9f, 1.1f, 4f,
 			JerotesSoundEvents.SPEAR_ATTACK,
 			JerotesSoundEvents.SPEAR_HIT,
@@ -162,7 +173,7 @@ public class JerotesItems implements JerotesItemsAdd {
 			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
 	public static final RegistryObject<Item> COPPER_PIKE = REGISTRY.register("copper_pike", () -> new ItemToolBasePike(
 			JerotesTiers.COPPER, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
-			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			11.5f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
 			0.9f, 1.1f, 4f,
 			JerotesSoundEvents.SPEAR_ATTACK,
 			JerotesSoundEvents.SPEAR_HIT,
@@ -170,7 +181,7 @@ public class JerotesItems implements JerotesItemsAdd {
 			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
 	public static final RegistryObject<Item> IRON_PIKE = REGISTRY.register("iron_pike", () -> new ItemToolBasePike(
 			Tiers.IRON, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
-			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			12.5f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
 			0.9f, 1.1f, 4f,
 			JerotesSoundEvents.SPEAR_ATTACK,
 			JerotesSoundEvents.SPEAR_HIT,
@@ -186,7 +197,7 @@ public class JerotesItems implements JerotesItemsAdd {
 			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
 	public static final RegistryObject<Item> DIAMOND_PIKE = REGISTRY.register("diamond_pike", () -> new ItemToolBasePike(
 			Tiers.DIAMOND, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
-			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			14f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
 			0.9f, 1.1f, 4f,
 			JerotesSoundEvents.SPEAR_ATTACK,
 			JerotesSoundEvents.SPEAR_HIT,
@@ -194,7 +205,7 @@ public class JerotesItems implements JerotesItemsAdd {
 			3.5f, 7.5f, 3.5f, 9.5f, 0.25f, 0.85f));
 	public static final RegistryObject<Item> NETHERITE_PIKE = REGISTRY.register("netherite_pike", () -> new ItemToolBasePike(
 			Tiers.NETHERITE, new Item.Properties().stacksTo(1).rarity(Rarity.COMMON),
-			10f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
+			15f - 2f, (1.0f / 1.43f) - 4f, 1.43f, 0.2f,
 			0.9f, 1.1f, 4f,
 			JerotesSoundEvents.SPEAR_ATTACK,
 			JerotesSoundEvents.SPEAR_HIT,
@@ -242,6 +253,7 @@ public class JerotesItems implements JerotesItemsAdd {
 	public static final RegistryObject<Item> VICIOUS_MOCKERY = REGISTRY.register("vicious_mockery", () -> new Shoot());
 	public static final RegistryObject<Item> SHOCKING_GRASP = REGISTRY.register("shocking_grasp", () -> new Shoot());
 	public static final RegistryObject<Item> HOLD_PERSON = REGISTRY.register("hold_person", () -> new Shoot());
+	public static final RegistryObject<Item> REMOVE_CURSE = REGISTRY.register("remove_curse", () -> new Shoot());
 	public static final RegistryObject<Item> BESTOW_CURSE = REGISTRY.register("bestow_curse", () -> new Shoot());
 	public static final RegistryObject<Item> BLINDNESS_CURSE = REGISTRY.register("blindness_curse", () -> new Shoot());
 	public static final RegistryObject<Item> DARKNESS_CURSE = REGISTRY.register("darkness_curse", () -> new Shoot());

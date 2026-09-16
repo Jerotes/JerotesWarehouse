@@ -100,6 +100,8 @@ public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements Tracea
         if (!livingEntity.isAlive() || livingEntity.isInvulnerable() || livingEntity == livingEntity2) {
             return false;
         }
+        if (AttackFind.FindCanNotAttack(this.getOwner(), livingEntity))
+            return false;
         if (livingEntity2 == null) {
             DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.BYPASSES_COOLDOWN_AND_NO_KNOCKBACK_MELEE, this);
             boolean bl = livingEntity.hurt(damageSource,
@@ -135,10 +137,6 @@ public class CloudOfDaggersEntity extends OtherSpellBaseEntity implements Tracea
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/other/cloud_of_daggers_daggers.png");
     }
 
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
-    }
     public float cloudScale() {
         return 0.6f;
     }

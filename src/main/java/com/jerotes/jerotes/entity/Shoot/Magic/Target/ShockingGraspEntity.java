@@ -64,7 +64,7 @@ public class ShockingGraspEntity extends BaseTargetEntity {
                 }
             }
         }
-        this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
+        this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
     }
 
     @Override

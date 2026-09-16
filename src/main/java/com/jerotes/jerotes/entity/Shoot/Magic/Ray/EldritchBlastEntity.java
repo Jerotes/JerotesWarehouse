@@ -45,6 +45,7 @@ public class EldritchBlastEntity extends BaseRayEntity {
         super.hitEntity(entity);
         if (!this.isUseful())
             return;
+        this.setUseful(false);
         if (this.level().isClientSide) {
             return;
         }
@@ -55,8 +56,7 @@ public class EldritchBlastEntity extends BaseRayEntity {
             boolean bl = livingEntity.hurt(damageSource,
                     Main.rollDice(1, 10, livingEntity.getRandom()) + spellLevelDamage - 1
             );
-            this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
-            this.setUseful(false);
+            this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
         }
     }
     @Override
@@ -64,17 +64,13 @@ public class EldritchBlastEntity extends BaseRayEntity {
         super.onHit(hitResult);
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
     protected void afterHasLineOfSight() {
         super.afterHasLineOfSight();
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
 
     public BaseRayEntity getRay() {

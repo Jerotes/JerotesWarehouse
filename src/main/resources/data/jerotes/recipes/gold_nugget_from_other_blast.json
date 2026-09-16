@@ -15,6 +15,9 @@
     },
     {
       "item": "jerotes:golden_spear"
+    },
+    {
+      "item": "jerotes:golden_greatsword"
     }
   ],
   "result": "minecraft:gold_nugget"

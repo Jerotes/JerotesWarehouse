@@ -3,8 +3,8 @@ package com.jerotes.jerotes.entity.Mob;
 import com.google.common.annotations.VisibleForTesting;
 import com.jerotes.jerotes.entity.Interface.JerotesEntity;
 import com.jerotes.jerotes.entity.Interface.UseShieldEntity;
-import com.jerotes.jerotes.goal.JerotesMoveToGoal;
-import com.jerotes.jerotes.goal.TaczGunAttackGoal;
+import com.jerotes.jerotes.entity.Interface.WizardEntity;
+import com.jerotes.jerotes.goal.*;
 import com.jerotes.jerotes.item.Interface.ItemTwoHanded;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.util.Main;
@@ -37,7 +37,7 @@ import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 
-public class TestEntity extends PathfinderMob implements JerotesEntity, UseShieldEntity {
+public class TestEntity extends PathfinderMob implements JerotesEntity, UseShieldEntity, WizardEntity {
 	private static final EntityDataAccessor<Boolean> IS_CAN_MOVE = SynchedEntityData.defineId(TestEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Boolean> IS_FEMALE = SynchedEntityData.defineId(TestEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> ID_SIZE = SynchedEntityData.defineId(TestEntity.class, EntityDataSerializers.INT);
@@ -71,6 +71,13 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 			this.goalSelector.addGoal(1, new TaczGunAttackGoal<>(this, 1.0D, 32.0f));
 		}
 
+		this.goalSelector.addGoal(1, new JerotesMainSpellAttackGoal(this, 1, 60, 240, 0.5f));
+		this.goalSelector.addGoal(1, new JerotesAddSpellAttackGoal(this, 1, 180, 240, 0.5f));
+		this.goalSelector.addGoal(1, new JerotesCombatIMagicAttackGoal<>(this, 0.5, 15.0f, 8.0f));
+		this.goalSelector.addGoal(1, new JerotesCombatIIMagicAttackGoal<>(this, 0.2, true, 8.0f));
+		this.goalSelector.addGoal(1, new JerotesCombatIIIMagicAttackGoal<>(this, 0.5, 15.0f, 8.0f));
+		this.goalSelector.addGoal(1, new JerotesCombatIVMagicAttackGoal<>(this, 0.5, 15.0f, 8.0f));
+
 		this.goalSelector.addGoal(1, new JerotesMoveToGoal(TestEntity.this, 1.0f, true) {
 			@Override
 			public boolean canUse() {
@@ -80,6 +87,9 @@ public class TestEntity extends PathfinderMob implements JerotesEntity, UseShiel
 
 		this.targetSelector.addGoal(1, new HurtByTargetGoal(this, new Class[0]));
 
+	}
+	public int getCombatStyle() {
+		return 1;
 	}
 
 	protected Vector3f getPassengerAttachmentPoint(Entity entity, EntityDimensions entityDimensions, float f) {

@@ -22,18 +22,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModList;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class MagicSpell {
@@ -133,7 +131,7 @@ public class MagicSpell {
 //			return true;
 //		}
 		//如果施法专注应该停止之前的施法专注
-		if (isConcentration()) {
+		if (isConcentration() && getSpellLevel() < getConcentrationSpellMaxLevel() && getSpellLevel() > getConcentrationSpellMinLevel()) {
 			//避免刚准备切换就清除
 			if (getCaster() instanceof MagicSpellLivingEntity magicSpellLivingEntity) {
 				magicSpellLivingEntity.setConcentrationSpellCleanTickJerotes(20);
@@ -157,6 +155,15 @@ public class MagicSpell {
 		}
 		return bl;
 	}
+
+	public int getConcentrationSpellMinLevel() {
+		return 0;
+	}
+
+	public int getConcentrationSpellMaxLevel() {
+		return 99999;
+	}
+
 	public boolean spellFindUse() {
 		return false;
 	}
@@ -203,7 +210,7 @@ public class MagicSpell {
 		this.spellLevel = event.getLevel();
 
 		//法术反制·被动影响
-		if (canBeBreak()) {
+		if (canBeBreak() && getTarget() != this.getCaster()) {
 			JerotesStopSpellEvent jerotesstopspellevent = new JerotesStopSpellEvent(getTarget(), this, null, getCaster(), this.isHelp() ? 3 : 1, getSpellLevel());
 			MinecraftForge.EVENT_BUS.post(jerotesstopspellevent);
 			if (jerotesstopspellevent.isCanceled()) {
@@ -213,14 +220,20 @@ public class MagicSpell {
 		//法术反制·主动影响
 		if (canBeBreak()) {
 			List<LivingEntity> list = getCaster().level().getEntitiesOfClass(LivingEntity.class, getCaster().getBoundingBox().inflate(32.0, 32, 32));
-			list.removeIf(livingEntity -> !(livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())) || livingEntity == this.getCaster() || (livingEntity.hasEffect(JerotesMobEffects.SPELL_REACTION_LOCK.get())));
-			list.removeIf(livingEntity -> getTarget() instanceof LivingEntity livingEntityTarget && SpellType.getCastingTickJerotes(livingEntityTarget) > -1);
+			//取消自身影响
+			list.removeIf(livingEntity -> livingEntity == this.getCaster());
+			//排除无法反制者
+			list.removeIf(livingEntity -> !(livingEntity.hasEffect(JerotesMobEffects.COUNTERSPELL.get())) || (livingEntity.hasEffect(JerotesMobEffects.SPELL_REACTION_LOCK.get())));
+			//排除正在施法
+			list.removeIf(livingEntity -> SpellType.getCastingTickJerotes(livingEntity) > -1);
+			//排除无法伤害的施法者
 			list.removeIf(livingEntity -> AttackFind.FindCanNotAttack(livingEntity, getCaster()));
+			//排除非主观
 			list.removeIf(livingEntity -> livingEntity instanceof Mob mob && mob.getTarget() != getCaster());
-			list.removeIf(livingEntity -> livingEntity instanceof Player player && !(player.swinging && Main.getTargetedEntity(player,32) == getCaster() ));
+			list.removeIf(livingEntity -> livingEntity instanceof Player player && !(player.swinging && Main.getTargetedEntity(player,32) == getCaster()));
 			if (!list.isEmpty()) {
 				for (LivingEntity target : list) {
-					if (isHelp() && target == getTarget()) continue;
+					if (isHelp() && !(target instanceof Mob mob && mob.getTarget() == target)) continue;
 					JerotesStopSpellEvent jerotesstopspellevent = new JerotesStopSpellEvent(target, this, null, getCaster(), this.isHelp() ? 3 : 1, getSpellLevel());
 					MinecraftForge.EVENT_BUS.post(jerotesstopspellevent);
 					if (jerotesstopspellevent.isCanceled()) {
@@ -328,7 +341,7 @@ public class MagicSpell {
 		return 1f;
 	}
 	public boolean isMelee() {
-		return this.getMagicType() == MagicType.SELF;
+		return false;
 	}
 	public boolean isHelp() {
 		return false;
@@ -440,6 +453,11 @@ public class MagicSpell {
 			}
 		}
 		list.add(Component.translatable(magicSpell.isMelee() ? "spell.jerotes.spell_max_distance_touch" : "spell.jerotes.spell_max_distance", magicSpell.getSpellDistance())
+				.withStyle(ChatFormatting.LIGHT_PURPLE));
+		list.add(Component.literal(ModList.get()
+						.getModContainerById(magicSpell.getSpellModId())
+						.map(container -> container.getModInfo().getDisplayName())
+						.orElse("Unknown Mod"))
 				.withStyle(ChatFormatting.LIGHT_PURPLE));
 	}
 }

@@ -4,6 +4,7 @@ import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
+import com.jerotes.jerotes.util.ParticlesUse;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -136,6 +137,14 @@ public abstract class BaseMagicMissileEntity extends MagicAboutEntity {
         }
         if (noDamageCooldown()) {
             entity.invulnerableTime = 0;
+        }
+        if (this.level() instanceof ServerLevel serverLevel) {
+            ParticlesUse.ballRendererParticle(serverLevel,
+                    this.getX(), this.getY(), this.getZ(),
+                    beamLightIII(), beamLightII(),
+                    0.1f, 0.2f, 0f,
+                    0f, 0.5f, 0.25f,
+                    6);
         }
     }
     public boolean noDamageCooldown() {

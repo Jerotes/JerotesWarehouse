@@ -84,12 +84,8 @@ public class ChainLightningEntity extends BaseRayEntity {
     public void setTarget(@Nullable Entity entity) {
         if (entity != null) {
             this.setTargetUUID(entity.getUUID());
-            if (!this.level().isClientSide) {
-                this.setTargetId(entity.getId());
-            }
         } else {
             this.setTargetUUID(null);
-            this.setTargetId(-1);
         }
     }
     @Nullable
@@ -193,17 +189,13 @@ public class ChainLightningEntity extends BaseRayEntity {
         super.onHitBlock(blockHitResult);
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
     protected void afterHasLineOfSight() {
         super.afterHasLineOfSight();
         if (!this.isUseful())
             return;
-        if (!this.level().isClientSide) {
-            this.setUseful(false);
-        }
+        this.setUseful(false);
     }
     @Override
     protected void onHit(HitResult hitResult) {
@@ -216,11 +208,16 @@ public class ChainLightningEntity extends BaseRayEntity {
     @Override
     public void tick() {
         super.tick();
+        if (getTarget() != null && this.getTargetId() == -1) {
+            this.setTargetId(getTarget().getId());
+        }
+        if (getTarget() != null && !this.getTarget().isAlive()) {
+            this.setTarget(null);
+            this.setTargetId(-1);
+        }
         //超过距离
         if (!this.spellIsFirst && getLastHurt() != null && this.position().distanceTo(getLastHurt().position().add(0, Main.mobHeight(getLastHurt()) * 0.7f, 0)) > 9) {
-            if (!this.level().isClientSide()) {
-                this.setUseful(false);
-            }
+            this.setUseful(false);
         }
     }
     public BaseRayEntity getRay() {

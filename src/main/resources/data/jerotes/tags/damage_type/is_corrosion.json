@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "jerotes:corrosion",
+    "jerotes:bypasses_cooldown_corrosion",
+    "jerotes:acid",
+    "jerotes:bypasses_cooldown_acid"
+  ]
+}

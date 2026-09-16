@@ -2,6 +2,7 @@ package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.*;
+import com.jerotes.jerotes.entity.Other.Other.InvisibleLightningBolt;
 import com.jerotes.jerotes.entity.Shoot.Magic.Ray.DisintegrateEntity;
 import com.jerotes.jerotes.init.JerotesItems;
 import com.jerotes.jerotes.init.JerotesMobEffects;
@@ -168,6 +169,12 @@ public abstract class EntityMixin implements IForgeEntity, JerotesChangeEntity {
             jerotesChangeStray.setJerotesParched("Jerotes_ Parched".equals(nameString));
         }
 
+    }
+    @Inject(method = "thunderHit", at = @At("HEAD"), cancellable = true)
+    public void thunderHit(ServerLevel serverLevel, LightningBolt lightningBolt, CallbackInfo ci) {
+        if (lightningBolt instanceof InvisibleLightningBolt invisibleLightningBolt) {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"), cancellable = true)

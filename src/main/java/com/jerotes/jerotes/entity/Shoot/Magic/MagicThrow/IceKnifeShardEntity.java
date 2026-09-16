@@ -3,6 +3,7 @@ package com.jerotes.jerotes.entity.Shoot.Magic.MagicThrow;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutThrowEntity;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.util.AttackFind;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -51,7 +52,7 @@ public class IceKnifeShardEntity extends MagicAboutThrowEntity {
     }
 
     protected ParticleOptions getTrailParticle() {
-        return ParticleTypes.SNOWFLAKE;
+        return JerotesParticleTypes.FROST.get();
     }
 
     @Override

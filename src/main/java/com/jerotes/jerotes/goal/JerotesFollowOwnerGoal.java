@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.146.
- */
 package com.jerotes.jerotes.goal;
 
 import net.minecraft.core.BlockPos;

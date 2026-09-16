@@ -6,10 +6,13 @@ import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicThrow.IceKnifeShardEntity;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
+import com.jerotes.jerotes.util.ParticlesUse;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -65,9 +68,24 @@ public class IceKnifeEntity extends MagicAboutEntity {
     @Override
     protected void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        this.iceKnife(this);
+        if (this.level().isClientSide) {
+            return;
+        }
+        BlockPos center = blockHitResult.getBlockPos();
+        Level level = this.level();
+        Entity owner = this.getOwner();
+        int radius = 2;
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    if (dx*dx + dy*dy + dz*dz > radius*radius) continue;
+                    BlockPos pos = center.offset(dx, dy, dz);
+                    Main.freezeBlock(level, pos, owner);
+                    Main.extinguishFire(level, pos, owner);
+                }
+            }
+        }
     }
-
     @Override
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
@@ -81,8 +99,12 @@ public class IceKnifeEntity extends MagicAboutEntity {
                 serverLevel.sendParticles(ParticleTypes.SNOWFLAKE,
                         pos.x, pos.y, pos.z,
                         1, dx, dy, dz, 0.1);
+                serverLevel.sendParticles(JerotesParticleTypes.FROST.get(),
+                        pos.x, pos.y, pos.z,
+                        1, dx, dy, dz, 0.1);
             }
         }
+        this.iceKnife(this);
         this.discard();
     }
 
@@ -96,6 +118,9 @@ public class IceKnifeEntity extends MagicAboutEntity {
                 double dy = (random.nextDouble() - 0.5) * 2.0;
                 double dz = (random.nextDouble() - 0.5) * 2.0;
                 serverLevel.sendParticles(ParticleTypes.SNOWFLAKE,
+                        pos.x, pos.y, pos.z,
+                        1, dx, dy, dz, 0.1);
+                serverLevel.sendParticles(JerotesParticleTypes.FROST.get(),
                         pos.x, pos.y, pos.z,
                         1, dx, dy, dz, 0.1);
             }

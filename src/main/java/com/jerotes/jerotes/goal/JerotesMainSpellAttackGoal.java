@@ -263,7 +263,7 @@ public class JerotesMainSpellAttackGoal extends Goal {
             spellList.removeIf(spellTypeInterface -> !spellTypeInterface.magicSpellGet(1, this.mob, this.mob).isCombat());
 
             if (spellList.isEmpty()) {
-                throw new IllegalStateException("法术列表为空");
+                return SpellType.JEROTES_EMPTY;
             }
             if (mob.getRandom().nextFloat() < randomSpellChance) {
                 return getRandomSpell(spellList);

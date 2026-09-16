@@ -42,6 +42,9 @@
     },
     {
       "item": "jerotes:copper_boots"
+    },
+    {
+      "item": "jerotes:copper_greatsword"
     }
   ],
   "result": "jerotes:copper_nugget"

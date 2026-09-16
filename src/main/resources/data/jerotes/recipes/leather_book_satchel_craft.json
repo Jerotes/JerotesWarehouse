@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aba",
+    "bcb"
+  ],
+  "ingredients": [
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "minecraft:leather"
+    },
+    {
+      "item": "minecraft:chiseled_bookshelf"
+    }
+  ],
+  "result": {
+    "item": "jerotes:leather_book_satchel",
+    "count": 1
+  }
+}

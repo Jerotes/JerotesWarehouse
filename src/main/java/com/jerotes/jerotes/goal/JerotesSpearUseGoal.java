@@ -130,6 +130,7 @@ public class JerotesSpearUseGoal<T extends PathfinderMob> extends Goal {
                 this.mob.stopUsingItem();
             }
             if (this.canChargeAttack) {
+                (this.mob).stopUsingItem();
                 (this.mob).startUsingItem(InteractionHand.MAIN_HAND);
                 if (this.mob.getMainHandItem().getItem() instanceof ItemToolBaseSpearBase itemToolBaseSpearBase) {
                     itemToolBaseSpearBase.makeSound(this.mob);

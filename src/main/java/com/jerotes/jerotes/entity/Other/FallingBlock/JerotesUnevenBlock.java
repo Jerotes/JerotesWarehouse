@@ -128,15 +128,19 @@ public class JerotesUnevenBlock extends BaseFallingBlock {
 	@Override
 	protected void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
+		compoundTag.putString("Mode", getMode().toString());
 		compoundTag.putFloat("AnimVY", getAnimVY());
 		compoundTag.putInt("Duration", getDuration());
 		compoundTag.putFloat("AddHeight", getAddHeight());
-		compoundTag.putFloat("StartTick", getStartTick());
-		compoundTag.putFloat("StopTick", getStopTick());
+		compoundTag.putInt("StartTick", getStartTick());
+		compoundTag.putInt("StopTick", getStopTick());
 	}
 	@Override
 	protected void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
+		if (compoundTag.contains("Mode")) {
+			setMode(FallingMoveType.valueOf(compoundTag.getString("Mode")));
+		}
 		this.setAnimVY(compoundTag.getFloat("AnimVY"));
 		this.setDuration(compoundTag.getInt("Duration"));
 		this.setAddHeight(compoundTag.getFloat("AddHeight"));

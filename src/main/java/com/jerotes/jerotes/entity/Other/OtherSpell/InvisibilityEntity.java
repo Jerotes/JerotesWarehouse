@@ -60,11 +60,6 @@ public class InvisibilityEntity extends OtherSpellBaseEntity implements Traceabl
     }
 
     @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
-    }
-
-    @Override
     public boolean endConcentration() {
         if (getOwner() != null) {
             SpellType.setConcentrationSpellTypeJerotes(getOwner(), "");

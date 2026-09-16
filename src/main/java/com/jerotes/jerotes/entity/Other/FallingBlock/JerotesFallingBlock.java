@@ -81,6 +81,7 @@ public class JerotesFallingBlock extends BaseFallingBlock {
 	@Override
 	protected void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
+		compoundTag.putString("Mode", getMode().toString());
 		compoundTag.putFloat("AnimVY", getAnimVY());
 		compoundTag.putInt("Duration", getDuration());
 		compoundTag.putFloat("Gravity", getGravity());
@@ -88,9 +89,12 @@ public class JerotesFallingBlock extends BaseFallingBlock {
 	@Override
 	protected void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
+		if (compoundTag.contains("Mode")) {
+			setMode(FallingMoveType.valueOf(compoundTag.getString("Mode")));
+		}
 		this.setAnimVY(compoundTag.getFloat("AnimVY"));
 		this.setDuration(compoundTag.getInt("Duration"));
-		this.setGravity(compoundTag.getInt("Gravity"));
+		this.setGravity(compoundTag.getFloat("Gravity"));
 	}
 	@Override
 	protected void defineSynchedData() {

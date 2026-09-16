@@ -47,8 +47,6 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
     }
 
-    // ===================== 命中半球 =====================
-
     private void renderBall(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, float beamLength) {
         if (!entity.isHitUseful() || entity.isUseful()) {
             return;
@@ -224,7 +222,6 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
 
         poseStack.pushPose();
 
-        //相对于命中半球的方向反转90度
         poseStack.mulPose(Axis.XP.rotation((float) Math.PI / 2));
 
         Matrix4f matrix = poseStack.last().pose();
@@ -296,7 +293,7 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
             pitch = dirLocal.y > 0.0 ? -(float) Math.PI / 2F : (float) Math.PI / 2F;
         } else {
             yaw = (float) Math.atan2(dirLocal.x, dirLocal.z);
-            pitch = (float) -Math.atan2(dirLocal.y, horizontalDistance);
+            pitch = (float) Math.asin(-dirLocal.y / dirLocal.length());
         }
 
         poseStack.mulPose(Axis.YP.rotation(yaw));
@@ -358,7 +355,6 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         poseStack.popPose();
     }
 
-    /** 撕裂锯齿核心，沿轴线随机偏移（用固定种子，帧间形状稳定不闪） */
     private void renderForceCrackle(T entity, PoseStack poseStack, MultiBufferSource buffer, float length) {
         if (length < 0.05f) return;
 
@@ -395,10 +391,6 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         }
     }
 
-    /**
-     * 脉冲喷涌：2条错开相位、沿轴线从起点循环冲向终点的高亮能量团，
-     * 模拟力场能量不断涌向命中点的"流动感"。
-     */
     private void renderForceSurge(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, float length,
                                   float baseHalfWidth, int innerR, int innerG, int innerB, int outerR, int outerG, int outerB) {
         if (length < 0.1f) return;
@@ -409,9 +401,9 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
         Matrix3f normal = poseStack.last().normal();
 
         float time = entity.getLifeRay() + partialTick;
-        float period = 10.0f; // 每个脉冲跑完全程需要的tick数,越小跑得越快
+        float period = 10.0f;
         int pulseCount = 2;
-        float pulseLength = length * 0.28f; // 每个能量团占光束长度的比例
+        float pulseLength = length * 0.28f;
         float pulseWidth = baseHalfWidth * 2.6f;
 
         for (int p = 0; p < pulseCount; p++) {
@@ -422,25 +414,21 @@ public class RayRenderer<T extends BaseRayEntity> extends EntityRenderer<T> {
             float z1 = Mth.clamp(centerZ + pulseLength * 0.5f, 0, length);
             if (z1 - z0 < 0.05f) continue;
 
-            // 能量团中心亮、两端暗，颜色由外层色过渡到内层核心色
             float midZ = (z0 + z1) * 0.5f;
             int a0 = 0;
             int a1 = (int) (255 * 0.9f);
             int a2 = 0;
 
-            // 前半段: 外色->核心色 渐变到峰值
             addVertex(consumer, matrix, normal, new Vec3(-pulseWidth, 0, z0), outerR, outerG, outerB, a0, 0, 0);
             addVertex(consumer, matrix, normal, new Vec3(pulseWidth, 0, z0), outerR, outerG, outerB, a0, 1, 0);
             addVertex(consumer, matrix, normal, new Vec3(pulseWidth, 0, midZ), innerR, innerG, innerB, a1, 1, 0.5f);
             addVertex(consumer, matrix, normal, new Vec3(-pulseWidth, 0, midZ), innerR, innerG, innerB, a1, 0, 0.5f);
 
-            // 后半段: 核心色峰值 渐变回外色消失
             addVertex(consumer, matrix, normal, new Vec3(-pulseWidth, 0, midZ), innerR, innerG, innerB, a1, 0, 0.5f);
             addVertex(consumer, matrix, normal, new Vec3(pulseWidth, 0, midZ), innerR, innerG, innerB, a1, 1, 0.5f);
             addVertex(consumer, matrix, normal, new Vec3(pulseWidth, 0, z1), outerR, outerG, outerB, a2, 1, 1);
             addVertex(consumer, matrix, normal, new Vec3(-pulseWidth, 0, z1), outerR, outerG, outerB, a2, 0, 1);
 
-            // 垂直方向也画一层,做成十字截面,避免只从一个角度看是扁平的
             addVertex(consumer, matrix, normal, new Vec3(0, -pulseWidth, z0), outerR, outerG, outerB, a0, 0, 0);
             addVertex(consumer, matrix, normal, new Vec3(0, pulseWidth, z0), outerR, outerG, outerB, a0, 1, 0);
             addVertex(consumer, matrix, normal, new Vec3(0, pulseWidth, midZ), innerR, innerG, innerB, a1, 1, 0.5f);

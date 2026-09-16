@@ -18,7 +18,7 @@ public class SimpleHammer extends ItemToolBaseHammer {
 			}
 
 			public float getAttackDamageBonus() {
-				return 7;
+				return 6.5f;
 			}
 
 			public int getLevel() {

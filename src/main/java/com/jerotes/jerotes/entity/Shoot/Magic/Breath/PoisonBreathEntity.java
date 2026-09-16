@@ -54,20 +54,22 @@ public class PoisonBreathEntity extends BaseBreathEntity {
         if (entity instanceof LivingEntity livingEntity) {
             Entity entity2 = this.getOwner();
             boolean bl = false;
+            boolean bl2 = false;
             DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.POISON, this, entity2);
-            if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
+            if (!EntityAndItemFind.savingSpellThrow(livingEntity)) {
                 bl = livingEntity.hurt(damageSource,
-                        Main.rollDice(spellLevelDamage, spellLevelMaxDamage, livingEntity.getRandom())
+                        Main.rollDice(spellLevelDamage * 2, spellLevelMaxDamage, livingEntity.getRandom())
                 );
-            }
-            else{
-                bl =  livingEntity.hurt(damageSource,
-                        Main.rollDice(spellLevelDamage, spellLevelMaxDamage, livingEntity.getRandom())
+            } else {
+                bl2 = livingEntity.hurt(damageSource,
+                        Main.rollDice(spellLevelDamage * 2, spellLevelMaxDamage, livingEntity.getRandom())
                 );
             }
             if (bl) {
                 livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.DEADLY_POISON.get(), 20 * spellLevelMainEffectTime * 6, spellLevelMainEffectLevel - 1), this.getEffectSource());
-                this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
+            }
+            if (bl || bl2) {
+                this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
             }
         }
     }

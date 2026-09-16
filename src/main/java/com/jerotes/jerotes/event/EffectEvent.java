@@ -156,7 +156,7 @@ public class EffectEvent {
 	public static void MobHold(LivingEvent.LivingTickEvent event) {
 		LivingEntity livingEntity = event.getEntity();
 		if (livingEntity != null) {
-			if (livingEntity.hasEffect(JerotesMobEffects.HOLD_MOB.get())) {
+			if (livingEntity.hasEffect(JerotesMobEffects.PARALYZED.get())) {
 				if (Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_x_rot") < 500) {
 					Main.getJerotesPersistentData(livingEntity).putFloat("jerotes_hold_mob_x_rot", livingEntity.getXRot() + 500);
 				} else {
@@ -170,10 +170,9 @@ public class EffectEvent {
 					livingEntity.yRotO = Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_y_rot") - 500;
 					livingEntity.setYHeadRot(Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_y_rot") - 500);
 					livingEntity.setYBodyRot(Main.getJerotesPersistentData(livingEntity).getFloat("jerotes_hold_mob_y_rot") - 500);
-
 				}
 			}
-			if (!livingEntity.hasEffect(JerotesMobEffects.HOLD_MOB.get())) {
+			if (!livingEntity.hasEffect(JerotesMobEffects.PARALYZED.get())) {
 				Main.persistentDataRemove(livingEntity, "jerotes_hold_mob_x_rot");
 				Main.persistentDataRemove(livingEntity, "jerotes_hold_mob_y_rot");
 			}
@@ -219,23 +218,6 @@ public class EffectEvent {
 			MirrorImageEntity toDiscard = list2.get(0);
 			toDiscard.discard();
 			event.setCanceled(true);
-		}
-	}
-
-	//法术反制
-	@SubscribeEvent
-	public static void Counterspell(JerotesStopSpellEvent event) {
-		Entity otherCaster = event.getOtherCaster();
-		Entity otherMagic = event.getSpellEntity();
-		Entity caster = event.getCaster();
-		if (otherMagic instanceof MagicAboutEntity magicAbout && otherCaster != null && !magicAbout.isHelp()) {
-			boolean bl = SpellUtil.SpellReaction(caster, otherCaster, otherMagic, magicAbout.getSpellLevel());
-			event.setCanceled(bl);
-		}
-		//存在危害类
-		if (event.getType() == 1) {
-			boolean bl = SpellUtil.SpellReaction(caster, otherCaster, otherMagic, event.getLevel());
-			event.setCanceled(bl);
 		}
 	}
 }

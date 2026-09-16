@@ -29,7 +29,7 @@ public class DamageTypeEvent {
 			//毒素
 			if (AttackFind.isPoisonDamage(attackBy)) {
 				if (EntityFactionFind.isConstruct(entity) || EntityFactionFind.isMachine(entity)) {
-					f /= 4;
+					f /= 2;
 				}
 				if (entity.getMobType() == MobType.UNDEAD) {
 					f /= 2;
@@ -53,19 +53,19 @@ public class DamageTypeEvent {
 					f /= 2;
 				}
 			}
-			//光耀
-			if (AttackFind.isRadiantDamage(attackBy)) {
-				if (entity.getMobType() == MobType.UNDEAD) {
-					f *= 2;
-				}
-			}
+//			//光耀
+//			if (AttackFind.isRadiantDamage(attackBy)) {
+//				if (entity.getMobType() == MobType.UNDEAD) {
+//					f *= 2;
+//				}
+//			}
 			//心灵
 			if (AttackFind.isPsychicDamage(attackBy)) {
 				if (EntityFactionFind.isConstruct(entity) || EntityFactionFind.isMachine(entity)) {
-					f /= 4;
+					f /= 2;
 				}
 				else if (entity instanceof Warden) {
-					f *= 4;
+					f *= 2;
 				}
 			}
 			event.setAmount(event.getAmount() * f);

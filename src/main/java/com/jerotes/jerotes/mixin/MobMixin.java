@@ -4,6 +4,7 @@ import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseUmbrella;
 import com.jerotes.jerotes.util.AttackFind;
+import com.jerotes.jerotes.util.Main;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -34,11 +35,6 @@ public abstract class MobMixin extends LivingEntity implements JerotesChangeMob 
     @Inject(method = "isSunBurnTick", at = @At("HEAD"), cancellable = true)
     private void isSunBurnTick(CallbackInfoReturnable<Boolean> cir) {
         if (isJerotesParched()) {
-            cir.setReturnValue(false);
-            cir.cancel();
-        }
-        if (this.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ItemToolBaseUmbrella ||
-                this.getUseItem().getItem() instanceof ItemToolBaseUmbrella) {
             cir.setReturnValue(false);
             cir.cancel();
         }

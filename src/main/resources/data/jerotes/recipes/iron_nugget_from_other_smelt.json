@@ -21,6 +21,12 @@
     },
     {
       "item": "jerotes:iron_spear"
+    },
+    {
+      "item": "jerotes:iron_greatsword"
+    },
+    {
+      "item": "jerotes:iron_parry_shield"
     }
   ],
   "result": "minecraft:iron_nugget"

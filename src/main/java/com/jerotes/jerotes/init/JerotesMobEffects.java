@@ -25,11 +25,15 @@ public class JerotesMobEffects {
 			.addAttributeModifier(Attributes.MOVEMENT_SPEED, "31F2026E-1894-8C79-23F5-A126E9A61B9F", -5, AttributeModifier.Operation.ADDITION)
 			.addAttributeModifier(Attributes.FLYING_SPEED, "A7F9C83C-3985-F513-1A19-0B9031C98BCC", -5, AttributeModifier.Operation.ADDITION)
 			.addAttributeModifier(Attributes.JUMP_STRENGTH, "32718860-6562-594E-3B9B-4898BD10EA27", -5, AttributeModifier.Operation.ADDITION));
+	public static final RegistryObject<MobEffect> PRONE = REGISTRY.register("prone", () -> new ProneMobEffect()
+		.addAttributeModifier(Attributes.MOVEMENT_SPEED, "aed5b595-622a-4ed1-b0b6-998328937c98", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL)
+			.addAttributeModifier(Attributes.FLYING_SPEED, "1e81a2f4-64ca-4744-a729-74a513f4dd7b", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
 	public static final RegistryObject<MobEffect> CORROSIVE = REGISTRY.register("corrosive", () -> new CorrosiveMobEffect()
 			.addAttributeModifier(Attributes.ARMOR, "E7391E98-2919-5988-07A7-1782F8BB7E70", -3.0, AttributeModifier.Operation.ADDITION));
 	public static final RegistryObject<MobEffect> DEADLY_POISON = REGISTRY.register("deadly_poison", () -> new DeadlyPoisonMobEffect());
 	public static final RegistryObject<MobEffect> TRUESIGHT = REGISTRY.register("truesight", () -> new TruesightMobEffect());
-	public static final RegistryObject<MobEffect> HOLD_MOB = REGISTRY.register("hold_mob", () -> new HoldMobEffect()
+	public static final RegistryObject<MobEffect> HOLD_MOB = REGISTRY.register("hold_mob", () -> new HoldMobEffect());
+	public static final RegistryObject<MobEffect> PARALYZED = REGISTRY.register("paralyzed", () -> new ParalyzedMobEffect()
 			.addAttributeModifier(Attributes.MOVEMENT_SPEED, "0235DCB5-D24D-1362-A042-BF3D59251E15", -6000, AttributeModifier.Operation.ADDITION)
 			.addAttributeModifier(Attributes.ATTACK_DAMAGE, "29B4FD71-D25D-EEB3-FD56-9CCC8E12AF60", -6000, AttributeModifier.Operation.ADDITION)
 			.addAttributeModifier(Attributes.ATTACK_SPEED, "973d07cb-137f-41fc-bb2e-9eef1eb71372", -6000, AttributeModifier.Operation.ADDITION)
@@ -58,8 +62,8 @@ public class JerotesMobEffects {
 	public static final RegistryObject<MobEffect> FOG = REGISTRY.register("fog", () -> new FogMobEffect());
 	public static final RegistryObject<MobEffect> ANALYTICAL_EYE = REGISTRY.register("analytical_eye", () -> new AnalyticalEyeMobEffect());
 	public static final RegistryObject<MobEffect> EXPLOSION = REGISTRY.register("explosion", () -> new ExplosionMobEffect());
-
 	public static final RegistryObject<MobEffect> MORE_TOUCH = REGISTRY.register("more_touch", () -> new MoreTouchMobEffect()
 			.addAttributeModifier(ForgeMod.ENTITY_REACH.get(), "72b41884-b2e4-47c4-a852-b3ddf9397c31", 1.0, AttributeModifier.Operation.ADDITION)
 			.addAttributeModifier(ForgeMod.BLOCK_REACH.get(), "c19adc73-52ab-437a-ac0f-2fb982141e4c", 1.0, AttributeModifier.Operation.ADDITION));
+	public static final RegistryObject<MobEffect> CURSED_ADDITIONAL_DAMAGE = REGISTRY.register("cursed_additional_damage", () -> new CursedAdditionalDamageMobEffect());
 }

@@ -11,8 +11,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 
-public class BaneOfHumanoidsEnchantment extends Enchantment implements MeleeEnchantment {
-	public BaneOfHumanoidsEnchantment(EquipmentSlot... slots) {
+public class BaneEnchantment extends Enchantment implements MeleeEnchantment {
+	public BaneEnchantment(EquipmentSlot... slots) {
 		super(Rarity.COMMON, EnchantmentCategory.WEAPON, slots);
 	}
 

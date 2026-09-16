@@ -21,9 +21,12 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.ADD_HAND.get(), AddHandRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.TEST_BEAM.get(), BaseBeamRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.SUNBEAM.get(), SunbeamRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_EVOKER_FANGS.get(), JerotesEvokerFangRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.SPELL_CLOUD.get(), NoopRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.RAIN_SPELL_CLOUD.get(), NoopRenderer::new);
+
+        event.registerEntityRenderer(JerotesEntityType.POISON_BREATH_AREA.get(), BreathAreaRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.CLOUD_OF_DAGGERS.get(), CloudOfDaggersRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.MAGIC_BONFIRE.get(), MagicBonfireRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.INSECT_PLAGUE.get(), InsectPlagueRenderer::new);
@@ -41,10 +44,12 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.ICE_STORM.get(), IceStormRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.THUNDERWAVE.get(), ThunderwaveRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.POWER_WORD_KILL.get(), PowerWordKillRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.LOCK_AIM.get(), NoopRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.JEROTES_FALLING_BLOCK.get(), BaseFallingBlockRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_EARTHREND_BLOCK.get(), BaseFallingBlockRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.JEROTES_UNEVEN_BLOCK.get(), JerotesUnevenBlockRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.INVISIBLE_LIGHTNING_BOLT.get(), NoopRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.MIRROR_IMAGE.get(), MirrorImageRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.THROWN_SIMPLE_JAVELIN.get(), ThrownSimpleJavelinRenderer::new);
@@ -78,6 +83,9 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.FIRE_BOLT.get(), MagicBoltRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.FROST_BOLT.get(), MagicBoltRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.SHOCK_BOLT.get(), MagicBoltRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.FLAMES_SPRAY.get(), MagicSprayRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.FROSTBITE_SPRAY.get(), MagicSprayRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.SPARKS_SPRAY.get(), SparksSprayRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.WITCH_BOLT.get(), WitchBoltRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.ICE_KNIFE.get(), IceKnifeRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.ICE_KNIFE_SHARD.get(), IceKnifeShardRenderer::new);
@@ -85,6 +93,7 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.RAY_OF_FROST.get(), RayRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.RAY_OF_LIGHTNING.get(), RayRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.ELDRITCH_BLAST.get(), RayRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.SCORCHING_RAY.get(), RayRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.RAY_OF_SICKNESS.get(), RayRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.RAY_OF_ENFEEBLEMENT.get(), RayRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.DISINTEGRATE.get(), RayRenderer::new);
@@ -95,7 +104,9 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.SHOCKING_GRASP.get(), ShockingGraspRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.GUARDIAN_LASER.get(), GuardianLaserRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.VICIOUS_MOCKERY.get(), TargetRenderer::new);
-        event.registerEntityRenderer(JerotesEntityType.BESTOW_CURSE.get(), TargetRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.BESTOW_CURSE.get(), BestowCurseRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.CONCENTRATION_BESTOW_CURSE.get(), BestowCurseRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.REMOVE_CURSE.get(), TargetRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.BLINDNESS_CURSE.get(), TargetRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.DARKNESS_CURSE.get(), TargetRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.FATIGUE_CURSE.get(), TargetRenderer::new);

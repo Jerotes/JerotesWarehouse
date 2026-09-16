@@ -28,6 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.entity.PartEntity;
 
 import java.util.List;
 import java.util.Random;
@@ -73,7 +74,7 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
         super.tick();
         if (this.level() instanceof ServerLevel serverLevel) {
             if (this.getLifeTick() == 1) {
-                this.playSound(JerotesSoundEvents.WIND, 5.625f, 1.0f);
+                this.playSound(JerotesSoundEvents.WIND_SHORT, 5.625f, 1.0f);
                 this.playSound(SoundEvents.LIGHTNING_BOLT_THUNDER, 5.625f, 1.0f);
             }
             if (this.getLifeTick() == 10) {
@@ -116,7 +117,11 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
 
                         if (entity instanceof LivingEntity livingEntity) {
                             this.dealDamageTo(livingEntity);
-                        } else if (entity instanceof ItemEntity itemEntity) {
+                        }
+                        else if (entity instanceof PartEntity<?> partEntity && partEntity.getParent() instanceof LivingEntity livingEntity) {
+                            this.dealDamageTo(livingEntity);
+                        }
+                        else if (entity instanceof ItemEntity itemEntity) {
                             Vec3 horizontalDir = forward;
                             double speed = 0.75;
                             double verticalSpeed = 0.2;
@@ -131,42 +136,10 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
                 }
             }
         }
-//        if (this.level() instanceof ServerLevel serverLevel) {
-//            if (life >= 8 && life <= 12) {
-//                Vec3 look = this.getCasterLook();
-//                Vec3 up = new Vec3(0, 1, 0);
-//                Vec3 right = look.cross(up).normalize();
-//                if (right.lengthSqr() < 0.001) {
-//                    right = new Vec3(1, 0, 0);
-//                }
-//                up = right.cross(look).normalize();
-//                Vec3 direction = look;
-//                Vec3 center = this.position()
-//                        .add(0, 5.35f, 0)
-//                        .add(direction.scale(3.5));
-//
-//                float innerRadius = 2.0f;
-//                int innerCount = 40;
-//                for (int i = 0; i < innerCount; i++) {
-//                    float angle = (float) (2 * Math.PI * i / innerCount);
-//                    Vec3 offset = right.scale(innerRadius * Math.cos(angle))
-//                            .add(up.scale(innerRadius * Math.sin(angle)));
-//                    Vec3 particlePos = center.add(offset);
-//                    serverLevel.sendParticles(
-//                            ParticleTypes.CLOUD,
-//                            particlePos.x, particlePos.y, particlePos.z,
-//                            1,
-//                            0, 0, 0,
-//                            1
-//                    );
-//                }
-//            }
-//        }
         if (this.level().isClientSide()) {
             int life = this.getLifeTick();
-            Entity caster = this;
-
-            Vec3 look = getLookAngle(caster);
+            Entity caster = this.getOwner() != null ? this.getOwner() : this;
+            Vec3 look = caster.getViewVector(1.0f);
             if (look.lengthSqr() < 0.001) return;
             look = look.normalize();
 
@@ -259,6 +232,8 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
         if (!livingEntity.isAlive() || livingEntity.isInvulnerable() || livingEntity == livingEntity2) {
             return false;
         }
+        if (AttackFind.FindCanNotAttack(this.getOwner(), livingEntity))
+            return false;
         DamageSource damageSource = AttackFind.findDamageType(this, JerotesDamageTypes.THUNDER, this);
         if (livingEntity2 != null) {
             if (AttackFind.FindCanNotAttack(livingEntity2, livingEntity)) {
@@ -268,7 +243,7 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
         }
 
         if (!EntityAndItemFind.savingSpellThrow(livingEntity)){
-            livingEntity.hurt(damageSource, Main.rollDice(2 + (spellLevelDamage - 1), 6, livingEntity.getRandom()));
+            livingEntity.hurt(damageSource, Main.rollDice(2 + (getSpellLevel() - 1), 6, livingEntity.getRandom()));
             if (!EntityAndItemFind.isNoSpecialKnockback(livingEntity.getType())) {
                 Entity caster = this.getOwner() != null ? this.getOwner() : this;
                 if (caster != null) {
@@ -289,7 +264,7 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
         }
         else {
             livingEntity.hurt(damageSource,
-                    Main.rollDice(8 + (spellLevelDamage - 3), 6, livingEntity.getRandom()) / 2
+                    Main.rollDice(8 + (getSpellLevel() - 3), 6, livingEntity.getRandom()) / 2
             );
         }
         return true;
@@ -299,21 +274,8 @@ public class ThunderwaveEntity extends OtherSpellBaseEntity implements Traceable
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png");
     }
 
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
-    }
-
     protected static Vec3 getLookAngle(Entity entity) {
-        float p_20172_ = entity.getXRot();
-        float p_20173_ = entity.getYHeadRot();
-        float f = p_20172_ * ((float)Math.PI / 180F);
-        float f1 = -p_20173_ * ((float)Math.PI / 180F);
-        float f2 = Mth.cos(f1);
-        float f3 = Mth.sin(f1);
-        float f4 = Mth.cos(f);
-        float f5 = Mth.sin(f);
-        return new Vec3((double)(f3 * f4), (double)(-f5), (double)(f2 * f4));
+        return entity.getViewVector(1.0f);
     }
 }
 

@@ -3,6 +3,15 @@
   "values": [
     "#jerotes:whips",
 
-    "jerotes:copper_sword"
+    "jerotes:copper_sword",
+
+    "jerotes:simple_greatsword",
+    "jerotes:wooden_greatsword",
+    "jerotes:stone_greatsword",
+    "jerotes:copper_greatsword",
+    "jerotes:iron_greatsword",
+    "jerotes:golden_greatsword",
+    "jerotes:diamond_greatsword",
+    "jerotes:netherite_greatsword"
   ]
 }

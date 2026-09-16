@@ -175,7 +175,7 @@ public class ShockingGraspRenderer<T extends ShockingGraspEntity> extends Entity
                     pitch = segDir.y > 0.0 ? -(float)Math.PI / 2F : (float)Math.PI / 2F;
                 } else {
                     yaw = (float)Math.atan2(segDir.x, segDir.z);
-                    pitch = (float)-Math.atan2(segDir.y, hDist);
+                    pitch = (float)Math.asin(-segDir.y / segLen);
                 }
 
                 poseStack.pushPose();
@@ -221,10 +221,7 @@ public class ShockingGraspRenderer<T extends ShockingGraspEntity> extends Entity
             }
         }
     }
-
-    private void renderQuadrilateralPipe(VertexConsumer consumer, Matrix4f matrix, Matrix3f normal,
-                                         float distance, float halfWidth,
-                                         int r, int g, int b, int a, int light, boolean bl) {
+    private void renderQuadrilateralPipe(VertexConsumer consumer, Matrix4f matrix, Matrix3f normal, float distance, float halfWidth, int r, int g, int b, int a, int light, boolean bl) {
         if (bl) {
             consumer.vertex(matrix, -halfWidth, -halfWidth, distance).color(r, g, b, a).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, 1).endVertex();
             consumer.vertex(matrix, halfWidth, -halfWidth, distance).color(r, g, b, a).uv(1, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, 0, 0, 1).endVertex();

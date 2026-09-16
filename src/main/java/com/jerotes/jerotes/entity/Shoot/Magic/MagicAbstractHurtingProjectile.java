@@ -30,7 +30,6 @@ import net.minecraftforge.common.MinecraftForge;
 import javax.annotation.Nullable;
 
 public abstract class MagicAbstractHurtingProjectile extends Projectile implements MagicAbout {
-
     public double xPower;
     public double yPower;
     public double zPower;
@@ -128,7 +127,7 @@ public abstract class MagicAbstractHurtingProjectile extends Projectile implemen
     protected boolean canHitEntity(Entity entity) {
         //法术取消
         //event
-        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(entity, null, this, getOwner());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return false;

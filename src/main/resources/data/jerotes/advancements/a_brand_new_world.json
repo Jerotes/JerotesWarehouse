@@ -36,7 +36,10 @@
   ],
   "rewards": {
     "experience": 100,
+    "loot": ["jerotes:gameplay/jerotes_other/guide_gift"],
     "recipes": [
+      "jerotes:copper_carved_company_investigation_records_craft",
+      "jerotes:leather_book_satchel_craft",
 
       "jerotes:copper_sword_craft",
       "jerotes:copper_axe_craft",
@@ -66,6 +69,15 @@
       "jerotes:golden_dagger_craft",
       "jerotes:diamond_dagger_craft",
       "jerotes:netherite_dagger_smith",
+
+      "jerotes:simple_greatsword_craft",
+      "jerotes:wooden_greatsword_craft",
+      "jerotes:stone_greatsword_craft",
+      "jerotes:iron_greatsword_craft",
+      "jerotes:copper_greatsword_craft",
+      "jerotes:golden_greatsword_craft",
+      "jerotes:diamond_greatsword_craft",
+      "jerotes:netherite_greatsword_smith",
 
       "jerotes:simple_javelin_craft",
       "jerotes:heal_javelin_craft",

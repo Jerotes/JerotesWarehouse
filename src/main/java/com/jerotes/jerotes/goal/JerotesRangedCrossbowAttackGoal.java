@@ -206,17 +206,17 @@ public class JerotesRangedCrossbowAttackGoal<T extends Mob & CrossbowAttackMob> 
     }
 
     static final class CrossbowState {
-        public static final /* enum */ CrossbowState UNCHARGED = new CrossbowState();
-        public static final /* enum */ CrossbowState CHARGING = new CrossbowState();
-        public static final /* enum */ CrossbowState CHARGED = new CrossbowState();
-        public static final /* enum */ CrossbowState READY_TO_ATTACK = new CrossbowState();
-        private static final /* synthetic */ CrossbowState[] $VALUES;
+        public static final CrossbowState UNCHARGED = new CrossbowState();
+        public static final CrossbowState CHARGING = new CrossbowState();
+        public static final CrossbowState CHARGED = new CrossbowState();
+        public static final CrossbowState READY_TO_ATTACK = new CrossbowState();
+        private static final CrossbowState[] $VALUES;
 
         public static CrossbowState[] values() {
             return (CrossbowState[])$VALUES.clone();
         }
 
-        private static /* synthetic */ CrossbowState[] $values() {
+        private static CrossbowState[] $values() {
             return new CrossbowState[]{UNCHARGED, CHARGING, CHARGED, READY_TO_ATTACK};
         }
 

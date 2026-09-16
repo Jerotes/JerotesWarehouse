@@ -1,5 +1,6 @@
 package com.jerotes.jerotes.util;
 
+import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.client.animation.SpearAnimations;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.FactionEntity;
@@ -25,16 +26,19 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -61,8 +65,9 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -70,6 +75,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.NetworkHooks;
@@ -89,11 +95,6 @@ public class Main {
 		return new CompoundTag();
 	}
 
-
-
-
-
-
 	//幸运值
 	public static double luck(LivingEntity livingEntity) {
 		return livingEntity.getAttribute(Attributes.LUCK) != null ? livingEntity.getAttributeValue(Attributes.LUCK) : 0;
@@ -105,101 +106,97 @@ public class Main {
 	}
 
 	//打开gui
-	public static void openMobInventoryGui(ServerPlayer serverPlayer, LivingEntity livingEntity, boolean bl, boolean bl2, boolean canUseMainHand, boolean canUseOffHand, boolean canUseHelmet, boolean canUseChestplate, boolean canUseLeggings, boolean canUseBoots) {
+	public static void openMobInventoryGui(ServerPlayer serverPlayer, LivingEntity livingEntity, boolean bl, boolean bl2,
+										   boolean canUseMainHand, boolean canUseOffHand, boolean canUseHelmet,
+										   boolean canUseChestplate, boolean canUseLeggings, boolean canUseBoots) {
 		if (!livingEntity.isAlive()) {
 			return;
 		}
-		//先获得基础类型
-		String string = EntityFactionFind.getFindFaction(livingEntity);
-		String string2 = "jerotes";
-		//如果有自己的阵营而不是类型
+
+		MobInventoryGuiData data = resolveMobInventoryGuiData(livingEntity);
+
+		NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
+			@Override
+			public Component getDisplayName() {
+				return Component.literal("mob_inventory_gui");
+			}
+
+			@Override
+			public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+				FriendlyByteBuf packetBuffer = new FriendlyByteBuf(Unpooled.buffer());
+				writeMobInventoryGuiData(packetBuffer, serverPlayer, livingEntity, data);
+				return new MobInventoryGUIMenu(id, inventory, packetBuffer, bl, bl2, canUseMainHand, canUseOffHand, canUseHelmet, canUseChestplate, canUseLeggings, canUseBoots);
+			}
+		}, buf -> writeMobInventoryGuiData(buf, serverPlayer, livingEntity, data));
+	}
+
+	private static MobInventoryGuiData resolveMobInventoryGuiData(LivingEntity livingEntity) {
+		String faction = EntityFactionFind.getFindFaction(livingEntity);
+		String modId = "jerotes";
+
 		if (!EntityFactionFind.getTrueFaction(livingEntity).isEmpty()) {
-			string = EntityFactionFind.getTrueFaction(livingEntity);
+			faction = EntityFactionFind.getTrueFaction(livingEntity);
 		}
 
-		//不属于基础类型有自定义阵营的就优先选择自己的modid
-		List<String> list = EntityFactionFind.getAllFindFaction(livingEntity, true);
-		if (!list.contains(string) && !string.equals(EntityFactionFind.getFindFaction(livingEntity))) {
-			string2 = EntityFactionFind.getTrueMobTypeNameModId(livingEntity);
+		List<String> factionTypeList = EntityFactionFind.getAllFindFaction(livingEntity, true);
+		if (!factionTypeList.contains(faction) && !faction.equals(EntityFactionFind.getFindFaction(livingEntity))) {
+			modId = EntityFactionFind.getTrueMobTypeNameModId(livingEntity);
 		}
-		//如果有主人
-		if (AttackFind.getOwnerTrue(livingEntity) != null) {
-			LivingEntity owner = AttackFind.getOwnerTrue(livingEntity);
-			//不属于基础类型的主人有自定义阵营
-			if (!list.contains(EntityFactionFind.getTrueFaction(owner)) && !EntityFactionFind.getTrueFaction(owner).isEmpty()) {
-				//先试着用主人的modid
+
+		LivingEntity owner = AttackFind.getOwnerTrue(livingEntity);
+		if (owner != null) {
+			String ownerFaction = EntityFactionFind.getTrueFaction(owner);
+			if (!factionTypeList.contains(ownerFaction) && !ownerFaction.isEmpty()) {
 				if (!EntityFactionFind.getTrueMobTypeNameModId(owner).isEmpty()) {
-					string2 = EntityFactionFind.getTrueMobTypeNameModId(livingEntity);
-				}
-				//主人没有自定义modid，就得跟随主人的基础modid
-				else {
-					string2 = Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(owner.getType())).getNamespace();
+					modId = EntityFactionFind.getTrueMobTypeNameModId(livingEntity);
+				} else {
+					modId = Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(owner.getType())).getNamespace();
 				}
 			}
 		}
 
 		if (!Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction").isEmpty()) {
-			string = Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction");
+			faction = Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction");
 		}
 		if (!Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction_mod_id").isEmpty()) {
-			string2 = Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction_mod_id");
+			modId = Main.getJerotesPersistentData(livingEntity).getString("jerotes_mob_faction_mod_id");
 		}
-		String finalString = string;
-		String finalString2 = string2;
-		String finalString3 = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getMobTypeNameModId() : "";
 
-		List<String> finalStringList = FactionEntity.getFactionTypeListAll(livingEntity);
-		List<String> finalStringList2 = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getFactionTypeListEvenThoughTame() : new ArrayList<>();
-      NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
-            @Override
-            public Component getDisplayName() {
-                return Component.literal("mob_inventory_gui");
-            }
+		String mobTypeNameModId = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getMobTypeNameModId() : "";
+		List<String> factionTypeListAll = FactionEntity.getFactionTypeListAll(livingEntity);
+		List<String> factionTypeListEvenThoughTame = livingEntity instanceof FactionEntity factionEntity ? factionEntity.getFactionTypeListEvenThoughTame() : new ArrayList<>();
 
-            @Override
-            public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-                FriendlyByteBuf packetBuffer = new FriendlyByteBuf(Unpooled.buffer());
-                packetBuffer.writeBlockPos(serverPlayer.blockPosition());
-                packetBuffer.writeByte(0);
-                packetBuffer.writeVarInt(livingEntity.getId());
-                packetBuffer.writeUtf(finalString);
-				packetBuffer.writeUtf(finalString2);
-				packetBuffer.writeUtf(finalString3);
-				packetBuffer.writeCollection(finalStringList, FriendlyByteBuf::writeUtf);
-				packetBuffer.writeCollection(finalStringList2, FriendlyByteBuf::writeUtf);
-                return new MobInventoryGUIMenu(id, inventory, packetBuffer, bl, bl2, canUseMainHand, canUseOffHand, canUseHelmet, canUseChestplate, canUseLeggings, canUseBoots);
-			}
-        }, buf -> {
-		  buf.writeBlockPos(serverPlayer.blockPosition());
-		  buf.writeByte(0);
-		  buf.writeVarInt(livingEntity.getId());
-		  buf.writeUtf(finalString);
-		  buf.writeUtf(finalString2);
-		  buf.writeUtf(finalString3);
-		  buf.writeCollection(finalStringList, FriendlyByteBuf::writeUtf);
-		  buf.writeCollection(finalStringList2, FriendlyByteBuf::writeUtf);
-        });
+		return new MobInventoryGuiData(faction, modId, mobTypeNameModId, factionTypeListAll, factionTypeListEvenThoughTame);
 	}
+	private static void writeMobInventoryGuiData(FriendlyByteBuf buf, ServerPlayer serverPlayer, LivingEntity livingEntity, MobInventoryGuiData data) {
+		buf.writeBlockPos(serverPlayer.blockPosition());
+		buf.writeByte(0);
+		buf.writeVarInt(livingEntity.getId());
+		buf.writeUtf(data.faction());
+		buf.writeUtf(data.modId());
+		buf.writeUtf(data.mobTypeNameModId());
+		buf.writeCollection(data.factionTypeListAll(), FriendlyByteBuf::writeUtf);
+		buf.writeCollection(data.factionTypeListEvenThoughTame(), FriendlyByteBuf::writeUtf);
+	}
+	private record MobInventoryGuiData(String faction, String modId, String mobTypeNameModId, List<String> factionTypeListAll, List<String> factionTypeListEvenThoughTame) { }
 	//打开gui
 	public static void openSuchInventoryGui(ServerPlayer serverPlayer, LivingEntity livingEntity) {
 		if (!livingEntity.isAlive()) {
 			return;
 		}
-      NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
-            @Override
-            public Component getDisplayName() {
-                return livingEntity.getDisplayName();
-            }
+		NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
+			@Override
+			public Component getDisplayName() {
+				return livingEntity.getDisplayName();
+			}
 
-            @Override
-            public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-                FriendlyByteBuf packetBuffer = new FriendlyByteBuf(Unpooled.buffer());
-                packetBuffer.writeVarInt(livingEntity.getId());
-                return new SuchInventoryMenu(id, inventory, packetBuffer);
-            }
-        }, buf -> {
-            buf.writeVarInt(livingEntity.getId());
-        });
+			@Override
+			public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+				FriendlyByteBuf packetBuffer = new FriendlyByteBuf(Unpooled.buffer());
+				packetBuffer.writeVarInt(livingEntity.getId());
+				return new SuchInventoryMenu(id, inventory, packetBuffer);
+			}
+		}, buf -> buf.writeVarInt(livingEntity.getId()));
 	}
 	//腾跃
 	public static void WaterLeap(PathfinderMob mob, float strength) {
@@ -332,6 +329,19 @@ public class Main {
 		vec32 = new Vec3(vec32.x, 0.0, vec32.z).normalize();
 		return vec32.dot(vec3) < (-1 + (angleThreshold/180));
 	}
+	//锥形角度
+	public static boolean isIn3DCone(Entity observer, Vec3 targetPos, float angleDeg) {
+		Vec3 eyePos = observer.getEyePosition();
+		Vec3 toTarget = targetPos.subtract(eyePos);
+		double distance = toTarget.length();
+		if (distance < 1e-6) return true;
+		Vec3 viewDir = observer.getViewVector(1.0f);
+		Vec3 targetDir = toTarget.normalize();
+		double dot = viewDir.dot(targetDir);
+		double angleRad = Math.acos(Mth.clamp(dot, -1.0, 1.0));
+		double angleDegActual = Math.toDegrees(angleRad);
+		return angleDegActual <= angleDeg;
+	}
 	//直线
 	public static boolean hasLineOfSightEntity(Entity target, Entity self) {
 		if (target.level() != self.level()) {
@@ -349,7 +359,7 @@ public class Main {
 		return level.clip(new ClipContext(self, vec3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
 	}
 	//玩家视线
-	public static Entity getTargetedEntityBase(Player player, double maxDistance, boolean bl, boolean mustPickable) {
+	public static Entity getTargetedEntityBase(Player player, double maxDistance, boolean bl, boolean mustPickable, boolean getPartOwner) {
 		Level world = player.level();
 		Vec3 startVec = player.getEyePosition(1.0F);
 		Vec3 lookVec = player.getViewVector(1.0F).scale(maxDistance);
@@ -368,21 +378,34 @@ public class Main {
 				if (distance < closestDistance) {
 					if (!(bl && (entity.isInvisible()|| !player.hasLineOfSight(entity)))) {
 						closestDistance = distance;
-						closestEntity = entity;
+						if (entity instanceof PartEntity<?> partEntity && partEntity.getParent() != null && getPartOwner) {
+							closestEntity = partEntity.getParent();
+						}
+						else {
+							closestEntity = entity;
+						}
 					}
 				}
 			}
 		}
 		return closestEntity;
 	}
+	//选择锁定目标
+	//配置锁定距离           默认不包括隐形、隔墙，必须可选定，选择部件主人
 	public static Entity getTargetedEntity(Player player, double maxDistance) {
 		return getTargetedEntity(player, maxDistance, false, true);
 	}
+	//配置锁定距离、包括隐形       默认不包括隔墙，必须可选定，选择部件主人
 	public static Entity getTargetedEntity(Player player, double maxDistance, boolean bl) {
 		return getTargetedEntity(player, maxDistance, bl, true);
 	}
+	//配置锁定距离、包括隐形、包括隔墙、可选定       默认选择部件主人
 	public static Entity getTargetedEntity(Player player, double maxDistance, boolean bl, boolean mustPickable) {
-		Entity entity = getTargetedEntityBase(player, maxDistance, bl, mustPickable);
+		return getTargetedEntity(player, maxDistance, bl, mustPickable, true);
+	}
+	//配置锁定距离、包括隐形、包括隔墙、可选定、选择部件主人
+	public static Entity getTargetedEntity(Player player, double maxDistance, boolean bl, boolean mustPickable, boolean getPartOwner) {
+		Entity entity = getTargetedEntityBase(player, maxDistance, bl, mustPickable, getPartOwner);
 		if (bl && entity != null && entity.isInvisible()) {
 			return null;
 		}
@@ -510,6 +533,7 @@ public class Main {
 					float hardness = state.getDestroySpeed(level, mutablePos);
 					if (hardness < 0f || hardness >= destroy) continue;
 					if (!filter.test(state)) continue;
+					if (state.is(TagKey.create(Registries.BLOCK, new ResourceLocation(JerotesWarehouse.MODID, "shapeless_as_air")))) continue;
 
 					if (!ForgeEventFactory.onEntityDestroyBlock(mob, mutablePos, state)) continue;
 					if (!ForgeHooks.canEntityDestroy(mob.level(), mutablePos, mob)) continue;
@@ -520,14 +544,16 @@ public class Main {
 
 					boolean success;
 					if (isReplaceable && random.nextFloat() > 0.005f) {
-						success = level.setBlock(mutablePos, Blocks.AIR.defaultBlockState(), 3);
+						if (random.nextFloat() > 0.5f) {
+							success = level.setBlock(mutablePos, Blocks.AIR.defaultBlockState(), 3);
+						}
+						else {
+							success = level.destroyBlock(mutablePos, false, mob);
+						}
 						if (success) {
 //							level.levelEvent(2001, mutablePos, Block.getId(state));
 //							level.gameEvent(GameEvent.BLOCK_DESTROY, mutablePos, GameEvent.Context.of(mob, state));
-							success = level.destroyBlock(mutablePos, false, mob);
-							if (success) {
-								anyDestroyed = true;
-							}
+							anyDestroyed = true;
 						}
 					} else {
 						success = level.destroyBlock(mutablePos, true, mob);
@@ -633,7 +659,7 @@ public class Main {
 		}
 	}
 	//拔地方块
-	public static void spawnFallingBlockBySelf(ServerLevel serverLevel, LivingEntity caster, int maxDistance, float pushDistance, int pushAngle, int pushTick, float attackDamage) {
+	public static void spawnEarthrendBlockBySelf(ServerLevel serverLevel, LivingEntity caster, int maxDistance, float pushDistance, int pushAngle, int pushTick, float attackDamage) {
 		AABB aabb = AABB.ofSize(new Vec3(caster.getX(), caster.getY() - 1, caster.getZ()), maxDistance*1.25f, maxDistance*1.25f, maxDistance*1.25f);
 		for (BlockPos blockPos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
 			if (caster.position().distanceTo(blockPos.getCenter()) > maxDistance) continue;
@@ -652,6 +678,43 @@ public class Main {
 				}
 				serverLevel.addFreshEntity(fallingBlock);
 			}
+		}
+	}
+	public static void spawnEarthquakeFallingBlockByPos(ServerLevel level, BlockPos pos) {
+		RandomSource random = RandomSource.create();
+		BlockPos abovePos = (new BlockPos(pos)).above();
+		BlockState block = level.getBlockState(pos);
+		BlockState blockAbove = level.getBlockState(abovePos);
+		if (!block.isAir() && block.isRedstoneConductor(level, pos) && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
+			JerotesEarthrendBlock fallingBlock = new JerotesEarthrendBlock(level, (double)pos.getX() + 0.5, (double)(pos.getY() + 1), (double)pos.getZ() + 0.5, block, 10);
+			fallingBlock.push(0.0, 0.2 + random.nextGaussian() * 0.2, 0.0);
+			level.addFreshEntity(fallingBlock);
+		}
+	}
+	public static void spawnEarthquakeFallingBlockByPos(ServerLevel level, BlockPos pos, LivingEntity caster) {
+		RandomSource random = RandomSource.create();
+		BlockPos abovePos = (new BlockPos(pos)).above();
+		BlockState block = level.getBlockState(pos);
+		BlockState blockAbove = level.getBlockState(abovePos);
+		if (!block.isAir() && block.isRedstoneConductor(level, pos) && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
+			JerotesEarthrendBlock fallingBlock = new JerotesEarthrendBlock(level, (double)pos.getX() + 0.5, (double)(pos.getY() + 1), (double)pos.getZ() + 0.5, block, 10);
+			fallingBlock.setOwner(caster);
+			fallingBlock.setPushTick(1800);
+			fallingBlock.push(0.0, 0.2 + random.nextGaussian() * 0.2, 0.0);
+			level.addFreshEntity(fallingBlock);
+		}
+	}
+	public static void spawnEarthquakeFallingBlockByPosSameHeight(ServerLevel level, BlockPos pos, LivingEntity caster, float height) {
+		RandomSource random = RandomSource.create();
+		BlockPos abovePos = (new BlockPos(pos)).above();
+		BlockState block = level.getBlockState(pos);
+		BlockState blockAbove = level.getBlockState(abovePos);
+		if (!block.isAir() && block.isRedstoneConductor(level, pos) && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
+			JerotesEarthrendBlock fallingBlock = new JerotesEarthrendBlock(level, (double)pos.getX() + 0.5, (double)(pos.getY() + 1), (double)pos.getZ() + 0.5, block, 10);
+			fallingBlock.setOwner(caster);
+			fallingBlock.setPushTick(1800);
+			fallingBlock.push(0.0, height, 0.0);
+			level.addFreshEntity(fallingBlock);
 		}
 	}
 	//凹凸方块
@@ -1005,11 +1068,13 @@ public class Main {
 	public static Entity getEntityByUUID(Level level, UUID uuid) {
 		return getEntityByUUID(level.getServer(), uuid);
 	}
-	public static Entity getEntityByUUID(MinecraftServer server, UUID uuid){
+	public static Entity getEntityByUUID(MinecraftServer server, UUID uuid) {
 		if (uuid != null && server != null) {
 			for (ServerLevel world : server.getAllLevels()) {
 				Entity entity = world.getEntity(uuid);
-				return entity;
+				if (entity != null) {
+					return entity;
+				}
 			}
 		}
 		return null;
@@ -1055,9 +1120,10 @@ public class Main {
 			case 1 -> { normalLevel = 1; minLevel = 1; }
 			case 2, 3 -> { normalLevel = 2; minLevel = 1; }
 			case 4, 5 -> { normalLevel = 3; minLevel = 2; }
-			case 6, 7 -> { normalLevel = 4; minLevel = 3; }
-			case 8 -> { normalLevel = 5; minLevel = 4; }
-			default -> { normalLevel = 6; minLevel = 5; }
+			case 6 -> { normalLevel = 4; minLevel = 3; }
+			case 7 -> { normalLevel = 5; minLevel = 4; }
+			case 8 -> { normalLevel = 6; minLevel = 5; }
+			default -> { normalLevel = 7; minLevel = 6; }
 		}
 
 		if (minLevel > maxLevel) {
@@ -1098,9 +1164,56 @@ public class Main {
 
 	//召唤物处理
 	public static void conjureAbout(LivingEntity owner, LivingEntity summoned, boolean isSpell) {
-
 	}
 	public static void conjureAbout(LivingEntity owner, LivingEntity summoned) {
 		Main.conjureAbout(owner, summoned, true);
+	}
+
+	//灭火
+	public static void extinguishFire(Level level, BlockPos blockPos, Entity owner) {
+		if (!(owner instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+			BlockState state = level.getBlockState(blockPos);
+			if (state.is(Blocks.FIRE) || state.is(Blocks.SOUL_FIRE)) {
+				level.removeBlock(blockPos, false);
+				return;
+			}
+			if (state.hasProperty(CampfireBlock.LIT) && state.getValue(CampfireBlock.LIT)) {
+				level.setBlock(blockPos, state.setValue(CampfireBlock.LIT, false), Block.UPDATE_ALL);
+				return;
+			}
+			if (state.hasProperty(AbstractCandleBlock.LIT) && state.getValue(AbstractCandleBlock.LIT)) {
+				level.setBlock(blockPos, state.setValue(AbstractCandleBlock.LIT, false), Block.UPDATE_ALL);
+			}
+		}
+	}
+	//结冰
+	public static void freezeBlock(Level level, BlockPos blockPos, Entity owner) {
+		if (!(owner instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+			BlockState state = level.getBlockState(blockPos);
+			if (state.getFluidState().getType() == Fluids.WATER && state.getFluidState().isSource()) {
+				level.setBlock(blockPos, Blocks.FROSTED_ICE.defaultBlockState(), Block.UPDATE_ALL);
+			}
+		}
+	}
+	//着火
+	public static void placeFire(Level level, BlockPos pos, Entity owner) {
+		if (!(owner instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+			if (level.isEmptyBlock(pos) && BaseFireBlock.canBePlacedAt(level, pos, Direction.UP)) {
+				level.setBlockAndUpdate(pos, BaseFireBlock.getState(level, pos));
+			}
+		}
+	}
+	//点火
+	public static void igniteBlock(Level level, BlockPos blockPos, Entity owner) {
+		if (!(owner instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+			BlockState state = level.getBlockState(blockPos);
+			if (state.hasProperty(CampfireBlock.LIT) && !state.getValue(CampfireBlock.LIT)) {
+				level.setBlock(blockPos, state.setValue(CampfireBlock.LIT, true), Block.UPDATE_ALL);
+				return;
+			}
+			if (state.hasProperty(AbstractCandleBlock.LIT) && !state.getValue(AbstractCandleBlock.LIT)) {
+				level.setBlock(blockPos, state.setValue(AbstractCandleBlock.LIT, true), Block.UPDATE_ALL);
+			}
+		}
 	}
 }

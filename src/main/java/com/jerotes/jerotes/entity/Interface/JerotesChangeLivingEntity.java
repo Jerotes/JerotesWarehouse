@@ -21,5 +21,15 @@ public interface JerotesChangeLivingEntity {
 
     int getAnesthetizedTickJerotes();
     void setAnesthetizedTickJerotes(int tick);
+
+    int getProneTickJerotes();
+    void setProneTickJerotes(int tick);
+
+    float getThisTickRenderTimeJerotes();
+    void setThisTickRenderTimeJerotes(float tick);
+    float getLastTickRenderTimeJerotes();
+    void setLastTickRenderTimeJerotes(float tick);
+    float getProneTickProgressJerotes();
+    void setProneTickProgressJerotes(float tick);
 }
 

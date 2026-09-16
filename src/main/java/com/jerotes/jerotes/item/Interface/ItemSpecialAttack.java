@@ -15,5 +15,8 @@ public interface ItemSpecialAttack {
     default boolean jerotesSpecialAttackNeed(LivingEntity livingEntity) {
         return !(livingEntity instanceof Player player && player.getAttackStrengthScale(5F) < 1);
     }
+    default boolean jerotesHasSpecialAttack(LivingEntity livingEntity) {
+        return true;
+    }
 }
 

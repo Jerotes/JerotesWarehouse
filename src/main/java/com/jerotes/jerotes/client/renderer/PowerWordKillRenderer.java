@@ -27,9 +27,7 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
 
     private static final int KILL_TICK = 10;
 
-    // 整体尺寸放大倍率——九环法术，应该比普通特效大上不止一圈
     private static final float EFFECT_SCALE = 1.6f;
-    // 地面特效贴地偏移，只做很小的抬升防止 z-fighting，不再跟 targetHeight 挂钩
     private static final float GROUND_LIFT = 0.03f;
 
 
@@ -57,7 +55,6 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource buffer, int packedLight) {
 
-        // renderRound(entity, partialTick, poseStack, buffer);
         renderRitualCircles(entity, partialTick, poseStack, buffer);
         renderGroundGlyphRays(entity, partialTick, poseStack, buffer);
         renderRisingSpikes(entity, partialTick, poseStack, buffer);
@@ -82,20 +79,14 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
                 .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normal, 0, 1, 0).endVertex();
     }
 
-    // ============================================================
-    // 法阵环:抬高到半空悬浮 + 正反双面绘制,解决只有从下往上看才可见的问题
-    // ============================================================
     private void renderRitualCircles(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer) {
         float time = entity.tickCount + partialTick;
         float t = Mth.clamp((entity.life + partialTick) / entity.getMaxLife(), 0f, 1f);
-        // 快速长出,然后在最后25%时间里线性淡出到0——之前的写法最多只能淡到0.7,
-        // 导致消失前一帧还有alpha≈140,entity被移除时直接硬切,不平滑。
         float growth = Mth.clamp(t * 4f, 0f, 1f);
         float fadeOut = 1.0f - Mth.clamp((t - 0.75f) / 0.25f, 0f, 1f);
         float ringScale = growth * fadeOut;
         if (ringScale <= 0.01f) return;
 
-        // 贴地,只做很小的抬升防止z-fighting
         float yBase = GROUND_LIFT;
         float baseRadius = (entity.getSize() * 0.9f + 1.2f) * EFFECT_SCALE;
 
@@ -115,7 +106,6 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
             float ringWidth = (0.08f + ring * 0.015f) * EFFECT_SCALE;
             int alpha = (int) (200 * ringScale * (0.7f + 0.3f * Mth.sin(time * 0.1f + ring)));
 
-            // 三层都贴地,只留极小偏移防止z-fighting,不再做高度差
             float ringY = yBase + ring * 0.002f;
 
             for (int i = 0; i < segments; i++) {
@@ -138,13 +128,11 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
                 int r0 = colorMain[0], g0 = colorMain[1], b0 = colorMain[2];
                 int r1 = colorEdge[0], g1 = colorEdge[1], b1 = colorEdge[2];
 
-                // 正面绕序(原来只有这一半,导致背面剔除后只能从下往上看到)
                 addVertex(consumer, matrix, ix0, ringY, iz0, r0, g0, b0, alpha);
                 addVertex(consumer, matrix, ox0, ringY, oz0, r1, g1, b1, alpha);
                 addVertex(consumer, matrix, ox1, ringY, oz1, r1, g1, b1, alpha);
                 addVertex(consumer, matrix, ix1, ringY, iz1, r0, g0, b0, alpha);
 
-                // 反面绕序:同一个四边形反过来再画一遍,从上方也能看到
                 addVertex(consumer, matrix, ix1, ringY, iz1, r0, g0, b0, alpha);
                 addVertex(consumer, matrix, ox1, ringY, oz1, r1, g1, b1, alpha);
                 addVertex(consumer, matrix, ox0, ringY, oz0, r1, g1, b1, alpha);
@@ -153,9 +141,6 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
         }
     }
 
-    // ============================================================
-    // 新增 2：地面放射符文刻线（贴地，放大）
-    // ============================================================
     private void renderGroundGlyphRays(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer) {
         float time = entity.tickCount + partialTick;
         float t = Mth.clamp((entity.life + partialTick) / entity.getMaxLife(), 0f, 1f);
@@ -188,9 +173,6 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
         }
     }
 
-    // ============================================================
-    // 新增 3：环绕升起的暗晶尖刺（放大高度/半径）
-    // ============================================================
     private void renderRisingSpikes(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer) {
         float time = entity.tickCount + partialTick;
         float t = Mth.clamp((entity.life + partialTick) / entity.getMaxLife(), 0f, 1f);
@@ -267,7 +249,7 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
 
             float orbitAngle = time * (0.02f + hash(hseed) * 0.04f) + hseed;
             float orbitRadius = baseRadius * (0.5f + hash(hseed + 1f) * 0.8f);
-            float height = hash(hseed + 2f) * baseHeight; // 从贴地开始往上飘
+            float height = hash(hseed + 2f) * baseHeight;
 
             float mx = Mth.cos(orbitAngle) * orbitRadius;
             float mz = Mth.sin(orbitAngle) * orbitRadius;
@@ -292,9 +274,6 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
         }
     }
 
-    // ============================================================
-    // 新增 5：处决冲击波（放大半径/核心）
-    // ============================================================
     private void renderKillBurst(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer) {
         float lifeF = entity.life + partialTick;
         float burst = Mth.clamp(1.0f - Math.abs(lifeF - KILL_TICK) / 15f, 0f, 1f);
@@ -345,7 +324,6 @@ public class PowerWordKillRenderer<T extends PowerWordKillEntity> extends Entity
         addVertex(consumer, matrix, 0, cy - coreSize, 0, 255, 240, 250, coreAlpha);
     }
 
-    // ============================================================
     private static int[] unpackColor(int packed) {
         return new int[]{(packed >> 16) & 255, (packed >> 8) & 255, packed & 255};
     }

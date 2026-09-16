@@ -2,7 +2,13 @@ package com.jerotes.jerotes.spell;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.entity.Interface.ConcentrationSpellEntity;
+import com.jerotes.jerotes.entity.Other.OtherSpell.BestowCurseEntity;
+import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
+import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
+import com.jerotes.jerotes.init.JerotesDamageTypes;
+import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.network.JerotesPlayerData;
+import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,6 +23,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = JerotesWarehouse.MODID)
@@ -169,6 +176,37 @@ public class SpellFindUseEvent {
         }
     }
 
+
+    @SubscribeEvent
+    public static void BestowCurse(LivingHurtEvent event) {
+        if (event != null && event.getEntity() != null) {
+            LivingEntity hurt = event.getEntity();
+            DamageSource damagesource = event.getSource();
+            if (damagesource == null || hurt == null || damagesource.getEntity() == null)
+                return;
+            if (event.getAmount() <= 0)
+                return;
+            if (event.getEntity().hasEffect(JerotesMobEffects.CURSED_ADDITIONAL_DAMAGE.get())) {
+                if (damagesource.is(JerotesDamageTypes.CURSED_ADDITIONAL_DAMAGE))
+                    return;
+                List<BestowCurseEntity> list = hurt.level().getEntitiesOfClass(BestowCurseEntity.class, hurt.getBoundingBox().inflate(12, 12, 12));
+                for (BestowCurseEntity bestowCurseEntity : list) {
+                    if (bestowCurseEntity == null) continue;
+                    if (bestowCurseEntity.getOwner() == damagesource.getEntity() || bestowCurseEntity.getOwner() == damagesource.getDirectEntity()) {
+                        float scale = 1;
+                        if (event.getAmount() > 0 && event.getAmount() < 3.5f) {
+                            scale = Math.min(1, event.getAmount() / 3.5f);
+                        }
+                        hurt.invulnerableTime = 0;
+                        DamageSource damageSource = AttackFind.findDamageType(hurt, JerotesDamageTypes.CURSED_ADDITIONAL_DAMAGE, bestowCurseEntity.getOwner());
+                        hurt.hurt(damageSource, Main.rollDice(1, 8, hurt.getRandom()) * scale);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     @SubscribeEvent
     public static void CasterDeath(LivingDeathEvent event) {
         LivingEntity caster = event.getEntity();
@@ -190,6 +228,25 @@ public class SpellFindUseEvent {
 
         if (!SpellType.getConcentrationSpellTypeJerotes(caster).isEmpty()) {
             SpellType.endConcentration(caster);
+        }
+    }
+
+
+
+    //法术反制
+    @SubscribeEvent
+    public static void Counterspell(JerotesStopSpellEvent event) {
+        Entity otherCaster = event.getOtherCaster();
+        Entity otherMagic = event.getSpellEntity();
+        Entity caster = event.getCaster();
+        if (otherMagic instanceof MagicAboutEntity magicAbout && otherCaster != null && !magicAbout.isHelp()) {
+            boolean bl = SpellUtil.SpellReaction(caster, otherCaster, otherMagic, magicAbout.getSpellLevel());
+            event.setCanceled(bl);
+        }
+        //存在危害类
+        if (event.getType() == 1) {
+            boolean bl = SpellUtil.SpellReaction(caster, otherCaster, otherMagic, event.getLevel());
+            event.setCanceled(bl);
         }
     }
 }

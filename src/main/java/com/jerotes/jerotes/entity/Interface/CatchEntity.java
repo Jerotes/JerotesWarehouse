@@ -28,7 +28,6 @@ public interface CatchEntity {
 
     SoundEvent getPickupSound();
 
-    /** @deprecated */
     @Deprecated
     static void saveDefaultDataToCatchTag(Mob mob, ItemStack itemStack) {
         CompoundTag compoundtag = itemStack.getOrCreateTag();
@@ -59,7 +58,6 @@ public interface CatchEntity {
         compoundtag.putFloat("Health", mob.getHealth());
     }
 
-    /** @deprecated */
     @Deprecated
     static void loadDefaultDataFromCatchTag(Mob mob, CompoundTag compoundTag) {
         if (compoundTag.contains("NoAI")) {

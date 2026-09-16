@@ -67,15 +67,15 @@ public class MendingEntity extends OtherSpellBaseEntity implements TraceableEnti
                             0.2f + RandomSource.create().nextFloat() / 5f,
                             (RandomSource.create().nextFloat() - 0.5f) / 3f, 0.25);
                 }
-                if (subcategory == 0) {
+                if (getSubcategory() == 0) {
                     if (getTarget() instanceof LivingEntity livingEntity) {
                         for (EquipmentSlot slot : EquipmentSlot.values()) {
                             if (slot.getType() == EquipmentSlot.Type.HAND || slot.getType() == EquipmentSlot.Type.ARMOR) {
                                 ItemStack stack = livingEntity.getItemBySlot(slot);
                                 if (!stack.isEmpty() && stack.isDamageableItem()) {
                                     int repairAmount = stack.getMaxDamage() / 3;
-                                    int minRepairAmount = 20 * spellLevelDamage * spellLevelDamage;
-                                    int maxRepairAmount = 100 * spellLevelDamage * spellLevelDamage;
+                                    int minRepairAmount = 20 * getSpellLevel() * getSpellLevel();
+                                    int maxRepairAmount = 100 * getSpellLevel() * getSpellLevel();
                                     int newDamage = Math.max(0, stack.getDamageValue() - Mth.clamp(repairAmount, minRepairAmount, maxRepairAmount));
                                     stack.setDamageValue(newDamage);
                                 }
@@ -87,8 +87,8 @@ public class MendingEntity extends OtherSpellBaseEntity implements TraceableEnti
                             ItemStack stack = itemEntity.getItem();
                             if (!stack.isEmpty() && stack.isDamageableItem()) {
                                 int repairAmount = stack.getMaxDamage() / 3;
-                                int minRepairAmount = 20 * spellLevelDamage * spellLevelDamage;
-                                int maxRepairAmount = 100 * spellLevelDamage * spellLevelDamage;
+                                int minRepairAmount = 20 * getSpellLevel() * getSpellLevel();
+                                int maxRepairAmount = 100 * getSpellLevel() * getSpellLevel();
                                 int newDamage = Math.max(0, stack.getDamageValue() - Mth.clamp(repairAmount, minRepairAmount, maxRepairAmount));
                                 stack.setDamageValue(newDamage);
                                 itemEntity.setItem(stack);
@@ -97,14 +97,15 @@ public class MendingEntity extends OtherSpellBaseEntity implements TraceableEnti
                         }
                     }
                 }
-                else if (subcategory == 1) {
+                else if (getSubcategory() == 1) {
                     if (getTarget() instanceof LivingEntity livingEntity) {
                         if (EntityFactionFind.isMachine(livingEntity) || EntityFactionFind.isConstruct(livingEntity)) {
                             livingEntity.heal(
                                     //单数多出0.5
-                                    (spellLevelDamage > 1 && spellLevelDamage % 2 == 1) ?
-                                            Main.rollDice(1 + (spellLevelDamage - 2) / 2, 8, livingEntity.getRandom()) + Main.rollDice(1, 8, livingEntity.getRandom()) * 0.5f + (1 + (getBaseSpellLevelDamage() - 1) * 0.5f) :
-                                            Main.rollDice(1 + (spellLevelDamage - 1) / 2, 8, livingEntity.getRandom()) + (1 + (getBaseSpellLevelDamage() - 1) * 0.5f)
+                                    (getSpellLevel() > 1 && getSpellLevel() % 2 == 1) ?
+                                            Main.rollDice(1 + (getSpellLevel() - 2) / 2, 8, livingEntity.getRandom()) +
+                                                    Main.rollDice(1, 8, livingEntity.getRandom()) * 0.5f + (1 + (getSpellLevel() - 1) * 0.5f) :
+                                            Main.rollDice(1 + (getSpellLevel() - 1) / 2, 8, livingEntity.getRandom()) + (1 + (getSpellLevel() - 1) * 0.5f)
                             );
                         }
                     }
@@ -115,11 +116,6 @@ public class MendingEntity extends OtherSpellBaseEntity implements TraceableEnti
 
     public ResourceLocation getTextureLocation() {
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/beam/ray.png");
-    }
-
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
     }
 }
 

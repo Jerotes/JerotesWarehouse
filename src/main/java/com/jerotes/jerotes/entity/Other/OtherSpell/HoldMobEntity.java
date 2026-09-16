@@ -37,13 +37,13 @@ public class HoldMobEntity extends OtherSpellBaseEntity implements TraceableEnti
     }
     @Override
     public int getMaxLife() {
-        return 60 * 20 + 25;
+        return 60 * 20 + 15;
     }
     public int getMaxStart() {
-        return 20;
+        return 10;
     }
     public boolean moveToTarget() {
-        return this.getLifeTick() >= 20 || !(this.getTarget() instanceof Player);
+        return this.getLifeTick() >= 10 || !(this.getTarget() instanceof Player);
     }
     @VisibleForTesting
     public void setSize(float f) {
@@ -59,12 +59,12 @@ public class HoldMobEntity extends OtherSpellBaseEntity implements TraceableEnti
     @Override
     public void tick() {
         super.tick();
-        int time = (getMaxLife() - 20) - 5 - (getLifeTick() - 20);
+        int time = (getMaxLife() - 10) - 5 - (getLifeTick() - 10);
 
-        if (this.getLifeTick() < 20) {
+        if (this.getLifeTick() < 10) {
             return;
         }
-        if (this.getLifeTick() == 20) {
+        if (this.getLifeTick() == 10) {
             boolean bl = false;
             List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.2, 0.0, 0.2));
             list.removeIf(livingEntity -> livingEntity != this.getTarget());
@@ -82,8 +82,8 @@ public class HoldMobEntity extends OtherSpellBaseEntity implements TraceableEnti
 
         if (!this.level().isClientSide()) {
             if (getTarget() instanceof LivingEntity livingEntity && getTarget().isAlive()) {
-                livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.HOLD_MOB.get(), time, 0, false, false));
-                if ((time % 120 == 0) && time != 0) {
+                livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.HOLD_MOB.get(), time, 0, false, false), this.getOwner());
+                if (this.getLifeTick() % 120 == 10) {
                     if (EntityAndItemFind.savingSpellThrow(livingEntity, 0, true)){
                         if (!livingEntity.level().isClientSide) {
                             livingEntity.removeEffect(JerotesMobEffects.HOLD_MOB.get());
@@ -124,12 +124,6 @@ public class HoldMobEntity extends OtherSpellBaseEntity implements TraceableEnti
     }
     public ResourceLocation getRollTextureLocation() {
         return new ResourceLocation(JerotesWarehouse.MODID, "textures/entity/other/hold_mob_chain.png");
-    }
-
-
-    @Override
-    public int getSpellLevel() {
-        return this.spellLevelDamage;
     }
 }
 

@@ -4,9 +4,11 @@ import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
+import com.jerotes.jerotes.init.JerotesParticleTypes;
 import com.jerotes.jerotes.init.JerotesSoundEvents;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.Main;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -14,8 +16,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -50,14 +56,26 @@ public class FrostBoltEntity extends BaseMagicBoltEntity {
                     entity.setTicksFrozen(140 + 20 * spellLevelFreezeTime);
                 }
             }
-            this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
         }
+    }
+    @Override
+    protected void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
+        if (this.level().isClientSide) {
+            return;
+        }
+        BlockPos blockPos = blockHitResult.getBlockPos().relative(blockHitResult.getDirection());
+        BlockPos blockPos2 = blockHitResult.getBlockPos();
+        Main.extinguishFire(this.level(), blockPos, this.getOwner());
+        Main.extinguishFire(this.level(), blockPos2, this.getOwner());
+        Main.freezeBlock(this.level(), blockPos, this.getOwner());
+        Main.freezeBlock(this.level(), blockPos2, this.getOwner());
     }
 
     @Override
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
-
+        this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
         if (this.level() instanceof ServerLevel serverLevel) {
             Vec3 pos = this.position();
             int count = 40;
@@ -65,7 +83,7 @@ public class FrostBoltEntity extends BaseMagicBoltEntity {
                 double dx = (random.nextDouble() - 0.5) * 2.0;
                 double dy = (random.nextDouble() - 0.5) * 2.0;
                 double dz = (random.nextDouble() - 0.5) * 2.0;
-                serverLevel.sendParticles(ParticleTypes.SNOWFLAKE,
+                serverLevel.sendParticles(JerotesParticleTypes.FROST.get(),
                         pos.x, pos.y, pos.z,
                         1, dx, dy, dz, 0.1);
             }
@@ -82,7 +100,7 @@ public class FrostBoltEntity extends BaseMagicBoltEntity {
                 double dx = (random.nextDouble() - 0.5) * 2.0;
                 double dy = (random.nextDouble() - 0.5) * 2.0;
                 double dz = (random.nextDouble() - 0.5) * 2.0;
-                serverLevel.sendParticles(ParticleTypes.SNOWFLAKE,
+                serverLevel.sendParticles(JerotesParticleTypes.FROST.get(),
                         pos.x, pos.y, pos.z,
                         1, dx, dy, dz, 0.1);
             }

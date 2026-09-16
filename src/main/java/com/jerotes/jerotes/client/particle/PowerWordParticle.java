@@ -117,10 +117,6 @@ public class PowerWordParticle extends TextureSheetParticle {
 		this.setAlpha(alpha);
 	}
 
-	/**
-	 * 重写渲染：把粒子从"始终正方形面向摄像机"改成"沿运动方向拉伸的彗星状菱形"，
-	 * 速度越快拖尾越长，这是拖尾/彗星感的核心来源。
-	 */
 	@Override
 	public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
 		Vec3 camPos = renderInfo.getPosition();

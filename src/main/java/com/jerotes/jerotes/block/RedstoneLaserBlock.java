@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
 public class RedstoneLaserBlock extends Block {
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
@@ -34,7 +35,6 @@ public class RedstoneLaserBlock extends Block {
 
 	@Override
 	public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-		// 只有指定方向才输出信号
 		return state.getValue(FACING) == direction ? 15 : 0;
 	}
 

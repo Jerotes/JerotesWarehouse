@@ -1,9 +1,5 @@
-/*
- * Decompiled with CFR 0.152.
- */
 package com.jerotes.jerotes.effect;
 
-import net.minecraft.world.effect.InstantenousMobEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 

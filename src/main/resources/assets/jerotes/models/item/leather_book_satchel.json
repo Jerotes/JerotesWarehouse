@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jerotes:item/leather_book_satchel"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "jerotes_book_satchel_open": 1.0
+      },
+      "model": "jerotes:item/leather_book_satchel_open"
+    }
+  ]
+}

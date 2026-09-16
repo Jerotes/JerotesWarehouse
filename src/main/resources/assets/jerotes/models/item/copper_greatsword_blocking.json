@@ -1,0 +1,28 @@
+{
+  "parent": "jerotes:item/copper_greatsword",
+  "textures": {
+    "layer0": "jerotes:item/copper_greatsword"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 2, -90, 55 ],
+      "translation": [ 0, 8.5, 0.5 ],
+      "scale": [ 1.25, 1.25, 1.25 ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [ 2, 90, -55 ],
+      "translation": [ 0, 8.5, 0.5 ],
+      "scale": [ 1.25, 1.25, 1.25 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 0, 90],
+      "translation": [-2, 2, 0],
+      "scale": [ 1.25, 1.25, 1.25 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 180, -90],
+      "translation": [-2, 2, 0],
+      "scale": [ 1.25, 1.25, 1.25 ]
+    }
+  }
+}

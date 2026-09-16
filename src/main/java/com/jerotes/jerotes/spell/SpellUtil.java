@@ -41,7 +41,7 @@ public class SpellUtil {
     public static boolean SpellReaction(Entity caster, Entity otherCaster, Entity otherMagic, int otherSpellLevel) {
         //boolean 判定是否执行清除等
         //法术反制
-        if (CounterspellCanUse(caster)) {
+        if (CounterspellCanUse(caster) && !(otherCaster != null && caster.distanceTo(otherCaster) > 18)) {
             return Counterspell(caster, otherCaster, otherMagic, CounterspellLevel(caster), otherSpellLevel);
         }
         return false;
@@ -55,6 +55,8 @@ public class SpellUtil {
     }
     //法术反制-实现
     public static boolean Counterspell(Entity caster, Entity otherCaster, Entity otherMagic, int counterSpellLevel, int otherSpellLevel) {
+        System.out.println("[Counterspell] reactor=" + caster + " otherCaster=" + otherCaster
+                + " sameRef=" + (caster == otherCaster));
         if (!CounterspellCanUse(caster)) {
             return false;
         }
@@ -74,7 +76,13 @@ public class SpellUtil {
             bl = (Main.rollDice(1, 20, player.getRandom()) + (caster instanceof SpellUseEntity useEntity ? useEntity.getSpellLevel() : 0)) >= DC;
         }
         //如果不是玩家，且配置文件无法判定，则超过等级直接判定失败
-        else if (MainConfig.NoRollDice || !(MainConfig.HaveSavingThrow || MainConfig.HaveSavingThrowOnlyPlayerAndLegendary && EntityAndItemFind.isLegendary(caster))) {
+        else if ((MainConfig.NoRollDice || !MainConfig.HaveSavingThrow) && !EntityAndItemFind.isLegendary(caster)) {
+            bl = false;
+        }
+        else if (MainConfig.HaveSavingThrowOnlyPlayerAndLegendary && !EntityAndItemFind.isLegendary(caster)) {
+            bl = false;
+        }
+        else if (MainConfig.OnlyPlayerAndLegendaryCanCounterHigherSpells && !EntityAndItemFind.isLegendary(caster)) {
             bl = false;
         }
         //其他情况投骰子
@@ -102,14 +110,16 @@ public class SpellUtil {
             //产生粒子 玩家-目标施法者/魔法
             {
                 Entity castersTarget = otherMagic != null ? otherMagic : otherCaster;
-                Vec3 start = caster.position().add(0.0, Main.mobHeight(caster) * 0.7f, 0.0);
-                Vec3 end = castersTarget.position().add(0.0, Main.mobHeight(caster) * 0.7f, 0.0);
-                Vec3 dir = end.subtract(start);
-                Vec3 norm = dir.normalize();
-                int steps = Mth.floor(dir.length()) * 6 + 1;
-                for (int i = 1; i < steps; i++) {
-                    Vec3 pos = start.add(norm.scale(i / 6f));
-                    serverLevel.sendParticles(bl ? JerotesParticleTypes.COUNTERSPELL.get() : JerotesParticleTypes.COUNTERSPELL_FAIL.get(), pos.x, pos.y, pos.z, 1, 0.0, 0.0, 0.0, 0.0);
+                if (castersTarget != null) {
+                    Vec3 start = caster.position().add(0.0, Main.mobHeight(caster) * 0.7f, 0.0);
+                    Vec3 end = castersTarget.position().add(0.0, Main.mobHeight(caster) * 0.7f, 0.0);
+                    Vec3 dir = end.subtract(start);
+                    Vec3 norm = dir.normalize();
+                    int steps = Mth.floor(dir.length()) * 6 + 1;
+                    for (int i = 1; i < steps; i++) {
+                        Vec3 pos = start.add(norm.scale(i / 6f));
+                        serverLevel.sendParticles(bl ? JerotesParticleTypes.COUNTERSPELL.get() : JerotesParticleTypes.COUNTERSPELL_FAIL.get(), pos.x, pos.y, pos.z, 1, 0.0, 0.0, 0.0, 0.0);
+                    }
                 }
             }
             if (otherMagic != null && otherCaster != null) {

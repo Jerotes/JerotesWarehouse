@@ -44,7 +44,7 @@ public class FatigueCurseEntity extends BaseTargetEntity {
         DamageSource damageSource = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(JerotesDamageTypes.MAGIC_EFFECT), this, this.getOwner());
         livingEntity.hurt(damageSource, 0f);
         livingEntity.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 20 * spellLevelMainEffectTime, spellLevelMainEffectLevel - 1), this.getEffectSource());
-        this.playSound(JerotesSoundEvents.SPELL, 3.0f, 1.0f);
+        this.playSound(JerotesSoundEvents.SPELL, 1.0f, 1.0f);
     }
 
     @Override

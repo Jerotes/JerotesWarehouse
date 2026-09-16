@@ -36,7 +36,6 @@ import net.minecraftforge.common.MinecraftForge;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 public abstract class BaseRayEntity extends MagicAboutEntity {
     public static final EntityDataAccessor<Boolean> USEFUL = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> HIT_USEFUL = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.BOOLEAN);
@@ -47,6 +46,12 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     private static final EntityDataAccessor<Integer> LIFE_RAY = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> LIFE_RAY_LAST = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> RAY_COUNT = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> DATA_X_SPEED_RAY = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_Y_SPEED_RAY = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_Z_SPEED_RAY = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_X_START_RAY = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_Y_START_RAY = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DATA_Z_START_RAY = SynchedEntityData.defineId(BaseRayEntity.class, EntityDataSerializers.FLOAT);
 
     public BaseRayEntity(EntityType<? extends MagicAboutEntity> entityType, Level level) {
         super(entityType, level);
@@ -101,13 +106,30 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         float f2 = Mth.cos(p_37254_ * ((float)Math.PI / 180F)) * Mth.cos(p_37253_ * ((float)Math.PI / 180F));
         this.shoot((double)f, (double)f1, (double)f2, p_37256_, p_37257_);
     }
+
+    public float getXSpeedRay() { return this.getEntityData().get(DATA_X_SPEED_RAY); }
+    public float getYSpeedRay() { return this.getEntityData().get(DATA_Y_SPEED_RAY); }
+    public float getZSpeedRay() { return this.getEntityData().get(DATA_Z_SPEED_RAY); }
+    public void setXSpeedRay(float x) { this.getEntityData().set(DATA_X_SPEED_RAY, x); }
+    public void setYSpeedRay(float y) { this.getEntityData().set(DATA_Y_SPEED_RAY, y); }
+    public void setZSpeedRay(float z) { this.getEntityData().set(DATA_Z_SPEED_RAY, z); }
+
+    public float getXStartRay() { return this.getEntityData().get(DATA_X_START_RAY); }
+    public float getYStartRay() { return this.getEntityData().get(DATA_Y_START_RAY); }
+    public float getZStartRay() { return this.getEntityData().get(DATA_Z_START_RAY); }
+    public void setXStartRay(float x) { this.getEntityData().set(DATA_X_START_RAY, x); }
+    public void setYStartRay(float y) { this.getEntityData().set(DATA_Y_START_RAY, y); }
+    public void setZStartRay(float z) { this.getEntityData().set(DATA_Z_START_RAY, z); }
+
     public Vec3 getRayDeltaMovement() {
-        return new Vec3(xSpeedRay/2, ySpeedRay/2, zSpeedRay/2);
+        return new Vec3(this.getXSpeedRay() / 2.0,
+                this.getYSpeedRay() / 2.0,
+                this.getZSpeedRay() / 2.0);
     }
     public void setRayDeltaMovement(Vec3 vec3){
-        xSpeedRay = vec3.x * 2;
-        ySpeedRay = vec3.y * 2;
-        zSpeedRay = vec3.z * 2;
+        this.setXSpeedRay((float)(vec3.x * 2));
+        this.setYSpeedRay((float)(vec3.y * 2));
+        this.setZSpeedRay((float)(vec3.z * 2));
     }
     public void setRayLastPos(Vec3 vec3) {
         this.entityData.set(LAST_X, (float) vec3.x);
@@ -115,9 +137,9 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.entityData.set(LAST_Z, (float) vec3.z);
     }
     public void setRayStartPos(Vec3 vec3) {
-        this.xStartRay = vec3.x;
-        this.yStartRay = vec3.y;
-        this.zStartRay = vec3.z;
+        this.setXStartRay((float)vec3.x);
+        this.setYStartRay((float)vec3.y);
+        this.setZStartRay((float)vec3.z);
     }
     public float getLastX() { return this.entityData.get(LAST_X); }
     public float getLastY() { return this.entityData.get(LAST_Y); }
@@ -138,16 +160,9 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.setRayDeltaMovement(new Vec3(p_20335_, p_20336_, p_20337_));
     }
 
-
     public double summonTod = 1;
     public double summonTod2 = 1;
     public double summonTod3 = 1;
-    public double xSpeedRay = 0;
-    public double ySpeedRay = 0;
-    public double zSpeedRay = 0;
-    public double xStartRay = 0;
-    public double yStartRay = 0;
-    public double zStartRay = 0;
     public boolean isUseful() {
         return this.getEntityData().get(USEFUL);
     }
@@ -164,14 +179,6 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
                     ParticlesUse.spawnDirectionalHemisphereParticles(serverLevel, center, direction, false,0.35f, this.getTrailParticle(), 0.005f, 0.05f, 80);
                 }
             }
-//            if (this.getTrailParticle() != null && bl) {
-//                if (this.level() instanceof ServerLevel serverLevel) {
-//                    Vec3 center = this.position().add(0,this.getBbHeight()*0.4F,0);
-//                    Vec3 lastPos = new Vec3(this.getLastX(), this.getLastY(), this.getLastZ()).add(0,this.getBbHeight()*0.4F,0);
-//                    Vec3 direction = center.subtract(lastPos);
-//                    ParticlesUse.spawnDirectionalHemisphereParticles(serverLevel, center, direction, false,0.5f, this.getTrailParticle(), 0.25f, 0.015f, 24);
-//                }
-//            }
         }
     }
     public boolean isHitUseful() {
@@ -198,12 +205,12 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         compoundTag.putDouble("SummonTod", summonTod);
         compoundTag.putDouble("SummonTod2", summonTod2);
         compoundTag.putDouble("SummonTod3", summonTod3);
-        compoundTag.putDouble("XSpeedRay", xSpeedRay);
-        compoundTag.putDouble("YSpeedRay", ySpeedRay);
-        compoundTag.putDouble("ZSpeedRay", zSpeedRay);
-        compoundTag.putDouble("XStartRay", xStartRay);
-        compoundTag.putDouble("YStartRay", yStartRay);
-        compoundTag.putDouble("ZStartRay", zStartRay);
+        compoundTag.putDouble("XSpeedRay", this.getXSpeedRay());
+        compoundTag.putDouble("YSpeedRay", this.getYSpeedRay());
+        compoundTag.putDouble("ZSpeedRay", this.getZSpeedRay());
+        compoundTag.putDouble("XStartRay", this.getXStartRay());
+        compoundTag.putDouble("YStartRay", this.getYStartRay());
+        compoundTag.putDouble("ZStartRay", this.getZStartRay());
         compoundTag.putDouble("XLastRay", getLastX());
         compoundTag.putDouble("YLastRay", getLastY());
         compoundTag.putDouble("ZLastRay", getLastZ());
@@ -223,10 +230,13 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.summonTod = compoundTag.getDouble("SummonTod");
         this.summonTod2 = compoundTag.getDouble("SummonTod2");
         this.summonTod3 = compoundTag.getDouble("SummonTod3");
-        this.xSpeedRay = compoundTag.getDouble("XSpeedRay");
-        this.ySpeedRay = compoundTag.getDouble("YSpeedRay");
-        this.zSpeedRay = compoundTag.getDouble("ZSpeedRay");
-        this.setRayStartPos(new Vec3(compoundTag.getDouble("XStartRay"), compoundTag.getDouble("YStartRay"), compoundTag.getDouble("ZStartRay")));
+        this.setXSpeedRay((float)compoundTag.getDouble("XSpeedRay"));
+        this.setYSpeedRay((float)compoundTag.getDouble("YSpeedRay"));
+        this.setZSpeedRay((float)compoundTag.getDouble("ZSpeedRay"));
+        this.setXStartRay((float)compoundTag.getDouble("XStartRay"));
+        this.setYStartRay((float)compoundTag.getDouble("YStartRay"));
+        this.setZStartRay((float)compoundTag.getDouble("ZStartRay"));
+        this.setRayStartPos(new Vec3(this.getXStartRay(), this.getYStartRay(), this.getZStartRay()));
         this.setRayLastPos(new Vec3(compoundTag.getDouble("XLastRay"), compoundTag.getDouble("YLastRay"), compoundTag.getDouble("ZLastRay")));
         this.setUseful(compoundTag.getBoolean("IsUseful"));
         this.setHitUseful(compoundTag.getBoolean("IsHitUseful"));
@@ -244,6 +254,12 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         this.getEntityData().define(LAST_X, 0.0f);
         this.getEntityData().define(LAST_Y, 0.0f);
         this.getEntityData().define(LAST_Z, 0.0f);
+        this.getEntityData().define(DATA_X_SPEED_RAY, 0.0f);
+        this.getEntityData().define(DATA_Y_SPEED_RAY, 0.0f);
+        this.getEntityData().define(DATA_Z_SPEED_RAY, 0.0f);
+        this.getEntityData().define(DATA_X_START_RAY, 0.0f);
+        this.getEntityData().define(DATA_Y_START_RAY, 0.0f);
+        this.getEntityData().define(DATA_Z_START_RAY, 0.0f);
     }
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> entityDataAccessor) {
@@ -269,13 +285,11 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         super.tick();
 
         if (this.isUseful()) {
-            //撞墙
             if (this.life > 1) {
                 if (!Main.hasLineOfSightPos(new Vec3(this.getLastX(), this.getLastY(), this.getLastZ()), this.getPosition(0), getOwner(), this.level())) {
                     this.afterHasLineOfSight();
                 }
             }
-            //选择目标
             Vec3 start = new Vec3(getLastX(), getLastY(), getLastZ());
             Vec3 end = this.position();
             double radius = this.getBbWidth();
@@ -298,8 +312,8 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
                     this.hitEntity(target);
                 }
             }
-            //超过距离
-            if (this.position().distanceTo(new Vec3(this.xStartRay, this.yStartRay, this.zStartRay)) > getMaxReach() && this.isUseful()) {
+            if (this.position().distanceTo(new Vec3(this.getXStartRay(), this.getYStartRay(), this.getZStartRay())) > getMaxReach() && this.isUseful()) {
+                this.afterHasLineOfSight();
                 this.setUseful(false);
             }
         }
@@ -307,11 +321,12 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         if (this.getOwner() != null && this.isUseful()) {
             BaseRayEntity ray = this.getRay();
             ray.setOwner(this.getOwner());
-            ray.setPos(this.getX() + this.xSpeedRay, this.getY() + this.ySpeedRay, this.getZ() + this.zSpeedRay);
+            ray.setPos(this.getX() + this.getXSpeedRay(), this.getY() + this.getYSpeedRay(), this.getZ() + this.getZSpeedRay());
             ray.setRot(this.getYRot(), this.getXRot());
-            ray.setRayStartPos(new Vec3(this.xStartRay, this.yStartRay, this.zStartRay));
+            ray.setRayStartPos(new Vec3(this.getXStartRay(), this.getYStartRay(), this.getZStartRay()));
             ray.setRayDeltaMovement(this.getRayDeltaMovement());
             if (!this.level().isClientSide()) {
+                ray.setHitUseful(true);
                 ray.setUseful(true);
                 ray.setFirst(false);
                 ray.setLifeRay(this.getLifeRay());
@@ -329,13 +344,10 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
             this.setHitUseful(false);
             this.setUseful(false);
             if (this.showParticle()) {
-//                xSpeedRay = this.getDeltaMovement().x;
-//                ySpeedRay = this.getDeltaMovement().y;
-//                zSpeedRay = this.getDeltaMovement().z;
                 if (life > 5) {
                     if (this.getTrailParticle() != null) {
                         for (int i = -1; i < 5; ++i) {
-                            this.level().addParticle(this.getTrailParticle(), this.getX() + this.xSpeedRay * i * 0.2, this.getY() + this.ySpeedRay * i * 0.2 + this.getBbHeight() / 2, this.getZ() + this.zSpeedRay * i * 0.2, 0.0d, 0.0d, 0.0d);
+                            this.level().addParticle(this.getTrailParticle(), this.getX() + this.getXSpeedRay() * i * 0.2, this.getY() + this.getYSpeedRay() * i * 0.2 + this.getBbHeight() / 2, this.getZ() + this.getZSpeedRay() * i * 0.2, 0.0d, 0.0d, 0.0d);
                         }
                     }
                 }
@@ -345,7 +357,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
             if (this.showParticle()) {
                 if (this.getTrailParticle() != null) {
                     for (int i = -1; i < 5; ++i) {
-                        this.level().addParticle(this.getTrailParticle(), this.getX() + this.xSpeedRay * i * 0.2, this.getY() + this.ySpeedRay * i * 0.2 + this.getBbHeight() / 2, this.getZ() + this.zSpeedRay * i * 0.2, 0.0d, 0.0d, 0.0d);
+                        this.level().addParticle(this.getTrailParticle(), this.getX() + this.getXSpeedRay() * i * 0.2, this.getY() + this.getYSpeedRay() * i * 0.2 + this.getBbHeight() / 2, this.getZ() + this.getZSpeedRay() * i * 0.2, 0.0d, 0.0d, 0.0d);
                     }
                 }
             }
@@ -414,9 +426,7 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
         if (entity == this.getOwner()) {
             return;
         }
-        //法术取消
-        //event
-        JerotesStopSpellEvent event = new JerotesStopSpellEvent(getOwner(), null, this, entity);
+        JerotesStopSpellEvent event = new JerotesStopSpellEvent(entity, null, this, getOwner());
         MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
             return;
@@ -429,7 +439,6 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     protected float getInertia() {
         return 1.0f;
     }
-    //@Override
     protected float getLiquidInertia() {
         return 1.0f;
     }
@@ -443,6 +452,9 @@ public abstract class BaseRayEntity extends MagicAboutEntity {
     }
     public float beamScale() {
         return 1.0f;
+    }
+    public int lightningBoltCount() {
+        return 2 + random.nextInt(1);
     }
     public int beamLightI() {
         return 0x64a63a;
