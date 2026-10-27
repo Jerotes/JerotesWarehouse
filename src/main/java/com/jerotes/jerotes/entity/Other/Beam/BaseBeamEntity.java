@@ -264,6 +264,20 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 				Vec3 targetPos = calculateTargetPosition(caster);
 				targetPosAbout();
 
+				int n = 0;
+				if (attackCooldown() > 5) n = 5;
+				if (attackCooldown() > 10) n = 10;
+				boolean attacking = this.life % attackCooldown() == n;
+
+				Entity piercingTarget = null;
+				if (this.isPiercing()) {
+					piercingTarget = findFirstEntityOnRay(caster, caster.getEyePosition(), targetPos);
+					if (piercingTarget != null) {
+						targetPos = piercingTarget.getBoundingBox().inflate(0.75f).clip(caster.getEyePosition(), targetPos)
+								.orElse(piercingTarget.position());
+					}
+				}
+
 				this.setTargetX((float) targetPos.x);
 				this.setTargetY((float) targetPos.y);
 				this.setTargetZ((float) targetPos.z);
@@ -272,23 +286,26 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 				this.setSelfY((float) this.getY());
 				this.setSelfZ((float) this.getZ());
 
-				int n = 0;
-				if (attackCooldown() > 5) n = 5;
-				if (attackCooldown() > 10) n = 10;
-				if (this.life % attackCooldown() == n) {
-					List<Entity> hitEntities = findEntitiesOnRay(caster.getEyePosition(), targetPos, caster);
-					if (!hitEntities.isEmpty()) {
-						for (Entity entity : hitEntities) {
-							if (entity == this) continue;
-							if (entity == this.getOwner()) continue;
-							if (!this.getOwner().hasLineOfSight(entity)) continue;
-							this.customHurt(entity);
+				if (attacking) {
+					if (this.isPiercing()) {
+						if (piercingTarget != null) {
+							this.customHurt(piercingTarget);
+						}
+					} else {
+						List<Entity> hitEntities = findEntitiesOnRay(caster.getEyePosition(), targetPos, caster);
+						if (!hitEntities.isEmpty()) {
+							for (Entity entity : hitEntities) {
+								if (entity == this) continue;
+								if (entity == this.getOwner()) continue;
+								if (!this.getOwner().hasLineOfSight(entity)) continue;
+								this.customHurt(entity);
+							}
 						}
 					}
 				}
 			}
 
-			this.setPos(caster.getX(), caster.getY(0.75f), caster.getZ());
+			this.setPos(caster.getX(), caster.getY(0.75f) - this.getBbHeight() / 2, caster.getZ());
 
 			this.setYRot(caster.getYHeadRot());
 			this.setXRot(caster.getXRot());
@@ -309,6 +326,10 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 
 	public int attackCooldown() {
 		return 1;
+	}
+
+	public boolean isPiercing() {
+		return false;
 	}
 
 	public void customHurt(Entity entity) {
@@ -385,6 +406,17 @@ public class BaseBeamEntity extends Entity implements OwnableEntity {
 		}
 		hitContext.sortByDistance();
 		return hitContext.getEntities();
+	}
+
+	@Nullable
+	private Entity findFirstEntityOnRay(LivingEntity caster, Vec3 start, Vec3 end) {
+		for (Entity entity : findEntitiesOnRay(start, end, caster)) {
+			if (entity == this) continue;
+			if (entity == this.getOwner()) continue;
+			if (!caster.hasLineOfSight(entity)) continue;
+			return entity;
+		}
+		return null;
 	}
 
 	public float getBeamScaleAdd() {

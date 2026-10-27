@@ -5,6 +5,7 @@ import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.event.RendererEvent;
 import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.network.PacketHandler;
+import com.jerotes.jerotes.blockentity.IceSurfaceBlockEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,6 +17,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import com.jerotes.jerotes.init.JerotesBlocks;
 
 @Mod(JerotesWarehouse.MODID)
 public class JerotesWarehouse
@@ -30,6 +34,7 @@ public class JerotesWarehouse
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         JerotesItems.REGISTRY.register(modEventBus);
         JerotesBlocks.REGISTRY.register(modEventBus);
+        IceSurfaceBlockEntities.REGISTRY.register(modEventBus);
         JerotesMenus.REGISTRY.register(modEventBus);
         JerotesEntityType.REGISTRY.register(modEventBus);
         JerotesTabs.REGISTRY.register(modEventBus);
@@ -51,6 +56,10 @@ public class JerotesWarehouse
         event.enqueueWork(JerotesPotions::init);
     }
     private void initClient(final FMLClientSetupEvent event) {
+        event.enqueueWork(() -> ItemBlockRenderTypes.setRenderLayer(
+                JerotesBlocks.ICE_SURFACE.get(),
+                RenderType.translucent()));
+
         MinecraftForge.EVENT_BUS.register(this);
         event.enqueueWork(() -> {
             CilentInit.clientInit();

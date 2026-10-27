@@ -21,6 +21,7 @@ import com.jerotes.jerotes.navigation.WaterAndGroundPathNavigation;
 import com.jerotes.jerotes.util.AttackFind;
 import com.jerotes.jerotes.util.EntityFactionFind;
 import com.jerotes.jerotes.util.Main;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -39,6 +40,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -65,7 +67,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.*;
 import net.minecraft.world.phys.AABB;
@@ -178,6 +179,7 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 	public boolean beTargetAsPlayer() {
 		return true;
 	}
+
 	@Override
 	public boolean beLookAsPlayer() {
 		return true;
@@ -627,18 +629,23 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 		//食物
 		if (itemStack.isEdible()) {
 			if (itemStack.is(Items.GOLDEN_APPLE)) {
-				if (needHeal() || this.getTarget() != null && !(this.hasEffect(MobEffects.ABSORPTION) || this.hasEffect(MobEffects.DAMAGE_RESISTANCE) || this.getRemainingFireTicks() > 0 && !this.hasEffect(MobEffects.FIRE_RESISTANCE))) {
-					return true;
-				}
+				return needHeal() || this.getTarget() != null && !(this.hasEffect(MobEffects.ABSORPTION) || this.hasEffect(MobEffects.DAMAGE_RESISTANCE) || this.getRemainingFireTicks() > 0 && !this.hasEffect(MobEffects.FIRE_RESISTANCE));
 			}
 			if (itemStack.is(Items.ENCHANTED_GOLDEN_APPLE)) {
-				if (needHeal() || this.getTarget() != null && !this.hasEffect(MobEffects.ABSORPTION)) {
-					return true;
-				}
+				return needHeal() || this.getTarget() != null && !this.hasEffect(MobEffects.ABSORPTION);
 			}
 			if (itemStack.getFoodProperties(this) != null && Objects.requireNonNull(itemStack.getFoodProperties(this)).getEffects().isEmpty()) {
 				if (needHeal()) {
 					return true;
+				}
+			}
+			if (itemStack.getFoodProperties(this) != null && !Objects.requireNonNull(itemStack.getFoodProperties(this)).getEffects().isEmpty()
+					&& Main.FoodUseFind(itemStack, this) > 0
+					&& (needHeal() || this.getTarget() != null)) {
+				for (Pair<MobEffectInstance, Float> pair : Objects.requireNonNull(itemStack.getFoodProperties(this)).getEffects()) {
+					if (pair.getFirst().getEffect().isBeneficial() && !this.hasEffect(pair.getFirst().getEffect())) {
+						return true;
+					}
 				}
 			}
 		}
@@ -667,7 +674,7 @@ public class JerotesPlayerEntity extends HumanEntity implements JerotesPlayerBas
 			}
 		}
 		//食物
-		if (itemStack.isEdible()) {
+		if (itemStack.isEdible() && Main.FoodUseFind(itemStack, this) > 0) {
 			return true;
 		}
 		return false;

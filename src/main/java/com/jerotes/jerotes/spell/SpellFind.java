@@ -4,6 +4,7 @@ import com.jerotes.jerotes.block.RedstoneLaserBlock;
 import com.jerotes.jerotes.entity.Interface.ContractableEntity;
 import com.jerotes.jerotes.entity.MagicSummoned.Vex.JerotesVexEntity;
 import com.jerotes.jerotes.entity.Other.BreathAreaSpell.PoisonBreathAreaEntity;
+import com.jerotes.jerotes.entity.Other.BreathAreaSpell.ColorSprayAreaEntity;
 import com.jerotes.jerotes.entity.Other.OtherSpell.MirrorImageEntity;
 import com.jerotes.jerotes.entity.Other.OtherSpell.*;
 import com.jerotes.jerotes.entity.Other.ShootTargetSpell.FireballEntity;
@@ -64,6 +65,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import com.jerotes.jerotes.entity.Other.OtherSpell.WailOfTheBansheeEntity;
 
 public class SpellFind {
 	//魔法飞弹
@@ -86,6 +88,30 @@ public class SpellFind {
 				}
 				serverLevel.addFreshEntity(spell);
 			}
+		}
+		return true;
+	}
+	//七彩喷射
+	public static boolean ColorSpray(LivingEntity caster, Entity target, int spellLevelDamage, boolean isPlayer) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			if (!isPlayer && target != caster && caster instanceof Mob mob && target != null) {
+				mob.getLookControl().setLookAt(target, 360.0f, 360.0f);
+				mob.lookAt(target, 360.0f, 360.0f);
+			}
+			Vec3 look = caster.getLookAngle().normalize();
+			Vec3 targetPos = caster.position()
+					.add(0, caster.getBbHeight() * 0.25 + 2 / 16f, 0)
+					.add(look.scale(2.25));
+
+			ColorSprayAreaEntity cloud = new ColorSprayAreaEntity(serverLevel, caster);
+			cloud.setSpellLevelDamage(spellLevelDamage);
+			cloud.setPos(targetPos.x, targetPos.y, targetPos.z);
+			cloud.setYRot(caster.getYRot());
+			cloud.setXRot(caster.getXRot());
+			cloud.setOwner(caster);
+			cloud.setTarget(caster);
+			serverLevel.addFreshEntity(cloud);
+			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
 		}
 		return true;
 	}
@@ -584,9 +610,9 @@ public class SpellFind {
 	public static boolean Sunbeam(LivingEntity caster, int spellLevelDamage, int spellLevelSubcategory) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			SunbeamEntity baseBeamEntity = new SunbeamEntity(JerotesEntityType.SUNBEAM.get(), serverLevel, spellLevelDamage, spellLevelSubcategory);
-			baseBeamEntity.setPos(caster.getX(), caster.getY(0.75), caster.getZ());
+			baseBeamEntity.setPos(caster.getX(), caster.getY(0.75) - baseBeamEntity.getBbHeight()/2, caster.getZ());
 			baseBeamEntity.setLightLockX((float) caster.getX());
-			baseBeamEntity.setLightLockY((float) (caster.getY(0.75)));
+			baseBeamEntity.setLightLockY((float) (caster.getY(0.75) - baseBeamEntity.getBbHeight()/2));
 			baseBeamEntity.setLightLockZ((float) caster.getZ());
 			baseBeamEntity.setOwner(caster);
 			serverLevel.addFreshEntity(baseBeamEntity);
@@ -916,16 +942,21 @@ public class SpellFind {
 	//火焰吸收
 	public static boolean FireAbsorption(LivingEntity caster, float amount, double spellLevelPercentage, float spellLevelInterval) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
-			if (Main.getJerotesPersistentData(caster).getDouble("jerotes_fire_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_fire_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_fire_absorption") == null) {
-				caster.heal((float) (amount * (spellLevelPercentage / 100)));
-				for (int i = 0; i < 2; ++i) {
-					serverLevel.sendParticles(JerotesParticleTypes.FLAME.get(), caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
+			if (caster.getHealth() < caster.getMaxHealth()) {
+				if (Main.getJerotesPersistentData(caster).getDouble("jerotes_fire_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_fire_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_fire_absorption") == null) {
+					caster.heal((float) (amount * (spellLevelPercentage / 100)));
+					for (int i = 0; i < 2; ++i) {
+						serverLevel.sendParticles(JerotesParticleTypes.FLAME.get(), caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
+					}
+					Main.getJerotesPersistentData(caster).putDouble("jerotes_fire_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_fire_absorption") + spellLevelInterval * 20);
+					Main.getJerotesPersistentData(caster).putDouble("jerotes_fire_absorption_last_damage", amount);
+					if (!caster.isInvisible()) {
+						serverLevel.sendParticles(JerotesParticleTypes.FIRE_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
+					}
 				}
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_fire_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_fire_absorption") + spellLevelInterval * 20);
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_fire_absorption_last_damage", amount);
-				if (!caster.isInvisible()) {
-					serverLevel.sendParticles(JerotesParticleTypes.FIRE_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
-				}
+			}
+			else {
+				return false;
 			}
 		}
 		return true;
@@ -933,16 +964,21 @@ public class SpellFind {
 	//冰霜吸收
 	public static boolean ColdAbsorption(LivingEntity caster, float amount, double spellLevelPercentage, float spellLevelInterval) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
-			if (Main.getJerotesPersistentData(caster).getDouble("jerotes_cold_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_cold_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_cold_absorption") == null) {
-				caster.heal((float) (amount * (spellLevelPercentage / 100)));
-				for (int i = 0; i < 2; ++i) {
-					serverLevel.sendParticles(JerotesParticleTypes.FROST.get(), caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
+			if (caster.getHealth() < caster.getMaxHealth()) {
+				if (Main.getJerotesPersistentData(caster).getDouble("jerotes_cold_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_cold_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_cold_absorption") == null) {
+					caster.heal((float) (amount * (spellLevelPercentage / 100)));
+					for (int i = 0; i < 2; ++i) {
+						serverLevel.sendParticles(JerotesParticleTypes.FROST.get(), caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
+					}
+					Main.getJerotesPersistentData(caster).putDouble("jerotes_cold_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_cold_absorption") + spellLevelInterval * 20);
+					Main.getJerotesPersistentData(caster).putDouble("jerotes_cold_absorption_last_damage", amount);
+					if (!caster.isInvisible()) {
+						serverLevel.sendParticles(JerotesParticleTypes.COLD_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
+					}
 				}
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_cold_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_cold_absorption") + spellLevelInterval * 20);
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_cold_absorption_last_damage", amount);
-				if (!caster.isInvisible()) {
-					serverLevel.sendParticles(JerotesParticleTypes.COLD_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
-				}
+			}
+			else {
+				return false;
 			}
 		}
 		return true;
@@ -950,16 +986,21 @@ public class SpellFind {
 	//闪电吸收
 	public static boolean LightningAbsorption(LivingEntity caster, float amount, double spellLevelPercentage, float spellLevelInterval) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
-			if (Main.getJerotesPersistentData(caster).getDouble("jerotes_lightning_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_lightning_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_lightning_absorption") == null) {
-				caster.heal((float) (amount * (spellLevelPercentage / 100)));
-				for (int i = 0; i < 2; ++i) {
-					serverLevel.sendParticles(JerotesParticleTypes.SHOCK.get(), caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
+			if (caster.getHealth() < caster.getMaxHealth()) {
+				if (Main.getJerotesPersistentData(caster).getDouble("jerotes_lightning_absorption") <= 0 || Main.getJerotesPersistentData(caster).getDouble("jerotes_lightning_absorption_last_damage") < amount || Main.getJerotesPersistentData(caster).get("jerotes_lightning_absorption") == null) {
+					caster.heal((float) (amount * (spellLevelPercentage / 100)));
+					for (int i = 0; i < 2; ++i) {
+						serverLevel.sendParticles(JerotesParticleTypes.SHOCK.get(), caster.getRandomX(1), caster.getRandomY(), caster.getRandomZ(1), 0, 0.0, 0.0, 0.0, 0.0);
+					}
+					Main.getJerotesPersistentData(caster).putDouble("jerotes_lightning_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_lightning_absorption") + spellLevelInterval * 20);
+					Main.getJerotesPersistentData(caster).putDouble("jerotes_lightning_absorption_last_damage", amount);
+					if (!caster.isInvisible()) {
+						serverLevel.sendParticles(JerotesParticleTypes.LIGHTNING_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
+					}
 				}
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_lightning_absorption", Main.getJerotesPersistentData(caster).getDouble("jerotes_lightning_absorption") + spellLevelInterval * 20);
-				Main.getJerotesPersistentData(caster).putDouble("jerotes_lightning_absorption_last_damage", amount);
-				if (!caster.isInvisible()) {
-					serverLevel.sendParticles(JerotesParticleTypes.LIGHTNING_ABSORPTION_DISPLAY.get(), caster.getX(), caster.getBoundingBox().maxY + 0.5, caster.getZ(), 0, 0.0, 0.0, 0.0, 0.0);
-				}
+			}
+			else {
+				return false;
 			}
 		}
 		return true;
@@ -1023,7 +1064,7 @@ public class SpellFind {
 			if (!(subcategory == 2)) {
 				Vec3 targetPos = caster.getPosition(0);
 				if (target != null) {
-					targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+					targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 				}
 				if (caster instanceof Player && (target == null || target == caster)) {
 					Vec3 startPos = caster.getEyePosition(1.0f);
@@ -1298,6 +1339,7 @@ public class SpellFind {
 					mirrorImageEntity.setOrder(i + 1);
 					mirrorImageEntity.setOwner(caster);
 					mirrorImageEntity.setScale(Main.mobWidth(caster), Main.mobHeight(caster));
+					mirrorImageEntity.setScaleEyeHeight(caster.getEyeHeight());
 					mirrorImageEntity.spellLevelDamage = spellLevelDamage;
 					//
 					List<Mob> list3 = caster.level().getEntitiesOfClass(Mob.class, caster.getBoundingBox().inflate(32.0, 32.0, 32.0));
@@ -1323,7 +1365,7 @@ public class SpellFind {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			Vec3 targetPos = caster.getPosition(0);
 			if (target != null) {
-				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+				targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 			}
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
@@ -1366,7 +1408,7 @@ public class SpellFind {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			Vec3 targetPos = caster.getPosition(0);
 			if (target != null) {
-				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+				targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 			}
 			BlockPos blockPos = new BlockPos(
 					Mth.floor(targetPos.x),
@@ -1405,7 +1447,7 @@ public class SpellFind {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			Vec3 targetPos = caster.getPosition(0);
 			if (target != null) {
-				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+				targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 			}
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
@@ -1446,7 +1488,7 @@ public class SpellFind {
 			}
 			Vec3 targetPos = caster.getPosition(0);
 			if (target != null) {
-				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+				targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 			}
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
@@ -1557,7 +1599,7 @@ public class SpellFind {
 			}
 			Vec3 targetPos = caster.getPosition(0);
 			if (target != null) {
-				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+				targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 			}
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
@@ -1611,7 +1653,7 @@ public class SpellFind {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			Vec3 targetPos = caster.getPosition(0);
 			if (target != null) {
-				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+				targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 			}
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
@@ -1643,7 +1685,7 @@ public class SpellFind {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			Vec3 targetPos = caster.getPosition(0);
 			if (target != null) {
-				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+				targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 			}
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
@@ -1819,6 +1861,19 @@ public class SpellFind {
 			}
 		}
 	}
+	//女妖之嚎
+	public static boolean WailOfTheBanshee(LivingEntity caster, Entity target, int spellLevelDamage) {
+		if (caster.level() instanceof ServerLevel serverLevel) {
+			Vec3 targetPos = caster.getPosition(0);
+			WailOfTheBansheeEntity cloud = new WailOfTheBansheeEntity(serverLevel, caster);
+			cloud.setSpellLevelDamage(spellLevelDamage);
+			cloud.setPos(targetPos.x, targetPos.y, targetPos.z);
+			cloud.setOwner(caster);
+			serverLevel.addFreshEntity(cloud);
+			serverLevel.gameEvent(GameEvent.ENTITY_PLACE, new BlockPos((int) caster.getX(), (int) caster.getY(), (int) caster.getZ()), GameEvent.Context.of(caster));
+		}
+		return true;
+	}
 	//律令死亡
 	public static boolean PowerWordKill(LivingEntity caster, Entity target, int spellLevelDamage) {
 		if (caster.level() instanceof ServerLevel serverLevel) {
@@ -1979,7 +2034,7 @@ public class SpellFind {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			Vec3 targetPos = caster.getPosition(0);
 			if (target != null) {
-				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+				targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 			}
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
@@ -2129,7 +2184,7 @@ public class SpellFind {
 		if (caster.level() instanceof ServerLevel serverLevel) {
 			Vec3 targetPos = caster.getPosition(0);
 			if (target != null) {
-				targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+				targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 			}
 			if (caster instanceof Player && (target == null || target == caster)) {
 				Vec3 startPos = caster.getEyePosition(1.0f);
@@ -2282,7 +2337,7 @@ public class SpellFind {
 			if (subcategory == 3 || subcategory == 4 || subcategory == 5) {
 				Vec3 targetPos = caster.getPosition(0);
 				if (target != null) {
-					targetPos = new Vec3(target.getX() + 0.5D, target.getY(), target.getZ() + 0.5D);
+					targetPos = new Vec3(target.getX(), target.getY(), target.getZ());
 				}
 				if (caster instanceof Player && (target == null || target == caster)) {
 					Vec3 startPos = caster.getEyePosition(1.0f);

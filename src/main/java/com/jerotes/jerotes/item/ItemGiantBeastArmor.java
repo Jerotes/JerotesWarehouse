@@ -64,7 +64,7 @@ public class ItemGiantBeastArmor extends Item implements ItemBeastArmor, ItemBas
 	}
 
 	@Override
-	public int getProtection() {
+	public int getBeastArmorProtection() {
 		return this.protection;
 	}
 

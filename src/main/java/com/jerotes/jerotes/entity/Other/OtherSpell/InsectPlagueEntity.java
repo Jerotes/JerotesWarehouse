@@ -57,7 +57,7 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
         return 10 * 60 * 20;
     }
     protected void doPush(Entity entity) {
-        if (shouldPush() && this.distanceToSqr(entity) <= 36.0D) {
+        if (shouldPush() && this.distanceToSqr(entity) <= (36.0D + ((Main.mobWidth(entity) / 2) * (Main.mobWidth(entity) / 2)))) {
             entity.makeStuckInBlock(Blocks.AIR.defaultBlockState(), new Vec3(0.5D, 0.5D, 0.5D));
         }
     }
@@ -101,7 +101,7 @@ public class InsectPlagueEntity extends OtherSpellBaseEntity implements Traceabl
                 boolean bl = false;
                 List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox());
                 for (LivingEntity livingEntity : list) {
-                    if (this.distanceToSqr(livingEntity) > 36.0D) continue;
+                    if (this.distanceToSqr(livingEntity) > (36.0D + ((Main.mobWidth(livingEntity) / 2) * (Main.mobWidth(livingEntity) / 2)))) continue;
                     if (this.dealDamageTo(livingEntity)) {
                         bl = true;
                     }

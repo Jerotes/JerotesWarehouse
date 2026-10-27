@@ -140,7 +140,7 @@ public abstract class BaseMagicMissileEntity extends MagicAboutEntity {
         }
         if (this.level() instanceof ServerLevel serverLevel) {
             ParticlesUse.ballRendererParticle(serverLevel,
-                    this.getX(), this.getY(), this.getZ(),
+                    this.getX(), this.getY(0.5f), this.getZ(),
                     beamLightIII(), beamLightII(),
                     0.1f, 0.2f, 0f,
                     0f, 0.5f, 0.25f,

@@ -66,6 +66,9 @@ public class ItemWarBeastArmorDyeable extends DyeableHorseArmorItem implements I
 	}
 
 	@Override
+	public int getBeastArmorProtection() {
+		return this.protection;
+	}
 	public int getProtection() {
 		return this.protection;
 	}

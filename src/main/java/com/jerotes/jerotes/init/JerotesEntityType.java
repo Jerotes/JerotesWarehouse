@@ -9,6 +9,7 @@ import com.jerotes.jerotes.entity.MagicSummoned.Zombie.FingerOfDeathZombieEntity
 import com.jerotes.jerotes.entity.MagicSummoned.Zombie.JerotesZombieEntity;
 import com.jerotes.jerotes.entity.Mob.*;
 import com.jerotes.jerotes.entity.Other.BreathAreaSpell.PoisonBreathAreaEntity;
+import com.jerotes.jerotes.entity.Other.BreathAreaSpell.ColorSprayAreaEntity;
 import com.jerotes.jerotes.entity.Other.Other.InvisibleLightningBolt;
 import com.jerotes.jerotes.entity.Other.OtherSpell.*;
 import com.jerotes.jerotes.entity.Other.OtherSpell.HoldPersonMainEntity;
@@ -45,6 +46,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import com.jerotes.jerotes.entity.Other.OtherSpell.WailOfTheBansheeEntity;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class JerotesEntityType {
@@ -93,6 +95,9 @@ public class JerotesEntityType {
 	public static final RegistryObject<EntityType<PoisonBreathAreaEntity>> POISON_BREATH_AREA = register("poison_breath_area",
 			EntityType.Builder.<PoisonBreathAreaEntity>of(PoisonBreathAreaEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
 					.sized(0.5F, 0.5F));
+	public static final RegistryObject<EntityType<ColorSprayAreaEntity>> COLOR_SPRAY_AREA = register("color_spray_area",
+			EntityType.Builder.<ColorSprayAreaEntity>of(ColorSprayAreaEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(0.5F, 0.5F));
 	public static final RegistryObject<EntityType<CloudOfDaggersEntity>> CLOUD_OF_DAGGERS = register("cloud_of_daggers",
 			EntityType.Builder.<CloudOfDaggersEntity>of(CloudOfDaggersEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
 					.sized(3F, 3F));
@@ -137,6 +142,9 @@ public class JerotesEntityType {
 					.sized(1.0f, 1.0f));
 	public static final RegistryObject<EntityType<IceStormEntity>> ICE_STORM = register("ice_storm",
 			EntityType.Builder.<IceStormEntity>of(IceStormEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
+					.sized(12f, 12f));
+	public static final RegistryObject<EntityType<WailOfTheBansheeEntity>> WAIL_OF_THE_BANSHEE = register("wail_of_the_banshee",
+			EntityType.Builder.<WailOfTheBansheeEntity>of(WailOfTheBansheeEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)
 					.sized(12f, 12f));
 	public static final RegistryObject<EntityType<ThunderwaveEntity>> THUNDERWAVE = register("thunderwave",
 			EntityType.Builder.<ThunderwaveEntity>of(ThunderwaveEntity::new, MobCategory.MISC).fireImmune().clientTrackingRange(10).updateInterval(Integer.MAX_VALUE)

@@ -3,6 +3,7 @@ package com.jerotes.jerotes.item.Tool;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.jerotes.jerotes.client.animation.SpearAnimations;
+import com.jerotes.jerotes.config.MainConfig;
 import com.jerotes.jerotes.entity.Interface.*;
 import com.jerotes.jerotes.init.*;
 import com.jerotes.jerotes.item.Interface.ItemSpecialAttack;
@@ -301,6 +302,7 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
         return true;
     }
     public static void causeExtraKnockback(LivingEntity self, Entity entity, float f, Vec3 vec3) {
+        if (entity instanceof LivingEntity livingEntity && AttackFind.SameFactionAvoidDamage(self, livingEntity) && MainConfig.SameFactionAvoidDamage) return;
         if (self instanceof Player || self instanceof JerotesPlayerBaseEntity jerotesPlayerBaseEntity && jerotesPlayerBaseEntity.useSpearAsPlayer() || self instanceof UseSpearSpecialEntity useSpearSpecialEntity && useSpearSpecialEntity.isJerotesSpearCauseExtraKnockbackPlayer()) {
             if (f > 0.0f) {
                 if (entity instanceof LivingEntity livingEntity) {
@@ -462,7 +464,8 @@ public class ItemToolBaseSpearBase extends TieredItem implements ItemSpecialEffe
         if (!entity2.canBeHitByProjectile()) {
             return false;
         }
-        if (entity instanceof LivingEntity living && AttackFind.FindCanNotAttack(living, entity2)) return false;
+        if (entity instanceof LivingEntity living && living == entity2) return false;
+        //if (entity instanceof LivingEntity living && AttackFind.FindCanNotAttack(living, entity2)) return false;
         if (!Main.hasLineOfSightEntity(entity, entity2)) {
             return false;
         }

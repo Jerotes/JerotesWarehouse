@@ -172,8 +172,12 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     private DamageSource lastDamageSource;
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     private void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
-        compoundTag.putBoolean("IsTrueInvisibleJerotes", this.isTrueInvisibleJerotes());
-        compoundTag.putFloat("MaxHealthReduceCountJerotes", this.getMaxHealthReduceCountJerotes());
+        if (this.isTrueInvisibleJerotes()) {
+            compoundTag.putBoolean("IsTrueInvisibleJerotes", true);
+        }
+        if (this.getMaxHealthReduceCountJerotes() > 0) {
+            compoundTag.putFloat("MaxHealthReduceCountJerotes", this.getMaxHealthReduceCountJerotes());
+        }
         if (this.getMaxHealthReduceTickJerotes() != 0) {
             compoundTag.putFloat("MaxHealthReduceTickJerotes", this.getMaxHealthReduceTickJerotes());
         }
@@ -186,15 +190,17 @@ public abstract class LivingEntityMixin extends Entity implements JerotesChangeL
     }
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
     private void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo ci) {
-        this.setTrueInvisibleJerotes(compoundTag.getBoolean("IsTrueInvisibleJerotes"));
+        if (compoundTag.contains("IsTrueInvisibleJerotes")) {
+            this.setTrueInvisibleJerotes(compoundTag.getBoolean("IsTrueInvisibleJerotes"));
+        }
         this.setMaxHealthReduceCountJerotes(compoundTag.getFloat("MaxHealthReduceCountJerotes"));
-        if (compoundTag.getFloat("MaxHealthReduceTickJerotes") != 0) {
+        if (compoundTag.contains("MaxHealthReduceTickJerotes")) {
             this.setMaxHealthReduceTickJerotes(compoundTag.getFloat("MaxHealthReduceTickJerotes"));
         }
-        if (compoundTag.getInt("AnesthetizedTickJerotes") != 0) {
+        if (compoundTag.contains("AnesthetizedTickJerotes")) {
             this.setAnesthetizedTickJerotes(compoundTag.getInt("AnesthetizedTickJerotes"));
         }
-        if (compoundTag.getInt("ProneTickJerotes") != 0) {
+        if (compoundTag.contains("ProneTickJerotes")) {
             this.setProneTickJerotes(compoundTag.getInt("ProneTickJerotes"));
         }
     }

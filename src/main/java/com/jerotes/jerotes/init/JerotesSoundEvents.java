@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 @SuppressWarnings("WeakerAccess")
 @Mod.EventBusSubscriber(modid = JerotesWarehouse.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class JerotesSoundEvents {
+    public static final SoundEvent MAGIC_WAIL_OF_THE_BANSHEE = createSoundEvent("magic_wail_of_the_banshee");
     public static final SoundEvent SPELL = createSoundEvent("spell");
     public static final SoundEvent BREATH = createSoundEvent("breath");
     public static final SoundEvent USE_SADDLE = createSoundEvent("use_saddle");
@@ -46,6 +47,7 @@ public class JerotesSoundEvents {
     public static final SoundEvent MAGIC_GHAST_FIREBALL = createSoundEvent("magic_ghast_fireball");
     public static final SoundEvent MAGIC_ENDERDRAGON_FIREBALL = createSoundEvent("magic_enderdragon_fireball");
     public static final SoundEvent MAGIC_POISON_BREATH = createSoundEvent("magic_poison_breath");
+    public static final SoundEvent MAGIC_COLOR_SPRAY = createSoundEvent("magic_color_spray");
     public static final SoundEvent MAGIC_FIRE_BOLT = createSoundEvent("magic_fire_bolt");
     public static final SoundEvent MAGIC_FROST_BOLT = createSoundEvent("magic_frost_bolt");
     public static final SoundEvent MAGIC_SHOCK_BOLT = createSoundEvent("magic_shock_bolt");

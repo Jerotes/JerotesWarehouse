@@ -18,7 +18,11 @@ import com.jerotes.jerotes.item.AAExplorationEye;
 import com.jerotes.jerotes.item.Interface.ItemSpecialInHand;
 import com.jerotes.jerotes.item.Tool.ItemToolBasePike;
 import com.jerotes.jerotes.item.Tool.ItemToolBaseSpearBase;
+import com.jerotes.jerotes.block.IceSurfaceBlock;
+import com.jerotes.jerotes.blockentity.IceSurfaceBlockEntity;
+import com.jerotes.jerotes.init.JerotesBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -55,6 +59,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.vehicle.Minecart;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -67,6 +72,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.FrostedIceBlock;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
@@ -87,6 +93,9 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.damagesource.DamageSource;
+import com.jerotes.jerotes.init.JerotesMobEffects;
 
 public class Main {
 	public static CompoundTag getJerotesPersistentData(Entity entity) {
@@ -342,6 +351,19 @@ public class Main {
 		double angleDegActual = Math.toDegrees(angleRad);
 		return angleDegActual <= angleDeg;
 	}
+	//锥形角度
+	public static boolean isEntityIn3DCone(Entity observer, Entity target, float angleDeg) {
+		if (isIn3DCone(observer, target.position(), angleDeg)) {
+			return true;
+		}
+		Vec3 eyePos = observer.getEyePosition();
+		AABB aabb = target.getBoundingBox();
+		Vec3 vec3 = new Vec3(
+				Mth.clamp(eyePos.x, aabb.minX, aabb.maxX),
+				Mth.clamp(eyePos.y, aabb.minY, aabb.maxY),
+				Mth.clamp(eyePos.z, aabb.minZ, aabb.maxZ));
+		return isIn3DCone(observer, vec3, angleDeg);
+	}
 	//直线
 	public static boolean hasLineOfSightEntity(Entity target, Entity self) {
 		if (target.level() != self.level()) {
@@ -486,7 +508,6 @@ public class Main {
 	public static boolean mobSizeGiant(Entity entity) {
 		return !mobSizeSmall(entity) && !mobSizeMedium(entity) && !mobSizeLarge(entity);
 	}
-
 
 	public static AABB blockDestroyAABB(Mob mob) {
 		AABB aABB = mob.getBoundingBox();
@@ -922,7 +943,6 @@ public class Main {
 		return false;
 	}
 
-
 	public static void spearInHandLayer(EntityModel<?> entityModel, LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int n) {
 		if (livingEntity instanceof SpecialItemInHandEntity specialItemInHandEntity && specialItemInHandEntity.stopSpecialItemInHand(itemStack))
 			return;
@@ -958,7 +978,6 @@ public class Main {
 			}
 		}
 	}
-
 
 	//附加手臂
 	public static AddHandEntity spawnAddHand(LivingEntity owner, int tick, int size) {
@@ -1008,7 +1027,6 @@ public class Main {
 		}
 		return null;
 	}
-
 
 	//Curios
 	public static ItemStack findCurios(LivingEntity livingEntity, Item item) {
@@ -1063,7 +1081,6 @@ public class Main {
 	public static boolean hasCurios(LivingEntity livingEntity, Item item) {
 		return !findCurios(livingEntity, item).isEmpty();
 	}
-
 
 	public static Entity getEntityByUUID(Level level, UUID uuid) {
 		return getEntityByUUID(level.getServer(), uuid);
@@ -1188,9 +1205,22 @@ public class Main {
 	}
 	//结冰
 	public static void freezeBlock(Level level, BlockPos blockPos, Entity owner) {
+		if (!level.isClientSide) {
+			BlockState bs = level.getBlockState(blockPos);
+			if (bs.is(Blocks.WATER) && bs.getFluidState().getAmount() < 8) {
+				Main.placeIceSurface(level, blockPos, 120);
+				return;
+			}
+		}
+
 		if (!(owner instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
 			BlockState state = level.getBlockState(blockPos);
-			if (state.getFluidState().getType() == Fluids.WATER && state.getFluidState().isSource()) {
+			if (state.is(Blocks.FROSTED_ICE)) {
+				if (state.getValue(FrostedIceBlock.AGE) != 0) {
+					level.setBlock(blockPos, state.setValue(FrostedIceBlock.AGE, 0), Block.UPDATE_ALL);
+				}
+			}
+			else if (state.getFluidState().getType() == Fluids.WATER && state.getFluidState().isSource()) {
 				level.setBlock(blockPos, Blocks.FROSTED_ICE.defaultBlockState(), Block.UPDATE_ALL);
 			}
 		}
@@ -1203,8 +1233,54 @@ public class Main {
 			}
 		}
 	}
+	public static void placeIceSurface(Level level, BlockPos pos, int maxLife) {
+		if (level.isClientSide) {
+			return;
+		}
+		if (level.dimension() == Level.NETHER
+				|| level.getBiome(pos).value().getBaseTemperature() > 1.5) {
+			return;
+		}
+		BlockState here = level.getBlockState(pos);
+		if (!here.isAir() && here.getFluidState().isEmpty()) {
+			return;
+		}
+		BlockState old = level.getBlockState(pos);
+		if (old.getBlock() instanceof IceSurfaceBlock && level.getBlockEntity(pos) instanceof IceSurfaceBlockEntity ice) {
+			ice.merge(maxLife, maxLife);
+			return;
+		}
+		level.setBlock(pos, JerotesBlocks.ICE_SURFACE.get().defaultBlockState(), 3);
+		if (level.getBlockEntity(pos) instanceof IceSurfaceBlockEntity ice) {
+			ice.init(maxLife);
+		}
+	}
+
+	public static void placeFireOnFlammable(Level level, BlockPos pos, Entity owner) {
+		if (!(owner instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+			if (level.isEmptyBlock(pos) && BaseFireBlock.canBePlacedAt(level, pos, Direction.UP)) {
+				BlockPos below = pos.below();
+				if (level.getBlockState(below).isFlammable(level, below, Direction.UP)) {
+					level.setBlockAndUpdate(pos, BaseFireBlock.getState(level, pos));
+				}
+			}
+		}
+	}
 	//点火
 	public static void igniteBlock(Level level, BlockPos blockPos, Entity owner) {
+		if (!level.isClientSide) {
+			BlockState bs = level.getBlockState(blockPos);
+			if (bs.getBlock() instanceof IceSurfaceBlock) {
+				level.removeBlockEntity(blockPos);
+				level.setBlockAndUpdate(blockPos, Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL, 7));
+				return;
+			}
+			if (bs.is(Blocks.ICE) || bs.is(Blocks.FROSTED_ICE)) {
+				level.setBlockAndUpdate(blockPos, Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL, 7));
+				return;
+			}
+		}
+
 		if (!(owner instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
 			BlockState state = level.getBlockState(blockPos);
 			if (state.hasProperty(CampfireBlock.LIT) && !state.getValue(CampfireBlock.LIT)) {
@@ -1216,4 +1292,45 @@ public class Main {
 			}
 		}
 	}
+	public static int FoodUseFind(ItemStack itemStack, @Nullable LivingEntity livingEntity) {
+		FoodProperties foodProperties = itemStack.getFoodProperties(livingEntity);
+		if (foodProperties == null) {
+			return 0;
+		}
+		int n = 1;
+		for (Pair<MobEffectInstance, Float> pair : foodProperties.getEffects()) {
+			MobEffectInstance mobEffectInstance = pair.getFirst();
+			int n2 = mobEffectInstance.getAmplifier() + 1;
+			n += mobEffectInstance.getEffect().isBeneficial() ? n2 : -n2;
+		}
+		return n;
+	}
+
+	public static float effectiveHealth(LivingEntity livingEntity) {
+		return livingEntity.getHealth() + (livingEntity instanceof Player player ? player.experienceLevel : 0);
+	}
+
+	public static void instantKill(LivingEntity livingEntity, DamageSource damageSource) {
+		for (int i = 0; i < 40 && !livingEntity.isRemoved() && livingEntity.isAlive(); ++i) {
+			livingEntity.invulnerableTime = 0;
+			livingEntity.hurt(damageSource, Float.MAX_VALUE);
+			livingEntity.setDeltaMovement(0, 0, 0);
+		}
+		if (!livingEntity.isRemoved() && livingEntity.isAlive()) {
+			livingEntity.invulnerableTime = 0;
+			livingEntity.hurt(livingEntity.damageSources().genericKill(), Float.MAX_VALUE);
+			livingEntity.setDeltaMovement(0, 0, 0);
+		}
+		if (!livingEntity.isRemoved() && livingEntity.isAlive()) {
+			livingEntity.invulnerableTime = 0;
+			livingEntity.hurt(livingEntity.damageSources().fellOutOfWorld(), Float.MAX_VALUE);
+			livingEntity.setDeltaMovement(0, 0, 0);
+		}
+		if (!livingEntity.isRemoved() && livingEntity.isAlive()) {
+			livingEntity.setHealth(0.0f);
+			livingEntity.die(damageSource);
+		}
+		livingEntity.setDeltaMovement(0, 0, 0);
+	}
+
 }

@@ -3,8 +3,8 @@
   "category": "equipment",
   "pattern": [
     "  a",
-    " ba",
-    "c  "
+    "ab ",
+    "ca "
   ],
   "key": {
     "a": {

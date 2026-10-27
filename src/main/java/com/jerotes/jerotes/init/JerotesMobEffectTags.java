@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 public interface JerotesMobEffectTags {
 	TagKey<MobEffect> ABACK_AWAY_IMMUNE = create("jerotes:aback_away_immune");
 	TagKey<MobEffect> BLINDNESS = create("jerotes:blindness");
+	TagKey<MobEffect> DEAFNESS = create("jerotes:deafness");
 	TagKey<MobEffect> GLOWING = create("jerotes:glowing");
 	TagKey<MobEffect> TRUE_INVISIBLE = create("jerotes:true_invisible");
 	TagKey<MobEffect> TRUE_INVISIBLE_MUST_CROUCHING = create("jerotes:true_invisible_must_crouching");

@@ -5,17 +5,17 @@
     "aba",
     "bcb"
   ],
-  "ingredients": [
-    {
+  "key": {
+    "a": {
       "item": "minecraft:string"
     },
-    {
+    "b": {
       "item": "minecraft:leather"
     },
-    {
+    "c": {
       "item": "minecraft:chiseled_bookshelf"
     }
-  ],
+  },
   "result": {
     "item": "jerotes:leather_book_satchel",
     "count": 1

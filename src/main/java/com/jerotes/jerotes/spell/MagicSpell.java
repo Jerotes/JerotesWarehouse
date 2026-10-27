@@ -68,6 +68,9 @@ public class MagicSpell {
 		if (!canUse()) {
 			return false;
 		}
+		if (this.getSpellId().equals("empty")) {
+			return false;
+		}
 		if (getCaster() != null && SpellType.getCastingTickJerotes(getCaster()) >= 0 && !SpellType.getLastSpellTypeJerotes(getCaster()).isEmpty()) {
 			if (!(getMagicType2() == MagicType.ADD && getCastingTicks() <= 0)) {
 				SpellTypeInterface spellTypeInterface = SpellRegistry.getSpellTypeById(SpellType.getLastSpellTypeJerotes(getCaster()));

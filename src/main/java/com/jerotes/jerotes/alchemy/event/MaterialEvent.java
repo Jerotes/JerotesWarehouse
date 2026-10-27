@@ -243,6 +243,13 @@ public class MaterialEvent {
 			event.setEffect2(new FireAbsorptionAlchemyEffect(1, 1));
 			event.setEffect3(new JumpBoostAlchemyEffect(1, 1));
 		}
+		//烟火之星
+		if (itemStack.is(Items.GUNPOWDER)) {
+			event.setEffectCount(3);
+			event.setEffect1(new ExplosionAlchemyEffect(1, 1));
+			event.setEffect2(new FogAlchemyEffect(1, 1));
+			event.setEffect3(new GlowingAlchemyEffect(1, 1));
+		}
 		//烈焰粉
 		if (itemStack.is(Items.BLAZE_POWDER)) {
 			event.setEffectCount(3);

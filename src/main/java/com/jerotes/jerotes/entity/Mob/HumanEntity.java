@@ -870,7 +870,7 @@ public class HumanEntity extends PathfinderMob implements SpellUseEntity, UseDag
 	@Override
 	public int getSpellLevel() {
 		if (isArchmage()) {
-			return Math.max(10, this.spellLevel);
+			return Math.max(9, this.spellLevel);
 		}
 		return this.spellLevel;
 	}

@@ -65,6 +65,9 @@ public class ItemWarBeastArmor extends HorseArmorItem implements ItemBeastArmor,
 	}
 
 	@Override
+	public int getBeastArmorProtection() {
+		return this.protection;
+	}
 	public int getProtection() {
 		return this.protection;
 	}

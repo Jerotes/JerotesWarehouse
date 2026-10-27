@@ -52,7 +52,7 @@ public class EldritchBlastEntity extends BaseRayEntity {
         if (entity instanceof LivingEntity livingEntity) {
             Entity entity2 = this.getOwner();
             livingEntity.invulnerableTime = 0;
-            DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.FORCE, this, entity2);
+            DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.BYPASSES_COOLDOWN_FORCE, this, entity2);
             boolean bl = livingEntity.hurt(damageSource,
                     Main.rollDice(1, 10, livingEntity.getRandom()) + spellLevelDamage - 1
             );

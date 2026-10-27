@@ -90,8 +90,9 @@ public class ItemToolBaseFlail extends ItemToolBaseHammer {
             List<LivingEntity> list = serverLevel.getEntitiesOfClass(LivingEntity.class, user.getBoundingBox().inflate(reachs, reachs, reachs));
             for (LivingEntity hurt : list) {
                 if (hurt == null || hurt.distanceTo(user) > reachs * 4) continue;
-                if (AttackFind.FindCanNotAttack(user, hurt)) continue;
-                if (!Main.canSee(hurt, user)) continue;
+                if (user == hurt) continue;
+                //if (AttackFind.FindCanNotAttack(user, hurt)) continue;
+                if (!Main.canSee(hurt, user) && !(hurt.getBoundingBox().intersects(user.getBoundingBox()))) continue;
                 if (!hurt.hasLineOfSight(user)) continue;
                 AttackFind.attackBegin(user, hurt);
                 boolean bl2 = AttackFind.attackAfter(user, hurt, damageMulti, knockbackMulti, false, 0f);

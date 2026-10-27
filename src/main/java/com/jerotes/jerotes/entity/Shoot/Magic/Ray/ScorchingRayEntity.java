@@ -54,7 +54,7 @@ public class ScorchingRayEntity extends BaseRayEntity {
         if (entity instanceof LivingEntity livingEntity) {
             Entity entity2 = this.getOwner();
             livingEntity.invulnerableTime = 0;
-            DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.FIRE_MAGIC, this, entity2);
+            DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.BYPASSES_COOLDOWN_FIRE, this, entity2);
             boolean bl = livingEntity.hurt(damageSource,
                   Main.rollDice(2, 6, livingEntity.getRandom())
             );

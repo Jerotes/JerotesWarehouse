@@ -98,7 +98,7 @@ public class ItemToolBaseWhip extends ItemToolBaseSword {
                     }
                     continue;
                 }
-                if (!Main.canSee(hurt, user)) continue;
+                if (!Main.canSee(hurt, user) && !(hurt.getBoundingBox().intersects(user.getBoundingBox()))) continue;
                 if (!hurt.hasLineOfSight(user)) continue;
                 AttackFind.attackBegin(user, hurt);
                 boolean bl2 = AttackFind.attackAfter(user, hurt, damageMulti, knockbackMulti, false, 0f);

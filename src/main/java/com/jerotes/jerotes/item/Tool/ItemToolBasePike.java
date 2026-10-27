@@ -196,8 +196,9 @@ public class ItemToolBasePike extends TieredItem implements MeleeItem, ItemSpeci
             for (LivingEntity hurt : list) {
                 if (hurt == null || hurt.distanceTo(livingEntity) > effectiveMaxRange(livingEntity) * 0.7f) continue;
                 if (!hurt.isAlive()) continue;
-                if (AttackFind.FindCanNotAttack(livingEntity, hurt)) continue;
-                if (!Main.canSeeAngle(livingEntity, hurt.getEyePosition(), 80)) continue;
+                if (livingEntity == hurt) continue;
+                //if (AttackFind.FindCanNotAttack(livingEntity, hurt)) continue;
+                if (!Main.canSeeAngle(livingEntity, hurt.getEyePosition(), 80) && !(hurt.getBoundingBox().intersects(livingEntity.getBoundingBox()))) continue;
                 if (!hurt.hasLineOfSight(livingEntity)) continue;
                 AttackFind.attackBegin(livingEntity, hurt);
                 causeExtraKnockback(livingEntity, hurt, 1.0f, hurt.getDeltaMovement());

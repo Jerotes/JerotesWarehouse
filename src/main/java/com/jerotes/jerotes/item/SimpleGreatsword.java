@@ -32,7 +32,7 @@ public class SimpleGreatsword extends ItemToolBaseTwoHandedSword {
 			public Ingredient getRepairIngredient() {
 				return Ingredient.of(ItemTags.PLANKS);
 			}
-		}, -1.0f, -3.1F, new Properties().durability(32));
+		}, -1.0f, -3.2F, new Properties().durability(32));
 	}
 }
 

@@ -21,6 +21,7 @@ public enum SpellType implements SpellTypeInterface {
 	JEROTES_GHAST_FIREBALL("jerotes_ghast_fireball"),
 	JEROTES_ENDERDRAGON_FIREBALL("jerotes_enderdragon_fireball"),
 	JEROTES_POISON_BREATH("jerotes_poison_breath"),
+	JEROTES_COLOR_SPRAY("jerotes_color_spray"),
 	JEROTES_FIRE_BOLT("jerotes_fire_bolt"),
 	JEROTES_FROST_BOLT("jerotes_frost_bolt"),
 	JEROTES_SHOCK_BOLT("jerotes_shock_bolt"),
@@ -81,6 +82,7 @@ public enum SpellType implements SpellTypeInterface {
 	JEROTES_CIRCULAR_EVOKER_FANG("jerotes_circular_evoker_fang"),
 	JEROTES_CONJURE_VEXES("jerotes_conjure_vexes"),
 	JEROTES_POWER_WORD_KILL("jerotes_power_word_kill"),
+	JEROTES_WAIL_OF_THE_BANSHEE("jerotes_wail_of_the_banshee"),
 	JEROTES_PROBING_EYE("jerotes_probing_eye"),
 	JEROTES_ANALYTICAL_EYE("jerotes_analytical_eye"),
 	JEROTES_ELEMENTAL_CONTRACT("jerotes_elemental_contract"),
@@ -114,6 +116,7 @@ public enum SpellType implements SpellTypeInterface {
 			case JEROTES_GHAST_FIREBALL -> SpellList.GhastFireball(level, caster, target);
 			case JEROTES_ENDERDRAGON_FIREBALL -> SpellList.EnderdragonFireball(level, caster, target);
 			case JEROTES_POISON_BREATH -> SpellList.PoisonBreath(level, caster, target);
+			case JEROTES_COLOR_SPRAY -> SpellList.ColorSpray(level, caster, target);
 			case JEROTES_FIRE_BOLT -> SpellList.FireBolt(level, caster, target);
 			case JEROTES_FROST_BOLT -> SpellList.FrostBolt(level, caster, target);
 			case JEROTES_SHOCK_BOLT -> SpellList.ShockBolt(level, caster, target);
@@ -174,6 +177,7 @@ public enum SpellType implements SpellTypeInterface {
 			case JEROTES_CIRCULAR_EVOKER_FANG -> SpellList.CircularEvokerFang(level, caster, target);
 			case JEROTES_CONJURE_VEXES -> SpellList.ConjureVexes(level, caster, target);
 			case JEROTES_POWER_WORD_KILL -> SpellList.PowerWordKill(level, caster, target);
+		case JEROTES_WAIL_OF_THE_BANSHEE -> SpellList.WailOfTheBanshee(level, caster, target);
 			case JEROTES_PROBING_EYE -> SpellList.ProbingEye(level, caster, target);
 			case JEROTES_ANALYTICAL_EYE -> SpellList.AnalyticalEye(level, caster, target);
 			case JEROTES_ELEMENTAL_CONTRACT -> SpellList.ElementalContract(level, caster, target);

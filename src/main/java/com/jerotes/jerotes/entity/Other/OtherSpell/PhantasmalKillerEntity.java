@@ -75,8 +75,8 @@ public class PhantasmalKillerEntity extends OtherSpellBaseEntity implements Trac
             if (!this.level().isClientSide()) {
                 if (getTarget() instanceof LivingEntity livingEntity && getTarget().isAlive()) {
                     livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.PHANTASMAL_KILLER.get(), time, 0, false, false), this.getOwner());
-                    livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.ABACK.get(), time, (int)Math.ceil(getSpellLevel() / 3.0), false, false), this.getOwner());
-                    livingEntity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, time, 0, false, false), this.getOwner());
+                    livingEntity.addEffect(new MobEffectInstance(JerotesMobEffects.ABACK.get(), 5, (int)Math.ceil(getSpellLevel() / 3.0), false, false), this.getOwner());
+                    livingEntity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 5, 0, false, false), this.getOwner());
                     if (this.getLifeTick() % 120 == 10) {
                         if (this.getLifeTick() == 10) {
                             if (EntityAndItemFind.savingSpellThrow(livingEntity)) {

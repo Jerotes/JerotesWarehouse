@@ -1,7 +1,7 @@
 package com.jerotes.jerotes.entity.Shoot.Magic.MagicSpray;
 
 import com.jerotes.jerotes.JerotesWarehouse;
-import com.jerotes.jerotes.client.particle.ElementBoltParticle;
+import com.jerotes.jerotes.client.particle.BoltParticleOptions;
 import com.jerotes.jerotes.entity.Shoot.Magic.MagicAboutEntity;
 import com.jerotes.jerotes.forge.JerotesStopSpellEvent;
 import com.jerotes.jerotes.init.JerotesParticleTypes;
@@ -93,7 +93,7 @@ public abstract class BaseMagicSprayEntity extends MagicAboutEntity {
                 for (Entity entity : list) {
                     if (entity == owner) continue;
                     if (entity.distanceTo(owner) > getMaxReach()) continue;
-                    if (!Main.isIn3DCone(owner, entity.position(), getSpellAngle())) continue;
+                    if (!Main.isEntityIn3DCone(owner, entity, getSpellAngle())) continue;
                     if (!Main.hasLineOfSightEntity(entity, owner)) continue;
                     if (entity instanceof LivingEntity livingEntity) {
                         this.useMagicTo(livingEntity);
@@ -170,15 +170,13 @@ public abstract class BaseMagicSprayEntity extends MagicAboutEntity {
                         BlockPos firePos = hitPos.relative(direction);
 
                         if (!checked.add(firePos)) continue;
-                        Main.extinguishFire(level, firePos, owner);
-                        Main.freezeBlock(level, firePos, owner);
+                        handleBlock(firePos, level.getBlockState(firePos));
                         continue;
                     }
 
                     BlockPos targetPos = BlockPos.containing(target);
                     if (!checked.add(targetPos)) continue;
-                    Main.extinguishFire(level, targetPos, owner);
-                    Main.freezeBlock(level, targetPos, owner);
+                    handleBlock(targetPos, level.getBlockState(targetPos));
                 }
             }
         }
@@ -197,7 +195,7 @@ public abstract class BaseMagicSprayEntity extends MagicAboutEntity {
         }
     }
 
-    private void spawnConeParticles(int lifeTick) {
+    public void spawnConeParticles(int lifeTick) {
         Entity owner = this.getOwner();
         if (owner == null) return;
         if (getTrailParticle() == null) return;
@@ -252,7 +250,7 @@ public abstract class BaseMagicSprayEntity extends MagicAboutEntity {
         }
     }
 
-    private void spawnBoltParticles() {
+    public void spawnBoltParticles() {
         Entity owner = this.getOwner();
         if (owner == null) return;
 
@@ -312,17 +310,12 @@ public abstract class BaseMagicSprayEntity extends MagicAboutEntity {
 
             Vec3 delta = target.subtract(origin);
 
-            float[] rgb = gradientColor(
-                    beamLightI(),
-                    beamLightII(),
-                    beamLightIII(),
-                    depth
-            );
+            float[] rgb = boltParticleColor(angleRad, depth);
 
             float scale = 0.85f + depth * 0.35f;
 
-            ElementBoltParticle.BoltParticleOptions options =
-                    new ElementBoltParticle.BoltParticleOptions(
+            BoltParticleOptions options =
+                    new BoltParticleOptions(
                             rgb[0],
                             rgb[1],
                             rgb[2],
@@ -343,7 +336,24 @@ public abstract class BaseMagicSprayEntity extends MagicAboutEntity {
             );
         }
     }
-    private static float[] gradientColor(int c1, int c2, int c3, float t) {
+    // 环带取色：默认走 beamLight I/II/III 三段插值，子类可覆盖（例如按角度排彩虹）
+    public int stripColor(float t) {
+        return packRgb(gradientColor(beamLightI(), beamLightII(), beamLightIII(), t));
+    }
+
+    // bolt 粒子取色：默认按深度，子类可覆盖（例如按环绕角排彩虹）
+    public float[] boltParticleColor(float angleRad, float depth) {
+        return gradientColor(beamLightI(), beamLightII(), beamLightIII(), depth);
+    }
+
+    protected static int packRgb(float[] rgb) {
+        int r = (int) (Mth.clamp(rgb[0], 0f, 1f) * 255f);
+        int g = (int) (Mth.clamp(rgb[1], 0f, 1f) * 255f);
+        int b = (int) (Mth.clamp(rgb[2], 0f, 1f) * 255f);
+        return r << 16 | g << 8 | b;
+    }
+
+    public static float[] gradientColor(int c1, int c2, int c3, float t) {
         int r, g, b;
         if (t < 0.5f) {
             float lt = t / 0.5f;
@@ -362,7 +372,7 @@ public abstract class BaseMagicSprayEntity extends MagicAboutEntity {
         return 3;
     }
     public int getStripeStop() {
-        return 15;
+        return 12;
     }
     public int getUseLife() {
         return 10;

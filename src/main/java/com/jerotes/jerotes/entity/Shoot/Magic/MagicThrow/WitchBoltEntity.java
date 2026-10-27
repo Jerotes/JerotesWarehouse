@@ -175,7 +175,7 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
             this.setDeltaMovement(0, 0, 0);
             this.setNoGravity(true);
             this.setPos(target.position().add(0, target.getBbHeight() / 2, 0));
-            this.setRot(target.getYRot() - this.getRelativeYaw(), target.getXRot() - this.getRelativePitch());
+            this.setRot(this.getRelativeYaw() - target.getYRot(), this.getRelativePitch() + target.getXRot());
             if (!target.isAlive()) {
                 this.lastBreak();
                 this.endConcentration();
@@ -241,7 +241,7 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
             this.setUseful(true);
             this.setTarget(livingEntity);
             this.addHurtUUID(entity.getUUID());
-            this.setRelativeYaw(this.getYRot() - livingEntity.getYRot());
+            this.setRelativeYaw(this.getYRot() + livingEntity.getYRot());
             this.setRelativePitch(this.getXRot() - livingEntity.getXRot());
         }
     }
@@ -280,7 +280,6 @@ public class WitchBoltEntity extends MagicAboutThrowEntity implements Concentrat
     public int roundLightI() {
         return 0x3c44ff;
     }
-
     public int roundLightII() {
         return 0x6392ff;
     }

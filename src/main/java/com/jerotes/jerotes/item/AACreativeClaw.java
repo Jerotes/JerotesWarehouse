@@ -102,9 +102,9 @@ public class AACreativeClaw extends Item {
 //			Main.spawnUnevenBlockByPos(serverLevel, livingEntity.getOnPos(), 4);
 		}
 //		BaseBeamEntity baseBeamEntity = new BaseBeamEntity(JerotesEntityType.TEST_BEAM.get(), level);
-//		baseBeamEntity.setPos(player.getX(), player.getY(0.75), player.getZ());
+//		baseBeamEntity.setPos(player.getX(), player.getY(0.75) - baseBeamEntity.getBbHeight()/2, player.getZ());
 //		baseBeamEntity.setLightLockX((float) player.getX());
-//		baseBeamEntity.setLightLockY((float) (player.getY(0.75)));
+//		baseBeamEntity.setLightLockY((float) (player.getY(0.75) - baseBeamEntity.getBbHeight()/2));
 //		baseBeamEntity.setLightLockZ((float) player.getZ());
 //		baseBeamEntity.setOwner(player);
 //		level.addFreshEntity(baseBeamEntity);

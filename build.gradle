@@ -34,6 +34,7 @@ minecraft {
     runs {
         configureEach {
             workingDirectory project.file('run')
+            jvmArgs '-Xmx2G', '-Xms512M', '-XX:MaxMetaspaceSize=512m'
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             mods {

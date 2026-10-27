@@ -77,6 +77,7 @@ public class SunbeamRenderer<T extends SunbeamEntity> extends EntityRenderer<T> 
 
 		poseStack.pushPose();
 
+		poseStack.translate(0.0f, t.getBbHeight() / 2.0f, 0.0f);
 		renderLightLock(t, f13, f14, f15, partialTick, t.tickCount, poseStack, multiBufferSource, packedLight);
 
 		poseStack.popPose();

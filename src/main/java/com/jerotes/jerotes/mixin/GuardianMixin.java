@@ -2,7 +2,9 @@ package com.jerotes.jerotes.mixin;
 
 import com.jerotes.jerotes.entity.Interface.SpellUseEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.ElderGuardian;
 import net.minecraft.world.entity.monster.Guardian;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;

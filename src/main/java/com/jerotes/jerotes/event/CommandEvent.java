@@ -50,6 +50,7 @@ public class CommandEvent {
 	@SubscribeEvent
 	public static void registerCommand4(RegisterCommandsEvent event) {
 		event.getDispatcher().register(Commands.literal("jerotes").requires(s -> s.hasPermission(4))
+				.then(PotionCommands.build(event))
 				//炼金
 				.then(Commands.literal("alchemy")
 						.then(Commands.literal("potion")

@@ -74,6 +74,7 @@ public class BaseBeamRenderer<T extends BaseBeamEntity> extends EntityRenderer<T
         float f15 = t.targetZProgress - startZ;
 
         poseStack.pushPose();
+        poseStack.translate(0.0f, t.getBbHeight() / 2.0f, 0.0f);
         renderLightLock(t, f13, f14, f15, partialTick, t.tickCount, poseStack, buffer, light);
         poseStack.popPose();
 

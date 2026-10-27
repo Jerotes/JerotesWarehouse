@@ -2,6 +2,8 @@ package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.effect.*;
+import com.jerotes.jerotes.effect.DeafenedMobEffect;
+import com.jerotes.jerotes.effect.ShapeshiftingMobEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -21,6 +23,8 @@ public class JerotesMobEffects {
 			.addAttributeModifier(Attributes.FLYING_SPEED, "6E4DCFE3-E7E5-81E7-4511-3257AECFF1D7", -5, AttributeModifier.Operation.ADDITION)
 			.addAttributeModifier(Attributes.JUMP_STRENGTH, "ED35696B-C393-0685-EC01-D3D5C2D9107F", -5, AttributeModifier.Operation.ADDITION)
 			.addAttributeModifier(Attributes.ATTACK_DAMAGE, "AE438D6F-85CD-FCA0-6047-CBDDA8BEDD95", -60, AttributeModifier.Operation.ADDITION));
+	public static final RegistryObject<MobEffect> DEAFENED = REGISTRY.register("deafened", DeafenedMobEffect::new);
+	public static final RegistryObject<MobEffect> SHAPESHIFTING = REGISTRY.register("shapeshifting", ShapeshiftingMobEffect::new);
 	public static final RegistryObject<MobEffect> ENSLAVEMENT = REGISTRY.register("enslavement", () -> new EnslavementMobEffect()
 			.addAttributeModifier(Attributes.MOVEMENT_SPEED, "31F2026E-1894-8C79-23F5-A126E9A61B9F", -5, AttributeModifier.Operation.ADDITION)
 			.addAttributeModifier(Attributes.FLYING_SPEED, "A7F9C83C-3985-F513-1A19-0B9031C98BCC", -5, AttributeModifier.Operation.ADDITION)

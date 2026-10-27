@@ -150,12 +150,12 @@ public class EntityAboutEvent {
 		LivingEntity hurt = event.getEntity();
 		Entity attacker = event.getSource().getEntity();
 		Entity attackerUse = event.getSource().getDirectEntity();
-		if (hurt != null && AttackFind.noKnockback(event.getSource())) {
-			Main.getJerotesPersistentData(hurt).putDouble("jerotes_no_knockback_tag", 1);
-		}
-		else if (hurt != null) {
-			Main.getJerotesPersistentData(hurt).putDouble("jerotes_no_knockback_tag", 0);
-		}
+//		if (hurt != null && AttackFind.noKnockback(event.getSource())) {
+//			Main.getJerotesPersistentData(hurt).putDouble("jerotes_no_knockback_tag", 1);
+//		}
+//		else if (hurt != null) {
+//			Main.getJerotesPersistentData(hurt).putDouble("jerotes_no_knockback_tag", 0);
+//		}
 		if (attacker instanceof LivingEntity livingEntity) {
 			//buff消失
 			attacker.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTagOrEmpty(JerotesMobEffectTags.REMOVE_AFTER_ATTACK).forEach(effect -> {
@@ -357,7 +357,7 @@ public class EntityAboutEvent {
 		LivingEntity entity = event.getEntity();
 		if (entity == null || !entity.isAlive())
 			return;
-		Main.persistentDataDoubleReduceToZero(entity, "jerotes_no_knockback_tag", true);
+//		Main.persistentDataDoubleReduceToZero(entity, "jerotes_no_knockback_tag", true);
 		Main.persistentDataDoubleReduceToZero(entity, "jerotes_sun_burn_tick", true);
 		//伤害间隔
 		if (Main.getJerotesPersistentData(entity).getFloat("jerotes_boss_hurt_cooldown") > 0) {

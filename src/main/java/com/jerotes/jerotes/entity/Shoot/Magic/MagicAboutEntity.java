@@ -148,9 +148,9 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
     }
 
     @Nullable
-    private Entity lastHurt;
+    public Entity lastHurt;
     @Nullable
-    private UUID lastHurtUUID;
+    public UUID lastHurtUUID;
 
     @Nullable
     public Entity getLastHurt() {
@@ -167,17 +167,11 @@ public abstract class MagicAboutEntity extends MagicAbstractHurtingProjectile im
     }
 
     public List<UUID> getHurtUUIDs() {
-        //        Optional<UUID> single = this.entityData.get(HURT_ID);
-//        if (single.isPresent()) {
-//            combined.add(single.get());
-//        }
-        Set<UUID> combined = new HashSet<>(this.hurtUUIDList);
-        return new ArrayList<>(combined);
+        return this.hurtUUIDList;
     }
 
     public void addHurtUUID(@Nullable UUID uUID) {
         if (uUID == null) return;
-//        this.entityData.set(HURT_ID, Optional.of(uUID));
         if (!this.hurtUUIDList.contains(uUID)) {
             this.hurtUUIDList.add(uUID);
         }

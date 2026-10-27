@@ -7,6 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import com.jerotes.jerotes.client.renderer.WailOfTheBansheeRenderer;
 
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -27,6 +28,7 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.RAIN_SPELL_CLOUD.get(), NoopRenderer::new);
 
         event.registerEntityRenderer(JerotesEntityType.POISON_BREATH_AREA.get(), BreathAreaRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.COLOR_SPRAY_AREA.get(), BreathAreaRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.CLOUD_OF_DAGGERS.get(), CloudOfDaggersRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.MAGIC_BONFIRE.get(), MagicBonfireRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.INSECT_PLAGUE.get(), InsectPlagueRenderer::new);
@@ -42,6 +44,7 @@ public class JerotesEntityRenderers {
         event.registerEntityRenderer(JerotesEntityType.PHANTASMAL_KILLER.get(), PhantasmalKillerRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.FIREBALL.get(), FireballRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.ICE_STORM.get(), IceStormRenderer::new);
+        event.registerEntityRenderer(JerotesEntityType.WAIL_OF_THE_BANSHEE.get(), WailOfTheBansheeRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.THUNDERWAVE.get(), ThunderwaveRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.POWER_WORD_KILL.get(), PowerWordKillRenderer::new);
         event.registerEntityRenderer(JerotesEntityType.LOCK_AIM.get(), NoopRenderer::new);

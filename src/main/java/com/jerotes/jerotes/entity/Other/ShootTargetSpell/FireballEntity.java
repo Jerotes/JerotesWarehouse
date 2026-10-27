@@ -4,6 +4,7 @@ import com.jerotes.jerotes.init.JerotesDamageTypes;
 import com.jerotes.jerotes.init.JerotesEntityType;
 import com.jerotes.jerotes.init.JerotesMobEffects;
 import com.jerotes.jerotes.util.AttackFind;
+import com.jerotes.jerotes.util.EntityAndItemFind;
 import com.jerotes.jerotes.util.Main;
 import com.jerotes.jerotes.util.ParticlesUse;
 import net.minecraft.core.BlockPos;
@@ -92,11 +93,13 @@ public class FireballEntity extends AbstractFireballEntity {
                 } else {
                     knock = 0.0;
                 }
-                double d2 = Math.max(0.2, 1.2 - knock);
-                livingHurt.setDeltaMovement(livingHurt.getDeltaMovement().add(-(this.getX() - livingHurt.getX()) * d2 / 3, -(this.getY() - livingHurt.getY()) * d2 / 4, -(this.getZ() - livingHurt.getZ()) * d2 / 3));
+                if (!EntityAndItemFind.isNoSpecialKnockback(hurt.getType())) {
+                    double d2 = Math.max(0.2, 1.2 - knock);
+                    livingHurt.setDeltaMovement(livingHurt.getDeltaMovement().add(-(this.getX() - livingHurt.getX()) * d2 / 3, -(this.getY() - livingHurt.getY()) * d2 / 4, -(this.getZ() - livingHurt.getZ()) * d2 / 3));
 
-                if (Main.mobSizeSmall(hurt) || Main.mobSizeMedium(hurt) || Main.mobSizeLarge(hurt)) {
-                    livingHurt.setDeltaMovement(livingHurt.getDeltaMovement().add(0, (this.getY() < livingHurt.getY() ? -1 : 1) * strength / 24, 0));
+                    if (Main.mobSizeSmall(hurt) || Main.mobSizeMedium(hurt) || Main.mobSizeLarge(hurt)) {
+                        livingHurt.setDeltaMovement(livingHurt.getDeltaMovement().add(0, (this.getY() < livingHurt.getY() ? -1 : 1) * strength / 24, 0));
+                    }
                 }
             }
             if (hurt instanceof ItemEntity itemEntity && itemEntity.getItem().getRarity() == Rarity.COMMON) {

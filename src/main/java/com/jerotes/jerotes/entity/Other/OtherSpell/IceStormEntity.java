@@ -34,6 +34,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.UUID;
+import com.jerotes.jerotes.block.IceSurfaceBlock;
 
 public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEntity, OwnableEntity, MagicAbout, BreakShieldEntity {
     public static final int RADIUS = 6;
@@ -61,16 +62,6 @@ public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEnt
     public int getMaxLife() {
         return 120;
     }
-    public boolean shouldPush() {
-        return this.getLifeTick() > 30;
-    }
-    protected void doPush(Entity entity) {
-        double radius = 6.0;
-        double radiusSq = radius * radius;
-        if (shouldPush() && entity.distanceToSqr(this) <= radiusSq && entity.onGround()) {
-            entity.makeStuckInBlock(Blocks.AIR.defaultBlockState(), new Vec3(0.5D, 1.0D, 0.5D));
-        }
-    }
 
     @Override
     public void tick() {
@@ -80,28 +71,6 @@ public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEnt
             for (int i = 0; i < 12; ++i) {
                 serverLevel.sendParticles(ParticleTypes.SNOWFLAKE, this.getRandomX(0.5), this.getRandomY(), this.getRandomZ(0.5), 0, 0.0, 0.0, 0.0, 0.0);
             }
-            if (this.getLifeTick() > 20) {
-                float f = Math.min(0.5f, (this.getLifeTick() - 20) / 30f);
-                for (int i = 0; i < 36; ++i) {
-                    double x = this.getRandomX(f);
-                    double y = this.getY() + 0.2f;
-                    double z = this.getRandomZ(f);
-                    double dx = x - this.getX();
-                    double dz = z - this.getZ();
-                    if (dx * dx + dz * dz <= 25.0) {
-                        serverLevel.sendParticles(
-                                ParticleTypes.SNOWFLAKE,
-                                x, y, z,
-                                0, 0, 0, 0, 0
-                        );
-                        serverLevel.sendParticles(
-                                new BlockParticleOption(ParticleTypes.BLOCK, Blocks.FROSTED_ICE.defaultBlockState()),
-                                x, y, z,
-                                0, 0, 0, 0, 0
-                        );
-                    }
-                }
-            }
         }
         //攻击
         if (this.getLifeTick() == 20) {
@@ -109,7 +78,7 @@ public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEnt
             double radius = 6.0;
             double radiusSq = radius * radius;
             for (LivingEntity livingEntity : list) {
-                if (livingEntity.distanceToSqr(this) <= radiusSq) {
+                if (livingEntity.distanceToSqr(this) <= (radiusSq + ((Main.mobWidth(livingEntity) / 2) * (Main.mobWidth(livingEntity) / 2)))) {
                     this.dealDamageTo(livingEntity);
                 }
             }
@@ -123,16 +92,28 @@ public class IceStormEntity extends OtherSpellBaseEntity implements TraceableEnt
             BlockPos center = this.blockPosition();
             int radius = 6;
             for (int dx = -radius; dx <= radius; dx++) {
-                for (int dy = -radius; dy <= radius; dy++) {
-                    for (int dz = -radius; dz <= radius; dz++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    if (dx * dx + dz * dz > radius * radius) {
+                        continue;
+                    }
+                    for (int dy = -radius; dy <= radius; dy++) {
                         BlockPos pos = center.offset(dx, dy, dz);
                         Main.freezeBlock(serverLevel, pos, getOwner());
+                        BlockState here = serverLevel.getBlockState(pos);
+                        if (here.isAir() || here.getBlock() instanceof IceSurfaceBlock) {
+                            if (here.getBlock() instanceof IceSurfaceBlock || here.isAir() && serverLevel.getBlockState(pos.below()).isSolid()) {
+                                Main.placeIceSurface(serverLevel, pos, 120);
+                            }
+                        }
                         Main.extinguishFire(serverLevel, pos, getOwner());
                     }
                 }
             }
             for (int dx = -radius; dx <= radius; dx++) {
                 for (int dz = -radius; dz <= radius; dz++) {
+                    if (dx * dx + dz * dz > radius * radius) {
+                        continue;
+                    }
                     for (int dy = -12; dy < 0; dy++) {
                         BlockPos pos = center.offset(dx, dy, dz);
                         Main.freezeBlock(serverLevel, pos, getOwner());

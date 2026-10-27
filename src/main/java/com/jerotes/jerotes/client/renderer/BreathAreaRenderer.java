@@ -151,9 +151,10 @@ public class BreathAreaRenderer extends EntityRenderer<BaseBreathAreaEntity> {
 			int alpha = (int) (Mth.clamp(alphaMul * flick, 0f, 1f) * globalFade * 200);
 
 			float colorT = ((angleDeg % 360f) + 360f) % 360f / 360f;
-			int r = lerpColorChannel(colorI, colorII, colorIII, colorT, 16);
-			int g = lerpColorChannel(colorI, colorII, colorIII, colorT, 8);
-			int b = lerpColorChannel(colorI, colorII, colorIII, colorT, 0);
+			int rgb = entityIn.stripColor(colorT);
+			int r = (rgb >> 16) & 0xFF;
+			int g = (rgb >> 8) & 0xFF;
+			int b = rgb & 0xFF;
 
 			addVertex(consumer, matrix, normalMat, in0.subtract(entityRenderPos), r, g, b, alpha, 0, 0);
 			addVertex(consumer, matrix, normalMat, out0.subtract(entityRenderPos), r, g, b, alpha, 1, 0);

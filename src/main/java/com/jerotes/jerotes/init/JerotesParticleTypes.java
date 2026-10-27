@@ -2,7 +2,7 @@ package com.jerotes.jerotes.init;
 
 import com.jerotes.jerotes.JerotesWarehouse;
 import com.jerotes.jerotes.client.particle.BallParticleOptions;
-import com.jerotes.jerotes.client.particle.ElementBoltParticle;
+import com.jerotes.jerotes.client.particle.BoltParticleOptions;
 import com.jerotes.jerotes.client.particle.SummonParticleOptions;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleType;
@@ -14,6 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class JerotesParticleTypes {
 	public static final DeferredRegister<ParticleType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, JerotesWarehouse.MODID);
 	public static final RegistryObject<SimpleParticleType> NULL = REGISTRY.register("null", () -> new SimpleParticleType(false));
+	public static final RegistryObject<SimpleParticleType> WAIL_OF_THE_BANSHEE_DISPLAY = REGISTRY.register("wail_of_the_banshee_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> ABACK = REGISTRY.register("aback", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> FLAME = REGISTRY.register("flame", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> FROST = REGISTRY.register("frost", () -> new SimpleParticleType(true));
@@ -50,16 +51,16 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> TARGET = REGISTRY.register("target", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> LIFE_MEND = REGISTRY.register("life_mend", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> CURE_WOUNDS = REGISTRY.register("cure_wounds", () -> new SimpleParticleType(true));
-	public static final RegistryObject<ParticleType<ElementBoltParticle.BoltParticleOptions>> ELEMENT_BOLT =
+	public static final RegistryObject<ParticleType<BoltParticleOptions>> ELEMENT_BOLT =
 			REGISTRY.register(
 					"element_bolt",
-					() -> new ParticleType<ElementBoltParticle.BoltParticleOptions>(
+					() -> new ParticleType<BoltParticleOptions>(
 							false,
-							ElementBoltParticle.BoltParticleOptions.DESERIALIZER
+							BoltParticleOptions.DESERIALIZER
 					) {
 						@Override
-						public Codec<ElementBoltParticle.BoltParticleOptions> codec() {
-							return ElementBoltParticle.BoltParticleOptions.CODEC;
+						public Codec<BoltParticleOptions> codec() {
+							return BoltParticleOptions.CODEC;
 						}
 					}
 			);
@@ -105,6 +106,7 @@ public class JerotesParticleTypes {
 	public static final RegistryObject<SimpleParticleType> BREEZE_WIND_CHARGE_DISPLAY = REGISTRY.register("breeze_wind_charge_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> GHAST_FIREBALL_DISPLAY = REGISTRY.register("ghast_fireball_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> ENDERDRAGON_FIREBALL_DISPLAY = REGISTRY.register("enderdragon_fireball_display", () -> new SimpleParticleType(true));
+	public static final RegistryObject<SimpleParticleType> COLOR_SPRAY_DISPLAY = REGISTRY.register("color_spray_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> POISON_BREATH_DISPLAY = REGISTRY.register("poison_breath_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> FIRE_BOLT_DISPLAY = REGISTRY.register("fire_bolt_display", () -> new SimpleParticleType(true));
 	public static final RegistryObject<SimpleParticleType> FROST_BOLT_DISPLAY = REGISTRY.register("frost_bolt_display", () -> new SimpleParticleType(true));

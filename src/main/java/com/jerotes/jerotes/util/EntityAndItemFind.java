@@ -132,7 +132,7 @@ public class EntityAndItemFind {
 		MinecraftForge.EVENT_BUS.post(event);
 		return event.isMerorDamage();
 	}
-	//是否无法缴械
+	//是否设定上未死亡
 	public static boolean isLoreUndying(EntityType type) {
 		return type.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:lore_undying")));
 	}
@@ -146,6 +146,19 @@ public class EntityAndItemFind {
 		return type.is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:snowball_can_attack")));
 	}
 	//是否目盲
+	public static boolean targetDeafness(LivingEntity livingEntity) {
+		return livingEntity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:deafness")));
+	}
+
+	public static boolean targetDeafnessTrue(LivingEntity livingEntity) {
+		AtomicBoolean can = new AtomicBoolean(false);
+		livingEntity.level().registryAccess().registryOrThrow(Registries.MOB_EFFECT).getTagOrEmpty(JerotesMobEffectTags.DEAFNESS).forEach(effect -> {
+			if (livingEntity.hasEffect(effect.get())) {
+				can.set(true);
+			}
+		});
+		return can.get() || EntityAndItemFind.targetDeafness(livingEntity);
+	}
 	public static boolean targetBlindness(LivingEntity livingEntity) {
 		return livingEntity.getType().is(TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("jerotes:blindness")));
 	}

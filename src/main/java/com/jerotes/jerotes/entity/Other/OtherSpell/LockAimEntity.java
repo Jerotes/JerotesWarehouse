@@ -55,6 +55,10 @@ public class LockAimEntity extends OtherSpellBaseEntity implements TraceableEnti
             this.getOwner().lookAt(EntityAnchorArgument.Anchor.EYES, this.getTarget().getPosition(0.02f).add(0, Main.mobHeight(getTarget()) * 0.7f, 0));
           //  lookAt(getOwner(),getTarget(),90,90);
         }
+
+        if (this.getTarget() == null || !this.getTarget().isAlive()) {
+            this.endConcentration();
+        }
     }
 
 

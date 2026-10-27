@@ -40,6 +40,9 @@ public interface UseBowEntity {
     }
     //发射
     default void useBowShoot(LivingEntity livingEntity, LivingEntity livingEntityTarget, float f, int n, int n2) {
+        useBowShoot(livingEntity, livingEntityTarget, f, n, n2, 3.0f);
+    }
+    default void useBowShoot(LivingEntity livingEntity, LivingEntity livingEntityTarget, float f, int n, int n2, float powerMultiplier) {
         if (livingEntityTarget == null) {
             return;
         }
@@ -86,7 +89,7 @@ public interface UseBowEntity {
         double d3 = livingEntityTarget.getZ() - livingEntity.getZ();
         double d4 = Math.sqrt(d * d + d3 * d3);
         //力度
-        float power = powerTime * 3.0F;
+        float power = powerTime * powerMultiplier;
         if (itemStackBow.getItem() instanceof ItemToolBaseBow itemToolBaseBow) {
             power = itemToolBaseBow.getArrowSpeed(powerTime);
         }

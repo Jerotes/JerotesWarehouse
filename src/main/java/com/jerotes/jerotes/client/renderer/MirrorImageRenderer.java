@@ -33,8 +33,8 @@ public class MirrorImageRenderer extends EntityRenderer<MirrorImageEntity> {
             return;
         }
         if (ownerRenderer instanceof JerotesChangeEntityRenderer jerotesChangeEntityRenderer) {
-            this.shadowRadius = jerotesChangeEntityRenderer.getJerotesShadowRadius();
-            this.shadowStrength = jerotesChangeEntityRenderer.getJerotesShadowStrength();
+            this.shadowRadius = mirror.isInvisible() ? 0 : jerotesChangeEntityRenderer.getJerotesShadowRadius();
+            this.shadowStrength = mirror.isInvisible() ? 0 : jerotesChangeEntityRenderer.getJerotesShadowStrength();
         }
         float ownerYaw = Mth.lerp(partialTick, owner.yRotO, owner.getYRot());
         poseStack.pushPose();

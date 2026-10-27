@@ -47,12 +47,12 @@ public class DamageTypeEvent {
 					f /= 2;
 				}
 			}
-			//暗蚀
-			if (AttackFind.isNecroticDamage(attackBy)) {
-				if (entity.getMobType() == MobType.UNDEAD) {
-					f /= 2;
-				}
-			}
+//			//暗蚀
+//			if (AttackFind.isNecroticDamage(attackBy)) {
+//				if (entity.getMobType() == MobType.UNDEAD) {
+//					f /= 2;
+//				}
+//			}
 //			//光耀
 //			if (AttackFind.isRadiantDamage(attackBy)) {
 //				if (entity.getMobType() == MobType.UNDEAD) {

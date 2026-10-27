@@ -1,9 +1,10 @@
 package com.jerotes.jerotes.item.Interface;
 
 public interface ItemBeastArmor {
-    default int getProtection() {
+    default int getBeastArmorProtection() {
         return 0;
     }
+
     default double getToughness() {
         return 0;
     }

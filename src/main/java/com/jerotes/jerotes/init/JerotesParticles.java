@@ -35,6 +35,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VI.get(), ElementParticle.Provider::new);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VII.get(), ElementParticle.Provider::new);
 		event.registerSpriteSet(JerotesParticleTypes.ANESTHETIZED_VIII.get(), ShootParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.WAIL_OF_THE_BANSHEE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.SPELL_LEVEL_I.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.SPELL_LEVEL_II.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.SPELL_LEVEL_III.get(), DisplayParticle::provider);
@@ -80,6 +81,7 @@ public class JerotesParticles {
 		event.registerSpriteSet(JerotesParticleTypes.BREEZE_WIND_CHARGE_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.GHAST_FIREBALL_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.ENDERDRAGON_FIREBALL_DISPLAY.get(), DisplayParticle::provider);
+		event.registerSpriteSet(JerotesParticleTypes.COLOR_SPRAY_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.POISON_BREATH_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.FIRE_BOLT_DISPLAY.get(), DisplayParticle::provider);
 		event.registerSpriteSet(JerotesParticleTypes.FROST_BOLT_DISPLAY.get(), DisplayParticle::provider);

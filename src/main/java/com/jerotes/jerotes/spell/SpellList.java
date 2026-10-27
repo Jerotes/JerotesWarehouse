@@ -142,6 +142,14 @@ public class SpellList {
 			public float getSpellDistanceBase() {
 				return 240;
 			}
+			//
+			public int getCustomSubcategoryReachAdd() {
+				return 1;
+			}
+			public int usedByNonPlayerFindSubcategory(LivingEntity livingEntity) {
+				return 0;
+			}
+			//
 		};
 	}
 	//末影龙火球
@@ -161,6 +169,30 @@ public class SpellList {
 			}
 			public float getSpellDistanceBase() {
 				return 60;
+			}
+		};
+	}
+	//七彩喷射
+	public static MagicSpell ColorSpray(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "color_spray", JerotesParticleTypes.COLOR_SPRAY_DISPLAY.get(), JerotesSoundEvents.MAGIC_COLOR_SPRAY){
+			public boolean spellFindUse() {
+				return SpellFind.ColorSpray(getCaster(), getTarget(), getSpellLevel(), getCaster() instanceof Player);
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.ILLUSION;
+			}
+			public float getSpellDistanceBase() {
+				int level = getSpellLevel();
+				if (level <= 3) return 4.5f;
+				if (level <= 6) return 9.0f;
+				if (level <= 8) return 18.0f;
+				return 27.0f;
+			}
+			public int usedByNonPlayerFindSubcategory(LivingEntity livingEntity) {
+				return 0;
 			}
 		};
 	}
@@ -530,6 +562,9 @@ public class SpellList {
 		return new MagicSpell(n, caster, target, MagicType.SHOOT, MagicType.MAIN, "ray_of_sickness", JerotesParticleTypes.RAY_OF_SICKNESS_DISPLAY.get(), JerotesSoundEvents.MAGIC_RAY_OF_SICKNESS){
 			public boolean spellFindUse() {
 				return SpellFind.RayofSickness(getCaster(), getTarget(), getSpellLevel(), 6 + (getSpellLevel() - 1) * 3, (int)Math.ceil((getSpellLevel()) / 2.0), getSpellAccuracy(), 1, 5, getCaster() instanceof Player);
+			}
+			public int getBaseSpellLevel() {
+				return 1;
 			}
 			public String getSpellModId() {
 				return JerotesWarehouse.MODID;
@@ -1956,6 +1991,29 @@ public class SpellList {
 			}
 			public SpellSchool getSpellSchool() {
 				return SpellSchool.DIVINATION;
+			}
+			public boolean canUseTargetNone() {
+				return true;
+			}
+		};
+	}
+	//女妖之嚎
+	public static MagicSpell WailOfTheBanshee(int n, LivingEntity caster, Entity target) {
+		return new MagicSpell(n, caster, target, MagicType.SELF, MagicType.MAIN, "wail_of_the_banshee", JerotesParticleTypes.WAIL_OF_THE_BANSHEE_DISPLAY.get(), JerotesSoundEvents.MAGIC_WAIL_OF_THE_BANSHEE){
+			public boolean spellFindUse() {
+				return SpellFind.WailOfTheBanshee(getCaster(), getTarget(), getSpellLevel());
+			}
+			public String getSpellModId() {
+				return JerotesWarehouse.MODID;
+			}
+			public int getBaseSpellLevel() {
+				return 9;
+			}
+			public float getSpellDistanceBase() {
+				return 12;
+			}
+			public SpellSchool getSpellSchool() {
+				return SpellSchool.NECROMANCY;
 			}
 			public boolean canUseTargetNone() {
 				return true;

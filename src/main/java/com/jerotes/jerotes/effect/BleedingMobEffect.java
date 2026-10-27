@@ -48,7 +48,7 @@ public class BleedingMobEffect extends BaseMobEffectSlowTick {
 			if (damage > maxDamage) {
 				damage = maxDamage;
 			}
-			DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.FORCE);
+			DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.BLEED);
 			livingEntity.hurt(damageSource, damage);
 		}
 		int num = effectLevel;

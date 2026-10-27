@@ -145,6 +145,10 @@ public class ItemToolBaseTwoHandedShovel extends ShovelItem implements ItemTwoHa
     public void jerotesSpecialAttackClient(LivingEntity livingEntity) {
         if (livingEntity instanceof Player player) {
             player.resetAttackStrengthTicker();
+            ItemStack itemStack = player.getMainHandItem();
+            boolean crit = AttackFind.shouldCritAttack(player, player);
+            setAttackType(itemStack, crit ? 4 : Main.randomReach(player.getRandom(), 1, 3));
+            setCritAttack(itemStack, crit);
         }
     }
     public static final String ATTACK_TYPE = "AttackType";
@@ -183,10 +187,10 @@ public class ItemToolBaseTwoHandedShovel extends ShovelItem implements ItemTwoHa
         for (LivingEntity hurt : list) {
             if (hurt == null || hurt.distanceTo(livingEntity) > reachs * 4) continue;
             if (!hurt.isAlive()) continue;
-            if (AttackFind.FindCanNotAttack(livingEntity, hurt)) continue;
-            if (jump && !Main.canSeeAngle(livingEntity, hurt.getEyePosition(), 22.5)) continue;
-            if (!Main.canSee(hurt, livingEntity)) continue;
-            if (!hurt.hasLineOfSight(livingEntity)) continue;
+            if (livingEntity == hurt) continue;
+            //if (AttackFind.FindCanNotAttack(livingEntity, hurt)) continue;
+            if (jump && !Main.canSeeAngle(livingEntity, hurt.getEyePosition(), 22.5) && !(hurt.getBoundingBox().intersects(livingEntity.getBoundingBox()))) continue;
+            if ((!Main.canSee(hurt, livingEntity) || !hurt.hasLineOfSight(livingEntity)) && !(hurt.getBoundingBox().intersects(livingEntity.getBoundingBox()))) continue;
             DamageSource damageSource = AttackFind.findDamageType(livingEntity, JerotesDamageTypes.BYPASSES_COOLDOWN_MELEE, livingEntity);
             AttackFind.attackBegin(livingEntity, hurt);
             boolean bl = AttackFind.attackAfterCustomDamage(livingEntity, hurt, damageSource, jump ? 1.5f : 1f, 1f, false, 0f);
@@ -250,9 +254,7 @@ public class ItemToolBaseTwoHandedShovel extends ShovelItem implements ItemTwoHa
                     HitResult hitResult = Minecraft.getInstance().hitResult;
                     boolean miningBlock = hitResult != null && hitResult.getType() == HitResult.Type.BLOCK;
                     if (getAttackType(itemInHand) == 0) {
-                        boolean crit = AttackFind.shouldCritAttack(player, player);
-                        setAttackType(itemInHand, (crit || miningBlock) ? 4 : Main.randomReach(player.getRandom(), 1, 3));
-                        setCritAttack(itemInHand, crit);
+                        setAttackType(itemInHand, miningBlock ? 4 : Main.randomReach(player.getRandom(), 1, 3));
                     }
                     if (swingProcess >= 0.98) {
                         setAttackType(itemInHand, 0);

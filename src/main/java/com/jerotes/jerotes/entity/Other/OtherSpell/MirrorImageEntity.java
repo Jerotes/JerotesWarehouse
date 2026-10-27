@@ -36,6 +36,7 @@ import java.util.UUID;
 public class MirrorImageEntity extends Mob implements JerotesEntity, OwnableEntity, MagicAbout {
 	private static final EntityDataAccessor<Float> WIDTH = SynchedEntityData.defineId(MirrorImageEntity.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Float> HEIGHT = SynchedEntityData.defineId(MirrorImageEntity.class, EntityDataSerializers.FLOAT);
+	private static final EntityDataAccessor<Float> EYE_HEIGHT = SynchedEntityData.defineId(MirrorImageEntity.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Integer> ORDER = SynchedEntityData.defineId(MirrorImageEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Float> ADD_X = SynchedEntityData.defineId(MirrorImageEntity.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<Float> ADD_Y = SynchedEntityData.defineId(MirrorImageEntity.class, EntityDataSerializers.FLOAT);
@@ -74,6 +75,10 @@ public class MirrorImageEntity extends Mob implements JerotesEntity, OwnableEnti
 	@Override
 	public boolean removeWhenFarAway(double distanceToClosestPlayer) {
 		return false;
+	}
+	@Override
+	protected float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
+		return getScaleEyeHeight();
 	}
 
 	@Override
@@ -162,13 +167,18 @@ public class MirrorImageEntity extends Mob implements JerotesEntity, OwnableEnti
 		this.reapplyPosition();
 		this.refreshDimensions();
 	}
+	public void setScaleEyeHeight(float f) {
+		this.entityData.set(EYE_HEIGHT, f);
+	}
 
 	public float getScaleWidth() {
 		return this.entityData.get(WIDTH);
 	}
-
 	public float getScaleHeight() {
 		return this.entityData.get(HEIGHT);
+	}
+	public float getScaleEyeHeight() {
+		return this.entityData.get(EYE_HEIGHT);
 	}
 
 	public void setOrder(int n) {
@@ -215,6 +225,7 @@ public class MirrorImageEntity extends Mob implements JerotesEntity, OwnableEnti
 		compoundTag.putInt("Order", this.getOrder());
 		compoundTag.putFloat("ScaleWidth", this.getScaleWidth());
 		compoundTag.putFloat("ScaleHeight", this.getScaleHeight());
+		compoundTag.putFloat("ScaleEyeHeight", this.getScaleEyeHeight());
 		compoundTag.putFloat("AddX", this.getAddX());
 		compoundTag.putFloat("AddY", this.getAddY());
 		compoundTag.putFloat("AddZ", this.getAddZ());
@@ -230,6 +241,7 @@ public class MirrorImageEntity extends Mob implements JerotesEntity, OwnableEnti
 		super.readAdditionalSaveData(compoundTag);
 		this.setOrder(compoundTag.getInt("Order"));
 		this.setScale(compoundTag.getFloat("ScaleWidth"), compoundTag.getFloat("ScaleHeight"));
+		this.setScaleEyeHeight(compoundTag.getFloat("ScaleEyeHeight"));
 		this.setAddX(compoundTag.getFloat("AddX"));
 		this.setAddY(compoundTag.getFloat("AddY"));
 		this.setAddZ(compoundTag.getFloat("AddZ"));
@@ -256,6 +268,7 @@ public class MirrorImageEntity extends Mob implements JerotesEntity, OwnableEnti
 		super.defineSynchedData();
 		this.getEntityData().define(WIDTH, 0.6f);
 		this.getEntityData().define(HEIGHT, 1.8f);
+		this.getEntityData().define(EYE_HEIGHT, 1.62F);
 		this.getEntityData().define(ORDER, 0);
 		this.getEntityData().define(ADD_X, 0.0f);
 		this.getEntityData().define(ADD_Y, 0.0f);
@@ -308,7 +321,7 @@ public class MirrorImageEntity extends Mob implements JerotesEntity, OwnableEnti
 			this.setOwnerId(this.getOwner().getId());
 		}
 
-		if (this.getOwner() != null) {
+		if (this.getOwner() != null && !this.getOwner().isInvisible()) {
 			if (this.level() instanceof ServerLevel serverLevel) {
 				for (int i2 = 0; i2 < 1; ++i2) {
 					for (int i = 0; i < 3; ++i) {

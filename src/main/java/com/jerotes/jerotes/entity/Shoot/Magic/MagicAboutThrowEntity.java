@@ -146,9 +146,9 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
     }
 
     @Nullable
-    private Entity lastHurt;
+    public Entity lastHurt;
     @Nullable
-    private UUID lastHurtUUID;
+    public UUID lastHurtUUID;
 
     @Nullable
     public Entity getLastHurt() {
@@ -165,8 +165,7 @@ public abstract class MagicAboutThrowEntity extends ThrowableProjectile implemen
     }
 
     public List<UUID> getHurtUUIDs() {
-        Set<UUID> combined = new HashSet<>(this.hurtUUIDList);
-        return new ArrayList<>(combined);
+        return this.hurtUUIDList;
     }
 
     public void addHurtUUID(@Nullable UUID uUID) {

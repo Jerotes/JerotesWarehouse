@@ -167,7 +167,7 @@ public class EntityFactionFind {
 		boolean chestplate = entity != null && entity.getItemBySlot(EquipmentSlot.CHEST).is(ItemTags.create(new ResourceLocation("jerotes:purple_sand_sisterhood_clothes")));
 		boolean legs = entity != null && entity.getItemBySlot(EquipmentSlot.LEGS).is(ItemTags.create(new ResourceLocation("jerotes:purple_sand_sisterhood_clothes")));
 		boolean feet = entity != null && entity.getItemBySlot(EquipmentSlot.FEET).is(ItemTags.create(new ResourceLocation("jerotes:purple_sand_sisterhood_clothes")));
-		return entity != null && !(helmet || chestplate || legs || feet);
+		return entity != null && (helmet || chestplate || legs || feet);
 	}
 
 	//袭击

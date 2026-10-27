@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -64,7 +65,9 @@ public class FlamesSprayEntity extends BaseMagicSprayEntity {
         if (this.level().isClientSide()) {
             return;
         }
-        Main.placeFire(this.level(), blockPos, this.getOwner());
+        if (this.random.nextFloat() > 0.9f) {
+            Main.placeFireOnFlammable(this.level(), blockPos, this.getOwner());
+        }
         Main.igniteBlock(this.level(), blockPos, this.getOwner());
     }
 
